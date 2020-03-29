@@ -30,9 +30,13 @@ Q: What happens after the last phase?
 
 A: Right now, the 10th phase goes on forever. It's still in development.
 
-Q: I keep falling and dying!
+Q: Why do I keep falling and dying!
 
 A: There are tricks to surviving, but it might be difficult!
+
+Q: I can't catch the blocks when I mine them! How do I do that?
+
+A: Yep. It's tough. You can't catch them all, but it *is* an infinite block!
 
 Q: Why do certain blocks spawn more frequently than others?
 
