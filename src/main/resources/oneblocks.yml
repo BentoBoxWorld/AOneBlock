@@ -1,0 +1,466 @@
+0:
+  name: Plains
+  biome: PLAINS
+  blocks:
+    ACACIA_LEAVES: 100
+    ACACIA_LOG: 100
+    ANDESITE: 100
+    BEE_NEST: 10
+    BIRCH_LEAVES: 100
+    BIRCH_LOG: 500
+    BROWN_MUSHROOM_BLOCK: 100
+    CHEST: 100
+    CLAY: 10
+    COAL_ORE: 700
+    COARSE_DIRT: 100
+    COBBLESTONE: 800
+    DARK_OAK_LEAVES: 100
+    DARK_OAK_LOG: 300
+    DIAMOND_ORE: 2
+    DIORITE: 100
+    DIRT: 1000
+    EMERALD_ORE: 5
+    GOLD_ORE: 10
+    GRANITE: 400
+    GRASS_BLOCK: 2000
+    GRASS_PATH: 100
+    GRAVEL: 100
+    INFESTED_STONE: 1
+    IRON_ORE: 300
+    MYCELIUM: 10
+    OAK_LEAVES: 1000
+    OAK_LOG: 2000
+    PODZOL: 10
+    SAND: 200
+    STONE: 800
+  mobs:
+    PIG: 100
+    COW: 100
+    SHEEP: 100
+    CHICKEN: 100
+    SPIDER: 10
+  chests:
+    10:
+      IRON_INGOT: 3
+    30:
+      BREAD: 3
+    1:
+      DIAMOND: 1
+      POTATO: 1
+100:
+  name: Underground
+  biome: TAIGA
+  blocks:
+    ANDESITE: 200
+    CHEST: 100
+    COAL_ORE: 500
+    COBBLESTONE: 800
+    DIAMOND_ORE: 10
+    DIORITE: 200
+    DIRT: 500
+    EMERALD_ORE: 10
+    GOLD_ORE: 10
+    GRANITE: 100
+    GRAVEL: 200
+    INFESTED_COBBLESTONE: 100
+    INFESTED_STONE: 100
+    IRON_ORE: 300
+    LAPIS_ORE: 10
+    OBSIDIAN: 2
+    REDSTONE_ORE: 10
+    RED_SAND: 50
+    RED_SANDSTONE: 50
+    SAND: 100
+    SANDSTONE: 100
+    STONE: 1000
+  mobs:
+    SKELETON: 10
+    ZOMBIE: 20
+    CREEPER: 3
+    BAT: 10
+    ENDERMAN: 1
+    CAVE_SPIDER: 2
+  chests:
+    10:
+      IRON_INGOT: 3
+    30:
+      BREAD: 3
+    1:
+      DIAMOND: 1
+      POTATO: 1
+200:
+  name: Snow
+  biome: SNOWY_TAIGA
+  blocks:
+    CHEST: 1
+    COBBLESTONE: 1
+    DIORITE: 1
+    DIRT: 1
+    GOLD_ORE: 1
+    GRANITE: 1
+    ICE: 1
+    INFESTED_COBBLESTONE: 1
+    INFESTED_STONE: 1
+    LAPIS_ORE: 1
+    SNOW_BLOCK: 1
+    SPRUCE_LEAVES: 1
+    SPRUCE_LOG: 1
+    STONE: 1
+    STRIPPED_SPRUCE_LOG: 1
+  mobs:
+    SNOWMAN: 1
+    POLAR_BEAR: 1
+    WOLF: 1
+  chests:
+    10:
+      IRON_INGOT: 3
+    30:
+      BREAD: 3
+    1:
+      DIAMOND: 1
+      POTATO: 1
+300:
+  name: Ocean
+  biome: OCEAN
+  blocks:
+    ANDESITE: 500
+    BRAIN_CORAL_BLOCK: 1
+    BUBBLE_CORAL_BLOCK: 1
+    CLAY: 300
+    DARK_PRISMARINE: 1
+    DEAD_BRAIN_CORAL: 1
+    DEAD_BRAIN_CORAL_BLOCK: 1
+    DEAD_BRAIN_CORAL_FAN: 1
+    DEAD_BUBBLE_CORAL: 1
+    DEAD_BUBBLE_CORAL_BLOCK: 1
+    DEAD_BUBBLE_CORAL_FAN: 1
+    DEAD_FIRE_CORAL: 1
+    DEAD_FIRE_CORAL_BLOCK: 1
+    DEAD_FIRE_CORAL_FAN: 1
+    DEAD_HORN_CORAL: 1
+    DEAD_HORN_CORAL_BLOCK: 1
+    DEAD_HORN_CORAL_FAN: 1
+    DEAD_TUBE_CORAL: 1
+    DEAD_TUBE_CORAL_BLOCK: 1
+    DEAD_TUBE_CORAL_FAN: 1
+    DIRT: 200
+    GLOWSTONE: 1
+    GRANITE: 500
+    GRAVEL: 300
+    HORN_CORAL_BLOCK: 1
+    PRISMARINE: 1
+    RED_SAND: 10
+    SAND: 1000
+    SANDSTONE: 300
+    SEA_LANTERN: 1
+    SPONGE: 1
+    STONE: 500
+    TUBE_CORAL_BLOCK: 1
+    TURTLE_EGG: 1
+    WET_SPONGE: 1
+  mobs:
+    TROPICAL_FISH: 1
+    COD: 1
+    SALMON: 1
+    DOLPHIN: 1
+    DROWNED: 1
+    TURTLE: 1
+    SQUID: 1
+  chests:
+    10:
+      IRON_INGOT: 3
+    30:
+      BREAD: 3
+    1:
+      DIAMOND: 1
+      POTATO: 1
+400:
+  name: Jungle
+  biome: JUNGLE
+  blocks:
+    CHEST: 1
+    COAL_ORE: 1
+    COARSE_DIRT: 1
+    COBBLESTONE: 1
+    DARK_OAK_LEAVES: 1
+    DARK_OAK_LOG: 1
+    DIAMOND_ORE: 1
+    DIRT: 1
+    EMERALD_ORE: 1
+    GOLD_ORE: 1
+    GRASS_BLOCK: 1
+    GRAVEL: 1
+    JUNGLE_LEAVES: 1
+    JUNGLE_LOG: 1
+    LAPIS_ORE: 1
+    MELON: 1
+    MYCELIUM: 1
+    PODZOL: 1
+    PUMPKIN: 1
+    SPRUCE_LEAVES: 1
+    SPRUCE_LOG: 1
+    STONE: 1
+    STRIPPED_JUNGLE_LOG: 1
+  mobs:
+    PANDA: 1
+    PARROT: 1
+    OCELOT: 1
+    CHICKEN: 1
+    WITCH: 1
+  chests:
+    10:
+      IRON_INGOT: 3
+    30:
+      BREAD: 3
+    1:
+      DIAMOND: 1
+      POTATO: 1
+500:
+  name: Dungeon
+  biome: DARK_FOREST
+  blocks:
+    ANDESITE: 1
+    BROWN_MUSHROOM_BLOCK: 1
+    CHEST: 1
+    COAL_ORE: 1
+    COBBLESTONE: 1
+    DIAMOND_ORE: 1
+    DIORITE: 1
+    DIRT: 1
+    EMERALD_ORE: 1
+    GOLD_ORE: 1
+    GRANITE: 1
+    GRAVEL: 1
+    INFESTED_COBBLESTONE: 1
+    INFESTED_STONE: 1
+    IRON_ORE: 1
+    LAPIS_ORE: 1
+    MOSSY_COBBLESTONE: 1
+    OAK_PLANKS: 1
+    REDSTONE_ORE: 1
+    RED_MUSHROOM_BLOCK: 1
+    SAND: 1
+    SANDSTONE: 1
+    STONE: 1
+  mobs:
+    SKELETON: 1
+    ZOMBIE: 1
+    CREEPER: 1
+    BAT: 1
+    ENDERMAN: 1
+    CAVE_SPIDER: 1
+  chests:
+    10:
+      IRON_INGOT: 3
+    30:
+      BREAD: 3
+    1:
+      DIAMOND: 1
+      POTATO: 1
+600:
+  name: Desert
+  biome: DESERT
+  blocks:
+    CHEST: 10
+    RED_SAND: 200
+    RED_SANDSTONE: 100
+    SAND: 1000
+    SANDSTONE: 500
+    STONE: 200
+  mobs:
+    SKELETON: 1
+    ZOMBIE: 1
+    CREEPER: 1
+    RABBIT: 1
+    ENDERMAN: 1
+    SPIDER: 1
+    HUSK: 1
+  chests:
+    10:
+      IRON_INGOT: 3
+    30:
+      BREAD: 3
+    1:
+      DIAMOND: 1
+      POTATO: 1
+700:
+  name: The Nether
+  biome: NETHER
+  blocks:
+    CHEST: 100
+    GLOWSTONE: 100
+    GRAVEL: 300
+    NETHERRACK: 1000
+    NETHER_BRICKS: 50
+    NETHER_QUARTZ_ORE: 300
+    RED_NETHER_BRICKS: 25
+    SOUL_SAND: 100
+    MAGMA_BLOCK: 1
+  mobs:
+    PIG_ZOMBIE: 100
+    ENDERMAN: 1
+    BLAZE: 5
+    GHAST: 1
+    MAGMA_CUBE: 10
+    SKELETON: 50
+    WITHER_SKELETON: 1
+  chests:
+    10:
+      IRON_INGOT: 3
+    30:
+      BREAD: 3
+    1:
+      DIAMOND: 1
+      POTATO: 1
+800:
+  name: Idyll
+  biome: PLAINS
+  blocks:
+    ACACIA_LOG: 1
+    BIRCH_LOG: 1
+    CHEST: 1
+    COAL_ORE: 1
+    CYAN_TERRACOTTA: 1
+    DARK_OAK_LOG: 1
+    DARK_PRISMARINE: 1
+    DIAMOND_ORE: 1
+    EMERALD_ORE: 1
+    GOLD_ORE: 1
+    GRASS_BLOCK: 1
+    GRASS_PATH: 1
+    GREEN_TERRACOTTA: 1
+    HAY_BLOCK: 1
+    HONEYCOMB_BLOCK: 1
+    HONEY_BLOCK: 1
+    IRON_ORE: 1
+    JACK_O_LANTERN: 1
+    JUNGLE_LOG: 1
+    LAPIS_ORE: 1
+    LIGHT_BLUE_TERRACOTTA: 1
+    LIGHT_GRAY_TERRACOTTA: 1
+    LIME_TERRACOTTA: 1
+    MAGENTA_TERRACOTTA: 1
+    MELON: 1
+    OAK_LOG: 1
+    ORANGE_TERRACOTTA: 1
+    PINK_TERRACOTTA: 1
+    PODZOL: 1
+    POLISHED_ANDESITE: 1
+    POLISHED_DIORITE: 1
+    POLISHED_GRANITE: 1
+    PUMPKIN: 1
+    PURPLE_TERRACOTTA: 1
+    REDSTONE_ORE: 1
+    RED_TERRACOTTA: 1
+    SPRUCE_LOG: 1
+    STONE: 1
+    TERRACOTTA: 1
+    WHITE_TERRACOTTA: 1
+    YELLOW_TERRACOTTA: 1
+  mobs:
+    FOX: 1
+    CHICKEN: 1
+    COW: 1
+    PIG: 1
+    SHEEP: 1
+    BEE: 3
+    CAT: 1
+    DONKEY: 1
+    HORSE: 1
+    RABBIT: 1
+    VILLAGER: 1
+  chests:
+    10:
+      IRON_INGOT: 3
+    30:
+      BREAD: 3
+    1:
+      DIAMOND: 1
+      POTATO: 1
+900:
+  name: Desolation
+  biome: BADLANDS
+  blocks:
+    ANDESITE: 1
+    BLACK_CONCRETE: 1
+    BLACK_STAINED_GLASS: 1
+    BONE_BLOCK: 1
+    CHEST: 1
+    COARSE_DIRT: 1
+    COBBLESTONE: 1
+    CRACKED_STONE_BRICKS: 1
+    DAMAGED_ANVIL: 1
+    DEAD_BRAIN_CORAL_BLOCK: 1
+    DEAD_BUBBLE_CORAL_BLOCK: 1
+    DIORITE: 1
+    GRANITE: 1
+    GRAVEL: 1
+    GRAY_CONCRETE: 1
+    INFESTED_CHISELED_STONE_BRICKS: 1
+    INFESTED_COBBLESTONE: 1
+    INFESTED_CRACKED_STONE_BRICKS: 1
+    INFESTED_MOSSY_STONE_BRICKS: 1
+    INFESTED_STONE: 1
+    INFESTED_STONE_BRICKS: 1
+    MOSSY_COBBLESTONE: 1
+    MOSSY_STONE_BRICKS: 1
+    MYCELIUM: 1
+    OBSIDIAN: 1
+    PODZOL: 1
+    STONE: 1
+    STONE_BRICKS: 1
+    STRIPPED_DARK_OAK_LOG: 1
+    STRIPPED_OAK_LOG: 1
+    STRIPPED_OAK_WOOD: 1
+    STRIPPED_SPRUCE_LOG: 1
+    STRIPPED_SPRUCE_WOOD: 1
+    TERRACOTTA: 1
+  mobs:
+    VEX: 100
+    ENDERMITE: 1
+    CREEPER: 5
+    SKELETON: 50
+    EVOKER: 1
+    ILLUSIONER: 1
+    PILLAGER: 1
+    CAVE_SPIDER: 1
+    RAVAGER: 1
+    STRAY: 1
+  chests:
+    10:
+      IRON_INGOT: 3
+    30:
+      BREAD: 3
+    1:
+      DIAMOND: 1
+      POTATO: 1
+1000:
+  name: The End
+  biome: THE_END
+  blocks:
+    CHEST: 100
+    ENDER_CHEST: 1
+    END_STONE: 1000
+    END_STONE_BRICKS: 100
+    END_STONE_BRICK_SLAB: 100
+    END_STONE_BRICK_STAIRS: 10
+    END_STONE_BRICK_WALL: 10
+    OBSIDIAN: 250
+    PURPLE_TERRACOTTA: 1
+    PURPLE_WOOL: 1
+    PURPUR_BLOCK: 500
+    PURPUR_PILLAR: 100
+    PURPUR_SLAB: 100
+    PURPUR_STAIRS: 100
+  mobs:
+    ENDERMAN: 100
+    SHULKER: 1
+  chests:
+    10:
+      IRON_INGOT: 3
+    30:
+      BREAD: 3
+    1:
+      DIAMOND: 1
+      POTATO: 1
+   

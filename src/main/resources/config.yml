@@ -248,7 +248,7 @@ island:
       # Reset inventory - if true, the player's inventory will be cleared.
       # Note: if you have MultiInv running or a similar inventory control plugin, that
       # plugin may still reset the inventory when the world changes.
-      inventory: false
+      inventory: true
       # Reset health - if true, the player's health will be reset.
       # Added since 1.8.0.
       health: true
@@ -269,7 +269,7 @@ island:
       # Reset inventory - if true, the player's inventory will be cleared.
       # Note: if you have MultiInv running or a similar inventory control plugin, that
       # plugin may still reset the inventory when the world changes.
-      inventory: false
+      inventory: true
       # Reset health - if true, the player's health will be reset.
       # Added since 1.8.0.
       health: false

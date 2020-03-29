@@ -1,9 +1,12 @@
 package world.bentobox.oneblock;
 
+import java.io.IOException;
+
 import org.bukkit.World;
 import org.bukkit.World.Environment;
 import org.bukkit.WorldCreator;
 import org.bukkit.WorldType;
+import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.generator.ChunkGenerator;
 import org.eclipse.jdt.annotation.Nullable;
 
@@ -27,12 +30,14 @@ public class OneBlock extends GameModeAddon {
     // Settings
     private Settings settings;
     private ChunkGeneratorWorld chunkGenerator;
-    private Config<Settings> configObject = new Config<>(this, Settings.class);
+    private final Config<Settings> configObject = new Config<>(this, Settings.class);
+    private BlockListener listener;
 
     @Override
     public void onLoad() {
         // Save the default config from config.yml
         saveDefaultConfig();
+
         // Load settings from config.yml. This will check if there are any issues with it too.
         loadSettings();
         // Chunk generator
@@ -51,17 +56,30 @@ public class OneBlock extends GameModeAddon {
             setState(State.DISABLED);
             return false;
         }
+        // Load the oneblocks
+
         return true;
     }
 
     @Override
     public void onEnable(){
-        registerListener(new BlockListener(this));
+        try {
+            listener = new BlockListener(this);
+            registerListener(listener);
+        } catch (IOException | InvalidConfigurationException e) {
+            // Disable
+            logError("OneBlock settings could not load (oneblock.yml error)! Addon disabled.");
+            logError(e.getMessage());
+            e.printStackTrace();
+            setState(State.DISABLED);
+        }
+
     }
 
     @Override
     public void onDisable() {
-        // Nothing to do here
+        // save cache
+        listener.saveCache();
     }
 
     @Override

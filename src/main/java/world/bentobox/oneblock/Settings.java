@@ -261,7 +261,7 @@ public class Settings implements WorldSettings {
     @ConfigComment("Note: if you have MultiInv running or a similar inventory control plugin, that")
     @ConfigComment("plugin may still reset the inventory when the world changes.")
     @ConfigEntry(path = "island.reset.on-join.inventory")
-    private boolean onJoinResetInventory = false;
+    private boolean onJoinResetInventory = true;
 
     @ConfigComment("Reset health - if true, the player's health will be reset.")
     @ConfigEntry(path = "island.reset.on-join.health", since = "1.8.0")
@@ -273,7 +273,7 @@ public class Settings implements WorldSettings {
 
     @ConfigComment("Reset experience points - if true, the player's experience will be reset.")
     @ConfigEntry(path = "island.reset.on-join.exp", since = "1.8.0")
-    private boolean onJoinResetXP = false;
+    private boolean onJoinResetXP = true;
 
 
     @ConfigComment("Reset Ender Chest - if true, the player's Ender Chest will be cleared.")
