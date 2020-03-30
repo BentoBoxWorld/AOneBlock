@@ -97,8 +97,8 @@ public class BlockListener implements Listener {
 
     private void process(BlockBreakEvent e, Island i, @NonNull Player player) {
         e.setCancelled(true);
-        // Get island from cache
-        OneBlockIslands is = cache.containsKey(i.getUniqueId()) ? cache.get(i.getUniqueId()) : cache.computeIfAbsent(i.getUniqueId(), OneBlockIslands::new);
+        // Get island from cache or load it
+        OneBlockIslands is = cache.containsKey(i.getUniqueId()) ? cache.get(i.getUniqueId()) : loadIsland(i.getUniqueId());
         // Get the phase for this island
         OneBlockPhase phase = oneBlocks.getPhase(is.getBlockNumber());
         // Announce the phase
@@ -145,6 +145,14 @@ public class BlockListener implements Listener {
         }
         // Increment the block number
         is.incrementBlockNumber();
+    }
+
+    private OneBlockIslands loadIsland(String uniqueId) {
+        if (handler.objectExists(uniqueId)) {
+            OneBlockIslands island = handler.loadObject(uniqueId);
+            if (island != null) return island;
+        }
+        return cache.computeIfAbsent(uniqueId, OneBlockIslands::new);
     }
 
     /*
