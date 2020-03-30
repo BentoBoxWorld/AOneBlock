@@ -10,36 +10,60 @@ OneBlock puts you on a block in space. There is only one block. What do you do n
 
 tastybento is tuning the game right now.
 
+## Commands
+
+The user command is `/ob`. The admin command is `/oba`. 
+
+
+
 ## FAQ
 
 Q: What phases are there?
+
 A: Like the original, there are 10 phases: Plains, Underground, Snow Biome, Ocean, Jungle Dungeon, Desert, The Nether, Idyll, Desolation, and The End. Each phase features a set of blocks, items, and mobs appropriate for the setting.
 
 Q: How many blocks are there in the 10 phases?
+
 A: TBD - now tuning.
 
 Q: What happens after the last phase?
+
 A: Right now, the 10th phase goes on forever. It's still in development.
 
+Q: Why do I keep falling and dying!
+
+A: There are tricks to surviving, but it might be difficult!
+
+Q: I can't catch the blocks when I mine them! How do I do that?
+
+A: Yep. It's tough. You can't catch them all, but it *is* an infinite block!
+
 Q: Why do certain blocks spawn more frequently than others?
+
 A: They just do! You can set the relative probability in the file `oneblock.yml`.
 
 Q: Which mobs can spawn?
+
 A: Each phase has a different set of mobs that can spawn. Be careful because they may push you off!
 
 Q: Do chests spawn?
+
 A: Yes. Chests spawn with random items in them from the current phase. 
 
 Q: Is it possible to reach the Nether in this map?
-A: Yes, it is. Nether blocks and obsidian can be obtained in phase 7 and later phases. Lava buckets may be available earlier in certain chests, but you'd need to be insanely lucky to get enough to create a nether portal before reaching phase 7.
+
+A: Yes, it is. Nether blocks and obsidian can be obtained in the Nether phase. Lava buckets may be available earlier in certain chests, but you'd need to be insanely lucky to get enough to create a nether portal before reaching phase 7.
 
 Q. If I get to the Nether, what's there?
+
 A. You'll have to find out!
 
 Q. Is it possible to reach the End on this map?
+
 A. Phew, you really ask a lot of questions! Err, yes, but I haven't worked out how to make that happen yet!
 
 Q: What is the end goal?
+
 A: It's whatever you want it to be! 
 
 ## Installation
