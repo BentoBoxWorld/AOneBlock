@@ -27,6 +27,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockDamageEvent;
+import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -223,7 +225,7 @@ public class BlockListener implements Listener {
     private void damageTool(@NonNull Player player) {
         ItemStack inHand = player.getInventory().getItemInMainHand();
         ItemMeta itemMeta = inHand.getItemMeta();
-        if (inHand instanceof Damageable && !itemMeta.isUnbreakable()) {
+        if (itemMeta instanceof Damageable && !itemMeta.isUnbreakable()) {
             Damageable meta = (Damageable) itemMeta;
             Integer damage = meta.getDamage();
             if (damage != null) {
@@ -236,6 +238,7 @@ public class BlockListener implements Listener {
                 } else {
                     meta.setDamage(damage + 1);
                 }
+                inHand.setItemMeta(itemMeta);
             }
         }
 
@@ -260,16 +263,19 @@ public class BlockListener implements Listener {
         return oneBlocksManager;
     }
 
-    /*
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onBlockDamage(BlockDamageEvent e) {
         if (!addon.inWorld(e.getBlock().getWorld())) {
             return;
         }
-        Location l = e.getBlock().getLocation();
-        addon.getIslands().getIslandAt(l).filter(i -> l.equals(i.getCenter())).ifPresent(i -> {
-            e.setCancelled(true);
-            process(i, e.getPlayer());
-        });
-    }*/
+        Block block = e.getBlock();
+        Location l = block.getLocation();
+        addon.getIslands().getIslandAt(l).filter(i -> l.equals(i.getCenter())).ifPresent(i ->
+        block.getWorld().spawnParticle(Particle.REDSTONE, l.add(new Vector(0.5, 1.0, 0.5)), 5, 0.1, 0, 0.1, 1, new Particle.DustOptions(Color.fromBGR(0,100,0), 1)));
+    }
+    /*
+    @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
+    public void onRespawn(PlayerRespawnEvent e) {
+
+    } */
 }

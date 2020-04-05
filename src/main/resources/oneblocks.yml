@@ -41,6 +41,7 @@
     SHEEP: 50
     CHICKEN: 50
     SPIDER: 10
+    VILLAGER: 5
   chests:
     '1':
       prob: 10
@@ -94,7 +95,7 @@
           v: 2230
           type: POTATO
     '7':
-      prob: 1
+      prob: 5
       contents:
         '3':
           ==: org.bukkit.inventory.ItemStack
@@ -105,7 +106,7 @@
             meta-type: ENCHANTED
             stored-enchants:
               DURABILITY: 3
-100:
+500:
   name: Underground
   biome: TAIGA
   environment: NORMAL
@@ -115,72 +116,149 @@
     CHEST: 200
     COAL_ORE: 500
     COBBLESTONE: 800
+    COBWEB: 250
     DIAMOND_ORE: 10
     DIORITE: 200
     DIRT: 500
     EMERALD_ORE: 10
-    GOLD_ORE: 10
+    GOLD_ORE: 20
     GRANITE: 100
     GRAVEL: 200
-    INFESTED_COBBLESTONE: 100
-    INFESTED_STONE: 100
     IRON_ORE: 300
-    LAPIS_ORE: 10
+    LAPIS_ORE: 20
     OBSIDIAN: 2
-    REDSTONE_ORE: 10
-    RED_SAND: 50
-    RED_SANDSTONE: 50
+    REDSTONE_ORE: 30
     SAND: 100
     SANDSTONE: 100
     STONE: 1000
   mobs:
-    SKELETON: 600
-    ZOMBIE: 100
-    CREEPER: 20
-    BAT: 10
-    ENDERMAN: 10
-    CAVE_SPIDER: 2
+    SKELETON: 650
+    ZOMBIE: 150
+    CREEPER: 30
+    BAT: 30
+    ENDERMAN: 20
+    CAVE_SPIDER: 40
   chests:
     '1':
-      prob: 10
+      prob: 25
       contents:
        '5':
           ==: org.bukkit.inventory.ItemStack
           v: 2230
-          type: WOODEN_HOE
+          type: BROWN_MUSHROOM
     '2':
-      prob: 15
+      prob: 25
       contents:
         '5':
           ==: org.bukkit.inventory.ItemStack
           v: 2230
-          type: BIRCH_SAPLING
+          type: RED_MUSHROOM
     '3':
-      prob: 15
+      prob: 5
       contents:
-        '5':
+        '3':
           ==: org.bukkit.inventory.ItemStack
           v: 2230
-          type: OAK_SAPLING
+          type: WATER_BUCKET
     '4':
       prob: 25
       contents:
         '5':
           ==: org.bukkit.inventory.ItemStack
           v: 2230
-          type: IRON_INGOT
-          amount: 3
+          type: MUSHROOM_STEW
     '5':
       prob: 35
       contents:
         '5':
           ==: org.bukkit.inventory.ItemStack
           v: 2230
-          type: BREAD
+          type: BAKED_POTATO
+    '6':
+      prob: 5
+      contents:
+        '5':
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: DIAMOND
+          amount: 2
         '7':
           ==: org.bukkit.inventory.ItemStack
           v: 2230
-          type: WHEAT_SEEDS
+          type: DIAMOND
+    '7':
+      prob: 1
+      contents:
+        '3':
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: ENCHANTED_BOOK
+          meta:
+            ==: ItemMeta
+            meta-type: ENCHANTED
+            stored-enchants:
+              DURABILITY: 3
+1000:
+  name: Winter
+  biome: SNOWY_TAIGA
+  environment: NORMAL
+  firstBlock: SNOW_BLOCK
+  blocks:
+    CHEST: 100
+    COBBLESTONE: 1000
+    DIRT: 100
+    GOLD_ORE: 20
+    LAPIS_ORE: 20
+    SNOW_BLOCK: 1000
+    SPRUCE_LEAVES: 500
+    SPRUCE_LOG: 500
+    STONE: 1000
+    STRIPPED_SPRUCE_LOG: 200
+  mobs:
+    SNOWMAN: 100
+    POLAR_BEAR: 100
+    WOLF: 50
+  chests:
+    '1':
+      prob: 100
+      contents:
+       '5':
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: ICE
+          amount: 2
+    '2':
+      prob: 15
+      contents:
+        '5':
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: BLUE_ICE
+          amount: 2
+    '3':
+      prob: 15
+      contents:
+        '5':
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: PACKED_ICE
+          amount: 2
+    '4':
+      prob: 100
+      contents:
+        '3':
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: IRON_SHOVEL
+          amount: 1
+    '5':
+      prob: 100
+      contents:
+        '5':
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SWEET_BERRIES
+          amount: 3
     '6':
       prob: 5
       contents:
@@ -204,33 +282,7 @@
             meta-type: ENCHANTED
             stored-enchants:
               DURABILITY: 3
-
-200:
-  name: Winter
-  biome: SNOWY_TAIGA
-  environment: NORMAL
-  firstBlock: SNOW_BLOCK
-  blocks:
-    CHEST: 1
-    COBBLESTONE: 1000
-    DIORITE: 100
-    DIRT: 100
-    GOLD_ORE: 1
-    GRANITE: 100
-    ICE: 600
-    INFESTED_COBBLESTONE: 100
-    INFESTED_STONE: 100
-    LAPIS_ORE: 10
-    SNOW_BLOCK: 1000
-    SPRUCE_LEAVES: 100
-    SPRUCE_LOG: 500
-    STONE: 1000
-    STRIPPED_SPRUCE_LOG: 200
-  mobs:
-    SNOWMAN: 100
-    POLAR_BEAR: 100
-    WOLF: 50
-300:
+2000:
   name: Ocean
   biome: OCEAN
   environment: NORMAL
@@ -279,7 +331,71 @@
     DROWNED: 600
     TURTLE: 10
     SQUID: 100
-400:
+  chests:
+    '1':
+      prob: 10
+      contents:
+       '5':
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: WOODEN_HOE
+    '2':
+      prob: 15
+      contents:
+        '5':
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: BIRCH_SAPLING
+    '3':
+      prob: 15
+      contents:
+        '5':
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_SAPLING
+    '4':
+      prob: 25
+      contents:
+        '5':
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: IRON_INGOT
+          amount: 3
+    '5':
+      prob: 35
+      contents:
+        '5':
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: BREAD
+        '7':
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: WHEAT_SEEDS
+    '6':
+      prob: 5
+      contents:
+        '5':
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: DIAMOND
+        '7':
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: POTATO
+    '7':
+      prob: 1
+      contents:
+        '3':
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: ENCHANTED_BOOK
+          meta:
+            ==: ItemMeta
+            meta-type: ENCHANTED
+            stored-enchants:
+              DURABILITY: 3
+3000:
   name: Jungle
   biome: JUNGLE
   environment: NORMAL
@@ -314,7 +430,71 @@
     OCELOT: 1
     CHICKEN: 1
     WITCH: 1
-500:
+  chests:
+    '1':
+      prob: 10
+      contents:
+       '5':
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: WOODEN_HOE
+    '2':
+      prob: 15
+      contents:
+        '5':
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: BIRCH_SAPLING
+    '3':
+      prob: 15
+      contents:
+        '5':
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_SAPLING
+    '4':
+      prob: 25
+      contents:
+        '5':
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: IRON_INGOT
+          amount: 3
+    '5':
+      prob: 35
+      contents:
+        '5':
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: BREAD
+        '7':
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: WHEAT_SEEDS
+    '6':
+      prob: 5
+      contents:
+        '5':
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: DIAMOND
+        '7':
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: POTATO
+    '7':
+      prob: 1
+      contents:
+        '3':
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: ENCHANTED_BOOK
+          meta:
+            ==: ItemMeta
+            meta-type: ENCHANTED
+            stored-enchants:
+              DURABILITY: 3
+4000:
   name: Dungeon
   biome: DARK_FOREST
   environment: NORMAL
@@ -350,7 +530,71 @@
     BAT: 1
     ENDERMAN: 1
     CAVE_SPIDER: 1
-600:
+  chests:
+    '1':
+      prob: 10
+      contents:
+       '5':
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: WOODEN_HOE
+    '2':
+      prob: 15
+      contents:
+        '5':
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: BIRCH_SAPLING
+    '3':
+      prob: 15
+      contents:
+        '5':
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_SAPLING
+    '4':
+      prob: 25
+      contents:
+        '5':
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: IRON_INGOT
+          amount: 3
+    '5':
+      prob: 35
+      contents:
+        '5':
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: BREAD
+        '7':
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: WHEAT_SEEDS
+    '6':
+      prob: 5
+      contents:
+        '5':
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: DIAMOND
+        '7':
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: POTATO
+    '7':
+      prob: 1
+      contents:
+        '3':
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: ENCHANTED_BOOK
+          meta:
+            ==: ItemMeta
+            meta-type: ENCHANTED
+            stored-enchants:
+              DURABILITY: 3
+5200:
   name: Desert
   biome: DESERT
   environment: NORMAL
@@ -370,7 +614,71 @@
     ENDERMAN: 1
     SPIDER: 1
     HUSK: 1
-700:
+  chests:
+    '1':
+      prob: 10
+      contents:
+       '5':
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: WOODEN_HOE
+    '2':
+      prob: 15
+      contents:
+        '5':
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: BIRCH_SAPLING
+    '3':
+      prob: 15
+      contents:
+        '5':
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_SAPLING
+    '4':
+      prob: 25
+      contents:
+        '5':
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: IRON_INGOT
+          amount: 3
+    '5':
+      prob: 35
+      contents:
+        '5':
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: BREAD
+        '7':
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: WHEAT_SEEDS
+    '6':
+      prob: 5
+      contents:
+        '5':
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: DIAMOND
+        '7':
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: POTATO
+    '7':
+      prob: 1
+      contents:
+        '3':
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: ENCHANTED_BOOK
+          meta:
+            ==: ItemMeta
+            meta-type: ENCHANTED
+            stored-enchants:
+              DURABILITY: 3
+6400:
   name: The Nether
   biome: NETHER
   environment: NETHER
@@ -393,8 +701,72 @@
     MAGMA_CUBE: 10
     SKELETON: 50
     WITHER_SKELETON: 1
-800:
-  name: Idyll
+  chests:
+    '1':
+      prob: 10
+      contents:
+       '5':
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: WOODEN_HOE
+    '2':
+      prob: 15
+      contents:
+        '5':
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: BIRCH_SAPLING
+    '3':
+      prob: 15
+      contents:
+        '5':
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_SAPLING
+    '4':
+      prob: 25
+      contents:
+        '5':
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: IRON_INGOT
+          amount: 3
+    '5':
+      prob: 35
+      contents:
+        '5':
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: BREAD
+        '7':
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: WHEAT_SEEDS
+    '6':
+      prob: 5
+      contents:
+        '5':
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: DIAMOND
+        '7':
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: POTATO
+    '7':
+      prob: 1
+      contents:
+        '3':
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: ENCHANTED_BOOK
+          meta:
+            ==: ItemMeta
+            meta-type: ENCHANTED
+            stored-enchants:
+              DURABILITY: 3
+7600:
+  name: Plenty
   biome: PLAINS
   environment: NORMAL
   blocks:
@@ -451,7 +823,71 @@
     HORSE: 1
     RABBIT: 1
     VILLAGER: 1
-900:
+  chests:
+    '1':
+      prob: 10
+      contents:
+       '5':
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: WOODEN_HOE
+    '2':
+      prob: 15
+      contents:
+        '5':
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: BIRCH_SAPLING
+    '3':
+      prob: 15
+      contents:
+        '5':
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_SAPLING
+    '4':
+      prob: 25
+      contents:
+        '5':
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: IRON_INGOT
+          amount: 3
+    '5':
+      prob: 35
+      contents:
+        '5':
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: BREAD
+        '7':
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: WHEAT_SEEDS
+    '6':
+      prob: 5
+      contents:
+        '5':
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: DIAMOND
+        '7':
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: POTATO
+    '7':
+      prob: 1
+      contents:
+        '3':
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: ENCHANTED_BOOK
+          meta:
+            ==: ItemMeta
+            meta-type: ENCHANTED
+            stored-enchants:
+              DURABILITY: 3
+8800:
   name: Desolation
   biome: BADLANDS
   environment: NORMAL
@@ -501,7 +937,7 @@
     CAVE_SPIDER: 1
     RAVAGER: 1
     STRAY: 1
-1000:
+9000:
   name: The End
   biome: THE_END
   environment: THE_END
@@ -523,3 +959,67 @@
   mobs:
     ENDERMAN: 100
     SHULKER: 1
+  chests:
+    '1':
+      prob: 10
+      contents:
+       '5':
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: WOODEN_HOE
+    '2':
+      prob: 15
+      contents:
+        '5':
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: BIRCH_SAPLING
+    '3':
+      prob: 15
+      contents:
+        '5':
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_SAPLING
+    '4':
+      prob: 25
+      contents:
+        '5':
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: IRON_INGOT
+          amount: 3
+    '5':
+      prob: 35
+      contents:
+        '5':
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: BREAD
+        '7':
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: WHEAT_SEEDS
+    '6':
+      prob: 5
+      contents:
+        '5':
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: DIAMOND
+        '7':
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: POTATO
+    '7':
+      prob: 1
+      contents:
+        '3':
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: ENCHANTED_BOOK
+          meta:
+            ==: ItemMeta
+            meta-type: ENCHANTED
+            stored-enchants:
+              DURABILITY: 3
