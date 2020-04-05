@@ -3,8 +3,8 @@ package world.bentobox.oneblock.listeners;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.TreeMap;
 
 import org.bukkit.Material;
@@ -14,10 +14,11 @@ import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemStack;
+import org.eclipse.jdt.annotation.Nullable;
 
 import world.bentobox.oneblock.OneBlock;
 
-class OneBlocks {
+public class OneBlocksManager {
 
     private static final String ONE_BLOCKS_YML = "oneblocks.yml";
     private final OneBlock addon;
@@ -29,10 +30,21 @@ class OneBlocks {
      * @throws IOException - exception
      * @throws FileNotFoundException - exception
      */
-    public OneBlocks(OneBlock addon) throws FileNotFoundException, IOException, InvalidConfigurationException {
+    public OneBlocksManager(OneBlock addon) throws FileNotFoundException, IOException, InvalidConfigurationException {
         this.addon = addon;
         // Save the default oneblocks.yml file
         addon.saveResource(ONE_BLOCKS_YML, false);
+        /*
+        YamlConfiguration c = new YamlConfiguration();
+        c.set("0.chests.1.prob", 5);
+        ItemStack newBook = new ItemStack(Material.ENCHANTED_BOOK);
+        EnchantmentStorageMeta esm = (EnchantmentStorageMeta) newBook.getItemMeta();
+        esm.addStoredEnchant(Enchantment.DURABILITY, 3, true);
+        newBook.setItemMeta(esm);
+        c.set("0.chests.1.contents.3", newBook);
+        ItemStack itemStack = new ItemStack(Material.IRON_AXE, 3);
+        c.set("0.chests.1.contents.5", itemStack);
+        addon.log(c.saveToString());*/
         loadBlocks();
     }
 
@@ -50,6 +62,10 @@ class OneBlocks {
             obPhase.setPhaseName(phase.getString("name", blockNumber));
             // biome
             obPhase.setPhaseBiome(Biome.valueOf(phase.getString("biome", "PLAINS").toUpperCase()));
+            // First block
+            if (phase.contains("firstBlock")) {
+                addFirstBlock(obPhase, phase.getString("firstBlock"));
+            }
             // Blocks
             addBlocks(obPhase, phase);
             // Mobs
@@ -62,25 +78,37 @@ class OneBlocks {
         }
     }
 
+    private void addFirstBlock(OneBlockPhase obPhase, @Nullable String material) {
+        if (material == null) return;
+        Material m = Material.matchMaterial(material);
+        if (m == null || !m.isBlock()) {
+            addon.logError("Bad firstBlock material: " + material);
+        } else {
+            obPhase.setFirstBlock(new OneBlockObject(m, 0));
+        }
+    }
+
     private void addChests(OneBlockPhase obPhase, ConfigurationSection phase) {
         if (phase.isConfigurationSection("chests")) {
             ConfigurationSection chests = phase.getConfigurationSection("chests");
-            for (String chestProb : chests.getKeys(false)) {
-                int prob = Integer.parseInt(chestProb);
-                // Get the itemstacks
-                List<ItemStack> chestContents = new ArrayList<>();
-                ConfigurationSection chest = chests.getConfigurationSection(chestProb);
-                for (String material : chest.getKeys(false)) {
-                    Material m = Material.matchMaterial(material);
-                    if (m == null) {
-                        addon.logError("Bad chest item material in " + ONE_BLOCKS_YML + ": " + material);
-                    } else {
-                        ItemStack item = new ItemStack(m, chest.getInt(material, 1));
-                        chestContents.add(item);
+            for (String chestId: chests.getKeys(false)) {
+                ConfigurationSection chest = chests.getConfigurationSection(chestId);
+                int prob = chest.getInt("prob", 0);
+                if (prob > 0) {
+                    Map<Integer, ItemStack> items = new HashMap<>();
+                    ConfigurationSection contents = chest.getConfigurationSection("contents");
+                    if (contents != null) {
+                        for (String index : contents.getKeys(false)) {
+                            int slot = Integer.valueOf(index);
+                            ItemStack item = contents.getItemStack(index);
+                            if (item != null) items.put(slot, item);
+                        }
                     }
+                    obPhase.addChest(items, prob);
                 }
-                obPhase.addChest(chestContents, prob);
             }
+            // Calculate the rare chests
+            obPhase.discoverRareChests();
         }
 
     }

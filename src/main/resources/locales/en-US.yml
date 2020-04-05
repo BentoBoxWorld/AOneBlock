@@ -3,10 +3,8 @@
 # the one at http://yaml-online-parser.appspot.com                                        #
 ###########################################################################################
 
-bskyblock:
-  sign:
-    line0: "&cBSkyBlock"
-    line1: "Welcome!"
-    line2: "[name]"
-    line3: "Do not fall! &c<3"
-    
+oneblock:
+  commands:
+    count:
+      description: show the block count and phase
+      info: "You are on block [number] in the [name] phase"

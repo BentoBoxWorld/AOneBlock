@@ -60,6 +60,8 @@ public class IslandCommand extends CompositeCommand {
         new IslandNearCommand(this);
         // Team commands
         new IslandTeamCommand(this);
+        // Count
+        new IslandCountCommand(this);
     }
 
     /* (non-Javadoc)

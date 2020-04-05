@@ -1,6 +1,8 @@
 0:
   name: Plains
   biome: PLAINS
+  environment: NORMAL
+  firstBlock: GRASS_BLOCK
   blocks:
     ACACIA_LEAVES: 100
     ACACIA_LOG: 100
@@ -40,16 +42,74 @@
     CHICKEN: 100
     SPIDER: 10
   chests:
-    10:
-      IRON_INGOT: 3
-    30:
-      BREAD: 3
-    1:
-      DIAMOND: 1
-      POTATO: 1
+    '1':
+      prob: 10
+      contents:
+       '5':
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: WOODEN_HOE
+    '2':
+      prob: 15
+      contents:
+        '5':
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: BIRCH_SAPLING
+    '3':
+      prob: 15
+      contents:
+        '5':
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_SAPLING
+    '4':
+      prob: 25
+      contents:
+        '5':
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: IRON_INGOT
+          amount: 3
+    '5':
+      prob: 35
+      contents:
+        '5':
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: BREAD
+        '7':
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: WHEAT_SEEDS
+    '6':
+      prob: 5
+      contents:
+        '5':
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: DIAMOND
+        '7':
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: POTATO
+    '7':
+      prob: 1
+      contents:
+        '3':
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: ENCHANTED_BOOK
+          meta:
+            ==: ItemMeta
+            meta-type: ENCHANTED
+            stored-enchants:
+              DURABILITY: 3
 100:
   name: Underground
   biome: TAIGA
+  environment: NORMAL
+  firstBlock: STONE
   blocks:
     ANDESITE: 200
     CHEST: 100
@@ -80,48 +140,36 @@
     BAT: 10
     ENDERMAN: 1
     CAVE_SPIDER: 2
-  chests:
-    10:
-      IRON_INGOT: 3
-    30:
-      BREAD: 3
-    1:
-      DIAMOND: 1
-      POTATO: 1
 200:
   name: Snow
   biome: SNOWY_TAIGA
+  environment: NORMAL
+  firstBlock: SNOW_BLOCK
   blocks:
     CHEST: 1
-    COBBLESTONE: 1
-    DIORITE: 1
-    DIRT: 1
+    COBBLESTONE: 1000
+    DIORITE: 100
+    DIRT: 100
     GOLD_ORE: 1
-    GRANITE: 1
-    ICE: 1
-    INFESTED_COBBLESTONE: 1
-    INFESTED_STONE: 1
-    LAPIS_ORE: 1
-    SNOW_BLOCK: 1
-    SPRUCE_LEAVES: 1
-    SPRUCE_LOG: 1
-    STONE: 1
-    STRIPPED_SPRUCE_LOG: 1
+    GRANITE: 100
+    ICE: 600
+    INFESTED_COBBLESTONE: 100
+    INFESTED_STONE: 100
+    LAPIS_ORE: 10
+    SNOW_BLOCK: 1000
+    SPRUCE_LEAVES: 100
+    SPRUCE_LOG: 500
+    STONE: 1000
+    STRIPPED_SPRUCE_LOG: 200
   mobs:
     SNOWMAN: 1
     POLAR_BEAR: 1
-    WOLF: 1
-  chests:
-    10:
-      IRON_INGOT: 3
-    30:
-      BREAD: 3
-    1:
-      DIAMOND: 1
-      POTATO: 1
+    WOLF: 5
 300:
   name: Ocean
   biome: OCEAN
+  environment: NORMAL
+  firstBlock: PRISMARINE
   blocks:
     ANDESITE: 500
     BRAIN_CORAL_BLOCK: 1
@@ -166,17 +214,11 @@
     DROWNED: 1
     TURTLE: 1
     SQUID: 1
-  chests:
-    10:
-      IRON_INGOT: 3
-    30:
-      BREAD: 3
-    1:
-      DIAMOND: 1
-      POTATO: 1
 400:
   name: Jungle
   biome: JUNGLE
+  environment: NORMAL
+  firstBlock: MELON
   blocks:
     CHEST: 1
     COAL_ORE: 1
@@ -207,17 +249,11 @@
     OCELOT: 1
     CHICKEN: 1
     WITCH: 1
-  chests:
-    10:
-      IRON_INGOT: 3
-    30:
-      BREAD: 3
-    1:
-      DIAMOND: 1
-      POTATO: 1
 500:
   name: Dungeon
   biome: DARK_FOREST
+  environment: NORMAL
+  firstBlock: CHEST
   blocks:
     ANDESITE: 1
     BROWN_MUSHROOM_BLOCK: 1
@@ -249,17 +285,11 @@
     BAT: 1
     ENDERMAN: 1
     CAVE_SPIDER: 1
-  chests:
-    10:
-      IRON_INGOT: 3
-    30:
-      BREAD: 3
-    1:
-      DIAMOND: 1
-      POTATO: 1
 600:
   name: Desert
   biome: DESERT
+  environment: NORMAL
+  firstBlock: SAND
   blocks:
     CHEST: 10
     RED_SAND: 200
@@ -275,17 +305,11 @@
     ENDERMAN: 1
     SPIDER: 1
     HUSK: 1
-  chests:
-    10:
-      IRON_INGOT: 3
-    30:
-      BREAD: 3
-    1:
-      DIAMOND: 1
-      POTATO: 1
 700:
   name: The Nether
   biome: NETHER
+  environment: NETHER
+  firstBlock: NETHERRACK
   blocks:
     CHEST: 100
     GLOWSTONE: 100
@@ -304,17 +328,10 @@
     MAGMA_CUBE: 10
     SKELETON: 50
     WITHER_SKELETON: 1
-  chests:
-    10:
-      IRON_INGOT: 3
-    30:
-      BREAD: 3
-    1:
-      DIAMOND: 1
-      POTATO: 1
 800:
   name: Idyll
   biome: PLAINS
+  environment: NORMAL
   blocks:
     ACACIA_LOG: 1
     BIRCH_LOG: 1
@@ -369,17 +386,10 @@
     HORSE: 1
     RABBIT: 1
     VILLAGER: 1
-  chests:
-    10:
-      IRON_INGOT: 3
-    30:
-      BREAD: 3
-    1:
-      DIAMOND: 1
-      POTATO: 1
 900:
   name: Desolation
   biome: BADLANDS
+  environment: NORMAL
   blocks:
     ANDESITE: 1
     BLACK_CONCRETE: 1
@@ -426,17 +436,10 @@
     CAVE_SPIDER: 1
     RAVAGER: 1
     STRAY: 1
-  chests:
-    10:
-      IRON_INGOT: 3
-    30:
-      BREAD: 3
-    1:
-      DIAMOND: 1
-      POTATO: 1
 1000:
   name: The End
   biome: THE_END
+  environment: THE_END
   blocks:
     CHEST: 100
     ENDER_CHEST: 1
@@ -455,12 +458,3 @@
   mobs:
     ENDERMAN: 100
     SHULKER: 1
-  chests:
-    10:
-      IRON_INGOT: 3
-    30:
-      BREAD: 3
-    1:
-      DIAMOND: 1
-      POTATO: 1
-   

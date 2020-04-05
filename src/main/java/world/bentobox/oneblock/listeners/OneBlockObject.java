@@ -1,6 +1,6 @@
 package world.bentobox.oneblock.listeners;
 
-import java.util.List;
+import java.util.Map;
 
 import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
@@ -16,19 +16,38 @@ public class OneBlockObject {
 
     private EntityType entityType;
     private Material material;
-    private List<ItemStack> chest;
+    private Map<Integer,ItemStack> chest;
+    private boolean rare;
+    private final int prob;
 
-    public OneBlockObject(EntityType entityType) {
+    /**
+     * An entity
+     * @param entityType - type
+     */
+    public OneBlockObject(EntityType entityType, int prob) {
         this.entityType = entityType;
+        this.prob = prob;
     }
 
-    public OneBlockObject(Material material) {
+    /**
+     * A block
+     * @param material - block type
+     */
+    public OneBlockObject(Material material, int prob) {
         this.material = material;
+        this.prob = prob;
+
     }
 
-    public OneBlockObject(List<ItemStack> chest) {
+    /**
+     * A chest
+     * @param chest - list of itemstacks in the chest
+     */
+    public OneBlockObject(Map<Integer,ItemStack> chest, int prob) {
         this.material = Material.CHEST;
         this.chest = chest;
+        this.prob = prob;
+
     }
 
     /**
@@ -39,6 +58,8 @@ public class OneBlockObject {
         this.chest = ob.getChest();
         this.entityType = ob.getEntityType();
         this.material = ob.getMaterial();
+        this.prob = ob.getProb();
+        this.rare = ob.isRare();
     }
 
     /**
@@ -60,7 +81,7 @@ public class OneBlockObject {
     /**
      * @return the inventory
      */
-    public List<ItemStack> getChest() {
+    public Map<Integer, ItemStack> getChest() {
         return chest;
     }
 
@@ -78,6 +99,27 @@ public class OneBlockObject {
      */
     public boolean isEntity() {
         return entityType != null;
+    }
+
+    /**
+     * @return the rare
+     */
+    public boolean isRare() {
+        return rare;
+    }
+
+    /**
+     * @param rare the rare to set
+     */
+    public void setRare(boolean rare) {
+        this.rare = rare;
+    }
+
+    /**
+     * @return the prob
+     */
+    public int getProb() {
+        return prob;
     }
 
 }

@@ -13,10 +13,13 @@ import org.eclipse.jdt.annotation.Nullable;
 import world.bentobox.bentobox.api.addons.GameModeAddon;
 import world.bentobox.bentobox.api.configuration.Config;
 import world.bentobox.bentobox.api.configuration.WorldSettings;
+import world.bentobox.bentobox.database.objects.Island;
 import world.bentobox.oneblock.commands.AdminCommand;
 import world.bentobox.oneblock.commands.IslandCommand;
+import world.bentobox.oneblock.dataobjects.OneBlockIslands;
 import world.bentobox.oneblock.generators.ChunkGeneratorWorld;
 import world.bentobox.oneblock.listeners.BlockListener;
+import world.bentobox.oneblock.listeners.OneBlocksManager;
 
 /**
  * Main OneBlock class - provides an island minigame in the sky
@@ -174,4 +177,11 @@ public class OneBlock extends GameModeAddon {
         this.saveWorldSettings();
     }
 
+    /**
+     * @param i - island
+     * @return one block island data
+     */
+    public OneBlockIslands getOneBlocksIsland(Island i) {
+        return listener.getIsland(i);
+    }
 }

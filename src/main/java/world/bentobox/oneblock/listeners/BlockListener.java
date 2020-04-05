@@ -4,14 +4,19 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
+import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.World.Environment;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.block.Chest;
 import org.bukkit.configuration.InvalidConfigurationException;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -19,6 +24,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.util.Vector;
 import org.eclipse.jdt.annotation.NonNull;
 
@@ -37,9 +43,10 @@ import world.bentobox.oneblock.dataobjects.OneBlockIslands;
 public class BlockListener implements Listener {
 
     private final OneBlock addon;
-    private OneBlocks oneBlocks;
+    private OneBlocksManager oneBlocksManager;
     private final Database<OneBlockIslands> handler;
     private final Map<String, OneBlockIslands> cache;
+    private final Random random = new Random();
 
     /**
      * @param addon - OneBlock
@@ -51,7 +58,7 @@ public class BlockListener implements Listener {
         this.addon = addon;
         handler = new Database<>(addon, OneBlockIslands.class);
         cache = new HashMap<>();
-        oneBlocks = new OneBlocks(addon);
+        oneBlocksManager = new OneBlocksManager(addon);
     }
 
     /**
@@ -98,21 +105,25 @@ public class BlockListener implements Listener {
     private void process(BlockBreakEvent e, Island i, @NonNull Player player) {
         e.setCancelled(true);
         // Get island from cache or load it
-        OneBlockIslands is = cache.containsKey(i.getUniqueId()) ? cache.get(i.getUniqueId()) : loadIsland(i.getUniqueId());
+        OneBlockIslands is = getIsland(i);
         // Get the phase for this island
-        OneBlockPhase phase = oneBlocks.getPhase(is.getBlockNumber());
+        OneBlockPhase phase = oneBlocksManager.getPhase(is.getBlockNumber());
         // Announce the phase
+        boolean newPhase = false;
         if (!is.getPhaseName().equalsIgnoreCase(phase.getPhaseName())) {
             cache.get(i.getUniqueId()).setPhaseName(phase.getPhaseName());
             player.sendTitle(phase.getPhaseName(), null, -1, -1, -1);
+            newPhase = true;
         }
         // Get the next block
-        OneBlockObject nextBlock = phase.getNextBlock();
+        OneBlockObject nextBlock = newPhase && phase.getFirstBlock() != null ? phase.getFirstBlock() : phase.getNextBlock();
         // Get the block that is being broken
         Block block = i.getCenter().toVector().toLocation(player.getWorld()).getBlock();
-        // Set the biome
-        if (block.getWorld().getEnvironment().equals(Environment.NORMAL)) {
+        // Set the biome for the block and one block above it
+        if (!block.getBiome().equals(phase.getPhaseBiome())) {
+            block.getWorld().setBiome(block.getX(), block.getZ(), phase.getPhaseBiome());
             block.setBiome(phase.getPhaseBiome());
+            block.getRelative(BlockFace.UP).setBiome(phase.getPhaseBiome());
         }
         // Entity
         if (nextBlock.isEntity()) {
@@ -125,34 +136,73 @@ public class BlockListener implements Listener {
         // Break the block
         block.breakNaturally();
         player.giveExp(e.getExpToDrop());
-        // TODO Damage tool
-        ItemStack inHand = player.getInventory().getItemInMainHand();
-        if (inHand instanceof Damageable) {
-            Damageable meta = (Damageable) inHand.getItemMeta();
-            Integer damage = meta.getDamage();
-            if (damage != null) {
-                meta.setDamage(damage + 1);
-            }
-        }
+        // Damage tool
+        damageTool(player);
+
         @NonNull
         Material type = nextBlock.getMaterial();
         // Place new block with no physics
         block.setType(type, false);
         // Fill the chest
-        if (type.equals(Material.CHEST)) {
+        if (type.equals(Material.CHEST) && nextBlock.getChest() != null) {
             Chest chest = (Chest)block.getState();
-            nextBlock.getChest().forEach(chest.getBlockInventory()::addItem);
+            nextBlock.getChest().forEach(chest.getBlockInventory()::setItem);
+            if (nextBlock.isRare()) {
+                block.getWorld().spawnParticle(Particle.REDSTONE, block.getLocation().add(new Vector(0.5, 1.0, 0.5)), 50, 0.5, 0, 0.5, 1, new Particle.DustOptions(Color.fromBGR(50,255,255), 1));
+                //block.getWorld().spawnParticle(Particle.REDSTONE, block.getLocation().add(new Vector(0.5, 1.0, 0.5)), 500, new Particle.DustOptions(Color.fromBGR(50,255,255), 1));
+            }
         }
         // Increment the block number
         is.incrementBlockNumber();
     }
 
+    /**
+     * Get the one block island data
+     * @param i - island
+     * @return one block island
+     */
+    public OneBlockIslands getIsland(Island i) {
+        return cache.containsKey(i.getUniqueId()) ? cache.get(i.getUniqueId()) : loadIsland(i.getUniqueId());
+    }
+
+    private void damageTool(@NonNull Player player) {
+        ItemStack inHand = player.getInventory().getItemInMainHand();
+        ItemMeta itemMeta = inHand.getItemMeta();
+        if (inHand instanceof Damageable && !itemMeta.isUnbreakable()) {
+            Damageable meta = (Damageable) itemMeta;
+            Integer damage = meta.getDamage();
+            if (damage != null) {
+                // Check for DURABILITY
+                if (itemMeta.hasEnchant(Enchantment.DURABILITY)) {
+                    int level = itemMeta.getEnchantLevel(Enchantment.DURABILITY);
+                    if (random.nextInt(level + 1) == 0) {
+                        meta.setDamage(damage + 1);
+                    }
+                } else {
+                    meta.setDamage(damage + 1);
+                }
+            }
+        }
+
+    }
+
     private OneBlockIslands loadIsland(String uniqueId) {
         if (handler.objectExists(uniqueId)) {
             OneBlockIslands island = handler.loadObject(uniqueId);
-            if (island != null) return island;
+            if (island != null) {
+                // Add to cache
+                cache.put(island.getUniqueId(), island);
+                return island;
+            }
         }
         return cache.computeIfAbsent(uniqueId, OneBlockIslands::new);
+    }
+
+    /**
+     * @return the oneBlocksManager
+     */
+    public OneBlocksManager getOneBlocksManager() {
+        return oneBlocksManager;
     }
 
     /*

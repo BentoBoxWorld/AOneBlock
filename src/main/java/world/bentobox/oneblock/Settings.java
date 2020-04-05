@@ -115,9 +115,9 @@ public class Settings implements WorldSettings {
     private boolean useOwnGenerator;
 
     @ConfigComment("Sea height (don't changes this mid-game unless you delete the world)")
-    @ConfigComment("Minimum is 0, which means you are playing Skyblock!")
+    @ConfigComment("Minimum is 0")
     @ConfigComment("If sea height is less than about 10, then players will drop right through it")
-    @ConfigComment("if it exists. Makes for an interesting variation on skyblock.")
+    @ConfigComment("if it exists.")
     @ConfigEntry(path = "world.sea-height", needsReset = true)
     private int seaHeight = 0;
 
@@ -150,31 +150,19 @@ public class Settings implements WorldSettings {
     @ConfigEntry(path = "world.nether.generate")
     private boolean netherGenerate = true;
 
-    @ConfigComment("Islands in Nether. Change to false for standard vanilla nether.")
-    @ConfigEntry(path = "world.nether.islands", needsReset = true)
-    private boolean netherIslands = true;
+    private boolean netherIslands = false;
 
-    @ConfigComment("Make the nether roof, if false, there is nothing up there")
-    @ConfigComment("Change to false if lag is a problem from the generation")
-    @ConfigComment("Only applies to islands Nether")
-    @ConfigEntry(path = "world.nether.roof")
-    private boolean netherRoof = true;
+    private boolean netherRoof = false;
 
     @ConfigComment("Nether spawn protection radius - this is the distance around the nether spawn")
     @ConfigComment("that will be protected from player interaction (breaking blocks, pouring lava etc.)")
     @ConfigComment("Minimum is 0 (not recommended), maximum is 100. Default is 25.")
-    @ConfigComment("Only applies to vanilla nether")
     @ConfigEntry(path = "world.nether.spawn-radius")
     private int netherSpawnRadius = 32;
 
     // End
-    @ConfigEntry(path = "world.end.generate")
-    private boolean endGenerate = true;
-
-    @ConfigEntry(path = "world.end.islands", needsReset = true)
-    private boolean endIslands = true;
-
-    @ConfigEntry(path = "world.end.dragon-spawn", experimental = true)
+    private boolean endGenerate = false;
+    private boolean endIslands = false;
     private boolean dragonSpawn = false;
 
     @ConfigComment("Mob white list - these mobs will NOT be removed when logging in or doing /island")
