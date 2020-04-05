@@ -11,7 +11,7 @@
     BIRCH_LEAVES: 100
     BIRCH_LOG: 500
     BROWN_MUSHROOM_BLOCK: 100
-    CHEST: 100
+    CHEST: 200
     CLAY: 10
     COAL_ORE: 700
     COARSE_DIRT: 100
@@ -36,10 +36,10 @@
     SAND: 200
     STONE: 800
   mobs:
-    PIG: 100
-    COW: 100
-    SHEEP: 100
-    CHICKEN: 100
+    PIG: 50
+    COW: 50
+    SHEEP: 50
+    CHICKEN: 50
     SPIDER: 10
   chests:
     '1':
@@ -112,7 +112,7 @@
   firstBlock: STONE
   blocks:
     ANDESITE: 200
-    CHEST: 100
+    CHEST: 200
     COAL_ORE: 500
     COBBLESTONE: 800
     DIAMOND_ORE: 10
@@ -134,14 +134,79 @@
     SANDSTONE: 100
     STONE: 1000
   mobs:
-    SKELETON: 10
-    ZOMBIE: 20
-    CREEPER: 3
+    SKELETON: 600
+    ZOMBIE: 100
+    CREEPER: 20
     BAT: 10
-    ENDERMAN: 1
+    ENDERMAN: 10
     CAVE_SPIDER: 2
+  chests:
+    '1':
+      prob: 10
+      contents:
+       '5':
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: WOODEN_HOE
+    '2':
+      prob: 15
+      contents:
+        '5':
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: BIRCH_SAPLING
+    '3':
+      prob: 15
+      contents:
+        '5':
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_SAPLING
+    '4':
+      prob: 25
+      contents:
+        '5':
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: IRON_INGOT
+          amount: 3
+    '5':
+      prob: 35
+      contents:
+        '5':
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: BREAD
+        '7':
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: WHEAT_SEEDS
+    '6':
+      prob: 5
+      contents:
+        '5':
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: DIAMOND
+        '7':
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: POTATO
+    '7':
+      prob: 1
+      contents:
+        '3':
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: ENCHANTED_BOOK
+          meta:
+            ==: ItemMeta
+            meta-type: ENCHANTED
+            stored-enchants:
+              DURABILITY: 3
+
 200:
-  name: Snow
+  name: Winter
   biome: SNOWY_TAIGA
   environment: NORMAL
   firstBlock: SNOW_BLOCK
@@ -162,9 +227,9 @@
     STONE: 1000
     STRIPPED_SPRUCE_LOG: 200
   mobs:
-    SNOWMAN: 1
-    POLAR_BEAR: 1
-    WOLF: 5
+    SNOWMAN: 100
+    POLAR_BEAR: 100
+    WOLF: 50
 300:
   name: Ocean
   biome: OCEAN
@@ -172,48 +237,48 @@
   firstBlock: PRISMARINE
   blocks:
     ANDESITE: 500
-    BRAIN_CORAL_BLOCK: 1
-    BUBBLE_CORAL_BLOCK: 1
+    BRAIN_CORAL_BLOCK: 100
+    BUBBLE_CORAL_BLOCK: 100
     CLAY: 300
-    DARK_PRISMARINE: 1
-    DEAD_BRAIN_CORAL: 1
-    DEAD_BRAIN_CORAL_BLOCK: 1
-    DEAD_BRAIN_CORAL_FAN: 1
-    DEAD_BUBBLE_CORAL: 1
-    DEAD_BUBBLE_CORAL_BLOCK: 1
-    DEAD_BUBBLE_CORAL_FAN: 1
-    DEAD_FIRE_CORAL: 1
-    DEAD_FIRE_CORAL_BLOCK: 1
-    DEAD_FIRE_CORAL_FAN: 1
-    DEAD_HORN_CORAL: 1
-    DEAD_HORN_CORAL_BLOCK: 1
-    DEAD_HORN_CORAL_FAN: 1
-    DEAD_TUBE_CORAL: 1
-    DEAD_TUBE_CORAL_BLOCK: 1
-    DEAD_TUBE_CORAL_FAN: 1
+    DARK_PRISMARINE: 100
+    DEAD_BRAIN_CORAL: 100
+    DEAD_BRAIN_CORAL_BLOCK: 100
+    DEAD_BRAIN_CORAL_FAN: 100
+    DEAD_BUBBLE_CORAL: 100
+    DEAD_BUBBLE_CORAL_BLOCK: 100
+    DEAD_BUBBLE_CORAL_FAN: 100
+    DEAD_FIRE_CORAL: 100
+    DEAD_FIRE_CORAL_BLOCK: 100
+    DEAD_FIRE_CORAL_FAN: 100
+    DEAD_HORN_CORAL: 100
+    DEAD_HORN_CORAL_BLOCK: 100
+    DEAD_HORN_CORAL_FAN: 100
+    DEAD_TUBE_CORAL: 100
+    DEAD_TUBE_CORAL_BLOCK: 100
+    DEAD_TUBE_CORAL_FAN: 100
     DIRT: 200
     GLOWSTONE: 1
     GRANITE: 500
     GRAVEL: 300
-    HORN_CORAL_BLOCK: 1
-    PRISMARINE: 1
+    HORN_CORAL_BLOCK: 100
+    PRISMARINE: 100
     RED_SAND: 10
     SAND: 1000
     SANDSTONE: 300
-    SEA_LANTERN: 1
-    SPONGE: 1
+    SEA_LANTERN: 100
+    SPONGE: 100
     STONE: 500
-    TUBE_CORAL_BLOCK: 1
-    TURTLE_EGG: 1
-    WET_SPONGE: 1
+    TUBE_CORAL_BLOCK: 100
+    TURTLE_EGG: 10
+    WET_SPONGE: 10
   mobs:
-    TROPICAL_FISH: 1
-    COD: 1
-    SALMON: 1
-    DOLPHIN: 1
-    DROWNED: 1
-    TURTLE: 1
-    SQUID: 1
+    TROPICAL_FISH: 100
+    COD: 100
+    SALMON: 100
+    DOLPHIN: 10
+    DROWNED: 600
+    TURTLE: 10
+    SQUID: 100
 400:
   name: Jungle
   biome: JUNGLE

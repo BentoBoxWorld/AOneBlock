@@ -2,7 +2,9 @@ package world.bentobox.oneblock.listeners;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
@@ -11,12 +13,15 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
+import org.bukkit.World;
 import org.bukkit.World.Environment;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Chest;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -25,6 +30,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.util.BoundingBox;
 import org.bukkit.util.Vector;
 import org.eclipse.jdt.annotation.NonNull;
 
@@ -47,6 +53,19 @@ public class BlockListener implements Listener {
     private final Database<OneBlockIslands> handler;
     private final Map<String, OneBlockIslands> cache;
     private final Random random = new Random();
+    /**
+     * Water entities
+     */
+    private final static List<EntityType> WATER_ENTITIES = Arrays.asList(
+            EntityType.GUARDIAN,
+            EntityType.SQUID,
+            EntityType.COD,
+            EntityType.SALMON,
+            EntityType.PUFFERFISH,
+            EntityType.TROPICAL_FISH,
+            EntityType.DROWNED,
+            EntityType.DOLPHIN);
+
 
     /**
      * @param addon - OneBlock
@@ -120,17 +139,16 @@ public class BlockListener implements Listener {
         // Get the block that is being broken
         Block block = i.getCenter().toVector().toLocation(player.getWorld()).getBlock();
         // Set the biome for the block and one block above it
-        if (!block.getBiome().equals(phase.getPhaseBiome())) {
+        if (newPhase) {
             block.getWorld().setBiome(block.getX(), block.getZ(), phase.getPhaseBiome());
-            block.setBiome(phase.getPhaseBiome());
-            block.getRelative(BlockFace.UP).setBiome(phase.getPhaseBiome());
+            addon.logWarning("Setting biome at " + block.getX() + ", " + block.getZ() + " to " + phase.getPhaseBiome());
+            //block.setBiome(phase.getPhaseBiome());
+            //block.getRelative(BlockFace.UP).setBiome(phase.getPhaseBiome());
         }
         // Entity
         if (nextBlock.isEntity()) {
-            Location spawnLoc = i.getCenter().toVector().add(new Vector(0.5D, 1D, 0.5D)).toLocation(player.getWorld());
-            block.getWorld().spawnEntity(spawnLoc, nextBlock.getEntityType());
-            player.playSound(player.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 1F, 2F);
-            // Entity spawns do not increment the block number
+            // Entity spawns do not increment the block number or break the block
+            spawnEntity(nextBlock, block);
             return;
         }
         // Break the block
@@ -145,15 +163,52 @@ public class BlockListener implements Listener {
         block.setType(type, false);
         // Fill the chest
         if (type.equals(Material.CHEST) && nextBlock.getChest() != null) {
-            Chest chest = (Chest)block.getState();
-            nextBlock.getChest().forEach(chest.getBlockInventory()::setItem);
-            if (nextBlock.isRare()) {
-                block.getWorld().spawnParticle(Particle.REDSTONE, block.getLocation().add(new Vector(0.5, 1.0, 0.5)), 50, 0.5, 0, 0.5, 1, new Particle.DustOptions(Color.fromBGR(50,255,255), 1));
-                //block.getWorld().spawnParticle(Particle.REDSTONE, block.getLocation().add(new Vector(0.5, 1.0, 0.5)), 500, new Particle.DustOptions(Color.fromBGR(50,255,255), 1));
-            }
+            fillChest(nextBlock, block);
         }
         // Increment the block number
         is.incrementBlockNumber();
+    }
+
+    private void spawnEntity(OneBlockObject nextBlock, Block block) {
+        Location spawnLoc = block.getLocation().add(new Vector(0.5D, 1D, 0.5D));
+        Entity entity = block.getWorld().spawnEntity(spawnLoc, nextBlock.getEntityType());
+        // Make space for entity - this will blot out blocks
+        if (entity != null) {
+            makeSpace(entity);
+            block.getWorld().playSound(block.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 1F, 2F);
+        } else {
+            addon.logWarning("Could not spawn entity at " + spawnLoc);
+        }
+    }
+
+    private void makeSpace(Entity e) {
+        World world = e.getWorld();
+        // Make space for entity based on the entity's size
+        BoundingBox bb = e.getBoundingBox();
+        for (double x = bb.getMinX(); x <= bb.getMaxX() + 1; x++) {
+            for (double z = bb.getMinZ(); z <= bb.getMaxZ() + 1; z++) {
+                double y = bb.getMinY();
+                Block b = world.getBlockAt(new Location(world, x,y,z));
+                for (; y <= Math.min(bb.getMaxY() + 1, world.getMaxHeight()); y++) {
+                    b = world.getBlockAt(new Location(world, x,y,z));
+                    if (!b.getType().equals(Material.AIR) && !b.isLiquid()) b.breakNaturally();
+                    b.setType(WATER_ENTITIES.contains(e.getType()) ? Material.WATER : Material.AIR, false);
+                }
+                // Add air block on top for all water entities (required for dolphin, okay for others)
+                if (WATER_ENTITIES.contains(e.getType())) {
+                    b.getRelative(BlockFace.UP).setType(Material.AIR);
+                }
+            }
+        }
+    }
+
+
+    private void fillChest(OneBlockObject nextBlock, Block block) {
+        Chest chest = (Chest)block.getState();
+        nextBlock.getChest().forEach(chest.getBlockInventory()::setItem);
+        if (nextBlock.isRare()) {
+            block.getWorld().spawnParticle(Particle.REDSTONE, block.getLocation().add(new Vector(0.5, 1.0, 0.5)), 50, 0.5, 0, 0.5, 1, new Particle.DustOptions(Color.fromBGR(50,255,255), 1));
+        }
     }
 
     /**

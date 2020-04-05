@@ -5,6 +5,11 @@
 
 oneblock:
   commands:
+    admin:
+      setcount:
+        parameters: "<name> <count>"
+        description: "set player's block count"
+        set: "[name]'s count set to [number]"
     count:
       description: show the block count and phase
       info: "You are on block [number] in the [name] phase"

@@ -83,7 +83,8 @@ public class AdminCommand extends CompositeCommand {
         new AdminPurgeCommand(this);
         // Settings
         new AdminSettingsCommand(this);
-
+        // Set count
+        new AdminSetCountCommand(this);
     }
 
     @Override
