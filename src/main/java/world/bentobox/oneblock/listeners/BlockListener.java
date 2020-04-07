@@ -3,6 +3,7 @@ package world.bentobox.oneblock.listeners;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,7 +15,6 @@ import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.World;
-import org.bukkit.World.Environment;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Chest;
@@ -23,12 +23,14 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Cancellable;
+import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockDamageEvent;
-import org.bukkit.event.player.PlayerRespawnEvent;
+import org.bukkit.event.player.PlayerBucketEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -68,6 +70,28 @@ public class BlockListener implements Listener {
             EntityType.DROWNED,
             EntityType.DOLPHIN);
 
+    private final static Map<EntityType, Sound> MOB_SOUNDS;
+    public static final int MAX_LOOK_AHEAD = 5;
+    static {
+        Map<EntityType, Sound> m = new HashMap<>();
+        m.put(EntityType.ZOMBIE, Sound.ENTITY_ZOMBIE_AMBIENT);
+        m.put(EntityType.CREEPER, Sound.ENTITY_CREEPER_PRIMED);
+        m.put(EntityType.SKELETON, Sound.ENTITY_SKELETON_AMBIENT);
+        m.put(EntityType.DROWNED, Sound.ENTITY_DROWNED_AMBIENT);
+        m.put(EntityType.BLAZE, Sound.ENTITY_BLAZE_AMBIENT);
+        m.put(EntityType.CAVE_SPIDER, Sound.ENTITY_SPIDER_AMBIENT);
+        m.put(EntityType.SPIDER, Sound.ENTITY_SPIDER_AMBIENT);
+        m.put(EntityType.EVOKER, Sound.ENTITY_EVOKER_AMBIENT);
+        m.put(EntityType.GHAST, Sound.ENTITY_GHAST_AMBIENT);
+        m.put(EntityType.HUSK, Sound.ENTITY_HUSK_AMBIENT);
+        m.put(EntityType.ILLUSIONER, Sound.ENTITY_ILLUSIONER_AMBIENT);
+        m.put(EntityType.RAVAGER, Sound.ENTITY_RAVAGER_AMBIENT);
+        m.put(EntityType.SHULKER, Sound.ENTITY_SHULKER_AMBIENT);
+        m.put(EntityType.VEX, Sound.ENTITY_VEX_AMBIENT);
+        m.put(EntityType.WITCH, Sound.ENTITY_WITCH_AMBIENT);
+        m.put(EntityType.STRAY, Sound.ENTITY_STRAY_AMBIENT);
+        MOB_SOUNDS = Collections.unmodifiableMap(m);
+    }
 
     /**
      * @param addon - OneBlock
@@ -123,8 +147,17 @@ public class BlockListener implements Listener {
         addon.getIslands().getIslandAt(l).filter(i -> l.equals(i.getCenter())).ifPresent(i -> process(e, i, e.getPlayer()));
     }
 
-    private void process(BlockBreakEvent e, Island i, @NonNull Player player) {
-        e.setCancelled(true);
+    @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
+    public void onBlockBreak(PlayerBucketEvent e) {
+        if (!addon.inWorld(e.getBlock().getWorld())) {
+            return;
+        }
+        Location l = e.getBlock().getLocation();
+        addon.getIslands().getIslandAt(l).filter(i -> l.equals(i.getCenter())).ifPresent(i -> process(e, i, e.getPlayer()));
+    }
+
+    private void process(Cancellable e, Island i, @NonNull Player player) {
+        if (e instanceof BlockBreakEvent) e.setCancelled(true);
         // Get island from cache or load it
         OneBlockIslands is = getIsland(i);
         // Get the phase for this island
@@ -136,10 +169,21 @@ public class BlockListener implements Listener {
             player.sendTitle(phase.getPhaseName(), null, -1, -1, -1);
             newPhase = true;
         }
-        // Get the next block
-        OneBlockObject nextBlock = newPhase && phase.getFirstBlock() != null ? phase.getFirstBlock() : phase.getNextBlock();
         // Get the block that is being broken
         Block block = i.getCenter().toVector().toLocation(player.getWorld()).getBlock();
+        // Fill a 5 block queue
+        if (is.getQueue().isEmpty() || newPhase) {
+            // Add initial 5 blocks
+            for (int j = 0; j < MAX_LOOK_AHEAD; j++) {
+                is.add(phase.getNextBlock());
+            }
+        }
+        // Play warning sound for upcoming mobs
+        if (addon.getSettings().getMobWarning() > 0) {
+            is.getNearestMob(random.nextInt(addon.getSettings().getMobWarning()) + 1).filter(MOB_SOUNDS::containsKey).map(MOB_SOUNDS::get).ifPresent(s -> block.getWorld().playSound(block.getLocation(), s, 1F, 1F));
+        }
+        // Get the next block
+        OneBlockObject nextBlock = newPhase && phase.getFirstBlock() != null ? phase.getFirstBlock() : is.pop(phase.getNextBlock());
         // Set the biome for the block and one block above it
         if (newPhase) {
             block.getWorld().setBiome(block.getX(), block.getZ(), phase.getPhaseBiome());
@@ -154,10 +198,12 @@ public class BlockListener implements Listener {
             return;
         }
         // Break the block
-        block.breakNaturally();
-        player.giveExp(e.getExpToDrop());
-        // Damage tool
-        damageTool(player);
+        if (e instanceof BlockBreakEvent) {
+            block.breakNaturally();
+            player.giveExp(((BlockBreakEvent)e).getExpToDrop());
+            // Damage tool
+            damageTool(player);
+        }
 
         @NonNull
         Material type = nextBlock.getMaterial();

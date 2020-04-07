@@ -20,6 +20,7 @@ import world.bentobox.bentobox.api.flags.Flag;
 import world.bentobox.bentobox.database.objects.adapters.Adapter;
 import world.bentobox.bentobox.database.objects.adapters.FlagSerializer;
 import world.bentobox.bentobox.database.objects.adapters.FlagSerializer2;
+import world.bentobox.oneblock.listeners.BlockListener;
 
 /**
  * All the plugin settings are here
@@ -208,6 +209,12 @@ public class Settings implements WorldSettings {
     // ---------------------------------------------
 
     /*      ISLAND      */
+    @ConfigComment("Magic block mob warning")
+    @ConfigComment("Players might be able to hear hostile mobs up to this many blocks away")
+    @ConfigComment("Minimum is 0 (no warning), max is 5")
+    @ConfigEntry(path = "island.mob-warning")
+    private int mobWarning = 4;
+
     @ConfigComment("Default max team size")
     @ConfigComment("Permission size cannot be less than the default below. ")
     @ConfigEntry(path = "island.max-team-size")
@@ -218,7 +225,7 @@ public class Settings implements WorldSettings {
     @ConfigComment("permission size cannot be less than the default below. ")
     @ConfigEntry(path = "island.max-coop-size", since = "1.13.0")
     private int maxCoopSize = 4;
-    
+
     @ConfigComment("Default maximum number of trusted rank members per island")
     @ConfigComment("Players can have the oneblock.trust.maxsize.<number> permission to be bigger but")
     @ConfigComment("permission size cannot be less than the default below. ")
@@ -1566,7 +1573,7 @@ public class Settings implements WorldSettings {
     public void setTicksPerMonsterSpawns(int ticksPerMonsterSpawns) {
         this.ticksPerMonsterSpawns = ticksPerMonsterSpawns;
     }
-    
+
     /**
      * @return the maxCoopSize
      */
@@ -1595,5 +1602,24 @@ public class Settings implements WorldSettings {
      */
     public void setMaxTrustSize(int maxTrustSize) {
         this.maxTrustSize = maxTrustSize;
+    }
+
+    /**
+     * @return the mobWarning
+     */
+    public int getMobWarning() {
+        if (mobWarning < 0) {
+            mobWarning = 0;
+        } else if (mobWarning > BlockListener.MAX_LOOK_AHEAD) {
+            mobWarning = BlockListener.MAX_LOOK_AHEAD;
+        }
+        return mobWarning;
+    }
+
+    /**
+     * @param mobWarning the mobWarning to set
+     */
+    public void setMobWarning(int mobWarning) {
+        this.mobWarning = mobWarning;
     }
 }

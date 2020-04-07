@@ -1,8 +1,16 @@
 package world.bentobox.oneblock.dataobjects;
 
+import java.util.Optional;
+import java.util.Queue;
+import java.util.concurrent.ArrayBlockingQueue;
+
+import org.bukkit.entity.EntityType;
+
 import com.google.gson.annotations.Expose;
 
 import world.bentobox.bentobox.database.objects.DataObject;
+import world.bentobox.oneblock.listeners.BlockListener;
+import world.bentobox.oneblock.listeners.OneBlockObject;
 
 /**
  * @author tastybento
@@ -16,6 +24,8 @@ public class OneBlockIslands implements DataObject {
     private int blockNumber;
     @Expose
     private String phaseName = "";
+
+    private Queue<OneBlockObject> queue;
 
     /**
      * @return the phaseName
@@ -71,5 +81,36 @@ public class OneBlockIslands implements DataObject {
     public void setUniqueId(String uniqueId) {
         this.uniqueId = uniqueId;
     }
+
+    /**
+     * @return the queue
+     */
+    public Queue<OneBlockObject> getQueue() {
+        if (queue == null) queue = new ArrayBlockingQueue<>(BlockListener.MAX_LOOK_AHEAD);
+        return queue;
+    }
+
+    /**
+     * Get the nearest upcoming mob, if it exists
+     * @param i - look ahead value
+     * @return nearest upcoming mob
+     */
+    public Optional<EntityType> getNearestMob(int i) {
+        if (queue == null) queue = new ArrayBlockingQueue<>(BlockListener.MAX_LOOK_AHEAD);
+        return queue.stream().limit(i).filter(OneBlockObject::isEntity).findFirst().map(OneBlockObject::getEntityType);
+    }
+
+    public void add(OneBlockObject nextBlock) {
+        if (queue == null) queue = new ArrayBlockingQueue<>(BlockListener.MAX_LOOK_AHEAD);
+        queue.add(nextBlock);
+    }
+
+    public OneBlockObject pop(OneBlockObject toAdd) {
+        if (queue == null) queue = new ArrayBlockingQueue<>(BlockListener.MAX_LOOK_AHEAD);
+        OneBlockObject b = queue.remove();
+        queue.add(toAdd);
+        return b;
+    }
+
 
 }
