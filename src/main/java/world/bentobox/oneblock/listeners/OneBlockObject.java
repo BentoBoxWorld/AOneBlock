@@ -14,15 +14,39 @@ import org.bukkit.inventory.ItemStack;
  */
 public class OneBlockObject {
 
+    public enum Rarity {
+        /**
+         * Applies to most items.
+         */
+        COMMON,
+        /**
+         * Mostly common treasure items, as well as drops from minor bosses.
+         * e.g. banner patterns, Exp bottle, potions, elytra, enchanted books, heads
+         * heart of the sea, nether star, totem of undying
+         */
+        UNCOMMON,
+        /**
+         * Items crafted from boss drops, as well as trickier to obtain treasures.
+         * Beacon, conduit, enchanted armor, golden apple, music discs
+         */
+        RARE,
+        /**
+         * Mostly reserved for extremely difficult-to-obtain treasures.
+         * Enchanted golden apple, creative-exclusive items
+         */
+        EPIC
+    }
+
     private EntityType entityType;
     private Material material;
     private Map<Integer,ItemStack> chest;
-    private boolean rare;
-    private final int prob;
+    private Rarity rarity;
+    private int prob;
 
     /**
      * An entity
      * @param entityType - type
+     * @param prob - relative probability
      */
     public OneBlockObject(EntityType entityType, int prob) {
         this.entityType = entityType;
@@ -32,6 +56,7 @@ public class OneBlockObject {
     /**
      * A block
      * @param material - block type
+     * @param prob - relative probability
      */
     public OneBlockObject(Material material, int prob) {
         this.material = material;
@@ -43,10 +68,10 @@ public class OneBlockObject {
      * A chest
      * @param chest - list of itemstacks in the chest
      */
-    public OneBlockObject(Map<Integer,ItemStack> chest, int prob) {
+    public OneBlockObject(Map<Integer,ItemStack> chest, Rarity rarity) {
         this.material = Material.CHEST;
         this.chest = chest;
-        this.prob = prob;
+        this.setRarity(rarity);
 
     }
 
@@ -58,8 +83,6 @@ public class OneBlockObject {
         this.chest = ob.getChest();
         this.entityType = ob.getEntityType();
         this.material = ob.getMaterial();
-        this.prob = ob.getProb();
-        this.rare = ob.isRare();
     }
 
     /**
@@ -102,17 +125,17 @@ public class OneBlockObject {
     }
 
     /**
-     * @return the rare
+     * @return the rarity
      */
-    public boolean isRare() {
-        return rare;
+    public Rarity getRarity() {
+        return rarity;
     }
 
     /**
-     * @param rare the rare to set
+     * @param rarity the rarity to set
      */
-    public void setRare(boolean rare) {
-        this.rare = rare;
+    public void setRarity(Rarity rarity) {
+        this.rarity = rarity;
     }
 
     /**
@@ -120,6 +143,13 @@ public class OneBlockObject {
      */
     public int getProb() {
         return prob;
+    }
+
+    /**
+     * @param prob the prob to set
+     */
+    public void setProb(int prob) {
+        this.prob = prob;
     }
 
 }

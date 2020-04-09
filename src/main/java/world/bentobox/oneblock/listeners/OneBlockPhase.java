@@ -1,8 +1,12 @@
 package world.bentobox.oneblock.listeners;
 
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 import java.util.TreeMap;
+import java.util.stream.Collectors;
 
 import org.bukkit.Material;
 import org.bukkit.World.Environment;
@@ -10,10 +14,21 @@ import org.bukkit.block.Biome;
 import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemStack;
 
+import world.bentobox.oneblock.listeners.OneBlockObject.Rarity;
+
 
 public class OneBlockPhase {
 
-    private static final double RARE_VALUE = 0.05; // 5%
+    private final static Map<Rarity, Integer> RARITY_TO_PROB;
+    static {
+        Map<Rarity, Integer> m = new HashMap<>();
+        m.put(Rarity.COMMON, 62);
+        m.put(Rarity.UNCOMMON, 25);
+        m.put(Rarity.RARE, 10);
+        m.put(Rarity.EPIC, 4);
+        RARITY_TO_PROB = Collections.unmodifiableMap(m);
+    }
+
     /**
      * Tree map of all materials and their probabilities as a ratio to the sum of all probabilities
      */
@@ -29,6 +44,19 @@ public class OneBlockPhase {
     private final TreeMap<Integer, OneBlockObject> probChest = new TreeMap<>();
     private int chestTotal = 0;
     private final Random random = new Random();
+    private final String blockNumber;
+
+
+    public OneBlockPhase(String blockNumber) {
+        this.blockNumber = blockNumber;
+    }
+
+    /**
+     * @return the blockNumber
+     */
+    public String getBlockNumber() {
+        return blockNumber;
+    }
 
     /**
      * @return the phaseName
@@ -78,9 +106,9 @@ public class OneBlockPhase {
         probMap.put(total, new OneBlockObject(entityType, prob));
     }
 
-    public void addChest(Map<Integer, ItemStack> items, int prob) {
-        chestTotal += prob;
-        probChest.put(chestTotal, new OneBlockObject(items, prob));
+    public void addChest(Map<Integer, ItemStack> items, Rarity rarity) {
+        chestTotal += RARITY_TO_PROB.get(rarity);
+        probChest.put(chestTotal, new OneBlockObject(items, rarity));
     }
 
     /**
@@ -103,13 +131,6 @@ public class OneBlockPhase {
             temp = probMap2.firstEntry().getValue();
         }
         return new OneBlockObject(temp);
-    }
-
-    /**
-     * Identify rare chests. Used after all chests have been loaded for the phase
-     */
-    public void discoverRareChests() {
-        probChest.values().forEach(v -> v.setRare((double)v.getProb()/chestTotal < RARE_VALUE));
     }
 
     /**
@@ -139,4 +160,25 @@ public class OneBlockPhase {
     public void setFirstBlock(OneBlockObject firstBlock) {
         this.firstBlock = firstBlock;
     }
+
+    public Collection<OneBlockObject> getChests() {
+        return probChest.values();
+    }
+
+    /**
+     * Get the mobs that are in this phase
+     * @return map of mob type and its relative probability
+     */
+    public Map<EntityType, Integer> getMobs() {
+        return probMap.values().stream().filter(o -> o.isEntity()).collect(Collectors.toMap(OneBlockObject::getEntityType, OneBlockObject::getProb));
+    }
+
+    /**
+     * Get the block materials in this phase
+     * @return map of materials and relative probabilities
+     */
+    public Map<Material, Integer> getBlocks() {
+        return probMap.values().stream().filter(o -> o.isMaterial()).collect(Collectors.toMap(OneBlockObject::getMaterial, OneBlockObject::getProb));
+    }
+
 }

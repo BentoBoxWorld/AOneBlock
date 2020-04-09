@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -24,13 +25,12 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
-import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockDamageEvent;
-import org.bukkit.event.player.PlayerBucketEvent;
+import org.bukkit.event.player.PlayerBucketFillEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -103,7 +103,7 @@ public class BlockListener implements Listener {
         this.addon = addon;
         handler = new Database<>(addon, OneBlockIslands.class);
         cache = new HashMap<>();
-        oneBlocksManager = new OneBlocksManager(addon);
+        oneBlocksManager = addon.getOneBlockManager();
     }
 
     /**
@@ -147,8 +147,12 @@ public class BlockListener implements Listener {
         addon.getIslands().getIslandAt(l).filter(i -> l.equals(i.getCenter())).ifPresent(i -> process(e, i, e.getPlayer()));
     }
 
+    /**
+     * Check for water grabbing
+     * @param e - event (note that you cannot register PlayerBucketEvent)
+     */
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
-    public void onBlockBreak(PlayerBucketEvent e) {
+    public void onBlockBreak(PlayerBucketFillEvent e) {
         if (!addon.inWorld(e.getBlock().getWorld())) {
             return;
         }
@@ -156,8 +160,8 @@ public class BlockListener implements Listener {
         addon.getIslands().getIslandAt(l).filter(i -> l.equals(i.getCenter())).ifPresent(i -> process(e, i, e.getPlayer()));
     }
 
+    @SuppressWarnings("deprecation")
     private void process(Cancellable e, Island i, @NonNull Player player) {
-        if (e instanceof BlockBreakEvent) e.setCancelled(true);
         // Get island from cache or load it
         OneBlockIslands is = getIsland(i);
         // Get the phase for this island
@@ -193,31 +197,40 @@ public class BlockListener implements Listener {
         }
         // Entity
         if (nextBlock.isEntity()) {
+            e.setCancelled(true);
             // Entity spawns do not increment the block number or break the block
             spawnEntity(nextBlock, block);
             return;
         }
         // Break the block
         if (e instanceof BlockBreakEvent) {
+            e.setCancelled(true);
             block.breakNaturally();
             player.giveExp(((BlockBreakEvent)e).getExpToDrop());
             // Damage tool
             damageTool(player);
+            spawnBlock(nextBlock, block);
+        } else if (e instanceof PlayerBucketFillEvent) {
+            Bukkit.getScheduler().runTask(addon.getPlugin(), ()-> spawnBlock(nextBlock, block));
         }
+        // Increment the block number
+        is.incrementBlockNumber();
+    }
 
+    private void spawnBlock(OneBlockObject nextBlock, Block block) {
         @NonNull
         Material type = nextBlock.getMaterial();
+
         // Place new block with no physics
         block.setType(type, false);
         // Fill the chest
         if (type.equals(Material.CHEST) && nextBlock.getChest() != null) {
             fillChest(nextBlock, block);
         }
-        // Increment the block number
-        is.incrementBlockNumber();
     }
 
     private void spawnEntity(OneBlockObject nextBlock, Block block) {
+        if (block.isEmpty()) block.setType(Material.STONE);
         Location spawnLoc = block.getLocation().add(new Vector(0.5D, 1D, 0.5D));
         Entity entity = block.getWorld().spawnEntity(spawnLoc, nextBlock.getEntityType());
         // Make space for entity - this will blot out blocks
@@ -250,13 +263,25 @@ public class BlockListener implements Listener {
         }
     }
 
-
     private void fillChest(OneBlockObject nextBlock, Block block) {
         Chest chest = (Chest)block.getState();
         nextBlock.getChest().forEach(chest.getBlockInventory()::setItem);
-        if (nextBlock.isRare()) {
-            block.getWorld().spawnParticle(Particle.REDSTONE, block.getLocation().add(new Vector(0.5, 1.0, 0.5)), 50, 0.5, 0, 0.5, 1, new Particle.DustOptions(Color.fromBGR(50,255,255), 1));
+        Color color = Color.fromBGR(0,255,255); // yellow
+        switch (nextBlock.getRarity()) {
+        case EPIC:
+            color = Color.fromBGR(255,0,255); // magenta
+            break;
+        case RARE:
+            color = Color.fromBGR(255,255,255); // cyan
+            break;
+        case UNCOMMON:
+            // Yellow
+            break;
+        default:
+            // No sparkles for regular chests
+            return;
         }
+        block.getWorld().spawnParticle(Particle.REDSTONE, block.getLocation().add(new Vector(0.5, 1.0, 0.5)), 50, 0.5, 0, 0.5, 1, new Particle.DustOptions(color, 1));
     }
 
     /**

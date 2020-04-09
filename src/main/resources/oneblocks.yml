@@ -1,392 +1,170 @@
-0:
+'0':
   name: Plains
-  biome: PLAINS
-  environment: NORMAL
   firstBlock: GRASS_BLOCK
+  biome: PLAINS
   blocks:
-    ACACIA_LEAVES: 100
-    ACACIA_LOG: 100
-    ANDESITE: 100
-    BEE_NEST: 10
-    BIRCH_LEAVES: 100
-    BIRCH_LOG: 500
-    BROWN_MUSHROOM_BLOCK: 100
-    CHEST: 200
-    CLAY: 10
-    COAL_ORE: 700
-    COARSE_DIRT: 100
-    COBBLESTONE: 800
-    DARK_OAK_LEAVES: 100
-    DARK_OAK_LOG: 300
-    DIAMOND_ORE: 2
-    DIORITE: 100
-    DIRT: 1000
-    EMERALD_ORE: 5
-    GOLD_ORE: 10
     GRANITE: 400
-    GRASS_BLOCK: 2000
+    STONE: 800
+    BROWN_MUSHROOM_BLOCK: 100
+    GOLD_ORE: 10
     GRASS_PATH: 100
-    GRAVEL: 100
+    DIRT: 1000
+    OAK_LOG: 2000
+    ACACIA_LOG: 100
+    CLAY: 10
+    ANDESITE: 100
     INFESTED_STONE: 1
+    ACACIA_LEAVES: 100
+    SAND: 200
+    PODZOL: 10
+    GRAVEL: 100
+    EMERALD_ORE: 5
+    COARSE_DIRT: 100
+    BIRCH_LEAVES: 100
+    BEE_NEST: 10
+    OAK_LEAVES: 1000
+    DIAMOND_ORE: 2
+    DARK_OAK_LEAVES: 100
+    GRASS_BLOCK: 2000
+    COBBLESTONE: 800
+    CHEST: 200
     IRON_ORE: 300
     MYCELIUM: 10
-    OAK_LEAVES: 1000
-    OAK_LOG: 2000
-    PODZOL: 10
-    SAND: 200
-    STONE: 800
+    BIRCH_LOG: 500
+    DIORITE: 100
+    DARK_OAK_LOG: 300
+    COAL_ORE: 700
   mobs:
+    VILLAGER: 5
     PIG: 50
     COW: 50
+    SPIDER: 10
     SHEEP: 50
     CHICKEN: 50
-    SPIDER: 10
-    VILLAGER: 5
   chests:
     '1':
-      prob: 10
       contents:
-       '5':
+        0:
           ==: org.bukkit.inventory.ItemStack
           v: 2230
-          type: WOODEN_HOE
-    '2':
-      prob: 15
-      contents:
-        '5':
+          type: DIRT
+          amount: 31
+        1:
           ==: org.bukkit.inventory.ItemStack
           v: 2230
-          type: BIRCH_SAPLING
-    '3':
-      prob: 15
-      contents:
-        '5':
-          ==: org.bukkit.inventory.ItemStack
-          v: 2230
-          type: OAK_SAPLING
-    '4':
-      prob: 25
-      contents:
-        '5':
-          ==: org.bukkit.inventory.ItemStack
-          v: 2230
-          type: IRON_INGOT
+          type: OAK_LOG
           amount: 3
-    '5':
-      prob: 35
-      contents:
-        '5':
+        2:
           ==: org.bukkit.inventory.ItemStack
           v: 2230
-          type: BREAD
-        '7':
+          type: BOWL
+        3:
           ==: org.bukkit.inventory.ItemStack
           v: 2230
-          type: WHEAT_SEEDS
-    '6':
-      prob: 5
-      contents:
-        '5':
+          type: GRANITE
+          amount: 7
+        4:
           ==: org.bukkit.inventory.ItemStack
           v: 2230
-          type: DIAMOND
-        '7':
+          type: CHEST
+          amount: 12
+        5:
           ==: org.bukkit.inventory.ItemStack
           v: 2230
-          type: POTATO
-    '7':
-      prob: 5
-      contents:
-        '3':
+          type: SANDSTONE
+          amount: 6
+        6:
           ==: org.bukkit.inventory.ItemStack
           v: 2230
-          type: ENCHANTED_BOOK
-          meta:
-            ==: ItemMeta
-            meta-type: ENCHANTED
-            stored-enchants:
-              DURABILITY: 3
-500:
-  name: Underground
-  biome: TAIGA
-  environment: NORMAL
-  firstBlock: STONE
-  blocks:
-    ANDESITE: 200
-    CHEST: 200
-    COAL_ORE: 500
-    COBBLESTONE: 800
-    COBWEB: 250
-    DIAMOND_ORE: 10
-    DIORITE: 200
-    DIRT: 500
-    EMERALD_ORE: 10
-    GOLD_ORE: 20
-    GRANITE: 100
-    GRAVEL: 200
-    IRON_ORE: 300
-    LAPIS_ORE: 20
-    OBSIDIAN: 2
-    REDSTONE_ORE: 30
-    SAND: 100
-    SANDSTONE: 100
-    STONE: 1000
-  mobs:
-    SKELETON: 650
-    ZOMBIE: 150
-    CREEPER: 30
-    BAT: 30
-    ENDERMAN: 20
-    CAVE_SPIDER: 40
-  chests:
-    '1':
-      prob: 25
-      contents:
-       '5':
+          type: ROTTEN_FLESH
+          amount: 2
+        7:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: COBBLESTONE
+          amount: 64
+        8:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: STRING
+          amount: 14
+        9:
           ==: org.bukkit.inventory.ItemStack
           v: 2230
           type: BROWN_MUSHROOM
-    '2':
-      prob: 25
-      contents:
-        '5':
+        10:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: COBBLESTONE
+          amount: 33
+        11:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: GOLD_ORE
+        13:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: LAPIS_LAZULI
+          amount: 6
+        14:
           ==: org.bukkit.inventory.ItemStack
           v: 2230
           type: RED_MUSHROOM
-    '3':
-      prob: 5
-      contents:
-        '3':
-          ==: org.bukkit.inventory.ItemStack
-          v: 2230
-          type: WATER_BUCKET
-    '4':
-      prob: 25
-      contents:
-        '5':
+          amount: 2
+        15:
           ==: org.bukkit.inventory.ItemStack
           v: 2230
           type: MUSHROOM_STEW
-    '5':
-      prob: 35
-      contents:
-        '5':
+        16:
           ==: org.bukkit.inventory.ItemStack
           v: 2230
-          type: BAKED_POTATO
-    '6':
-      prob: 5
-      contents:
-        '5':
+          type: ANDESITE
+          amount: 11
+        17:
           ==: org.bukkit.inventory.ItemStack
           v: 2230
-          type: DIAMOND
-          amount: 2
-        '7':
+          type: DIORITE
+          amount: 15
+        18:
           ==: org.bukkit.inventory.ItemStack
           v: 2230
-          type: DIAMOND
-    '7':
-      prob: 1
-      contents:
-        '3':
+          type: SAND
+          amount: 4
+        19:
           ==: org.bukkit.inventory.ItemStack
           v: 2230
-          type: ENCHANTED_BOOK
-          meta:
-            ==: ItemMeta
-            meta-type: ENCHANTED
-            stored-enchants:
-              DURABILITY: 3
-1000:
-  name: Winter
-  biome: SNOWY_TAIGA
-  environment: NORMAL
-  firstBlock: SNOW_BLOCK
-  blocks:
-    CHEST: 100
-    COBBLESTONE: 1000
-    DIRT: 100
-    GOLD_ORE: 20
-    LAPIS_ORE: 20
-    SNOW_BLOCK: 1000
-    SPRUCE_LEAVES: 500
-    SPRUCE_LOG: 500
-    STONE: 1000
-    STRIPPED_SPRUCE_LOG: 200
-  mobs:
-    SNOWMAN: 100
-    POLAR_BEAR: 100
-    WOLF: 50
-  chests:
-    '1':
-      prob: 100
-      contents:
-       '5':
+          type: SNOWBALL
+          amount: 4
+        20:
           ==: org.bukkit.inventory.ItemStack
           v: 2230
-          type: ICE
-          amount: 2
-    '2':
-      prob: 15
-      contents:
-        '5':
-          ==: org.bukkit.inventory.ItemStack
-          v: 2230
-          type: BLUE_ICE
-          amount: 2
-    '3':
-      prob: 15
-      contents:
-        '5':
-          ==: org.bukkit.inventory.ItemStack
-          v: 2230
-          type: PACKED_ICE
-          amount: 2
-    '4':
-      prob: 100
-      contents:
-        '3':
-          ==: org.bukkit.inventory.ItemStack
-          v: 2230
-          type: IRON_SHOVEL
-          amount: 1
-    '5':
-      prob: 100
-      contents:
-        '5':
+          type: DARK_OAK_LOG
+          amount: 3
+        21:
           ==: org.bukkit.inventory.ItemStack
           v: 2230
           type: SWEET_BERRIES
           amount: 3
-    '6':
-      prob: 5
-      contents:
-        '5':
+        23:
           ==: org.bukkit.inventory.ItemStack
           v: 2230
-          type: DIAMOND
-        '7':
-          ==: org.bukkit.inventory.ItemStack
-          v: 2230
-          type: POTATO
-    '7':
-      prob: 1
-      contents:
-        '3':
-          ==: org.bukkit.inventory.ItemStack
-          v: 2230
-          type: ENCHANTED_BOOK
-          meta:
-            ==: ItemMeta
-            meta-type: ENCHANTED
-            stored-enchants:
-              DURABILITY: 3
-2000:
-  name: Ocean
-  biome: OCEAN
-  environment: NORMAL
-  firstBlock: PRISMARINE
-  blocks:
-    ANDESITE: 500
-    BRAIN_CORAL_BLOCK: 100
-    BUBBLE_CORAL_BLOCK: 100
-    CLAY: 300
-    DARK_PRISMARINE: 100
-    DEAD_BRAIN_CORAL: 100
-    DEAD_BRAIN_CORAL_BLOCK: 100
-    DEAD_BRAIN_CORAL_FAN: 100
-    DEAD_BUBBLE_CORAL: 100
-    DEAD_BUBBLE_CORAL_BLOCK: 100
-    DEAD_BUBBLE_CORAL_FAN: 100
-    DEAD_FIRE_CORAL: 100
-    DEAD_FIRE_CORAL_BLOCK: 100
-    DEAD_FIRE_CORAL_FAN: 100
-    DEAD_HORN_CORAL: 100
-    DEAD_HORN_CORAL_BLOCK: 100
-    DEAD_HORN_CORAL_FAN: 100
-    DEAD_TUBE_CORAL: 100
-    DEAD_TUBE_CORAL_BLOCK: 100
-    DEAD_TUBE_CORAL_FAN: 100
-    DIRT: 200
-    GLOWSTONE: 1
-    GRANITE: 500
-    GRAVEL: 300
-    HORN_CORAL_BLOCK: 100
-    PRISMARINE: 100
-    RED_SAND: 10
-    SAND: 1000
-    SANDSTONE: 300
-    SEA_LANTERN: 100
-    SPONGE: 100
-    STONE: 500
-    TUBE_CORAL_BLOCK: 100
-    TURTLE_EGG: 10
-    WET_SPONGE: 10
-  mobs:
-    TROPICAL_FISH: 100
-    COD: 100
-    SALMON: 100
-    DOLPHIN: 10
-    DROWNED: 600
-    TURTLE: 10
-    SQUID: 100
-  chests:
-    '1':
-      prob: 10
-      contents:
-       '5':
-          ==: org.bukkit.inventory.ItemStack
-          v: 2230
-          type: WOODEN_HOE
-    '2':
-      prob: 15
-      contents:
-        '5':
-          ==: org.bukkit.inventory.ItemStack
-          v: 2230
-          type: BIRCH_SAPLING
-    '3':
-      prob: 15
-      contents:
-        '5':
+          type: BAKED_POTATO
+          amount: 4
+        25:
           ==: org.bukkit.inventory.ItemStack
           v: 2230
           type: OAK_SAPLING
-    '4':
-      prob: 25
+      rarity: COMMON
+    '2':
       contents:
-        '5':
+        13:
           ==: org.bukkit.inventory.ItemStack
           v: 2230
-          type: IRON_INGOT
-          amount: 3
-    '5':
-      prob: 35
+          type: MUSIC_DISC_11
+      rarity: RARE
+    '3':
       contents:
-        '5':
-          ==: org.bukkit.inventory.ItemStack
-          v: 2230
-          type: BREAD
-        '7':
-          ==: org.bukkit.inventory.ItemStack
-          v: 2230
-          type: WHEAT_SEEDS
-    '6':
-      prob: 5
-      contents:
-        '5':
-          ==: org.bukkit.inventory.ItemStack
-          v: 2230
-          type: DIAMOND
-        '7':
-          ==: org.bukkit.inventory.ItemStack
-          v: 2230
-          type: POTATO
-    '7':
-      prob: 1
-      contents:
-        '3':
+        0:
           ==: org.bukkit.inventory.ItemStack
           v: 2230
           type: ENCHANTED_BOOK
@@ -394,632 +172,1790 @@
             ==: ItemMeta
             meta-type: ENCHANTED
             stored-enchants:
-              DURABILITY: 3
-3000:
-  name: Jungle
-  biome: JUNGLE
-  environment: NORMAL
-  firstBlock: MELON
+              PROTECTION_FALL: 1
+        1:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: ENCHANTED_BOOK
+          meta:
+            ==: ItemMeta
+            meta-type: ENCHANTED
+            stored-enchants:
+              PROTECTION_FIRE: 1
+        2:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: ENCHANTED_BOOK
+          meta:
+            ==: ItemMeta
+            meta-type: ENCHANTED
+            stored-enchants:
+              PROTECTION_ENVIRONMENTAL: 1
+        3:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: EXPERIENCE_BOTTLE
+        4:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: EMERALD
+      rarity: UNCOMMON
+    '4':
+      contents:
+        0:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: LAPIS_LAZULI
+          amount: 8
+        16:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: ALLIUM
+        18:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: COMPOSTER
+        12:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: APPLE
+        14:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: BEETROOT_SEEDS
+      rarity: UNCOMMON
+    '5':
+      contents:
+        1:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: DANDELION
+        4:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OXEYE_DAISY
+        22:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: POPPY
+        7:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: PEONY
+        11:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_FENCE
+          amount: 16
+        14:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_FENCE_GATE
+      rarity: COMMON
+    '6':
+      contents:
+        0:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SUNFLOWER
+        4:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: LILAC
+        26:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: PINK_TULIP
+        11:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: LEAD
+        14:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: LEATHER
+          amount: 8
+      rarity: COMMON
+    '7':
+      contents:
+        4:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: FEATHER
+          amount: 3
+        22:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: RED_TULIP
+        26:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: LILY_OF_THE_VALLEY
+        11:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: LADDER
+          amount: 32
+        14:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SUGAR_CANE
+      rarity: COMMON
+'500':
+  name: Underground
+  firstBlock: STONE
+  biome: TAIGA
   blocks:
-    CHEST: 1
-    COAL_ORE: 1
-    COARSE_DIRT: 1
-    COBBLESTONE: 1
-    DARK_OAK_LEAVES: 1
-    DARK_OAK_LOG: 1
-    DIAMOND_ORE: 1
-    DIRT: 1
-    EMERALD_ORE: 1
-    GOLD_ORE: 1
-    GRASS_BLOCK: 1
-    GRAVEL: 1
-    JUNGLE_LEAVES: 1
-    JUNGLE_LOG: 1
-    LAPIS_ORE: 1
-    MELON: 1
-    MYCELIUM: 1
-    PODZOL: 1
-    PUMPKIN: 1
-    SPRUCE_LEAVES: 1
-    SPRUCE_LOG: 1
+    GRANITE: 100
+    OBSIDIAN: 2
+    STONE: 1000
+    SAND: 100
+    GOLD_ORE: 20
+    GRAVEL: 200
+    SANDSTONE: 100
+    EMERALD_ORE: 10
+    COBWEB: 250
+    LAPIS_ORE: 20
+    DIRT: 500
+    DIAMOND_ORE: 10
+    COBBLESTONE: 800
+    IRON_ORE: 300
+    CHEST: 200
+    REDSTONE_ORE: 30
+    DIORITE: 200
+    COAL_ORE: 500
+    ANDESITE: 200
+  mobs:
+    CREEPER: 30
+    BAT: 30
+    ZOMBIE: 250
+    ENDERMAN: 20
+    CAVE_SPIDER: 40
+    SKELETON: 150
+  chests:
+    '1':
+      contents:
+        0:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: ARROW
+          amount: 4
+        1:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: ARROW
+          amount: 4
+        2:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: ARROW
+          amount: 4
+        6:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: ARROW
+          amount: 4
+        10:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: ARROW
+          amount: 4
+        11:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: ARROW
+          amount: 4
+        12:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: ARROW
+          amount: 4
+        13:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: ARROW
+          amount: 4
+        14:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: ARROW
+          amount: 4
+        15:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: ARROW
+          amount: 4
+        16:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: ARROW
+          amount: 8
+        17:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: BOW
+        18:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: ARROW
+          amount: 4
+        19:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: ARROW
+          amount: 4
+        20:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: ARROW
+          amount: 4
+        24:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: ARROW
+          amount: 4
+      rarity: COMMON
+    '2':
+      contents:
+        21:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_FENCE
+          amount: 32
+        11:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: BONE
+          amount: 5
+        15:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: IRON_INGOT
+          amount: 4
+      rarity: COMMON
+    '3':
+      contents:
+        25:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: GUNPOWDER
+        12:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: RED_MUSHROOM
+        13:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: BROWN_MUSHROOM
+      rarity: COMMON
+    '4':
+      contents:
+        0:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: TORCH
+          amount: 3
+        16:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: RAIL
+          amount: 4
+        17:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: RAIL
+        4:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: TORCH
+          amount: 3
+        20:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: TORCH
+          amount: 3
+        6:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: RAIL
+        8:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: RAIL
+        24:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: RAIL
+        10:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: TORCH
+          amount: 3
+        26:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: RAIL
+        12:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SHIELD
+        15:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: RAIL
+      rarity: COMMON
+    '5':
+      contents:
+        12:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: EXPERIENCE_BOTTLE
+          amount: 5
+      rarity: UNCOMMON
+    '6':
+      contents:
+        19:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: BOW
+        7:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: EMERALD
+        12:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: CHAINMAIL_CHESTPLATE
+        14:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: CHEST_MINECART
+      rarity: UNCOMMON
+    '7':
+      contents:
+        11:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: EMERALD
+          amount: 2
+        12:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: EMERALD
+          amount: 2
+        13:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: EMERALD
+          amount: 2
+        14:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: EMERALD
+          amount: 2
+      rarity: UNCOMMON
+    '8':
+      contents:
+        3:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: EMERALD
+        21:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: EMERALD
+        13:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: LANTERN
+      rarity: UNCOMMON
+    '9':
+      contents:
+        0:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: BONE_BLOCK
+        2:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: BONE_BLOCK
+        4:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: BONE_BLOCK
+        6:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: BONE_BLOCK
+        8:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: BONE_BLOCK
+        9:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: BONE_BLOCK
+        10:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: BONE_BLOCK
+        11:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: BONE_BLOCK
+        12:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: BONE_BLOCK
+        13:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: BONE_BLOCK
+        14:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: BONE_BLOCK
+        15:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: BONE_BLOCK
+        16:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: BONE_BLOCK
+        17:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: BONE_BLOCK
+        18:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: BONE_BLOCK
+        20:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: BONE_BLOCK
+        22:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: BONE_BLOCK
+        24:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: BONE_BLOCK
+        26:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: BONE_BLOCK
+      rarity: RARE
+    '10':
+      contents:
+        11:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: ENCHANTED_BOOK
+          meta:
+            ==: ItemMeta
+            meta-type: ENCHANTED
+            stored-enchants:
+              PROTECTION_PROJECTILE: 2
+        13:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: EXPERIENCE_BOTTLE
+          amount: 4
+      rarity: RARE
+    '11':
+      contents:
+        10:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: IRON_TRAPDOOR
+        12:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: ENCHANTED_BOOK
+          meta:
+            ==: ItemMeta
+            meta-type: ENCHANTED
+            stored-enchants:
+              DAMAGE_ALL: 1
+        14:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: EXPERIENCE_BOTTLE
+          amount: 4
+      rarity: RARE
+    '12':
+      contents:
+        12:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: ENCHANTED_BOOK
+          meta:
+            ==: ItemMeta
+            meta-type: ENCHANTED
+            stored-enchants:
+              DAMAGE_UNDEAD: 2
+        14:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: EXPERIENCE_BOTTLE
+          amount: 5
+      rarity: RARE
+    '13':
+      contents:
+        3:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: EXPERIENCE_BOTTLE
+        4:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: EXPERIENCE_BOTTLE
+        5:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: EXPERIENCE_BOTTLE
+        21:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: EXPERIENCE_BOTTLE
+        22:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: EXPERIENCE_BOTTLE
+        23:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: EXPERIENCE_BOTTLE
+        12:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: EXPERIENCE_BOTTLE
+        13:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: CREEPER_HEAD
+        14:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: EXPERIENCE_BOTTLE
+      rarity: EPIC
+    '14':
+      contents:
+        3:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: IRON_INGOT
+        4:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: IRON_INGOT
+        5:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: IRON_INGOT
+        21:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: IRON_INGOT
+        22:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: IRON_INGOT
+        23:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: IRON_INGOT
+        12:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: IRON_INGOT
+        13:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: MUSIC_DISC_13
+        14:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: IRON_INGOT
+      rarity: EPIC
+'800':
+  name: Winter
+  firstBlock: SNOW_BLOCK
+  biome: SNOWY_TAIGA
+  blocks:
+    ICE: 100
+    STONE: 1000
+    COBBLESTONE: 1000
+    CHEST: 100
+    SAND: 100
+    GOLD_ORE: 20
+    STRIPPED_SPRUCE_LOG: 200
+    SPRUCE_LOG: 500
+    SPRUCE_LEAVES: 500
+    LAPIS_ORE: 20
+    DIRT: 100
+    SNOW_BLOCK: 1000
+  mobs:
+    SNOWMAN: 10
+    POLAR_BEAR: 10
+    RABBIT: 50
+    PIG: 10
+    COW: 10
+    WOLF: 100
+    SHEEP: 10
+    STRAY: 150
+    CREEPER: 30
+    ZOMBIE: 200
+    ENDERMAN: 10
+    SPIDER: 40
+    CHICKEN: 10
+    SKELETON: 10
+  chests:
+    '1':
+      contents:
+        0:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: CHAINMAIL_CHESTPLATE
+        1:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: CHAINMAIL_HELMET
+        2:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: CHAINMAIL_LEGGINGS
+        3:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: CHAINMAIL_BOOTS
+      rarity: COMMON
+    '2':
+      contents:
+        0:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: CYAN_BED
+        24:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: EXPERIENCE_BOTTLE
+          amount: 2
+        12:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: EXPERIENCE_BOTTLE
+          amount: 2
+      rarity: COMMON
+    '3':
+      contents:
+        0:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: CHARCOAL
+          amount: 64
+        11:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: GRINDSTONE
+        13:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: IRON_INGOT
+          amount: 4
+      rarity: COMMON
+    '4':
+      contents:
+        13:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: DAMAGED_ANVIL
+      rarity: UNCOMMON
+    '5':
+      contents:
+        3:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: EMERALD
+        5:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: EMERALD
+        21:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: EMERALD
+        23:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: EMERALD
+        13:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: IRON_INGOT
+          amount: 4
+      rarity: UNCOMMON
+    '6':
+      contents:
+        11:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: IRON_INGOT
+          amount: 4
+        14:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: ENCHANTED_BOOK
+          meta:
+            ==: ItemMeta
+            meta-type: ENCHANTED
+            stored-enchants:
+              PIERCING: 2
+      rarity: RARE
+    '7':
+      contents:
+        11:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: ENCHANTED_BOOK
+          meta:
+            ==: ItemMeta
+            meta-type: ENCHANTED
+            stored-enchants:
+              MENDING: 1
+        14:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: EXPERIENCE_BOTTLE
+          amount: 8
+      rarity: RARE
+    '8':
+      contents:
+        3:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: IRON_INGOT
+        4:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: IRON_INGOT
+        5:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: IRON_INGOT
+        21:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: IRON_INGOT
+        22:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: IRON_INGOT
+        23:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: IRON_INGOT
+        12:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: IRON_INGOT
+        13:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: MUSIC_DISC_CAT
+        14:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: IRON_INGOT
+      rarity: EPIC
+'2000':
+  name: Ocean
+  firstBlock: PRISMARINE
+  biome: OCEAN
+  blocks:
+    GRANITE: 500
+    STONE: 500
+    DEAD_FIRE_CORAL_BLOCK: 100
+    DEAD_BUBBLE_CORAL: 100
+    DEAD_HORN_CORAL_BLOCK: 100
+    DEAD_FIRE_CORAL_FAN: 100
+    DARK_PRISMARINE: 100
+    RED_SAND: 10
+    DIRT: 200
+    DEAD_TUBE_CORAL: 100
+    BRAIN_CORAL_BLOCK: 100
+    CLAY: 300
+    BUBBLE_CORAL_BLOCK: 100
+    DEAD_FIRE_CORAL: 100
+    TURTLE_EGG: 10
+    GLOWSTONE: 1
+    DEAD_TUBE_CORAL_FAN: 100
+    DEAD_BUBBLE_CORAL_BLOCK: 100
+    ANDESITE: 500
+    DEAD_HORN_CORAL: 100
+    DEAD_BRAIN_CORAL_BLOCK: 100
+    DEAD_BRAIN_CORAL: 100
+    SAND: 1000
+    WET_SPONGE: 10
+    HORN_CORAL_BLOCK: 100
+    GRAVEL: 300
+    SANDSTONE: 300
+    DEAD_BUBBLE_CORAL_FAN: 100
+    SEA_LANTERN: 100
+    PRISMARINE: 100
+    DEAD_TUBE_CORAL_BLOCK: 100
+    DEAD_HORN_CORAL_FAN: 100
+    TUBE_CORAL_BLOCK: 100
+    DEAD_BRAIN_CORAL_FAN: 100
+    SPONGE: 100
+  mobs:
+    DROWNED: 600
+    TROPICAL_FISH: 100
+    TURTLE: 10
+    SALMON: 100
+    SQUID: 100
+    DOLPHIN: 10
+    COD: 100
+  chests:
+    '1':
+      contents:
+        18:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        19:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        20:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        5:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: FISHING_ROD
+        21:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        22:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        23:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        24:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        25:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        10:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: ACACIA_BOAT
+        26:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        14:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: EXPERIENCE_BOTTLE
+          amount: 2
+      rarity: COMMON
+    '2':
+      contents:
+        18:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        19:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        20:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        21:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        22:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        23:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        24:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        25:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        10:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: BOWL
+        26:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        13:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: BIRCH_BOAT
+        15:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_TRAPDOOR
+      rarity: COMMON
+    '3':
+      contents:
+        2:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEA_PICKLE
+        10:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: LILY_PAD
+        11:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: LILY_PAD
+        12:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: LILY_PAD
+        16:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: BOOK
+          amount: 8
+        18:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        19:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        20:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        21:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        22:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        23:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        24:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        25:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        26:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+      rarity: COMMON
+    '4':
+      contents:
+        0:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: IRON_INGOT
+        2:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: IRON_INGOT
+        10:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: IRON_INGOT
+        13:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: COD_BUCKET
+        18:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        19:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        20:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        21:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        22:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        23:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        24:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        25:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        26:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+      rarity: COMMON
+    '5':
+      contents:
+        18:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        19:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        20:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        21:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        22:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        23:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        24:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        25:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        26:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        11:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SALMON_BUCKET
+        14:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: CHISELED_SANDSTONE
+          amount: 32
+      rarity: UNCOMMON
+    '6':
+      contents:
+        18:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        19:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        4:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: TROPICAL_FISH_BUCKET
+        20:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        21:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        22:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        23:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        24:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        25:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        26:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        12:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: DRIED_KELP_BLOCK
+        14:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: CHISELED_RED_SANDSTONE
+          amount: 32
+      rarity: UNCOMMON
+    '7':
+      contents:
+        0:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: LILY_PAD
+        1:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: LILY_PAD
+        2:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: LILY_PAD
+        3:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: LILY_PAD
+        4:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: LILY_PAD
+        5:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: LILY_PAD
+        6:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: LILY_PAD
+        7:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: LILY_PAD
+        8:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: LILY_PAD
+        9:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: CHISELED_SANDSTONE
+          amount: 8
+        13:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: PUFFERFISH_BUCKET
+        17:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: CHISELED_SANDSTONE
+          amount: 8
+        18:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        19:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        20:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        21:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        22:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        23:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        24:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        25:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        26:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+      rarity: UNCOMMON
+    '8':
+      contents:
+        18:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        19:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        20:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        21:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        22:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        23:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        24:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        25:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        26:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        11:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: ENCHANTED_BOOK
+          meta:
+            ==: ItemMeta
+            meta-type: ENCHANTED
+            stored-enchants:
+              FROST_WALKER: 1
+        13:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: HEART_OF_THE_SEA
+        15:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: ENCHANTED_BOOK
+          meta:
+            ==: ItemMeta
+            meta-type: ENCHANTED
+            stored-enchants:
+              OXYGEN: 2
+      rarity: RARE
+    '9':
+      contents:
+        1:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: NAUTILUS_SHELL
+        3:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: NAUTILUS_SHELL
+        4:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: ENCHANTED_BOOK
+          meta:
+            ==: ItemMeta
+            meta-type: ENCHANTED
+            stored-enchants:
+              LOOT_BONUS_BLOCKS: 2
+        5:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: NAUTILUS_SHELL
+        7:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: NAUTILUS_SHELL
+        9:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: NAUTILUS_SHELL
+        11:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: NAUTILUS_SHELL
+        13:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: NAUTILUS_SHELL
+        15:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: NAUTILUS_SHELL
+        17:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: NAUTILUS_SHELL
+        18:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        19:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        20:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        21:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        22:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        23:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        24:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        25:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        26:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+      rarity: RARE
+    '10':
+      contents:
+        18:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        19:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        20:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        21:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        22:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        23:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        24:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        25:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        26:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        11:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: CONDUIT
+        15:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: TURTLE_HELMET
+      rarity: EPIC
+    '11':
+      contents:
+        0:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: EMERALD
+        7:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: EMERALD
+        12:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEA_LANTERN
+        13:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: MUSIC_DISC_CHIRP
+        14:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: EXPERIENCE_BOTTLE
+          amount: 12
+        18:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        19:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        20:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        21:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        22:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        23:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        24:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+          amount: 2
+        25:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+          amount: 2
+        26:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+          amount: 2
+      rarity: EPIC
+'3000':
+  name: Jungle
+  firstBlock: MELON
+  biome: JUNGLE
+  blocks:
     STONE: 1
     STRIPPED_JUNGLE_LOG: 1
-  mobs:
-    PANDA: 1
-    PARROT: 1
-    OCELOT: 1
-    CHICKEN: 1
-    WITCH: 1
-  chests:
-    '1':
-      prob: 10
-      contents:
-       '5':
-          ==: org.bukkit.inventory.ItemStack
-          v: 2230
-          type: WOODEN_HOE
-    '2':
-      prob: 15
-      contents:
-        '5':
-          ==: org.bukkit.inventory.ItemStack
-          v: 2230
-          type: BIRCH_SAPLING
-    '3':
-      prob: 15
-      contents:
-        '5':
-          ==: org.bukkit.inventory.ItemStack
-          v: 2230
-          type: OAK_SAPLING
-    '4':
-      prob: 25
-      contents:
-        '5':
-          ==: org.bukkit.inventory.ItemStack
-          v: 2230
-          type: IRON_INGOT
-          amount: 3
-    '5':
-      prob: 35
-      contents:
-        '5':
-          ==: org.bukkit.inventory.ItemStack
-          v: 2230
-          type: BREAD
-        '7':
-          ==: org.bukkit.inventory.ItemStack
-          v: 2230
-          type: WHEAT_SEEDS
-    '6':
-      prob: 5
-      contents:
-        '5':
-          ==: org.bukkit.inventory.ItemStack
-          v: 2230
-          type: DIAMOND
-        '7':
-          ==: org.bukkit.inventory.ItemStack
-          v: 2230
-          type: POTATO
-    '7':
-      prob: 1
-      contents:
-        '3':
-          ==: org.bukkit.inventory.ItemStack
-          v: 2230
-          type: ENCHANTED_BOOK
-          meta:
-            ==: ItemMeta
-            meta-type: ENCHANTED
-            stored-enchants:
-              DURABILITY: 3
-4000:
-  name: Dungeon
-  biome: DARK_FOREST
-  environment: NORMAL
-  firstBlock: CHEST
-  blocks:
-    ANDESITE: 1
-    BROWN_MUSHROOM_BLOCK: 1
-    CHEST: 1
-    COAL_ORE: 1
-    COBBLESTONE: 1
-    DIAMOND_ORE: 1
-    DIORITE: 1
-    DIRT: 1
-    EMERALD_ORE: 1
+    PODZOL: 1
+    JUNGLE_LEAVES: 1
     GOLD_ORE: 1
-    GRANITE: 1
     GRAVEL: 1
-    INFESTED_COBBLESTONE: 1
-    INFESTED_STONE: 1
-    IRON_ORE: 1
+    EMERALD_ORE: 1
+    JUNGLE_LOG: 1
     LAPIS_ORE: 1
-    MOSSY_COBBLESTONE: 1
-    OAK_PLANKS: 1
-    REDSTONE_ORE: 1
-    RED_MUSHROOM_BLOCK: 1
-    SAND: 1
-    SANDSTONE: 1
-    STONE: 1
+    COARSE_DIRT: 1
+    DIRT: 1
+    PUMPKIN: 1
+    DIAMOND_ORE: 1
+    DARK_OAK_LEAVES: 1
+    GRASS_BLOCK: 1
+    COBBLESTONE: 1
+    CHEST: 1
+    MYCELIUM: 1
+    MELON: 1
+    SPRUCE_LOG: 1
+    SPRUCE_LEAVES: 1
+    DARK_OAK_LOG: 1
+    COAL_ORE: 1
   mobs:
-    SKELETON: 1
-    ZOMBIE: 1
+    PARROT: 1
+    WITCH: 1
+    OCELOT: 1
+    PANDA: 1
+    CHICKEN: 1
+  chests: {}
+'3500':
+  name: Swamp
+  firstBlock: GRASS
+  biome: SWAMP
+  blocks:
+    STONE: 1
+    GOLD_ORE: 10
+    GRAVEL: 40
+    EMERALD_ORE: 5
+    LAPIS_ORE: 10
+    COARSE_DIRT: 10
+    DIRT: 100
+    OAK_LOG: 100
+    WATER: 100
+    CLAY: 100
+    OAK_LEAVES: 100
+    DIAMOND_ORE: 2
+    GRASS_BLOCK: 100
+    COBBLESTONE: 70
+    CHEST: 100
+    COAL_ORE: 50
+  mobs:
+    VILLAGER: 50
+    ZOMBIE: 100
+    WITCH: 100
+    ZOMBIE_VILLAGER: 50
+    SLIME: 100
+    CAT: 10
+    CHICKEN: 20
+    SKELETON: 100
+  chests: {}
+'4000':
+  name: Dungeon
+  firstBlock: CHEST
+  biome: DARK_FOREST
+  blocks:
+    INFESTED_STONE: 1
+    GRANITE: 1
+    STONE: 1
+    SAND: 1
+    BROWN_MUSHROOM_BLOCK: 1
+    RED_MUSHROOM_BLOCK: 1
+    OAK_PLANKS: 1
+    GOLD_ORE: 1
+    GRAVEL: 1
+    SANDSTONE: 1
+    EMERALD_ORE: 1
+    MOSSY_COBBLESTONE: 1
+    LAPIS_ORE: 1
+    DIRT: 1
+    INFESTED_COBBLESTONE: 1
+    DIAMOND_ORE: 1
+    COBBLESTONE: 1
+    IRON_ORE: 1
+    CHEST: 1
+    REDSTONE_ORE: 1
+    DIORITE: 1
+    COAL_ORE: 1
+    ANDESITE: 1
+  mobs:
     CREEPER: 1
     BAT: 1
+    ZOMBIE: 1
     ENDERMAN: 1
     CAVE_SPIDER: 1
-  chests:
-    '1':
-      prob: 10
-      contents:
-       '5':
-          ==: org.bukkit.inventory.ItemStack
-          v: 2230
-          type: WOODEN_HOE
-    '2':
-      prob: 15
-      contents:
-        '5':
-          ==: org.bukkit.inventory.ItemStack
-          v: 2230
-          type: BIRCH_SAPLING
-    '3':
-      prob: 15
-      contents:
-        '5':
-          ==: org.bukkit.inventory.ItemStack
-          v: 2230
-          type: OAK_SAPLING
-    '4':
-      prob: 25
-      contents:
-        '5':
-          ==: org.bukkit.inventory.ItemStack
-          v: 2230
-          type: IRON_INGOT
-          amount: 3
-    '5':
-      prob: 35
-      contents:
-        '5':
-          ==: org.bukkit.inventory.ItemStack
-          v: 2230
-          type: BREAD
-        '7':
-          ==: org.bukkit.inventory.ItemStack
-          v: 2230
-          type: WHEAT_SEEDS
-    '6':
-      prob: 5
-      contents:
-        '5':
-          ==: org.bukkit.inventory.ItemStack
-          v: 2230
-          type: DIAMOND
-        '7':
-          ==: org.bukkit.inventory.ItemStack
-          v: 2230
-          type: POTATO
-    '7':
-      prob: 1
-      contents:
-        '3':
-          ==: org.bukkit.inventory.ItemStack
-          v: 2230
-          type: ENCHANTED_BOOK
-          meta:
-            ==: ItemMeta
-            meta-type: ENCHANTED
-            stored-enchants:
-              DURABILITY: 3
-5200:
-  name: Desert
-  biome: DESERT
-  environment: NORMAL
-  firstBlock: SAND
-  blocks:
-    CHEST: 10
-    RED_SAND: 200
-    RED_SANDSTONE: 100
-    SAND: 1000
-    SANDSTONE: 500
-    STONE: 200
-  mobs:
     SKELETON: 1
-    ZOMBIE: 1
+  chests: {}
+'5200':
+  name: Desert
+  firstBlock: SAND
+  biome: DESERT
+  blocks:
+    STONE: 200
+    CHEST: 10
+    SAND: 1000
+    RED_SANDSTONE: 100
+    SANDSTONE: 500
+    RED_SAND: 200
+  mobs:
     CREEPER: 1
+    ZOMBIE: 1
     RABBIT: 1
     ENDERMAN: 1
     SPIDER: 1
     HUSK: 1
-  chests:
-    '1':
-      prob: 10
-      contents:
-       '5':
-          ==: org.bukkit.inventory.ItemStack
-          v: 2230
-          type: WOODEN_HOE
-    '2':
-      prob: 15
-      contents:
-        '5':
-          ==: org.bukkit.inventory.ItemStack
-          v: 2230
-          type: BIRCH_SAPLING
-    '3':
-      prob: 15
-      contents:
-        '5':
-          ==: org.bukkit.inventory.ItemStack
-          v: 2230
-          type: OAK_SAPLING
-    '4':
-      prob: 25
-      contents:
-        '5':
-          ==: org.bukkit.inventory.ItemStack
-          v: 2230
-          type: IRON_INGOT
-          amount: 3
-    '5':
-      prob: 35
-      contents:
-        '5':
-          ==: org.bukkit.inventory.ItemStack
-          v: 2230
-          type: BREAD
-        '7':
-          ==: org.bukkit.inventory.ItemStack
-          v: 2230
-          type: WHEAT_SEEDS
-    '6':
-      prob: 5
-      contents:
-        '5':
-          ==: org.bukkit.inventory.ItemStack
-          v: 2230
-          type: DIAMOND
-        '7':
-          ==: org.bukkit.inventory.ItemStack
-          v: 2230
-          type: POTATO
-    '7':
-      prob: 1
-      contents:
-        '3':
-          ==: org.bukkit.inventory.ItemStack
-          v: 2230
-          type: ENCHANTED_BOOK
-          meta:
-            ==: ItemMeta
-            meta-type: ENCHANTED
-            stored-enchants:
-              DURABILITY: 3
-6400:
+    SKELETON: 1
+  chests: {}
+'6400':
   name: The Nether
-  biome: NETHER
-  environment: NETHER
   firstBlock: NETHERRACK
+  biome: NETHER
   blocks:
-    CHEST: 100
-    GLOWSTONE: 100
-    GRAVEL: 300
-    NETHERRACK: 1000
-    NETHER_BRICKS: 50
     NETHER_QUARTZ_ORE: 300
-    RED_NETHER_BRICKS: 25
+    CHEST: 100
     SOUL_SAND: 100
+    NETHERRACK: 1000
+    GRAVEL: 300
+    GLOWSTONE: 100
+    NETHER_BRICKS: 50
     MAGMA_BLOCK: 1
+    RED_NETHER_BRICKS: 25
   mobs:
-    PIG_ZOMBIE: 100
-    ENDERMAN: 1
-    BLAZE: 5
-    GHAST: 1
     MAGMA_CUBE: 10
-    SKELETON: 50
+    BLAZE: 5
+    ENDERMAN: 1
+    GHAST: 1
     WITHER_SKELETON: 1
-  chests:
-    '1':
-      prob: 10
-      contents:
-       '5':
-          ==: org.bukkit.inventory.ItemStack
-          v: 2230
-          type: WOODEN_HOE
-    '2':
-      prob: 15
-      contents:
-        '5':
-          ==: org.bukkit.inventory.ItemStack
-          v: 2230
-          type: BIRCH_SAPLING
-    '3':
-      prob: 15
-      contents:
-        '5':
-          ==: org.bukkit.inventory.ItemStack
-          v: 2230
-          type: OAK_SAPLING
-    '4':
-      prob: 25
-      contents:
-        '5':
-          ==: org.bukkit.inventory.ItemStack
-          v: 2230
-          type: IRON_INGOT
-          amount: 3
-    '5':
-      prob: 35
-      contents:
-        '5':
-          ==: org.bukkit.inventory.ItemStack
-          v: 2230
-          type: BREAD
-        '7':
-          ==: org.bukkit.inventory.ItemStack
-          v: 2230
-          type: WHEAT_SEEDS
-    '6':
-      prob: 5
-      contents:
-        '5':
-          ==: org.bukkit.inventory.ItemStack
-          v: 2230
-          type: DIAMOND
-        '7':
-          ==: org.bukkit.inventory.ItemStack
-          v: 2230
-          type: POTATO
-    '7':
-      prob: 1
-      contents:
-        '3':
-          ==: org.bukkit.inventory.ItemStack
-          v: 2230
-          type: ENCHANTED_BOOK
-          meta:
-            ==: ItemMeta
-            meta-type: ENCHANTED
-            stored-enchants:
-              DURABILITY: 3
-7600:
+    PIG_ZOMBIE: 100
+    SKELETON: 50
+  chests: {}
+'7600':
   name: Plenty
   biome: PLAINS
-  environment: NORMAL
   blocks:
-    ACACIA_LOG: 1
-    BIRCH_LOG: 1
-    CHEST: 1
-    COAL_ORE: 1
-    CYAN_TERRACOTTA: 1
-    DARK_OAK_LOG: 1
-    DARK_PRISMARINE: 1
-    DIAMOND_ORE: 1
-    EMERALD_ORE: 1
-    GOLD_ORE: 1
-    GRASS_BLOCK: 1
-    GRASS_PATH: 1
-    GREEN_TERRACOTTA: 1
-    HAY_BLOCK: 1
-    HONEYCOMB_BLOCK: 1
-    HONEY_BLOCK: 1
-    IRON_ORE: 1
-    JACK_O_LANTERN: 1
-    JUNGLE_LOG: 1
-    LAPIS_ORE: 1
-    LIGHT_BLUE_TERRACOTTA: 1
-    LIGHT_GRAY_TERRACOTTA: 1
-    LIME_TERRACOTTA: 1
-    MAGENTA_TERRACOTTA: 1
-    MELON: 1
-    OAK_LOG: 1
-    ORANGE_TERRACOTTA: 1
-    PINK_TERRACOTTA: 1
-    PODZOL: 1
-    POLISHED_ANDESITE: 1
-    POLISHED_DIORITE: 1
-    POLISHED_GRANITE: 1
-    PUMPKIN: 1
-    PURPLE_TERRACOTTA: 1
-    REDSTONE_ORE: 1
-    RED_TERRACOTTA: 1
-    SPRUCE_LOG: 1
     STONE: 1
-    TERRACOTTA: 1
-    WHITE_TERRACOTTA: 1
     YELLOW_TERRACOTTA: 1
+    ORANGE_TERRACOTTA: 1
+    LIGHT_BLUE_TERRACOTTA: 1
+    LIME_TERRACOTTA: 1
+    PURPLE_TERRACOTTA: 1
+    WHITE_TERRACOTTA: 1
+    GOLD_ORE: 1
+    GRASS_PATH: 1
+    DARK_PRISMARINE: 1
+    JUNGLE_LOG: 1
+    GREEN_TERRACOTTA: 1
+    LAPIS_ORE: 1
+    PUMPKIN: 1
+    OAK_LOG: 1
+    ACACIA_LOG: 1
+    REDSTONE_ORE: 1
+    POLISHED_GRANITE: 1
+    SPRUCE_LOG: 1
+    POLISHED_ANDESITE: 1
+    LIGHT_GRAY_TERRACOTTA: 1
+    PINK_TERRACOTTA: 1
+    POLISHED_DIORITE: 1
+    PODZOL: 1
+    EMERALD_ORE: 1
+    MAGENTA_TERRACOTTA: 1
+    CYAN_TERRACOTTA: 1
+    JACK_O_LANTERN: 1
+    DIAMOND_ORE: 1
+    GRASS_BLOCK: 1
+    HONEY_BLOCK: 1
+    CHEST: 1
+    IRON_ORE: 1
+    BIRCH_LOG: 1
+    RED_TERRACOTTA: 1
+    MELON: 1
+    TERRACOTTA: 1
+    HAY_BLOCK: 1
+    DARK_OAK_LOG: 1
+    HONEYCOMB_BLOCK: 1
+    COAL_ORE: 1
   mobs:
-    FOX: 1
-    CHICKEN: 1
-    COW: 1
-    PIG: 1
-    SHEEP: 1
-    BEE: 3
-    CAT: 1
     DONKEY: 1
-    HORSE: 1
-    RABBIT: 1
     VILLAGER: 1
-  chests:
-    '1':
-      prob: 10
-      contents:
-       '5':
-          ==: org.bukkit.inventory.ItemStack
-          v: 2230
-          type: WOODEN_HOE
-    '2':
-      prob: 15
-      contents:
-        '5':
-          ==: org.bukkit.inventory.ItemStack
-          v: 2230
-          type: BIRCH_SAPLING
-    '3':
-      prob: 15
-      contents:
-        '5':
-          ==: org.bukkit.inventory.ItemStack
-          v: 2230
-          type: OAK_SAPLING
-    '4':
-      prob: 25
-      contents:
-        '5':
-          ==: org.bukkit.inventory.ItemStack
-          v: 2230
-          type: IRON_INGOT
-          amount: 3
-    '5':
-      prob: 35
-      contents:
-        '5':
-          ==: org.bukkit.inventory.ItemStack
-          v: 2230
-          type: BREAD
-        '7':
-          ==: org.bukkit.inventory.ItemStack
-          v: 2230
-          type: WHEAT_SEEDS
-    '6':
-      prob: 5
-      contents:
-        '5':
-          ==: org.bukkit.inventory.ItemStack
-          v: 2230
-          type: DIAMOND
-        '7':
-          ==: org.bukkit.inventory.ItemStack
-          v: 2230
-          type: POTATO
-    '7':
-      prob: 1
-      contents:
-        '3':
-          ==: org.bukkit.inventory.ItemStack
-          v: 2230
-          type: ENCHANTED_BOOK
-          meta:
-            ==: ItemMeta
-            meta-type: ENCHANTED
-            stored-enchants:
-              DURABILITY: 3
-8800:
+    RABBIT: 1
+    BEE: 3
+    PIG: 1
+    FOX: 1
+    COW: 1
+    HORSE: 1
+    CAT: 1
+    SHEEP: 1
+    CHICKEN: 1
+  chests: {}
+'8800':
   name: Desolation
   biome: BADLANDS
-  environment: NORMAL
   blocks:
-    ANDESITE: 1
-    BLACK_CONCRETE: 1
-    BLACK_STAINED_GLASS: 1
+    GRANITE: 1
+    INFESTED_CHISELED_STONE_BRICKS: 1
+    STONE: 1
+    STRIPPED_OAK_WOOD: 1
+    GRAY_CONCRETE: 1
     BONE_BLOCK: 1
-    CHEST: 1
-    COARSE_DIRT: 1
-    COBBLESTONE: 1
+    STRIPPED_DARK_OAK_LOG: 1
+    MOSSY_STONE_BRICKS: 1
+    INFESTED_STONE_BRICKS: 1
+    INFESTED_MOSSY_STONE_BRICKS: 1
     CRACKED_STONE_BRICKS: 1
     DAMAGED_ANVIL: 1
-    DEAD_BRAIN_CORAL_BLOCK: 1
-    DEAD_BUBBLE_CORAL_BLOCK: 1
-    DIORITE: 1
-    GRANITE: 1
-    GRAVEL: 1
-    GRAY_CONCRETE: 1
-    INFESTED_CHISELED_STONE_BRICKS: 1
-    INFESTED_COBBLESTONE: 1
+    STRIPPED_SPRUCE_WOOD: 1
     INFESTED_CRACKED_STONE_BRICKS: 1
-    INFESTED_MOSSY_STONE_BRICKS: 1
+    BLACK_STAINED_GLASS: 1
+    DEAD_BUBBLE_CORAL_BLOCK: 1
+    ANDESITE: 1
     INFESTED_STONE: 1
-    INFESTED_STONE_BRICKS: 1
-    MOSSY_COBBLESTONE: 1
-    MOSSY_STONE_BRICKS: 1
-    MYCELIUM: 1
+    BLACK_CONCRETE: 1
+    DEAD_BRAIN_CORAL_BLOCK: 1
     OBSIDIAN: 1
     PODZOL: 1
-    STONE: 1
-    STONE_BRICKS: 1
-    STRIPPED_DARK_OAK_LOG: 1
-    STRIPPED_OAK_LOG: 1
-    STRIPPED_OAK_WOOD: 1
+    GRAVEL: 1
     STRIPPED_SPRUCE_LOG: 1
-    STRIPPED_SPRUCE_WOOD: 1
+    MOSSY_COBBLESTONE: 1
+    COARSE_DIRT: 1
+    INFESTED_COBBLESTONE: 1
+    COBBLESTONE: 1
+    CHEST: 1
+    MYCELIUM: 1
+    STONE_BRICKS: 1
     TERRACOTTA: 1
+    STRIPPED_OAK_LOG: 1
+    DIORITE: 1
   mobs:
-    VEX: 100
-    ENDERMITE: 1
-    CREEPER: 5
-    SKELETON: 50
-    EVOKER: 1
-    ILLUSIONER: 1
-    PILLAGER: 1
-    CAVE_SPIDER: 1
-    RAVAGER: 1
     STRAY: 1
-9000:
+    CREEPER: 5
+    EVOKER: 1
+    PILLAGER: 1
+    VEX: 100
+    ZOMBIE_HORSE: 1
+    ENDERMITE: 1
+    CAVE_SPIDER: 1
+    ILLUSIONER: 1
+    RAVAGER: 1
+    WITHER_SKELETON: 1
+    SKELETON: 50
+  chests: {}
+'9000':
   name: The End
   biome: THE_END
-  environment: THE_END
   blocks:
-    CHEST: 100
-    ENDER_CHEST: 1
-    END_STONE: 1000
-    END_STONE_BRICKS: 100
-    END_STONE_BRICK_SLAB: 100
-    END_STONE_BRICK_STAIRS: 10
-    END_STONE_BRICK_WALL: 10
-    OBSIDIAN: 250
-    PURPLE_TERRACOTTA: 1
-    PURPLE_WOOL: 1
-    PURPUR_BLOCK: 500
-    PURPUR_PILLAR: 100
     PURPUR_SLAB: 100
+    END_STONE: 1000
+    OBSIDIAN: 250
+    PURPUR_PILLAR: 100
+    END_STONE_BRICK_WALL: 10
+    PURPUR_BLOCK: 500
+    PURPLE_TERRACOTTA: 1
     PURPUR_STAIRS: 100
+    END_STONE_BRICK_SLAB: 100
+    PURPLE_WOOL: 1
+    END_STONE_BRICK_STAIRS: 10
+    ENDER_CHEST: 1
+    CHEST: 100
+    END_STONE_BRICKS: 100
   mobs:
     ENDERMAN: 100
     SHULKER: 1
-  chests:
-    '1':
-      prob: 10
-      contents:
-       '5':
-          ==: org.bukkit.inventory.ItemStack
-          v: 2230
-          type: WOODEN_HOE
-    '2':
-      prob: 15
-      contents:
-        '5':
-          ==: org.bukkit.inventory.ItemStack
-          v: 2230
-          type: BIRCH_SAPLING
-    '3':
-      prob: 15
-      contents:
-        '5':
-          ==: org.bukkit.inventory.ItemStack
-          v: 2230
-          type: OAK_SAPLING
-    '4':
-      prob: 25
-      contents:
-        '5':
-          ==: org.bukkit.inventory.ItemStack
-          v: 2230
-          type: IRON_INGOT
-          amount: 3
-    '5':
-      prob: 35
-      contents:
-        '5':
-          ==: org.bukkit.inventory.ItemStack
-          v: 2230
-          type: BREAD
-        '7':
-          ==: org.bukkit.inventory.ItemStack
-          v: 2230
-          type: WHEAT_SEEDS
-    '6':
-      prob: 5
-      contents:
-        '5':
-          ==: org.bukkit.inventory.ItemStack
-          v: 2230
-          type: DIAMOND
-        '7':
-          ==: org.bukkit.inventory.ItemStack
-          v: 2230
-          type: POTATO
-    '7':
-      prob: 1
-      contents:
-        '3':
-          ==: org.bukkit.inventory.ItemStack
-          v: 2230
-          type: ENCHANTED_BOOK
-          meta:
-            ==: ItemMeta
-            meta-type: ENCHANTED
-            stored-enchants:
-              DURABILITY: 3
+  chests: {}

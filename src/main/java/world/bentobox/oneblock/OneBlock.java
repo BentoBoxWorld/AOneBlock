@@ -19,6 +19,7 @@ import world.bentobox.oneblock.commands.IslandCommand;
 import world.bentobox.oneblock.dataobjects.OneBlockIslands;
 import world.bentobox.oneblock.generators.ChunkGeneratorWorld;
 import world.bentobox.oneblock.listeners.BlockListener;
+import world.bentobox.oneblock.listeners.OneBlocksManager;
 
 /**
  * Main OneBlock class - provides an island minigame in the sky
@@ -34,6 +35,7 @@ public class OneBlock extends GameModeAddon {
     private ChunkGeneratorWorld chunkGenerator;
     private final Config<Settings> configObject = new Config<>(this, Settings.class);
     private BlockListener listener;
+    private OneBlocksManager oneBlockManager;
 
     @Override
     public void onLoad() {
@@ -66,6 +68,7 @@ public class OneBlock extends GameModeAddon {
     @Override
     public void onEnable(){
         try {
+            oneBlockManager = new OneBlocksManager(this);
             listener = new BlockListener(this);
             registerListener(listener);
         } catch (IOException | InvalidConfigurationException e) {
@@ -182,5 +185,9 @@ public class OneBlock extends GameModeAddon {
      */
     public OneBlockIslands getOneBlocksIsland(Island i) {
         return listener.getIsland(i);
+    }
+
+    public OneBlocksManager getOneBlockManager() {
+        return oneBlockManager;
     }
 }
