@@ -70,7 +70,7 @@ public class BlockListener implements Listener {
             EntityType.DROWNED,
             EntityType.DOLPHIN);
 
-    private final static Map<EntityType, Sound> MOB_SOUNDS;
+    private static final Map<EntityType, Sound> MOB_SOUNDS;
     public static final int MAX_LOOK_AHEAD = 5;
     static {
         Map<EntityType, Sound> m = new HashMap<>();
@@ -296,7 +296,8 @@ public class BlockListener implements Listener {
     private void damageTool(@NonNull Player player) {
         ItemStack inHand = player.getInventory().getItemInMainHand();
         ItemMeta itemMeta = inHand.getItemMeta();
-        if (itemMeta instanceof Damageable && !itemMeta.isUnbreakable()) {
+        if (itemMeta instanceof Damageable && !itemMeta.isUnbreakable() && !inHand.getType().isBlock()
+                && inHand.getType().isItem()) {
             Damageable meta = (Damageable) itemMeta;
             Integer damage = meta.getDamage();
             if (damage != null) {

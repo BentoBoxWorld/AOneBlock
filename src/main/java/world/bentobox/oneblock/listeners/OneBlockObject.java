@@ -128,7 +128,7 @@ public class OneBlockObject {
      * @return the rarity
      */
     public Rarity getRarity() {
-        return rarity;
+        return rarity == null ? Rarity.COMMON : rarity;
     }
 
     /**
