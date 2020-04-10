@@ -210,17 +210,9 @@ public class BlockListener implements Listener {
             spawnEntity(nextBlock, block);
             return;
         }
-        // Break the block
-        if (e instanceof BlockBreakEvent) {
-            e.setCancelled(true);
-            block.breakNaturally();
-            // Give exp
-            player.giveExp(((BlockBreakEvent)e).getExpToDrop());
-            // Damage tool
-            damageTool(player);
-            spawnBlock(nextBlock, block);
-        } else if (e instanceof PlayerBucketFillEvent) {
-            Bukkit.getScheduler().runTask(addon.getPlugin(), ()-> spawnBlock(nextBlock, block));
+        // Replace the block by the following one
+        if (e instanceof BlockBreakEvent || e instanceof PlayerBucketFillEvent) {
+			Bukkit.getScheduler().runTask(addon.getPlugin(), () -> spawnBlock(nextBlock, block));
         }
         // Increment the block number
         is.incrementBlockNumber();
@@ -300,29 +292,6 @@ public class BlockListener implements Listener {
      */
     public OneBlockIslands getIsland(Island i) {
         return cache.containsKey(i.getUniqueId()) ? cache.get(i.getUniqueId()) : loadIsland(i.getUniqueId());
-    }
-
-    private void damageTool(@NonNull Player player) {
-        ItemStack inHand = player.getInventory().getItemInMainHand();
-        ItemMeta itemMeta = inHand.getItemMeta();
-        if (itemMeta instanceof Damageable && !itemMeta.isUnbreakable() && !inHand.getType().isBlock()
-                && inHand.getType().isItem()) {
-            Damageable meta = (Damageable) itemMeta;
-            Integer damage = meta.getDamage();
-            if (damage != null) {
-                // Check for DURABILITY
-                if (itemMeta.hasEnchant(Enchantment.DURABILITY)) {
-                    int level = itemMeta.getEnchantLevel(Enchantment.DURABILITY);
-                    if (random.nextInt(level + 1) == 0) {
-                        meta.setDamage(damage + 1);
-                    }
-                } else {
-                    meta.setDamage(damage + 1);
-                }
-                inHand.setItemMeta(itemMeta);
-            }
-        }
-
     }
 
     private OneBlockIslands loadIsland(String uniqueId) {
