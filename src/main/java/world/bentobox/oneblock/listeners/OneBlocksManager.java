@@ -48,17 +48,6 @@ public class OneBlocksManager {
         this.addon = addon;
         // Save the default oneblocks.yml file
         addon.saveResource(ONE_BLOCKS_YML, false);
-        /*
-        YamlConfiguration c = new YamlConfiguration();
-        c.set("0.chests.1.prob", 5);
-        ItemStack newBook = new ItemStack(Material.ENCHANTED_BOOK);
-        EnchantmentStorageMeta esm = (EnchantmentStorageMeta) newBook.getItemMeta();
-        esm.addStoredEnchant(Enchantment.DURABILITY, 3, true);
-        newBook.setItemMeta(esm);
-        c.set("0.chests.1.contents.3", newBook);
-        ItemStack itemStack = new ItemStack(Material.IRON_AXE, 3);
-        c.set("0.chests.1.contents.5", itemStack);
-        addon.log(c.saveToString());*/
         loadBlocks();
     }
 
@@ -72,6 +61,10 @@ public class OneBlocksManager {
             OneBlockPhase obPhase = new OneBlockPhase(blockNumber);
             // Get config Section
             ConfigurationSection phase = oneBlocks.getConfigurationSection(blockNumber);
+            // goto
+            if (phase.contains("gotoBlock")) {
+                obPhase.setGotoBlock(phase.getInt("gotoBlock", 0));
+            }
             // name
             obPhase.setPhaseName(phase.getString(NAME, blockNumber));
             // biome

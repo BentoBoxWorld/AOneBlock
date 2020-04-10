@@ -19,6 +19,7 @@ import world.bentobox.oneblock.commands.IslandCommand;
 import world.bentobox.oneblock.dataobjects.OneBlockIslands;
 import world.bentobox.oneblock.generators.ChunkGeneratorWorld;
 import world.bentobox.oneblock.listeners.BlockListener;
+import world.bentobox.oneblock.listeners.NoBlockHandler;
 import world.bentobox.oneblock.listeners.OneBlocksManager;
 
 /**
@@ -41,7 +42,6 @@ public class OneBlock extends GameModeAddon {
     public void onLoad() {
         // Save the default config from config.yml
         saveDefaultConfig();
-
         // Load settings from config.yml. This will check if there are any issues with it too.
         loadSettings();
         // Chunk generator
@@ -60,8 +60,6 @@ public class OneBlock extends GameModeAddon {
             setState(State.DISABLED);
             return false;
         }
-        // Load the oneblocks
-
         return true;
     }
 
@@ -71,6 +69,7 @@ public class OneBlock extends GameModeAddon {
             oneBlockManager = new OneBlocksManager(this);
             listener = new BlockListener(this);
             registerListener(listener);
+            registerListener(new NoBlockHandler(this));
         } catch (IOException | InvalidConfigurationException e) {
             // Disable
             logError("OneBlock settings could not load (oneblock.yml error)! Addon disabled.");

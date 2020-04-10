@@ -35,6 +35,7 @@ public class OneBlockPhase {
     private final Map<Rarity, List<OneBlockObject>> chests = new EnumMap<>(Rarity.class);
     private final Random random = new Random();
     private final String blockNumber;
+    private Integer gotoBlock;
 
 
     public OneBlockPhase(String blockNumber) {
@@ -191,6 +192,20 @@ public class OneBlockPhase {
      */
     public Map<Material, Integer> getBlocks() {
         return probMap.values().stream().filter(o -> o.isMaterial()).collect(Collectors.toMap(OneBlockObject::getMaterial, OneBlockObject::getProb));
+    }
+
+    /**
+     * @return the gotoBlock
+     */
+    public Integer getGotoBlock() {
+        return gotoBlock;
+    }
+
+    /**
+     * @param gotoBlock the gotoBlock to set
+     */
+    public void setGotoBlock(Integer gotoBlock) {
+        this.gotoBlock = gotoBlock;
     }
 
 }

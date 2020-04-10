@@ -112,5 +112,12 @@ public class OneBlockIslands implements DataObject {
         return b;
     }
 
+    /**
+     * Clear the look ahead queue
+     */
+    public void clearQueue() {
+        queue.clear();
+    }
+
 
 }

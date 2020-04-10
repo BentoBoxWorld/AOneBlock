@@ -160,12 +160,16 @@ public class BlockListener implements Listener {
         addon.getIslands().getIslandAt(l).filter(i -> l.equals(i.getCenter())).ifPresent(i -> process(e, i, e.getPlayer()));
     }
 
-    @SuppressWarnings("deprecation")
     private void process(Cancellable e, Island i, @NonNull Player player) {
         // Get island from cache or load it
         OneBlockIslands is = getIsland(i);
         // Get the phase for this island
         OneBlockPhase phase = oneBlocksManager.getPhase(is.getBlockNumber());
+        // Check for a goto
+        if (phase.getGotoBlock() != null) {
+            phase = oneBlocksManager.getPhase(phase.getGotoBlock());
+            is.setBlockNumber(phase.getGotoBlock());
+        }
         // Announce the phase
         boolean newPhase = false;
         if (!is.getPhaseName().equalsIgnoreCase(phase.getPhaseName())) {
@@ -177,6 +181,7 @@ public class BlockListener implements Listener {
         Block block = i.getCenter().toVector().toLocation(player.getWorld()).getBlock();
         // Fill a 5 block queue
         if (is.getQueue().isEmpty() || newPhase) {
+            is.clearQueue();
             // Add initial 5 blocks
             for (int j = 0; j < MAX_LOOK_AHEAD; j++) {
                 is.add(phase.getNextBlock());
@@ -190,10 +195,13 @@ public class BlockListener implements Listener {
         OneBlockObject nextBlock = newPhase && phase.getFirstBlock() != null ? phase.getFirstBlock() : is.pop(phase.getNextBlock());
         // Set the biome for the block and one block above it
         if (newPhase) {
-            block.getWorld().setBiome(block.getX(), block.getZ(), phase.getPhaseBiome());
-            addon.logWarning("Setting biome at " + block.getX() + ", " + block.getZ() + " to " + phase.getPhaseBiome());
-            //block.setBiome(phase.getPhaseBiome());
-            //block.getRelative(BlockFace.UP).setBiome(phase.getPhaseBiome());
+            for (int x = -4; x <= 4; x++) {
+                for (int z = -4; z <= 4; z++) {
+                    for (int y = -4; y <= 4; y++) {
+                        block.getWorld().setBiome(block.getX() + x, block.getY() + y, block.getZ() + z, phase.getPhaseBiome());
+                    }
+                }
+            }
         }
         // Entity
         if (nextBlock.isEntity()) {
@@ -206,6 +214,7 @@ public class BlockListener implements Listener {
         if (e instanceof BlockBreakEvent) {
             e.setCancelled(true);
             block.breakNaturally();
+            // Give exp
             player.giveExp(((BlockBreakEvent)e).getExpToDrop());
             // Damage tool
             damageTool(player);
