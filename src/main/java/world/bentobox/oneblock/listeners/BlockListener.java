@@ -224,7 +224,7 @@ public class BlockListener implements Listener {
         // Break the block
         if (e instanceof BlockBreakEvent) {
             e.setCancelled(true);
-            block.breakNaturally();
+            block.breakNaturally(player.getInventory().getItemInMainHand());
             // Give exp
             player.giveExp(((BlockBreakEvent)e).getExpToDrop());
             // Damage tool

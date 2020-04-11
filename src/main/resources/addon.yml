@@ -7,7 +7,10 @@ repository: "BentoBoxWorld/OneBlock"
 
 authors: tastybento
 
-permissions:    
+permissions:
+  oneblock.count:
+    description: Allow use of the oneblock count command
+    default: true   
   oneblock.island:
    description: Allow island command usage
    default: true
