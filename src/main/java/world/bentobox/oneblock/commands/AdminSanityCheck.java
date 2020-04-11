@@ -19,8 +19,8 @@ public class AdminSanityCheck extends CompositeCommand {
 
     @Override
     public void setup() {
-        setParametersHelp("oneblock.commands.admin.setchest.sanity.parameters");
-        setDescription("oneblock.commands.admin.setchest.sanity.description");
+        setParametersHelp("oneblock.commands.admin.sanity.parameters");
+        setDescription("oneblock.commands.admin.sanity.description");
         // Permission
         setPermission("admin.sanity");
         addon = (OneBlock)getAddon();
