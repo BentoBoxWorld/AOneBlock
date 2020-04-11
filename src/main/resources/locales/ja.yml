@@ -5,6 +5,7 @@ oneblock:
       setcount:
         parameters: "<名前> <数>"
         description: プレイヤーのブロック数を設定する
+        set: "[name]の数が[number]に設定されました"
       setchest:
         parameters: "<フェーズ> <レア度>"
         description: 見つめられた胸部を、指定された希少性を持つフェーズに置く
