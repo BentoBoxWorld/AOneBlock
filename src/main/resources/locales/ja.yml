@@ -1,0 +1,24 @@
+---
+oneblock:
+  commands:
+    admin:
+      setcount:
+        parameters: "<名前> <数>"
+        description: プレイヤーのブロック数を設定する
+      setchest:
+        parameters: "<フェーズ> <レア度>"
+        description: 見つめられた胸部を、指定された希少性を持つフェーズに置く
+        chest-is-empty: "＆cそのチェストは空なので追加できません"
+        unknown-phase: "＆c不明なフェーズ。タブコンプリートを使用して表示します"
+        unknown-rarity: "＆c希少性は不明です。 COMMON、UNCOMMON、RARE、またはEPICを使用します"
+        look-at-chest: "＆c満たされた箱を見てそれを設定します"
+        only-single-chest: "＆c単一のチェストのみを設定できます"
+        success: "＆a胸部がフェーズに追加されました"
+        failure: "＆cチェストをフェーズに追加できませんでした！エラーについてはコンソールを参照してください"
+      sanity:
+        parameters: "<フェーズ>"
+        description: コンソールに位相確率の健全性チェックを表示する
+        see-console: "＆aコンソールでレポートを表示"
+    count:
+      description: ブロック数とフェーズを表示する
+      info: "[name]フェーズのブロック[number]にいます"
