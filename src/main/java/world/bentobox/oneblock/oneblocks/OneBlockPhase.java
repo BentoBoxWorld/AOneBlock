@@ -1,4 +1,4 @@
-package world.bentobox.oneblock.listeners;
+package world.bentobox.oneblock.oneblocks;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -16,10 +16,17 @@ import org.bukkit.block.Biome;
 import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemStack;
 
-import world.bentobox.oneblock.listeners.OneBlockObject.Rarity;
+import world.bentobox.oneblock.oneblocks.OneBlockObject.Rarity;
 
 
 public class OneBlockPhase {
+    public static final TreeMap<Double, Rarity> CHEST_CHANCES = new TreeMap<>();
+    static {
+        CHEST_CHANCES.put(0.62D, Rarity.COMMON);
+        CHEST_CHANCES.put(0.87D, Rarity.UNCOMMON);
+        CHEST_CHANCES.put(0.96D, Rarity.RARE);
+        CHEST_CHANCES.put(1D, Rarity.EPIC);
+    }
     /**
      * Tree map of all materials and their probabilities as a ratio to the sum of all probabilities
      */
@@ -36,6 +43,8 @@ public class OneBlockPhase {
     private final Random random = new Random();
     private final String blockNumber;
     private Integer gotoBlock;
+    private int blockTotal = 0;
+    private int entityTotal = 0;
 
 
     public OneBlockPhase(String blockNumber) {
@@ -84,6 +93,7 @@ public class OneBlockPhase {
      */
     public void addBlock(Material material, int prob) {
         total += prob;
+        blockTotal += prob;
         probMap.put(total, new OneBlockObject(material, prob));
     }
 
@@ -94,6 +104,7 @@ public class OneBlockPhase {
      */
     public void addMob(EntityType entityType, int prob) {
         total += prob;
+        entityTotal += prob;
         probMap.put(total, new OneBlockObject(entityType, prob));
     }
 
@@ -114,17 +125,8 @@ public class OneBlockPhase {
 
     private OneBlockObject getRandomChest() {
         // Get the right type of chest
-        double chance = random.nextDouble();
-        List<OneBlockObject> list = Collections.emptyList();
-        if (chance < 0.62) {
-            list = chests.getOrDefault(Rarity.COMMON, Collections.emptyList());
-        } else if (chance < 0.87) {
-            list = chests.getOrDefault(Rarity.UNCOMMON, Collections.emptyList());
-        } else if (chance < 0.96) {
-            list = chests.getOrDefault(Rarity.RARE, Collections.emptyList());
-        } else {
-            list = chests.getOrDefault(Rarity.EPIC, Collections.emptyList());
-        }
+        Rarity r = CHEST_CHANCES.getOrDefault(CHEST_CHANCES.ceilingEntry(random.nextDouble()), Rarity.COMMON);
+        List<OneBlockObject> list = chests.getOrDefault(r, Collections.emptyList());
         // Pick one from the list or return an empty chest
         return list.isEmpty() ? new OneBlockObject(Material.CHEST, 0) : list.get(random.nextInt(list.size()));
     }
@@ -179,6 +181,13 @@ public class OneBlockPhase {
     }
 
     /**
+     * @return the chest map
+     */
+    public Map<Rarity, List<OneBlockObject>> getChestsMap() {
+        return chests;
+    }
+
+    /**
      * Get the mobs that are in this phase
      * @return map of mob type and its relative probability
      */
@@ -206,6 +215,27 @@ public class OneBlockPhase {
      */
     public void setGotoBlock(Integer gotoBlock) {
         this.gotoBlock = gotoBlock;
+    }
+
+    /**
+     * @return the total
+     */
+    public int getTotal() {
+        return total;
+    }
+
+    /**
+     * @return the blockTotal
+     */
+    public int getBlockTotal() {
+        return blockTotal;
+    }
+
+    /**
+     * @return the entityTotal
+     */
+    public int getEntityTotal() {
+        return entityTotal;
     }
 
 }

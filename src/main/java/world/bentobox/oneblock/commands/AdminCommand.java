@@ -87,6 +87,8 @@ public class AdminCommand extends CompositeCommand {
         new AdminSetCountCommand(this);
         // Set chest
         new AdminSetChestCommand(this);
+        // Sanity
+        new AdminSanityCheck(this);
     }
 
     @Override

@@ -10,7 +10,7 @@ import com.google.gson.annotations.Expose;
 
 import world.bentobox.bentobox.database.objects.DataObject;
 import world.bentobox.oneblock.listeners.BlockListener;
-import world.bentobox.oneblock.listeners.OneBlockObject;
+import world.bentobox.oneblock.oneblocks.OneBlockObject;
 
 /**
  * @author tastybento

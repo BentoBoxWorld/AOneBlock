@@ -10,159 +10,44 @@
     ANDESITE: 100
     COBBLESTONE: 800
     DIORITE: 100
-    CLAY: 10
+    CLAY: 40
     CHEST: 200
-    BEE_NEST: 10
+    BEE_NEST: 20
     OAK_LEAVES: 1000
     GRAVEL: 100
-    ACACIA_LEAVES: 100
-    INFESTED_STONE: 1
+    INFESTED_STONE: 40
     DARK_OAK_LEAVES: 100
     IRON_ORE: 300
     OAK_LOG: 2000
-    EMERALD_ORE: 5
-    PODZOL: 10
+    EMERALD_ORE: 40
+    PODZOL: 40
     BIRCH_LEAVES: 100
     DIRT: 1000
     SAND: 200
     GRASS_PATH: 100
     GRANITE: 400
-    MYCELIUM: 10
-    ACACIA_LOG: 100
+    MYCELIUM: 40
     DARK_OAK_LOG: 300
     COARSE_DIRT: 100
-    DIAMOND_ORE: 2
-    GOLD_ORE: 10
+    DIAMOND_ORE: 30
+    GOLD_ORE: 30
     STONE: 800
   mobs:
     SHEEP: 50
-    VILLAGER: 5
+    VILLAGER: 15
     COW: 50
     CHICKEN: 50
     PIG: 50
-    SPIDER: 10
+    SPIDER: 15
   chests:
     '1':
-      contents:
-        0:
-          ==: org.bukkit.inventory.ItemStack
-          v: 2230
-          type: DIRT
-          amount: 31
-        1:
-          ==: org.bukkit.inventory.ItemStack
-          v: 2230
-          type: OAK_LOG
-          amount: 3
-        2:
-          ==: org.bukkit.inventory.ItemStack
-          v: 2230
-          type: BOWL
-        3:
-          ==: org.bukkit.inventory.ItemStack
-          v: 2230
-          type: GRANITE
-          amount: 7
-        4:
-          ==: org.bukkit.inventory.ItemStack
-          v: 2230
-          type: CHEST
-          amount: 12
-        5:
-          ==: org.bukkit.inventory.ItemStack
-          v: 2230
-          type: SANDSTONE
-          amount: 6
-        6:
-          ==: org.bukkit.inventory.ItemStack
-          v: 2230
-          type: ROTTEN_FLESH
-          amount: 2
-        7:
-          ==: org.bukkit.inventory.ItemStack
-          v: 2230
-          type: COBBLESTONE
-          amount: 64
-        8:
-          ==: org.bukkit.inventory.ItemStack
-          v: 2230
-          type: STRING
-          amount: 14
-        9:
-          ==: org.bukkit.inventory.ItemStack
-          v: 2230
-          type: BROWN_MUSHROOM
-        10:
-          ==: org.bukkit.inventory.ItemStack
-          v: 2230
-          type: COBBLESTONE
-          amount: 33
-        11:
-          ==: org.bukkit.inventory.ItemStack
-          v: 2230
-          type: GOLD_ORE
-        13:
-          ==: org.bukkit.inventory.ItemStack
-          v: 2230
-          type: LAPIS_LAZULI
-          amount: 6
-        14:
-          ==: org.bukkit.inventory.ItemStack
-          v: 2230
-          type: RED_MUSHROOM
-          amount: 2
-        15:
-          ==: org.bukkit.inventory.ItemStack
-          v: 2230
-          type: MUSHROOM_STEW
-        16:
-          ==: org.bukkit.inventory.ItemStack
-          v: 2230
-          type: ANDESITE
-          amount: 11
-        17:
-          ==: org.bukkit.inventory.ItemStack
-          v: 2230
-          type: DIORITE
-          amount: 15
-        18:
-          ==: org.bukkit.inventory.ItemStack
-          v: 2230
-          type: SAND
-          amount: 4
-        19:
-          ==: org.bukkit.inventory.ItemStack
-          v: 2230
-          type: SNOWBALL
-          amount: 4
-        20:
-          ==: org.bukkit.inventory.ItemStack
-          v: 2230
-          type: DARK_OAK_LOG
-          amount: 3
-        21:
-          ==: org.bukkit.inventory.ItemStack
-          v: 2230
-          type: SWEET_BERRIES
-          amount: 3
-        23:
-          ==: org.bukkit.inventory.ItemStack
-          v: 2230
-          type: BAKED_POTATO
-          amount: 4
-        25:
-          ==: org.bukkit.inventory.ItemStack
-          v: 2230
-          type: OAK_SAPLING
-      rarity: COMMON
-    '2':
       contents:
         13:
           ==: org.bukkit.inventory.ItemStack
           v: 2230
           type: MUSIC_DISC_11
       rarity: RARE
-    '3':
+    '2':
       contents:
         0:
           ==: org.bukkit.inventory.ItemStack
@@ -200,7 +85,7 @@
           v: 2230
           type: EMERALD
       rarity: UNCOMMON
-    '4':
+    '3':
       contents:
         0:
           ==: org.bukkit.inventory.ItemStack
@@ -224,7 +109,7 @@
           v: 2230
           type: BEETROOT_SEEDS
       rarity: UNCOMMON
-    '5':
+    '4':
       contents:
         1:
           ==: org.bukkit.inventory.ItemStack
@@ -252,7 +137,7 @@
           v: 2230
           type: OAK_FENCE_GATE
       rarity: COMMON
-    '6':
+    '5':
       contents:
         0:
           ==: org.bukkit.inventory.ItemStack
@@ -276,7 +161,7 @@
           type: LEATHER
           amount: 8
       rarity: COMMON
-    '7':
+    '6':
       contents:
         4:
           ==: org.bukkit.inventory.ItemStack
@@ -301,7 +186,7 @@
           v: 2230
           type: SUGAR_CANE
       rarity: COMMON
-'500':
+'700':
   name: Underground
   firstBlock: STONE
   biome: TAIGA
@@ -311,20 +196,20 @@
     DIRT: 500
     SANDSTONE: 100
     SAND: 100
-    REDSTONE_ORE: 30
-    COAL_ORE: 500
-    LAPIS_ORE: 20
+    REDSTONE_ORE: 60
+    COAL_ORE: 300
+    LAPIS_ORE: 30
     ANDESITE: 200
     COBBLESTONE: 800
     DIORITE: 200
     GRANITE: 100
-    CHEST: 200
-    DIAMOND_ORE: 10
+    CHEST: 100
+    DIAMOND_ORE: 30
     GRAVEL: 200
     STONE: 1000
-    GOLD_ORE: 20
+    GOLD_ORE: 100
     IRON_ORE: 300
-    OBSIDIAN: 2
+    OBSIDIAN: 10
   mobs:
     ZOMBIE: 250
     SKELETON: 150
@@ -781,27 +666,27 @@
           v: 2230
           type: IRON_INGOT
       rarity: EPIC
-'800':
+'2000':
   name: Winter
   firstBlock: SNOW_BLOCK
   biome: SNOWY_TAIGA
   blocks:
-    CHEST: 100
+    CHEST: 150
     ICE: 100
-    DIRT: 100
+    DIRT: 200
     SAND: 100
     STONE: 1000
-    GOLD_ORE: 20
+    GOLD_ORE: 80
     SPRUCE_LOG: 500
     SNOW_BLOCK: 1000
     SPRUCE_LEAVES: 500
-    LAPIS_ORE: 20
+    LAPIS_ORE: 80
     STRIPPED_SPRUCE_LOG: 200
-    COBBLESTONE: 1000
+    COBBLESTONE: 900
   mobs:
     SHEEP: 10
-    SNOWMAN: 10
-    SKELETON: 10
+    SNOWMAN: 30
+    SKELETON: 100
     COW: 10
     ENDERMAN: 10
     PIG: 10
@@ -971,21 +856,21 @@
           v: 2230
           type: IRON_INGOT
       rarity: EPIC
-'2000':
+'3000':
   name: Ocean
   firstBlock: PRISMARINE
   biome: OCEAN
   blocks:
     DEAD_HORN_CORAL_FAN: 100
-    PRISMARINE: 100
+    PRISMARINE: 500
     DARK_PRISMARINE: 100
     DEAD_BUBBLE_CORAL: 100
     SEA_LANTERN: 100
     ANDESITE: 500
     CLAY: 300
-    GLOWSTONE: 1
+    GLOWSTONE: 50
     DEAD_BRAIN_CORAL_FAN: 100
-    GRAVEL: 300
+    GRAVEL: 400
     DEAD_FIRE_CORAL_FAN: 100
     DEAD_TUBE_CORAL_BLOCK: 100
     DEAD_FIRE_CORAL_BLOCK: 100
@@ -1011,6 +896,7 @@
     DEAD_HORN_CORAL: 100
     TUBE_CORAL_BLOCK: 100
     BUBBLE_CORAL_BLOCK: 100
+    CHEST: 200
   mobs:
     SQUID: 100
     DOLPHIN: 10
@@ -1682,7 +1568,7 @@
           type: SEAGRASS
           amount: 2
       rarity: EPIC
-'3000':
+'4000':
   name: Jungle
   firstBlock: MELON
   biome: JUNGLE
@@ -1698,18 +1584,18 @@
     LAPIS_ORE: 50
     JUNGLE_LOG: 500
     COBBLESTONE: 100
-    MYCELIUM: 1
-    CHEST: 200
+    MYCELIUM: 100
+    CHEST: 100
     COARSE_DIRT: 100
     DIAMOND_ORE: 10
     GRAVEL: 50
     STONE: 500
     GOLD_ORE: 100
-    STRIPPED_JUNGLE_LOG: 1
+    STRIPPED_JUNGLE_LOG: 100
   mobs:
-    PANDA: 2
+    PANDA: 5
     PARROT: 50
-    CHICKEN: 10
+    CHICKEN: 20
     OCELOT: 30
     WITCH: 100
     SKELETON: 100
@@ -2265,7 +2151,7 @@
           type: STICKY_PISTON
           amount: 2
       rarity: EPIC
-'3500':
+'5000':
   name: Swamp
   firstBlock: GRASS
   biome: SWAMP
@@ -2278,22 +2164,23 @@
     LAPIS_ORE: 10
     COBBLESTONE: 70
     CLAY: 100
-    CHEST: 100
+    CHEST: 50
     OAK_LEAVES: 100
     COARSE_DIRT: 10
     DIAMOND_ORE: 2
     GRAVEL: 40
-    STONE: 1
+    STONE: 10
     GOLD_ORE: 10
   mobs:
     CAT: 20
     ZOMBIE: 100
     ZOMBIE_VILLAGER: 10
-    VILLAGER: 50
+    VILLAGER: 10
     SLIME: 100
     CHICKEN: 20
     SKELETON: 100
     WITCH: 50
+    EVOKER: 2
   chests:
     '1':
       contents:
@@ -3043,7 +2930,7 @@
           v: 2230
           type: OAK_BOAT
       rarity: COMMON
-'4000':
+'6000':
   name: Dungeon
   firstBlock: CHEST
   biome: DARK_FOREST
@@ -3072,12 +2959,13 @@
     OAK_PLANKS: 2
     IRON_ORE: 2
   mobs:
-    ZOMBIE: 1
-    SKELETON: 1
+    ZOMBIE: 6
+    SKELETON: 4
     ENDERMAN: 1
-    CAVE_SPIDER: 1
+    CAVE_SPIDER: 3
     CREEPER: 1
-    BAT: 1
+    BAT: 3
+    WITCH: 1
   chests:
     '1':
       contents:
@@ -4402,7 +4290,7 @@
           v: 2230
           type: OAK_PLANKS
       rarity: EPIC
-'5200':
+'7000':
   name: Desert
   firstBlock: SAND
   biome: DESERT
@@ -5029,7 +4917,7 @@
           v: 2230
           type: DEAD_BUSH
       rarity: EPIC
-'6400':
+'7500':
   name: The Nether
   firstBlock: NETHERRACK
   biome: NETHER
@@ -5040,17 +4928,17 @@
     GLOWSTONE: 100
     NETHER_BRICKS: 50
     SOUL_SAND: 100
-    MAGMA_BLOCK: 1
+    MAGMA_BLOCK: 75
     GRAVEL: 300
     RED_NETHER_BRICKS: 25
   mobs:
-    BLAZE: 100
-    PIG_ZOMBIE: 200
+    BLAZE: 200
+    PIG_ZOMBIE: 300
     SKELETON: 50
-    ENDERMAN: 10
-    GHAST: 10
-    WITHER_SKELETON: 10
-    MAGMA_CUBE: 50
+    ENDERMAN: 20
+    GHAST: 20
+    WITHER_SKELETON: 20
+    MAGMA_CUBE: 100
   chests:
     '1':
       contents:
@@ -5733,7 +5621,7 @@
           v: 2230
           type: MAGMA_BLOCK
       rarity: EPIC
-'7600':
+'8500':
   name: Plenty
   biome: PLAINS
   blocks:
@@ -6541,7 +6429,7 @@
           type: COOKIE
           amount: 2
       rarity: EPIC
-'8800':
+'9500':
   name: Desolation
   biome: BADLANDS
   blocks:
@@ -6552,7 +6440,7 @@
     ANDESITE: 10
     COBBLESTONE: 10
     DIORITE: 10
-    CHEST: 50
+    CHEST: 8
     CRACKED_STONE_BRICKS: 10
     BONE_BLOCK: 1
     INFESTED_COBBLESTONE: 10
@@ -6580,18 +6468,18 @@
     MOSSY_STONE_BRICKS: 10
     STRIPPED_SPRUCE_LOG: 10
   mobs:
-    EVOKER: 10
+    EVOKER: 5
     ENDERMITE: 10
-    PILLAGER: 10
-    SKELETON: 50
-    CAVE_SPIDER: 100
-    VEX: 10
-    ZOMBIE_HORSE: 10
-    CREEPER: 50
-    WITHER_SKELETON: 10
-    RAVAGER: 10
-    STRAY: 100
-    ILLUSIONER: 10
+    PILLAGER: 5
+    SKELETON: 25
+    CAVE_SPIDER: 50
+    VEX: 5
+    ZOMBIE_HORSE: 5
+    CREEPER: 25
+    WITHER_SKELETON: 5
+    RAVAGER: 5
+    STRAY: 50
+    ILLUSIONER: 5
   chests:
     '1':
       contents:
@@ -6862,27 +6750,21 @@
           v: 2230
           type: BLACK_CARPET
       rarity: EPIC
-'9000':
+'10500':
   name: The End
   biome: THE_END
   blocks:
-    PURPLE_WOOL: 1
+    PURPLE_WOOL: 50
     PURPUR_BLOCK: 500
-    END_STONE_BRICK_WALL: 10
-    PURPLE_TERRACOTTA: 1
-    PURPUR_STAIRS: 100
-    END_STONE_BRICK_STAIRS: 10
-    CHEST: 100
+    PURPLE_TERRACOTTA: 100
+    CHEST: 200
     END_STONE_BRICKS: 100
     END_STONE: 1000
-    END_STONE_BRICK_SLAB: 100
     PURPUR_PILLAR: 100
-    ENDER_CHEST: 1
-    PURPUR_SLAB: 100
     OBSIDIAN: 250
   mobs:
-    SHULKER: 10
-    ENDERMAN: 100
+    SHULKER: 80
+    ENDERMAN: 500
   chests:
     '1':
       contents:
@@ -7622,5 +7504,5 @@
           v: 2230
           type: END_STONE_BRICKS
       rarity: EPIC
-'9500':
+'11000':
   gotoBlock: 0

@@ -45,6 +45,9 @@ import world.bentobox.bentobox.database.Database;
 import world.bentobox.bentobox.database.objects.Island;
 import world.bentobox.oneblock.OneBlock;
 import world.bentobox.oneblock.dataobjects.OneBlockIslands;
+import world.bentobox.oneblock.oneblocks.OneBlockObject;
+import world.bentobox.oneblock.oneblocks.OneBlockPhase;
+import world.bentobox.oneblock.oneblocks.OneBlocksManager;
 
 /**
  * @author tastybento

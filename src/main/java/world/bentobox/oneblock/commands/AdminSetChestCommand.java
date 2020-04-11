@@ -17,8 +17,8 @@ import org.bukkit.inventory.ItemStack;
 import world.bentobox.bentobox.api.commands.CompositeCommand;
 import world.bentobox.bentobox.api.user.User;
 import world.bentobox.oneblock.OneBlock;
-import world.bentobox.oneblock.listeners.OneBlockObject.Rarity;
-import world.bentobox.oneblock.listeners.OneBlockPhase;
+import world.bentobox.oneblock.oneblocks.OneBlockPhase;
+import world.bentobox.oneblock.oneblocks.OneBlockObject.Rarity;
 
 public class AdminSetChestCommand extends CompositeCommand {
 
@@ -42,6 +42,7 @@ public class AdminSetChestCommand extends CompositeCommand {
         setDescription("oneblock.commands.admin.setchest.description");
         // Permission
         setPermission("admin.setchest");
+        setOnlyPlayer(true);
         addon = (OneBlock)getAddon();
     }
 

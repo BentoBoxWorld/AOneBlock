@@ -158,4 +158,7 @@ permissions:
   oneblock.admin.setrank:
     description: Set a player's rank
     default: op
-    
+  oneblock.admin.setchest:
+    description: Puts the looked-at chest into a phase with a given rarity
+    default: op
+  

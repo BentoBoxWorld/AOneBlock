@@ -1,11 +1,13 @@
-package world.bentobox.oneblock.listeners;
+package world.bentobox.oneblock.oneblocks;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
@@ -22,7 +24,7 @@ import org.eclipse.jdt.annotation.Nullable;
 import com.google.common.io.Files;
 
 import world.bentobox.oneblock.OneBlock;
-import world.bentobox.oneblock.listeners.OneBlockObject.Rarity;
+import world.bentobox.oneblock.oneblocks.OneBlockObject.Rarity;
 
 public class OneBlocksManager {
 
@@ -48,11 +50,14 @@ public class OneBlocksManager {
         this.addon = addon;
         // Save the default oneblocks.yml file
         addon.saveResource(ONE_BLOCKS_YML, false);
-        loadBlocks();
+        loadPhases();
     }
 
-    private void loadBlocks() throws IOException, InvalidConfigurationException, NumberFormatException {
-        // Clear
+    /**
+     * Loads the game phases
+     */
+    private void loadPhases() throws IOException, InvalidConfigurationException, NumberFormatException {
+        // Clear block probabilities
         blockProbs = new TreeMap<>();
         // Load the config file
         YamlConfiguration oneBlocks = new YamlConfiguration();
@@ -226,5 +231,76 @@ public class OneBlocksManager {
         ConfigurationSection blocks = phSec.createSection(BLOCKS);
         phase.getBlocks().forEach((k,v) -> blocks.set(k.name(), v));
 
+    }
+
+    public void getProbs(OneBlockPhase phase) {
+        // Find the phase after this one
+        Integer blockNum = Integer.valueOf(phase.getBlockNumber());
+        Integer nextKey = blockProbs.ceilingKey(blockNum + 1);
+        addon.logWarning(phase.getPhaseName() + " starts at " + blockNum + (nextKey != null ? " and ends " + nextKey : ""));
+        if (nextKey != null) {
+            // This is the size of the phase in blocks
+            int phaseSize = nextKey - blockNum;
+            int blockTotal = phase.getBlockTotal();
+            int likelyChestTotal = 0;
+            double totalBlocks = 0;
+            // Now calculate the relative block probability
+            for (Entry<Material, Integer> en : phase.getBlocks().entrySet()) {
+                double chance = (double)en.getValue()/blockTotal;
+                double likelyNumberGenerated = chance * phaseSize;
+                totalBlocks += likelyNumberGenerated;
+                String report = en.getKey() + " likely generated = " + Math.round(likelyNumberGenerated) + " = " + Math.round(likelyNumberGenerated*100/phaseSize) + "%";
+                if (likelyNumberGenerated < 1) {
+                    addon.logWarning(report);
+                } else {
+                    addon.log(report);
+                }
+                if (en.getKey().equals(Material.CHEST)) {
+                    likelyChestTotal = (int) Math.round(likelyNumberGenerated);
+                }
+            }
+            addon.log("Total blocks generated = " + totalBlocks);
+            // Get the specific chest probability
+            if (likelyChestTotal == 0) {
+                addon.logWarning("No chests will be generated");
+                return;
+            }
+            addon.log("**** A total of " + likelyChestTotal + " chests will be generated ****");
+            // Now calculate chest chances
+            double lastChance = 0;
+            for (Entry<Double, Rarity> en : OneBlockPhase.CHEST_CHANCES.entrySet()) {
+                // Get the number of chests in this rarity group
+                int num = phase.getChestsMap().getOrDefault(en.getValue(), Collections.emptyList()).size();
+                double likelyNumberGenerated = (en.getKey() - lastChance) * likelyChestTotal;
+                lastChance = en.getKey();
+                String report = num + " " + en.getValue() + " chests in phase. Likely number generated = " + Math.round(likelyNumberGenerated);
+                if (num > 0 && likelyNumberGenerated < 1) {
+                    addon.logWarning(report);
+                } else {
+                    addon.log(report);
+                }
+
+            }
+            // Mobs
+            addon.log("-=-=-=-= Mobs -=-=-=-=-");
+            double totalMobs = 0;
+            // Now calculate the relative block probability
+            for (Entry<EntityType, Integer> en : phase.getMobs().entrySet()) {
+                double chance = (double)en.getValue()/phase.getTotal();
+                double likelyNumberGenerated = chance * phaseSize;
+                totalMobs += likelyNumberGenerated;
+                String report = en.getKey() + " likely generated = " + Math.round(likelyNumberGenerated) + " = " + Math.round(likelyNumberGenerated*100/phaseSize) + "%";
+                if (likelyNumberGenerated < 1) {
+                    addon.logWarning(report);
+                } else {
+                    addon.log(report);
+                }
+            }
+            addon.log("**** A total of " + Math.round(totalMobs) + " mobs will likely be generated ****");
+        }
+    }
+
+    public void getAllProbs() {
+        blockProbs.values().forEach(this::getProbs);
     }
 }

@@ -1,4 +1,4 @@
-package world.bentobox.oneblock.listeners;
+package world.bentobox.oneblock.oneblocks;
 
 import java.util.Map;
 

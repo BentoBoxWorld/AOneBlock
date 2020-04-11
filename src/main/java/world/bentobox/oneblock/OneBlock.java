@@ -20,7 +20,7 @@ import world.bentobox.oneblock.dataobjects.OneBlockIslands;
 import world.bentobox.oneblock.generators.ChunkGeneratorWorld;
 import world.bentobox.oneblock.listeners.BlockListener;
 import world.bentobox.oneblock.listeners.NoBlockHandler;
-import world.bentobox.oneblock.listeners.OneBlocksManager;
+import world.bentobox.oneblock.oneblocks.OneBlocksManager;
 
 /**
  * Main OneBlock class - provides an island minigame in the sky

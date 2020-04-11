@@ -10,6 +10,20 @@ oneblock:
         parameters: "<name> <count>"
         description: "set player's block count"
         set: "[name]'s count set to [number]"
+      setchest:
+        parameters: "<phase> <rarity>"
+        description: "put the looked-at chest in a phase with the rarity specified"
+        chest-is-empty: "&c That chest is empty so cannot be added"
+        unknown-phase: "&c Unknown phase. Use tab-complete to see them"
+        unknown-rarity: "&c Unknown rarity. Use COMMON, UNCOMMON, RARE or EPIC"
+        look-at-chest: "&c Look at a filled chest to set it"
+        only-single-chest: "&c Only single chests can be set"
+        success: "&a Chest successfully added to phase"
+        failure: "&c Chest could not be added to the phase! See console for errors"
+      sanity:
+        parameters: "<phase>"
+        description: "display a sanity check of the phase probabilities in the console"
+        see-console: "&a See the console for the report"
     count:
       description: show the block count and phase
       info: "You are on block [number] in the [name] phase"
