@@ -213,7 +213,7 @@ public class Settings implements WorldSettings {
     @ConfigComment("Players might be able to hear hostile mobs up to this many blocks away")
     @ConfigComment("Minimum is 0 (no warning), max is 5")
     @ConfigEntry(path = "island.mob-warning")
-    private int mobWarning = 4;
+    private int mobWarning = 5;
 
     @ConfigComment("Default max team size")
     @ConfigComment("Permission size cannot be less than the default below. ")

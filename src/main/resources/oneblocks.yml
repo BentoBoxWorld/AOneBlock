@@ -33,12 +33,12 @@
     GOLD_ORE: 30
     STONE: 800
   mobs:
-    SHEEP: 50
-    VILLAGER: 15
-    COW: 50
-    CHICKEN: 50
-    PIG: 50
-    SPIDER: 15
+    SHEEP: 150
+    VILLAGER: 30
+    COW: 300
+    CHICKEN: 400
+    PIG: 300
+    SPIDER: 150
   chests:
     '1':
       contents:
@@ -211,8 +211,8 @@
     IRON_ORE: 300
     OBSIDIAN: 10
   mobs:
-    ZOMBIE: 250
-    SKELETON: 150
+    ZOMBIE: 300
+    SKELETON: 200
     ENDERMAN: 20
     CAVE_SPIDER: 40
     CREEPER: 30

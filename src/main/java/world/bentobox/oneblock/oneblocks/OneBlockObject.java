@@ -152,4 +152,15 @@ public class OneBlockObject {
         this.prob = prob;
     }
 
+    /* (non-Javadoc)
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString() {
+        return "OneBlockObject [" + (entityType != null ? "entityType=" + entityType + ", " : "")
+                + (material != null ? "material=" + material + ", " : "")
+                + (chest != null ? "chest=" + chest + ", " : "") + (rarity != null ? "rarity=" + rarity + ", " : "")
+                + "prob=" + prob + "]";
+    }
+
 }

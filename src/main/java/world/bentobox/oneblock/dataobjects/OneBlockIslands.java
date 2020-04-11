@@ -1,15 +1,14 @@
 package world.bentobox.oneblock.dataobjects;
 
-import java.util.Optional;
-import java.util.Queue;
-import java.util.concurrent.ArrayBlockingQueue;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import org.bukkit.entity.EntityType;
 
 import com.google.gson.annotations.Expose;
 
 import world.bentobox.bentobox.database.objects.DataObject;
-import world.bentobox.oneblock.listeners.BlockListener;
 import world.bentobox.oneblock.oneblocks.OneBlockObject;
 
 /**
@@ -25,7 +24,7 @@ public class OneBlockIslands implements DataObject {
     @Expose
     private String phaseName = "";
 
-    private Queue<OneBlockObject> queue;
+    private List<OneBlockObject> queue;
 
     /**
      * @return the phaseName
@@ -85,29 +84,30 @@ public class OneBlockIslands implements DataObject {
     /**
      * @return the queue
      */
-    public Queue<OneBlockObject> getQueue() {
-        if (queue == null) queue = new ArrayBlockingQueue<>(BlockListener.MAX_LOOK_AHEAD);
+    public List<OneBlockObject> getQueue() {
+        if (queue == null) queue = new ArrayList<>();
         return queue;
     }
 
     /**
-     * Get the nearest upcoming mob, if it exists
+     * Get a list of nearby upcoming mobs
      * @param i - look ahead value
-     * @return nearest upcoming mob
+     * @return list of upcoming mobs
      */
-    public Optional<EntityType> getNearestMob(int i) {
-        if (queue == null) queue = new ArrayBlockingQueue<>(BlockListener.MAX_LOOK_AHEAD);
-        return queue.stream().limit(i).filter(OneBlockObject::isEntity).findFirst().map(OneBlockObject::getEntityType);
+    public List<EntityType> getNearestMob(int i) {
+        if (queue == null) queue = new ArrayList<>();
+        return queue.stream().limit(i).filter(OneBlockObject::isEntity).map(OneBlockObject::getEntityType).collect(Collectors.toList());
     }
 
     public void add(OneBlockObject nextBlock) {
-        if (queue == null) queue = new ArrayBlockingQueue<>(BlockListener.MAX_LOOK_AHEAD);
+        if (queue == null) queue = new ArrayList<>();
         queue.add(nextBlock);
     }
 
-    public OneBlockObject pop(OneBlockObject toAdd) {
-        if (queue == null) queue = new ArrayBlockingQueue<>(BlockListener.MAX_LOOK_AHEAD);
-        OneBlockObject b = queue.remove();
+    public OneBlockObject pollAndAdd(OneBlockObject toAdd) {
+        if (queue == null) queue = new ArrayList<>();
+        OneBlockObject b = queue.get(0);
+        queue.remove(0);
         queue.add(toAdd);
         return b;
     }

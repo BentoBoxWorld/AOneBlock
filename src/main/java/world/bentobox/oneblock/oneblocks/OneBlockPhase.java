@@ -125,7 +125,7 @@ public class OneBlockPhase {
 
     private OneBlockObject getRandomChest() {
         // Get the right type of chest
-        Rarity r = CHEST_CHANCES.getOrDefault(CHEST_CHANCES.ceilingEntry(random.nextDouble()), Rarity.COMMON);
+        Rarity r = CHEST_CHANCES.getOrDefault(CHEST_CHANCES.ceilingKey(random.nextDouble()), Rarity.COMMON);
         List<OneBlockObject> list = chests.getOrDefault(r, Collections.emptyList());
         // Pick one from the list or return an empty chest
         return list.isEmpty() ? new OneBlockObject(Material.CHEST, 0) : list.get(random.nextInt(list.size()));

@@ -236,7 +236,7 @@ island:
   # Magic block mob warning
   # Players might be able to hear hostile mobs up to this many blocks away
   # Minimum is 0 (no warning), max is 5
-  mob-warning: 3
+  mob-warning: 5
   # Default max team size
   # Permission size cannot be less than the default below. 
   max-team-size: 4

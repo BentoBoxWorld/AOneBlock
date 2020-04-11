@@ -45,6 +45,7 @@ import world.bentobox.bentobox.database.Database;
 import world.bentobox.bentobox.database.objects.Island;
 import world.bentobox.oneblock.OneBlock;
 import world.bentobox.oneblock.dataobjects.OneBlockIslands;
+import world.bentobox.oneblock.oneblocks.MobAspects;
 import world.bentobox.oneblock.oneblocks.OneBlockObject;
 import world.bentobox.oneblock.oneblocks.OneBlockPhase;
 import world.bentobox.oneblock.oneblocks.OneBlocksManager;
@@ -65,6 +66,7 @@ public class BlockListener implements Listener {
      */
     private final static List<EntityType> WATER_ENTITIES = Arrays.asList(
             EntityType.GUARDIAN,
+            EntityType.ELDER_GUARDIAN,
             EntityType.SQUID,
             EntityType.COD,
             EntityType.SALMON,
@@ -73,27 +75,29 @@ public class BlockListener implements Listener {
             EntityType.DROWNED,
             EntityType.DOLPHIN);
 
-    private static final Map<EntityType, Sound> MOB_SOUNDS;
+    private static final Map<EntityType, MobAspects> MOB_ASPECTS;
     public static final int MAX_LOOK_AHEAD = 5;
     static {
-        Map<EntityType, Sound> m = new HashMap<>();
-        m.put(EntityType.ZOMBIE, Sound.ENTITY_ZOMBIE_AMBIENT);
-        m.put(EntityType.CREEPER, Sound.ENTITY_CREEPER_PRIMED);
-        m.put(EntityType.SKELETON, Sound.ENTITY_SKELETON_AMBIENT);
-        m.put(EntityType.DROWNED, Sound.ENTITY_DROWNED_AMBIENT);
-        m.put(EntityType.BLAZE, Sound.ENTITY_BLAZE_AMBIENT);
-        m.put(EntityType.CAVE_SPIDER, Sound.ENTITY_SPIDER_AMBIENT);
-        m.put(EntityType.SPIDER, Sound.ENTITY_SPIDER_AMBIENT);
-        m.put(EntityType.EVOKER, Sound.ENTITY_EVOKER_AMBIENT);
-        m.put(EntityType.GHAST, Sound.ENTITY_GHAST_AMBIENT);
-        m.put(EntityType.HUSK, Sound.ENTITY_HUSK_AMBIENT);
-        m.put(EntityType.ILLUSIONER, Sound.ENTITY_ILLUSIONER_AMBIENT);
-        m.put(EntityType.RAVAGER, Sound.ENTITY_RAVAGER_AMBIENT);
-        m.put(EntityType.SHULKER, Sound.ENTITY_SHULKER_AMBIENT);
-        m.put(EntityType.VEX, Sound.ENTITY_VEX_AMBIENT);
-        m.put(EntityType.WITCH, Sound.ENTITY_WITCH_AMBIENT);
-        m.put(EntityType.STRAY, Sound.ENTITY_STRAY_AMBIENT);
-        MOB_SOUNDS = Collections.unmodifiableMap(m);
+        Map<EntityType, MobAspects> m = new HashMap<>();
+        m.put(EntityType.ZOMBIE, new MobAspects(Sound.ENTITY_ZOMBIE_AMBIENT, Color.fromRGB(74, 99, 53)));
+        m.put(EntityType.CREEPER, new MobAspects(Sound.ENTITY_CREEPER_PRIMED, Color.fromRGB(125, 255, 106)));
+        m.put(EntityType.SKELETON, new MobAspects(Sound.ENTITY_SKELETON_AMBIENT, Color.fromRGB(211, 211, 211)));
+        m.put(EntityType.DROWNED, new MobAspects(Sound.ENTITY_DROWNED_AMBIENT, Color.fromRGB(109, 152, 144)));
+        m.put(EntityType.BLAZE, new MobAspects(Sound.ENTITY_BLAZE_AMBIENT, Color.fromRGB(238, 211, 91)));
+        m.put(EntityType.CAVE_SPIDER, new MobAspects(Sound.ENTITY_SPIDER_AMBIENT, Color.fromRGB(63, 37, 31)));
+        m.put(EntityType.SPIDER, new MobAspects(Sound.ENTITY_SPIDER_AMBIENT, Color.fromRGB(94, 84, 73)));
+        m.put(EntityType.EVOKER, new MobAspects(Sound.ENTITY_EVOKER_AMBIENT, Color.fromRGB(144, 148, 148)));
+        m.put(EntityType.GHAST, new MobAspects(Sound.ENTITY_GHAST_AMBIENT, Color.fromRGB(242, 242, 242)));
+        m.put(EntityType.HUSK, new MobAspects(Sound.ENTITY_HUSK_AMBIENT, Color.fromRGB(111, 104, 90)));
+        m.put(EntityType.ILLUSIONER, new MobAspects(Sound.ENTITY_ILLUSIONER_AMBIENT, Color.fromRGB(144, 149, 149)));
+        m.put(EntityType.RAVAGER, new MobAspects(Sound.ENTITY_RAVAGER_AMBIENT, Color.fromRGB(85, 78, 73)));
+        m.put(EntityType.SHULKER, new MobAspects(Sound.ENTITY_SHULKER_AMBIENT, Color.fromRGB(142, 106, 146)));
+        m.put(EntityType.VEX, new MobAspects(Sound.ENTITY_VEX_AMBIENT, Color.fromRGB(137, 156, 176)));
+        m.put(EntityType.WITCH, new MobAspects(Sound.ENTITY_WITCH_AMBIENT, Color.fromRGB(56, 39, 67)));
+        m.put(EntityType.STRAY, new MobAspects(Sound.ENTITY_STRAY_AMBIENT, Color.fromRGB(118, 132, 135)));
+        m.put(EntityType.GUARDIAN, new MobAspects(Sound.ENTITY_GUARDIAN_AMBIENT, Color.fromRGB(201, 143, 113)));
+        m.put(EntityType.ELDER_GUARDIAN, new MobAspects(Sound.ENTITY_ELDER_GUARDIAN_AMBIENT, Color.fromRGB(201, 143, 113)));
+        MOB_ASPECTS = Collections.unmodifiableMap(m);
     }
 
     /**
@@ -192,10 +196,14 @@ public class BlockListener implements Listener {
         }
         // Play warning sound for upcoming mobs
         if (addon.getSettings().getMobWarning() > 0) {
-            is.getNearestMob(random.nextInt(addon.getSettings().getMobWarning()) + 1).filter(MOB_SOUNDS::containsKey).map(MOB_SOUNDS::get).ifPresent(s -> block.getWorld().playSound(block.getLocation(), s, 1F, 1F));
+            List<EntityType> opMob = is.getNearestMob(addon.getSettings().getMobWarning());
+            opMob.stream().filter(MOB_ASPECTS::containsKey).map(MOB_ASPECTS::get).forEach(s -> {
+                block.getWorld().playSound(block.getLocation(), s.getSound(), 1F, 1F);
+                block.getWorld().spawnParticle(Particle.REDSTONE, block.getLocation().add(new Vector(0.5, 1.0, 0.5)), 10, 0.5, 0, 0.5, 1, new Particle.DustOptions(s.getColor(), 1));
+            });
         }
         // Get the next block
-        OneBlockObject nextBlock = newPhase && phase.getFirstBlock() != null ? phase.getFirstBlock() : is.pop(phase.getNextBlock());
+        OneBlockObject nextBlock = newPhase && phase.getFirstBlock() != null ? phase.getFirstBlock() : is.pollAndAdd(phase.getNextBlock());
         // Set the biome for the block and one block above it
         if (newPhase) {
             for (int x = -4; x <= 4; x++) {
@@ -232,7 +240,6 @@ public class BlockListener implements Listener {
     private void spawnBlock(OneBlockObject nextBlock, Block block) {
         @NonNull
         Material type = nextBlock.getMaterial();
-
         // Place new block with no physics
         block.setType(type, false);
         // Fill the chest
