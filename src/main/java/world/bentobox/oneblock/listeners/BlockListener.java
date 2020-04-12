@@ -308,6 +308,7 @@ public class BlockListener implements Listener {
      * @param i - island
      * @return one block island
      */
+    @NonNull
     public OneBlockIslands getIsland(Island i) {
         return cache.containsKey(i.getUniqueId()) ? cache.get(i.getUniqueId()) : loadIsland(i.getUniqueId());
     }
@@ -335,6 +336,7 @@ public class BlockListener implements Listener {
 
     }
 
+    @NonNull
     private OneBlockIslands loadIsland(String uniqueId) {
         if (handler.objectExists(uniqueId)) {
             OneBlockIslands island = handler.loadObject(uniqueId);

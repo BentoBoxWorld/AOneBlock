@@ -8,11 +8,13 @@ import org.bukkit.WorldCreator;
 import org.bukkit.WorldType;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.generator.ChunkGenerator;
+import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jdt.annotation.Nullable;
 
 import world.bentobox.bentobox.api.addons.GameModeAddon;
 import world.bentobox.bentobox.api.configuration.Config;
 import world.bentobox.bentobox.api.configuration.WorldSettings;
+import world.bentobox.bentobox.api.user.User;
 import world.bentobox.bentobox.database.objects.Island;
 import world.bentobox.oneblock.commands.AdminCommand;
 import world.bentobox.oneblock.commands.IslandCommand;
@@ -70,6 +72,9 @@ public class OneBlock extends GameModeAddon {
             listener = new BlockListener(this);
             registerListener(listener);
             registerListener(new NoBlockHandler(this));
+            // Register placeholders
+            getPlugin().getPlaceholdersManager().registerPlaceholder(this,"oneblock_phase", this::getPhaseByUser);
+            getPlugin().getPlaceholdersManager().registerPlaceholder(this,"oneblock_count", this::getCountByUser);
         } catch (IOException | InvalidConfigurationException e) {
             // Disable
             logError("OneBlock settings could not load (oneblock.yml error)! Addon disabled.");
@@ -78,6 +83,21 @@ public class OneBlock extends GameModeAddon {
             setState(State.DISABLED);
         }
 
+    }
+
+    private String getPhaseByUser(User user) {
+        return getIslands().getProtectedIslandAt(user.getLocation())
+                .map(this::getOneBlocksIsland)
+                .map(OneBlockIslands::getPhaseName)
+                .orElse("");
+    }
+
+    private String getCountByUser(User user) {
+        return getIslands().getProtectedIslandAt(user.getLocation())
+                .map(this::getOneBlocksIsland)
+                .map(OneBlockIslands::getBlockNumber)
+                .map(String::valueOf)
+                .orElse("");
     }
 
     @Override
@@ -182,6 +202,7 @@ public class OneBlock extends GameModeAddon {
      * @param i - island
      * @return one block island data
      */
+    @NonNull
     public OneBlockIslands getOneBlocksIsland(Island i) {
         return listener.getIsland(i);
     }
