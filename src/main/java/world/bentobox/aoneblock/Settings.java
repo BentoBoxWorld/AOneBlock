@@ -26,19 +26,19 @@ import world.bentobox.bentobox.database.objects.adapters.FlagSerializer2;
  * All the plugin settings are here
  * @author Tastybento
  */
-@StoreAt(filename="config.yml", path="addons/OneBlock") // Explicitly call out what name this should have.
-@ConfigComment("OneBlock Configuration [version]")
+@StoreAt(filename="config.yml", path="addons/AOneBlock") // Explicitly call out what name this should have.
+@ConfigComment("AOneBlock Configuration [version]")
 public class Settings implements WorldSettings {
 
     /* Commands */
     @ConfigComment("Island Command. What command users will run to access their island.")
     @ConfigComment("To define alias, just separate commands with white space.")
-    @ConfigEntry(path = "oneblock.command.island", since = "1.3.0")
+    @ConfigEntry(path = "aoneblock.command.island", since = "1.3.0")
     private String islandCommand = "island is skyblock sb";
 
     @ConfigComment("The island admin command.")
     @ConfigComment("To define alias, just separate commands with white space.")
-    @ConfigEntry(path = "oneblock.command.admin", since = "1.3.0")
+    @ConfigEntry(path = "aoneblock.command.admin", since = "1.3.0")
     private String adminCommand = "bsbadmin bsb skyblockadmin sbadmin sba";
 
     /*      WORLD       */
@@ -83,7 +83,7 @@ public class Settings implements WorldSettings {
 
     @ConfigComment("Default protection range radius in blocks. Cannot be larger than distance.")
     @ConfigComment("Admins can change protection sizes for players individually using /bsbadmin range set <player> <new range>")
-    @ConfigComment("or set this permission: oneblock.island.range.<number>")
+    @ConfigComment("or set this permission: aoneblock.island.range.<number>")
     @ConfigEntry(path = "world.protection-range", needsReset = true)
     private int islandProtectionRange = 50;
 
@@ -221,13 +221,13 @@ public class Settings implements WorldSettings {
     private int maxTeamSize = 4;
 
     @ConfigComment("Default maximum number of coop rank members per island")
-    @ConfigComment("Players can have the oneblock.coop.maxsize.<number> permission to be bigger but")
+    @ConfigComment("Players can have the aoneblock.coop.maxsize.<number> permission to be bigger but")
     @ConfigComment("permission size cannot be less than the default below. ")
     @ConfigEntry(path = "island.max-coop-size", since = "1.13.0")
     private int maxCoopSize = 4;
 
     @ConfigComment("Default maximum number of trusted rank members per island")
-    @ConfigComment("Players can have the oneblock.trust.maxsize.<number> permission to be bigger but")
+    @ConfigComment("Players can have the aoneblock.trust.maxsize.<number> permission to be bigger but")
     @ConfigComment("permission size cannot be less than the default below. ")
     @ConfigEntry(path = "island.max-trusted-size", since = "1.13.0")
     private int maxTrustSize = 4;

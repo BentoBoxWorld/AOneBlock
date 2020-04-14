@@ -58,7 +58,7 @@ public class AOneBlock extends GameModeAddon {
         settings = configObject.loadConfigObject();
         if (settings == null) {
             // Disable
-            logError("OneBlock settings could not load! Addon disabled.");
+            logError("AOneBlock settings could not load! Addon disabled.");
             setState(State.DISABLED);
             return false;
         }
@@ -73,11 +73,11 @@ public class AOneBlock extends GameModeAddon {
             registerListener(listener);
             registerListener(new NoBlockHandler(this));
             // Register placeholders
-            getPlugin().getPlaceholdersManager().registerPlaceholder(this,"oneblock_phase", this::getPhaseByUser);
-            getPlugin().getPlaceholdersManager().registerPlaceholder(this,"oneblock_count", this::getCountByUser);
+            getPlugin().getPlaceholdersManager().registerPlaceholder(this,"aoneblock_phase", this::getPhaseByUser);
+            getPlugin().getPlaceholdersManager().registerPlaceholder(this,"aoneblock_count", this::getCountByUser);
         } catch (IOException | InvalidConfigurationException e) {
             // Disable
-            logError("OneBlock settings could not load (oneblock.yml error)! Addon disabled.");
+            logError("AOneBlock settings could not load (oneblock.yml error)! Addon disabled.");
             logError(e.getMessage());
             e.printStackTrace();
             setState(State.DISABLED);
@@ -109,7 +109,7 @@ public class AOneBlock extends GameModeAddon {
     @Override
     public void onReload() {
         if (loadSettings()) {
-            log("Reloaded OneBlock settings");
+            log("Reloaded AOneBlock settings");
         }
     }
 
@@ -124,7 +124,7 @@ public class AOneBlock extends GameModeAddon {
     public void createWorlds() {
         String worldName = settings.getWorldName().toLowerCase();
         if (getServer().getWorld(worldName) == null) {
-            log("Creating OneBlock world ...");
+            log("Creating AOneBlock world ...");
         }
 
         // Create the world if it does not exist
@@ -132,14 +132,14 @@ public class AOneBlock extends GameModeAddon {
         // Make the nether if it does not exist
         if (settings.isNetherGenerate()) {
             if (getServer().getWorld(worldName + NETHER) == null) {
-                log("Creating OneBlock's Nether...");
+                log("Creating AOneBlock's Nether...");
             }
             netherWorld = settings.isNetherIslands() ? getWorld(worldName, World.Environment.NETHER, chunkGenerator) : getWorld(worldName, World.Environment.NETHER, null);
         }
         // Make the end if it does not exist
         if (settings.isEndGenerate()) {
             if (getServer().getWorld(worldName + THE_END) == null) {
-                log("Creating OneBlock's End World...");
+                log("Creating AOneBlock's End World...");
             }
             endWorld = settings.isEndIslands() ? getWorld(worldName, World.Environment.THE_END, chunkGenerator) : getWorld(worldName, World.Environment.THE_END, null);
         }

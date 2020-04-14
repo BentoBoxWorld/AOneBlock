@@ -1,4 +1,4 @@
-name: OneBlock
+name: AOneBlock
 main: world.bentobox.aoneblock.AOneBlock
 version: ${version}${build.number}
 metrics: true
