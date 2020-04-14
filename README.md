@@ -1,11 +1,11 @@
-# OneBlock
-A variation on the OneBlock Minecraft map, written by tastybento. 
+# AOneBlock
+A OneBlock Minecraft plugin, written by tastybento. 
 Credit for the original idea: IJAminecraft.
 
 [![Build Status](https://ci.codemc.org/buildStatus/icon?job=BentoBoxWorld/OneBlock)](https://ci.codemc.org/job/BentoBoxWorld/job/OneBlock/)
 
 ## About
-OneBlock puts you on a block in space. There is only one block. What do you do next?
+AOneBlock puts you on a block in space. There is only one block. What do you do next?
 
 ## Development Status
 
