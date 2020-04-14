@@ -1,8 +1,9 @@
-package world.bentobox.oneblock.commands;
+package world.bentobox.aoneblock.commands;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import world.bentobox.aoneblock.AOneBlock;
 import world.bentobox.bentobox.api.commands.CompositeCommand;
 import world.bentobox.bentobox.api.commands.island.IslandBanCommand;
 import world.bentobox.bentobox.api.commands.island.IslandBanlistCommand;
@@ -22,11 +23,10 @@ import world.bentobox.bentobox.api.commands.island.IslandUnbanCommand;
 import world.bentobox.bentobox.api.commands.island.team.IslandTeamCommand;
 import world.bentobox.bentobox.api.localization.TextVariables;
 import world.bentobox.bentobox.api.user.User;
-import world.bentobox.oneblock.OneBlock;
 
 public class IslandCommand extends CompositeCommand {
 
-    public IslandCommand(OneBlock addon) {
+    public IslandCommand(AOneBlock addon) {
         super(addon,
                 addon.getSettings().getIslandCommand().split(" ")[0],
                 addon.getSettings().getIslandCommand().split(" "));

@@ -1,4 +1,4 @@
-package world.bentobox.oneblock.commands;
+package world.bentobox.aoneblock.commands;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -14,11 +14,11 @@ import org.bukkit.block.Chest;
 import org.bukkit.block.DoubleChest;
 import org.bukkit.inventory.ItemStack;
 
+import world.bentobox.aoneblock.AOneBlock;
+import world.bentobox.aoneblock.oneblocks.OneBlockPhase;
+import world.bentobox.aoneblock.oneblocks.OneBlockObject.Rarity;
 import world.bentobox.bentobox.api.commands.CompositeCommand;
 import world.bentobox.bentobox.api.user.User;
-import world.bentobox.oneblock.OneBlock;
-import world.bentobox.oneblock.oneblocks.OneBlockPhase;
-import world.bentobox.oneblock.oneblocks.OneBlockObject.Rarity;
 
 public class AdminSetChestCommand extends CompositeCommand {
 
@@ -27,7 +27,7 @@ public class AdminSetChestCommand extends CompositeCommand {
         List<String> l = Arrays.stream(Rarity.values()).map(Enum::name).collect(Collectors.toList());
         RARITY_LIST = Collections.unmodifiableList(l);
     }
-    private OneBlock addon;
+    private AOneBlock addon;
     private OneBlockPhase phase;
     private Rarity rarity;
     private Chest chest;
@@ -43,7 +43,7 @@ public class AdminSetChestCommand extends CompositeCommand {
         // Permission
         setPermission("admin.setchest");
         setOnlyPlayer(true);
-        addon = (OneBlock)getAddon();
+        addon = (AOneBlock)getAddon();
     }
 
     @Override

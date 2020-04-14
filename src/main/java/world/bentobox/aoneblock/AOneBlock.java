@@ -1,4 +1,4 @@
-package world.bentobox.oneblock;
+package world.bentobox.aoneblock;
 
 import java.io.IOException;
 
@@ -11,24 +11,24 @@ import org.bukkit.generator.ChunkGenerator;
 import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jdt.annotation.Nullable;
 
+import world.bentobox.aoneblock.commands.AdminCommand;
+import world.bentobox.aoneblock.commands.IslandCommand;
+import world.bentobox.aoneblock.dataobjects.OneBlockIslands;
+import world.bentobox.aoneblock.generators.ChunkGeneratorWorld;
+import world.bentobox.aoneblock.listeners.BlockListener;
+import world.bentobox.aoneblock.listeners.NoBlockHandler;
+import world.bentobox.aoneblock.oneblocks.OneBlocksManager;
 import world.bentobox.bentobox.api.addons.GameModeAddon;
 import world.bentobox.bentobox.api.configuration.Config;
 import world.bentobox.bentobox.api.configuration.WorldSettings;
 import world.bentobox.bentobox.api.user.User;
 import world.bentobox.bentobox.database.objects.Island;
-import world.bentobox.oneblock.commands.AdminCommand;
-import world.bentobox.oneblock.commands.IslandCommand;
-import world.bentobox.oneblock.dataobjects.OneBlockIslands;
-import world.bentobox.oneblock.generators.ChunkGeneratorWorld;
-import world.bentobox.oneblock.listeners.BlockListener;
-import world.bentobox.oneblock.listeners.NoBlockHandler;
-import world.bentobox.oneblock.oneblocks.OneBlocksManager;
 
 /**
  * Main OneBlock class - provides an island minigame in the sky
  * @author tastybento
  */
-public class OneBlock extends GameModeAddon {
+public class AOneBlock extends GameModeAddon {
 
     private static final String NETHER = "_nether";
     private static final String THE_END = "_the_end";

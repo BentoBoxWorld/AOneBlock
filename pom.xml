@@ -5,12 +5,12 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>world.bentobox</groupId>
-    <artifactId>oneblock</artifactId>
+    <artifactId>aoneblock</artifactId>
     <version>${revision}</version>
 
-    <name>OneBlock</name>
-    <description>OneBlock is an add-on for BentoBox, an expandable Minecraft Bukkit plugin for island-type games like SkyBlock or AcidIsland.</description>
-    <url>https://github.com/BentoBoxWorld/OneBlock</url>
+    <name>AOneBlock</name>
+    <description>AOneBlock is an add-on for BentoBox, an expandable Minecraft Bukkit plugin for island-type games like SkyBlock or AcidIsland.</description>
+    <url>https://github.com/BentoBoxWorld/AOneBlock</url>
     <inceptionYear>2020</inceptionYear>
 
     <developers>
@@ -25,19 +25,19 @@
     </developers>
 
     <scm>
-        <connection>scm:git:https://github.com/BentoBoxWorld/OneBlock.git</connection>
-        <developerConnection>scm:git:git@github.com:BentoBoxWorld/OneBlock.git</developerConnection>
-        <url>https://github.com/BentoBoxWorld/OneBlock</url>
+        <connection>scm:git:https://github.com/BentoBoxWorld/AOneBlock.git</connection>
+        <developerConnection>scm:git:git@github.com:BentoBoxWorld/AOneBlock.git</developerConnection>
+        <url>https://github.com/BentoBoxWorld/AOneBlock</url>
     </scm>
 
     <ciManagement>
         <system>jenkins</system>
-        <url>http://ci.codemc.org/job/BentoBoxWorld/job/OneBlock</url>
+        <url>http://ci.codemc.org/job/BentoBoxWorld/job/AOneBlock</url>
     </ciManagement>
 
     <issueManagement>
         <system>GitHub</system>
-        <url>https://github.com/BentoBoxWorld/OneBlock/issues</url>
+        <url>https://github.com/BentoBoxWorld/AOneBlock/issues</url>
     </issueManagement>
 
     <distributionManagement>

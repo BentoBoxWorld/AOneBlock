@@ -1,4 +1,4 @@
-package world.bentobox.oneblock.oneblocks;
+package world.bentobox.aoneblock.oneblocks;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -16,7 +16,7 @@ import org.bukkit.block.Biome;
 import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemStack;
 
-import world.bentobox.oneblock.oneblocks.OneBlockObject.Rarity;
+import world.bentobox.aoneblock.oneblocks.OneBlockObject.Rarity;
 
 
 public class OneBlockPhase {

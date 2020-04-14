@@ -1,4 +1,4 @@
-package world.bentobox.oneblock.listeners;
+package world.bentobox.aoneblock.listeners;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -38,17 +38,17 @@ import org.bukkit.util.BoundingBox;
 import org.bukkit.util.Vector;
 import org.eclipse.jdt.annotation.NonNull;
 
+import world.bentobox.aoneblock.AOneBlock;
+import world.bentobox.aoneblock.dataobjects.OneBlockIslands;
+import world.bentobox.aoneblock.oneblocks.MobAspects;
+import world.bentobox.aoneblock.oneblocks.OneBlockObject;
+import world.bentobox.aoneblock.oneblocks.OneBlockPhase;
+import world.bentobox.aoneblock.oneblocks.OneBlocksManager;
 import world.bentobox.bentobox.api.events.island.IslandEvent.IslandCreatedEvent;
 import world.bentobox.bentobox.api.events.island.IslandEvent.IslandDeleteEvent;
 import world.bentobox.bentobox.api.events.island.IslandEvent.IslandResettedEvent;
 import world.bentobox.bentobox.database.Database;
 import world.bentobox.bentobox.database.objects.Island;
-import world.bentobox.oneblock.OneBlock;
-import world.bentobox.oneblock.dataobjects.OneBlockIslands;
-import world.bentobox.oneblock.oneblocks.MobAspects;
-import world.bentobox.oneblock.oneblocks.OneBlockObject;
-import world.bentobox.oneblock.oneblocks.OneBlockPhase;
-import world.bentobox.oneblock.oneblocks.OneBlocksManager;
 
 /**
  * @author tastybento
@@ -56,7 +56,7 @@ import world.bentobox.oneblock.oneblocks.OneBlocksManager;
  */
 public class BlockListener implements Listener {
 
-    private final OneBlock addon;
+    private final AOneBlock addon;
     private OneBlocksManager oneBlocksManager;
     private final Database<OneBlockIslands> handler;
     private final Map<String, OneBlockIslands> cache;
@@ -106,7 +106,7 @@ public class BlockListener implements Listener {
      * @throws IOException - exception
      * @throws FileNotFoundException - exception
      */
-    public BlockListener(OneBlock addon) throws FileNotFoundException, IOException, InvalidConfigurationException {
+    public BlockListener(AOneBlock addon) throws FileNotFoundException, IOException, InvalidConfigurationException {
         this.addon = addon;
         handler = new Database<>(addon, OneBlockIslands.class);
         cache = new HashMap<>();

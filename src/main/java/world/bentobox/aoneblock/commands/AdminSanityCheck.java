@@ -1,16 +1,16 @@
-package world.bentobox.oneblock.commands;
+package world.bentobox.aoneblock.commands;
 
 import java.util.List;
 import java.util.Optional;
 
+import world.bentobox.aoneblock.AOneBlock;
+import world.bentobox.aoneblock.oneblocks.OneBlockPhase;
 import world.bentobox.bentobox.api.commands.CompositeCommand;
 import world.bentobox.bentobox.api.user.User;
-import world.bentobox.oneblock.OneBlock;
-import world.bentobox.oneblock.oneblocks.OneBlockPhase;
 
 public class AdminSanityCheck extends CompositeCommand {
 
-    private OneBlock addon;
+    private AOneBlock addon;
     private OneBlockPhase phase;
 
     public AdminSanityCheck(CompositeCommand islandCommand) {
@@ -23,7 +23,7 @@ public class AdminSanityCheck extends CompositeCommand {
         setDescription("oneblock.commands.admin.sanity.description");
         // Permission
         setPermission("admin.sanity");
-        addon = (OneBlock)getAddon();
+        addon = (AOneBlock)getAddon();
     }
 
     @Override

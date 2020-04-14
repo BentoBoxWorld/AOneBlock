@@ -1,7 +1,8 @@
-package world.bentobox.oneblock.commands;
+package world.bentobox.aoneblock.commands;
 
 import java.util.List;
 
+import world.bentobox.aoneblock.AOneBlock;
 import world.bentobox.bentobox.api.commands.CompositeCommand;
 import world.bentobox.bentobox.api.commands.admin.AdminDeleteCommand;
 import world.bentobox.bentobox.api.commands.admin.AdminGetrankCommand;
@@ -28,11 +29,10 @@ import world.bentobox.bentobox.api.commands.admin.team.AdminTeamKickCommand;
 import world.bentobox.bentobox.api.commands.admin.team.AdminTeamSetownerCommand;
 import world.bentobox.bentobox.api.localization.TextVariables;
 import world.bentobox.bentobox.api.user.User;
-import world.bentobox.oneblock.OneBlock;
 
 public class AdminCommand extends CompositeCommand {
 
-    public AdminCommand(OneBlock addon) {
+    public AdminCommand(AOneBlock addon) {
         super(addon,
                 addon.getSettings().getAdminCommand().split(" ")[0],
                 addon.getSettings().getAdminCommand().split(" "));

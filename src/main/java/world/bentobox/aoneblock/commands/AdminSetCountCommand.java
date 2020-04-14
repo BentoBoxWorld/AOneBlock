@@ -1,4 +1,4 @@
-package world.bentobox.oneblock.commands;
+package world.bentobox.aoneblock.commands;
 
 import java.util.List;
 import java.util.Optional;
@@ -6,17 +6,17 @@ import java.util.UUID;
 
 import org.eclipse.jdt.annotation.Nullable;
 
+import world.bentobox.aoneblock.AOneBlock;
+import world.bentobox.aoneblock.dataobjects.OneBlockIslands;
 import world.bentobox.bentobox.api.commands.CompositeCommand;
 import world.bentobox.bentobox.api.localization.TextVariables;
 import world.bentobox.bentobox.api.user.User;
 import world.bentobox.bentobox.database.objects.Island;
 import world.bentobox.bentobox.util.Util;
-import world.bentobox.oneblock.OneBlock;
-import world.bentobox.oneblock.dataobjects.OneBlockIslands;
 
 public class AdminSetCountCommand extends CompositeCommand {
 
-    private OneBlock addon;
+    private AOneBlock addon;
     private @Nullable UUID targetUUID;
     private @Nullable Island island;
     private Integer count;
@@ -31,7 +31,7 @@ public class AdminSetCountCommand extends CompositeCommand {
         setDescription("oneblock.commands.admin.setcount.description");
         // Permission
         setPermission("admin.setcount");
-        addon = (OneBlock)getAddon();
+        addon = (AOneBlock)getAddon();
     }
 
     @Override

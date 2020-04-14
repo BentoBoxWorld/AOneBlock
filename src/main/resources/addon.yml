@@ -1,167 +1,167 @@
 name: OneBlock
-main: world.bentobox.oneblock.OneBlock
+main: world.bentobox.aoneblock.AOneBlock
 version: ${version}${build.number}
 metrics: true
 icon: "STONE"
-repository: "BentoBoxWorld/OneBlock"
+repository: "BentoBoxWorld/AOneBlock"
 
 authors: tastybento
 
 permissions:
-  oneblock.count:
-    description: Allow use of the oneblock count command
+  aoneblock.count:
+    description: Allow use of the aoneblock count command
     default: true   
-  oneblock.island:
+  aoneblock.island:
    description: Allow island command usage
    default: true
-  oneblock.island.create:
+  aoneblock.island.create:
     description: Allow island creation
     default: true
-  oneblock.island.home:
+  aoneblock.island.home:
     description: Allow teleporting to player island
     default: true
-  oneblock.island.sethome:
+  aoneblock.island.sethome:
     description: Let the player use the sethome command
     default: true
-  oneblock.island.info:
+  aoneblock.island.info:
     description: Let the player check other players info
     default: true
-  oneblock.island.lock:
+  aoneblock.island.lock:
     description: Allows island locking
     default: true
-  oneblock.island.near:
+  aoneblock.island.near:
     description: Players can see nearby island names
     default: true
-  oneblock.island.expel:
+  aoneblock.island.expel:
     description: Allows expelling of visitors
     default: true
-  oneblock.island.ban:
+  aoneblock.island.ban:
     description: Allows banning of visitors
     default: true
-  oneblock.island.settings:
+  aoneblock.island.settings:
     description: Player can see server settings
     default: true
-  oneblock.island.language:
+  aoneblock.island.language:
     description: Player can select a language
     default: true
-  oneblock.island.name:
+  aoneblock.island.name:
     description: Player can set the name of their island
     default: true
-  oneblock.island.spawn:
+  aoneblock.island.spawn:
     description: Player can use the island spawn command if spawn exists
     default: true
-  oneblock.island.reset:
+  aoneblock.island.reset:
     description: Player can use the island reset or restart command
     default: true  
-  oneblock.island.team:
+  aoneblock.island.team:
     description: Let a player use team command
     default: true
-  oneblock.island.team.setowner:
+  aoneblock.island.team.setowner:
     description: Let a player change the team owner
     default: true
-  oneblock.island.team.invite:
+  aoneblock.island.team.invite:
     description: Let a player invite others
     default: true
-  oneblock.island.team.reject:
+  aoneblock.island.team.reject:
     description: Let a player reject invites
     default: true
-  oneblock.island.team.leave:
+  aoneblock.island.team.leave:
     description: Let a player leave the team
     default: true
-  oneblock.island.team.kick:
+  aoneblock.island.team.kick:
     description: Let a player kick team members
     default: true
-  oneblock.island.team.accept:
+  aoneblock.island.team.accept:
     description: Let a player accept invitations
     default: true
-  oneblock.island.team.trust:
+  aoneblock.island.team.trust:
     description: Let a player use team trust commands
     default: true
-  oneblock.island.team.coop:
+  aoneblock.island.team.coop:
     description: Let a player use team coop commands
     default: true
-  oneblock.island.team.promote:
+  aoneblock.island.team.promote:
     description: Let a player use promote commands
     default: true
-  oneblock.settings.*:
+  aoneblock.settings.*:
     description: Allow use of settings on island
     default: true
-  oneblock.mod.info:
+  aoneblock.mod.info:
     description: Let a moderator see info on a player
     default: op
-  oneblock.mod.clearreset:
+  aoneblock.mod.clearreset:
     description: Allow clearing of island reset limit
     default: false
-  oneblock.mod.bypasscooldowns:
+  aoneblock.mod.bypasscooldowns:
     description: Allow moderator to bypass cooldowns
     default: op
-  oneblock.mod.bypassdelays:
+  aoneblock.mod.bypassdelays:
     description: Allow moderator to bypass delays
     default: op
-  oneblock.mod.bypassprotect:
+  aoneblock.mod.bypassprotect:
     description: Allow moderator to bypass island protection
     default: op
-  oneblock.mod.bypassexpel:
+  aoneblock.mod.bypassexpel:
     description: Allow moderator to bypass island expulsion
     default: op
-  oneblock.mod.switch:
+  aoneblock.mod.switch:
     description: Allows moderator to switch bypass protection on and off
     default: op
-  oneblock.mod.lock:
+  aoneblock.mod.lock:
     description: Locks or unlocks an island
     default: op
-  oneblock.mod.bypasslock:
+  aoneblock.mod.bypasslock:
     description: Bypasses an island lock
     default: op
-  oneblock.mod.bypassban:
+  aoneblock.mod.bypassban:
     description: Bypasses island ban
     default: op  
-  oneblock.mod.team:
+  aoneblock.mod.team:
     description: Enables modification of teams via kick and add commands
     default: false
-  oneblock.admin.tp:
+  aoneblock.admin.tp:
     description: Allows teleport to an island
     default: op    
-  oneblock.admin.clearresetall:
+  aoneblock.admin.clearresetall:
     description: Allow clearing of island reset limit of all players
     default: op
-  oneblock.admin.reload:
+  aoneblock.admin.reload:
     description: Reload the config.yml
     default: op
-  oneblock.admin.delete:
+  aoneblock.admin.delete:
     description: Let a player completely remove a player (including island)
     default: op
-  oneblock.admin.register:
+  aoneblock.admin.register:
     description: Let a player register the nearest island to another player.
     default: op
-  oneblock.admin.unregister:
+  aoneblock.admin.unregister:
     description: Removes a player from an island without deleting the island blocks.
     default: op
-  oneblock.admin.setspawn:
+  aoneblock.admin.setspawn:
     description: Allows use of spawn tools
     default: op
-  oneblock.admin.setrange:
+  aoneblock.admin.setrange:
     description: Allows setting of island protection range
     default: op
-  oneblock.admin.settingsreset:
+  aoneblock.admin.settingsreset:
     description: Resets all the islands to default protection settings
     default: op
-  oneblock.admin.noban:
+  aoneblock.admin.noban:
     description: Player cannot be banned from an island
     default: op
-  oneblock.admin.noexpel:
+  aoneblock.admin.noexpel:
     description: Player cannot be expelled from an island
     default: op
-  oneblock.admin.setlanguage:
+  aoneblock.admin.setlanguage:
     description: Resets all player languages and sets the default language
     default: op
-  oneblock.admin.getrank:
+  aoneblock.admin.getrank:
     description: Get a player's rank
     default: op
-  oneblock.admin.setrank:
+  aoneblock.admin.setrank:
     description: Set a player's rank
     default: op
-  oneblock.admin.setchest:
+  aoneblock.admin.setchest:
     description: Puts the looked-at chest into a phase with a given rarity
     default: op
   

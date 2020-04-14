@@ -1,17 +1,17 @@
-package world.bentobox.oneblock.commands;
+package world.bentobox.aoneblock.commands;
 
 import java.util.List;
 
+import world.bentobox.aoneblock.AOneBlock;
+import world.bentobox.aoneblock.dataobjects.OneBlockIslands;
 import world.bentobox.bentobox.api.commands.CompositeCommand;
 import world.bentobox.bentobox.api.localization.TextVariables;
 import world.bentobox.bentobox.api.user.User;
 import world.bentobox.bentobox.util.Util;
-import world.bentobox.oneblock.OneBlock;
-import world.bentobox.oneblock.dataobjects.OneBlockIslands;
 
 public class IslandCountCommand extends CompositeCommand {
 
-    private OneBlock addon;
+    private AOneBlock addon;
 
     public IslandCountCommand(CompositeCommand islandCommand) {
         super(islandCommand, "count");
@@ -23,7 +23,7 @@ public class IslandCountCommand extends CompositeCommand {
         setOnlyPlayer(true);
         // Permission
         setPermission("count");
-        addon = (OneBlock)getAddon();
+        addon = (AOneBlock)getAddon();
     }
 
     @Override

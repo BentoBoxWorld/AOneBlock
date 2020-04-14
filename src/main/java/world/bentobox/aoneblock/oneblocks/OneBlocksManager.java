@@ -1,4 +1,4 @@
-package world.bentobox.oneblock.oneblocks;
+package world.bentobox.aoneblock.oneblocks;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -23,8 +23,8 @@ import org.eclipse.jdt.annotation.Nullable;
 
 import com.google.common.io.Files;
 
-import world.bentobox.oneblock.OneBlock;
-import world.bentobox.oneblock.oneblocks.OneBlockObject.Rarity;
+import world.bentobox.aoneblock.AOneBlock;
+import world.bentobox.aoneblock.oneblocks.OneBlockObject.Rarity;
 
 public class OneBlocksManager {
 
@@ -37,7 +37,7 @@ public class OneBlocksManager {
     private static final String CONTENTS = "contents";
     private static final String MOBS = "mobs";
     private static final String BLOCKS = "blocks";
-    private final OneBlock addon;
+    private final AOneBlock addon;
     private TreeMap<Integer, OneBlockPhase> blockProbs;
 
     /**
@@ -46,7 +46,7 @@ public class OneBlocksManager {
      * @throws IOException - exception
      * @throws FileNotFoundException - exception
      */
-    public OneBlocksManager(OneBlock addon) throws FileNotFoundException, IOException, InvalidConfigurationException {
+    public OneBlocksManager(AOneBlock addon) throws FileNotFoundException, IOException, InvalidConfigurationException {
         this.addon = addon;
         // Save the default oneblocks.yml file
         addon.saveResource(ONE_BLOCKS_YML, false);

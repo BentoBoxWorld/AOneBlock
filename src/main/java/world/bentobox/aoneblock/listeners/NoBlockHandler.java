@@ -1,4 +1,4 @@
-package world.bentobox.oneblock.listeners;
+package world.bentobox.aoneblock.listeners;
 
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
@@ -6,8 +6,8 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerRespawnEvent;
 
+import world.bentobox.aoneblock.AOneBlock;
 import world.bentobox.bentobox.database.objects.Island;
-import world.bentobox.oneblock.OneBlock;
 
 /**
  * Handles the situation when there is no block to go back to after death respawn
@@ -16,9 +16,9 @@ import world.bentobox.oneblock.OneBlock;
  */
 public class NoBlockHandler implements Listener {
 
-    private OneBlock addon;
+    private AOneBlock addon;
 
-    public NoBlockHandler(OneBlock oneBlock) {
+    public NoBlockHandler(AOneBlock oneBlock) {
         this.addon = oneBlock;
     }
 

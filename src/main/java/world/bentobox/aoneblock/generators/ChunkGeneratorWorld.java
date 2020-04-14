@@ -1,4 +1,4 @@
-package world.bentobox.oneblock.generators;
+package world.bentobox.aoneblock.generators;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -15,7 +15,7 @@ import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.util.Vector;
 import org.bukkit.util.noise.PerlinOctaveGenerator;
 
-import world.bentobox.oneblock.OneBlock;
+import world.bentobox.aoneblock.AOneBlock;
 
 /**
  * @author tastybento
@@ -23,14 +23,14 @@ import world.bentobox.oneblock.OneBlock;
  */
 public class ChunkGeneratorWorld extends ChunkGenerator {
 
-    private final OneBlock addon;
+    private final AOneBlock addon;
     private final Random rand = new Random();
     private final Map<Vector, Material> roofChunk = new HashMap<>();
 
     /**
      * @param addon - addon
      */
-    public ChunkGeneratorWorld(OneBlock addon) {
+    public ChunkGeneratorWorld(AOneBlock addon) {
         super();
         this.addon = addon;
         makeNetherRoof();
