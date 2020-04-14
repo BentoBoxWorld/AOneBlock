@@ -3,7 +3,7 @@
 # the one at http://yaml-online-parser.appspot.com                                        #
 ###########################################################################################
 
-oneblock:
+aoneblock:
   commands:
     admin:
       setcount:
