@@ -77,7 +77,7 @@ A: Yes. Chests spawn with random items in them from the current phase. There are
 
 Q: Is it possible to reach the Nether or End in this map?
 
-A: No. Those worlds are not included yet, just the phases.
+A: Yes, the vanilla Nether exists by default but there is no End world. 
 
 Q: What is the end goal?
 
