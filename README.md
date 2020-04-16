@@ -2,7 +2,7 @@
 A OneBlock Minecraft plugin, written by tastybento. 
 Credit for the original idea: IJAminecraft.
 
-[![Build Status](https://ci.codemc.org/buildStatus/icon?job=BentoBoxWorld/OneBlock)](https://ci.codemc.org/job/BentoBoxWorld/job/OneBlock/)
+[![Build Status](https://ci.codemc.org/buildStatus/icon?job=BentoBoxWorld/AOneBlock)](https://ci.codemc.org/job/BentoBoxWorld/job/AOneBlock/)
 
 ## About
 AOneBlock puts you on a block in space. There is only one block. What do you do next?
