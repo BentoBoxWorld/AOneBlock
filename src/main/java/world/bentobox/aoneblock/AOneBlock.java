@@ -73,8 +73,10 @@ public class AOneBlock extends GameModeAddon {
             registerListener(listener);
             registerListener(new NoBlockHandler(this));
             // Register placeholders
-            getPlugin().getPlaceholdersManager().registerPlaceholder(this,"phase", this::getPhaseByUser);
-            getPlugin().getPlaceholdersManager().registerPlaceholder(this,"count", this::getCountByUser);
+            getPlugin().getPlaceholdersManager().registerPlaceholder(this,"visited_island_phase", this::getPhaseByUser);
+            getPlugin().getPlaceholdersManager().registerPlaceholder(this,"visited_island_count", this::getCountByUser);
+            getPlugin().getPlaceholdersManager().registerPlaceholder(this,"my_island_phase", this::getPhaseByIsland);
+            getPlugin().getPlaceholdersManager().registerPlaceholder(this,"my_island_count", this::getCountByIsland);
         } catch (IOException | InvalidConfigurationException e) {
             // Disable
             logError("AOneBlock settings could not load (oneblock.yml error)! Addon disabled.");
@@ -98,6 +100,16 @@ public class AOneBlock extends GameModeAddon {
                 .map(OneBlockIslands::getBlockNumber)
                 .map(String::valueOf)
                 .orElse("");
+    }
+
+    private String getPhaseByIsland(User user) {
+        Island i = getIslands().getIsland(getOverWorld(), user);
+        return i == null ? "" : getOneBlocksIsland(i).getPhaseName();
+    }
+
+    private String getCountByIsland(User user) {
+        Island i = getIslands().getIsland(getOverWorld(), user);
+        return i == null ? "" : String.valueOf(getOneBlocksIsland(i).getBlockNumber());
     }
 
     @Override
