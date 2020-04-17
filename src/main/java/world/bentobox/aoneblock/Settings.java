@@ -31,15 +31,15 @@ import world.bentobox.bentobox.database.objects.adapters.FlagSerializer2;
 public class Settings implements WorldSettings {
 
     /* Commands */
-    @ConfigComment("Island Command. What command users will run to access their island.")
+    @ConfigComment("Player command. What command users will run to access their island.")
     @ConfigComment("To define alias, just separate commands with white space.")
     @ConfigEntry(path = "aoneblock.command.island", since = "1.3.0")
-    private String islandCommand = "island is skyblock sb";
+    private String islandCommand = "ob oneblock";
 
-    @ConfigComment("The island admin command.")
+    @ConfigComment("The admin command.")
     @ConfigComment("To define alias, just separate commands with white space.")
     @ConfigEntry(path = "aoneblock.command.admin", since = "1.3.0")
-    private String adminCommand = "bsbadmin bsb skyblockadmin sbadmin sba";
+    private String adminCommand = "oba obadmin";
 
     /*      WORLD       */
     @ConfigComment("Friendly name for this world. Used in admin commands. Must be a single word")

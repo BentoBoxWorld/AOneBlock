@@ -1,5 +1,5 @@
-# OneBlock Configuration ${version}
-oneblock:
+# AOneBlock Configuration ${version}
+aoneblock:
   command:
     # Island Command. What command users will run to access their island.
     # To define alias, just separate commands with white space.
