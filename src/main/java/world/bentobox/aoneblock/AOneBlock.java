@@ -73,8 +73,8 @@ public class AOneBlock extends GameModeAddon {
             registerListener(listener);
             registerListener(new NoBlockHandler(this));
             // Register placeholders
-            getPlugin().getPlaceholdersManager().registerPlaceholder(this,"aoneblock_phase", this::getPhaseByUser);
-            getPlugin().getPlaceholdersManager().registerPlaceholder(this,"aoneblock_count", this::getCountByUser);
+            getPlugin().getPlaceholdersManager().registerPlaceholder(this,"phase", this::getPhaseByUser);
+            getPlugin().getPlaceholdersManager().registerPlaceholder(this,"count", this::getCountByUser);
         } catch (IOException | InvalidConfigurationException e) {
             // Disable
             logError("AOneBlock settings could not load (oneblock.yml error)! Addon disabled.");
