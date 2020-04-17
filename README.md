@@ -2,7 +2,7 @@
 A OneBlock Minecraft plugin, written by tastybento. 
 Credit for the original idea: IJAminecraft.
 
-[![Build Status](https://ci.codemc.org/buildStatus/icon?job=BentoBoxWorld/OneBlock)](https://ci.codemc.org/job/BentoBoxWorld/job/OneBlock/)
+[![Build Status](https://ci.codemc.org/buildStatus/icon?job=BentoBoxWorld/AOneBlock)](https://ci.codemc.org/job/BentoBoxWorld/job/AOneBlock/)
 
 ## About
 AOneBlock puts you on a block in space. There is only one block. What do you do next?
@@ -77,7 +77,7 @@ A: Yes. Chests spawn with random items in them from the current phase. There are
 
 Q: Is it possible to reach the Nether or End in this map?
 
-A: No. Those worlds are not included yet, just the phases.
+A: Yes, the vanilla Nether exists by default but there is no End world. 
 
 Q: What is the end goal?
 
