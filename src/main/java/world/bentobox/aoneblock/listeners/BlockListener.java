@@ -330,7 +330,12 @@ public class BlockListener implements Listener {
                 } else {
                     meta.setDamage(damage + 1);
                 }
-                inHand.setItemMeta(itemMeta);
+                if (meta.getDamage() > inHand.getType().getMaxDurability()) {
+                    player.getWorld().playSound(player.getLocation(), Sound.ENTITY_ITEM_BREAK, 1F, 1F);
+                    player.getInventory().setItemInMainHand(null);
+                } else {
+                    inHand.setItemMeta(itemMeta);
+                }
             }
         }
 
