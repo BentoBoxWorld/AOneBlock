@@ -19,7 +19,7 @@ public class IslandCountCommand extends CompositeCommand {
 
     @Override
     public void setup() {
-        setDescription("oneblock.commands.count.description");
+        setDescription("aoneblock.commands.count.description");
         setOnlyPlayer(true);
         // Permission
         setPermission("count");
@@ -43,7 +43,7 @@ public class IslandCountCommand extends CompositeCommand {
     public boolean execute(User user, String label, List<String> args) {
         getIslands().getProtectedIslandAt(user.getLocation()).ifPresent(island -> {
             OneBlockIslands i = addon.getOneBlocksIsland(island);
-            user.sendMessage("oneblock.commands.count.info", TextVariables.NUMBER, String.valueOf(i.getBlockNumber()), TextVariables.NAME, i.getPhaseName());
+            user.sendMessage("aoneblock.commands.count.info", TextVariables.NUMBER, String.valueOf(i.getBlockNumber()), TextVariables.NAME, i.getPhaseName());
         });
         return true;
     }

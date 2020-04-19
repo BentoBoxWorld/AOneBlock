@@ -38,8 +38,8 @@ public class AdminSetChestCommand extends CompositeCommand {
 
     @Override
     public void setup() {
-        setParametersHelp("oneblock.commands.admin.setchest.parameters");
-        setDescription("oneblock.commands.admin.setchest.description");
+        setParametersHelp("aoneblock.commands.admin.setchest.parameters");
+        setDescription("aoneblock.commands.admin.setchest.description");
         // Permission
         setPermission("admin.setchest");
         setOnlyPlayer(true);
@@ -56,7 +56,7 @@ public class AdminSetChestCommand extends CompositeCommand {
         // Check phase
         Optional<OneBlockPhase> opPhase = addon.getOneBlockManager().getPhase(args.get(0).toUpperCase());
         if (!opPhase.isPresent()) {
-            user.sendMessage("oneblock.commands.admin.setchest.unknown-phase");
+            user.sendMessage("aoneblock.commands.admin.setchest.unknown-phase");
             return false;
         } else {
             phase = opPhase.get();
@@ -66,19 +66,19 @@ public class AdminSetChestCommand extends CompositeCommand {
         try {
             rarity = Rarity.valueOf(args.get(1).toUpperCase());
         } catch (Exception e) {
-            user.sendMessage("oneblock.commands.admin.setchest.unknown-rarity");
+            user.sendMessage("aoneblock.commands.admin.setchest.unknown-rarity");
             return false;
         }
 
         // Check that player is looking at a chest
         Block target = user.getPlayer().getTargetBlock(null, 5);
         if (!target.getType().equals(Material.CHEST)) {
-            user.sendMessage("oneblock.commands.admin.setchest.look-at-chest");
+            user.sendMessage("aoneblock.commands.admin.setchest.look-at-chest");
             return false;
         }
         chest = (Chest)target.getState();
         if (chest.getInventory().getHolder() instanceof DoubleChest) {
-            user.sendMessage("oneblock.commands.admin.setchest.only-single-chest");
+            user.sendMessage("aoneblock.commands.admin.setchest.only-single-chest");
             return false;
         }
         return true;
@@ -96,14 +96,14 @@ public class AdminSetChestCommand extends CompositeCommand {
             }
         }
         if (items.isEmpty()) {
-            user.sendMessage("oneblock.commands.admin.setchest.chest-is-empty");
+            user.sendMessage("aoneblock.commands.admin.setchest.chest-is-empty");
             return false;
         }
         phase.addChest(items, rarity);
         if (addon.getOneBlockManager().saveOneBlockConfig()) {
-            user.sendMessage("oneblock.commands.admin.setchest.success");
+            user.sendMessage("aoneblock.commands.admin.setchest.success");
         } else {
-            user.sendMessage("oneblock.commands.admin.setchest.failure");
+            user.sendMessage("aoneblock.commands.admin.setchest.failure");
         }
         return true;
     }

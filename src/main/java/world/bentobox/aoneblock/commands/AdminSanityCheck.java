@@ -19,8 +19,8 @@ public class AdminSanityCheck extends CompositeCommand {
 
     @Override
     public void setup() {
-        setParametersHelp("oneblock.commands.admin.sanity.parameters");
-        setDescription("oneblock.commands.admin.sanity.description");
+        setParametersHelp("aoneblock.commands.admin.sanity.parameters");
+        setDescription("aoneblock.commands.admin.sanity.description");
         // Permission
         setPermission("admin.sanity");
         addon = (AOneBlock)getAddon();
@@ -37,7 +37,7 @@ public class AdminSanityCheck extends CompositeCommand {
         // Check phase
         Optional<OneBlockPhase> opPhase = addon.getOneBlockManager().getPhase(args.get(0).toUpperCase());
         if (!opPhase.isPresent()) {
-            user.sendMessage("oneblock.commands.admin.setchest.unknown-phase");
+            user.sendMessage("aoneblock.commands.admin.setchest.unknown-phase");
             return false;
         } else {
             phase = opPhase.get();
@@ -54,7 +54,7 @@ public class AdminSanityCheck extends CompositeCommand {
             addon.getOneBlockManager().getProbs(phase);
         }
         if (user.isPlayer()) {
-            user.sendMessage("oneblock.commands.admin.setchest.see-console");
+            user.sendMessage("aoneblock.commands.admin.setchest.see-console");
         }
         return true;
     }
