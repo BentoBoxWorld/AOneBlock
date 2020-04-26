@@ -2,7 +2,6 @@ package world.bentobox.aoneblock.listeners;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -31,6 +30,8 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockDamageEvent;
+import org.bukkit.event.entity.EntityChangeBlockEvent;
+import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.player.PlayerBucketFillEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
@@ -45,7 +46,6 @@ import world.bentobox.aoneblock.oneblocks.MobAspects;
 import world.bentobox.aoneblock.oneblocks.OneBlockObject;
 import world.bentobox.aoneblock.oneblocks.OneBlockPhase;
 import world.bentobox.aoneblock.oneblocks.OneBlocksManager;
-import world.bentobox.bentobox.BentoBox;
 import world.bentobox.bentobox.api.events.island.IslandEvent.IslandCreatedEvent;
 import world.bentobox.bentobox.api.events.island.IslandEvent.IslandDeleteEvent;
 import world.bentobox.bentobox.api.events.island.IslandEvent.IslandResettedEvent;
@@ -179,7 +179,7 @@ public class BlockListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
-    public void onBlockBreak(BlockBreakEvent e) {
+    public void onBlockBreak(final BlockBreakEvent e) {
         if (!addon.inWorld(e.getBlock().getWorld())) {
             return;
         }
@@ -188,11 +188,36 @@ public class BlockListener implements Listener {
     }
 
     /**
+     * Prevent entities other than players changing the magic block
+     * @param e - EntityChangeBlockEvent
+     */
+    @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
+    public void onBlockChange(final EntityChangeBlockEvent e) {
+        if (!addon.inWorld(e.getBlock().getWorld())) {
+            return;
+        }
+        Location l = e.getBlock().getLocation();
+        addon.getIslands().getIslandAt(l).filter(i -> l.equals(i.getCenter())).ifPresent(i -> e.setCancelled(true));
+    }
+
+    /**
+     * Blocks oneblocks from being blown up
+     * @param e - EntityExplodeEvent
+     */
+    @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
+    public void onExplosion(final EntityExplodeEvent e) {
+        if (!addon.inWorld(e.getEntity().getWorld())) {
+            return;
+        }
+        e.blockList().removeIf(b -> addon.getIslands().getIslandAt(b.getLocation()).filter(i -> b.getLocation().equals(i.getCenter())).isPresent());
+    }
+
+    /**
      * Check for water grabbing
      * @param e - event (note that you cannot register PlayerBucketEvent)
      */
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
-    public void onBlockBreak(PlayerBucketFillEvent e) {
+    public void onBlockBreak(final PlayerBucketFillEvent e) {
         if (!addon.inWorld(e.getBlock().getWorld())) {
             return;
         }
