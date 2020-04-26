@@ -1242,7 +1242,7 @@ public class Settings implements WorldSettings {
 
     @Override
     public String getPermissionPrefix() {
-        return "oneblock";
+        return "aoneblock";
     }
 
     @Override
