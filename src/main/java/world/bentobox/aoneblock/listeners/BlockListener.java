@@ -2,6 +2,7 @@ package world.bentobox.aoneblock.listeners;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -44,6 +45,7 @@ import world.bentobox.aoneblock.oneblocks.MobAspects;
 import world.bentobox.aoneblock.oneblocks.OneBlockObject;
 import world.bentobox.aoneblock.oneblocks.OneBlockPhase;
 import world.bentobox.aoneblock.oneblocks.OneBlocksManager;
+import world.bentobox.bentobox.BentoBox;
 import world.bentobox.bentobox.api.events.island.IslandEvent.IslandCreatedEvent;
 import world.bentobox.bentobox.api.events.island.IslandEvent.IslandDeleteEvent;
 import world.bentobox.bentobox.api.events.island.IslandEvent.IslandResettedEvent;
@@ -61,6 +63,37 @@ public class BlockListener implements Listener {
     private final Database<OneBlockIslands> handler;
     private final Map<String, OneBlockIslands> cache;
     private final Random random = new Random();
+
+    /**
+     * Tools that take damage. See https://minecraft.gamepedia.com/Item_durability#Tool_durability
+     */
+    private final static Map<Material, Integer> TOOLS;
+    static {
+        Map<Material, Integer> t = new HashMap<>();
+        t.put(Material.DIAMOND_AXE, 1);
+        t.put(Material.DIAMOND_SHOVEL, 1);
+        t.put(Material.DIAMOND_PICKAXE, 1);
+        t.put(Material.IRON_AXE, 1);
+        t.put(Material.IRON_SHOVEL, 1);
+        t.put(Material.IRON_PICKAXE, 1);
+        t.put(Material.WOODEN_AXE, 1);
+        t.put(Material.WOODEN_SHOVEL, 1);
+        t.put(Material.WOODEN_PICKAXE, 1);
+        t.put(Material.GOLDEN_AXE, 1);
+        t.put(Material.GOLDEN_SHOVEL, 1);
+        t.put(Material.GOLDEN_PICKAXE, 1);
+        t.put(Material.STONE_AXE, 1);
+        t.put(Material.STONE_SHOVEL, 1);
+        t.put(Material.STONE_PICKAXE, 1);
+        t.put(Material.SHEARS, 1);
+        t.put(Material.DIAMOND_SWORD, 2);
+        t.put(Material.GOLDEN_SWORD, 2);
+        t.put(Material.STONE_SWORD, 2);
+        t.put(Material.IRON_SWORD, 2);
+        t.put(Material.WOODEN_SWORD, 2);
+        t.put(Material.TRIDENT, 2);
+        TOOLS = Collections.unmodifiableMap(t);
+    }
     /**
      * Water entities
      */
@@ -228,7 +261,7 @@ public class BlockListener implements Listener {
             // Give exp
             player.giveExp(((BlockBreakEvent)e).getExpToDrop());
             // Damage tool
-            damageTool(player);
+            damageTool(player, block);
             spawnBlock(nextBlock, block);
         } else if (e instanceof PlayerBucketFillEvent) {
             Bukkit.getScheduler().runTask(addon.getPlugin(), ()-> spawnBlock(nextBlock, block));
@@ -313,22 +346,25 @@ public class BlockListener implements Listener {
         return cache.containsKey(i.getUniqueId()) ? cache.get(i.getUniqueId()) : loadIsland(i.getUniqueId());
     }
 
-    private void damageTool(@NonNull Player player) {
+    private void damageTool(@NonNull Player player, Block block) {
         ItemStack inHand = player.getInventory().getItemInMainHand();
         ItemMeta itemMeta = inHand.getItemMeta();
-        if (itemMeta instanceof Damageable && !itemMeta.isUnbreakable() && !inHand.getType().isBlock()
-                && inHand.getType().isItem()) {
+
+        if (itemMeta instanceof Damageable && !itemMeta.isUnbreakable() && TOOLS.containsKey(inHand.getType())) {
             Damageable meta = (Damageable) itemMeta;
-            Integer damage = meta.getDamage();
-            if (damage != null) {
+            // Get the item's current durability
+            Integer durability = meta.getDamage();
+            // Get the damage this will do
+            int damage = TOOLS.get(inHand.getType());
+            if (durability != null) {
                 // Check for DURABILITY
                 if (itemMeta.hasEnchant(Enchantment.DURABILITY)) {
                     int level = itemMeta.getEnchantLevel(Enchantment.DURABILITY);
                     if (random.nextInt(level + 1) == 0) {
-                        meta.setDamage(damage + 1);
+                        meta.setDamage(durability + damage);
                     }
                 } else {
-                    meta.setDamage(damage + 1);
+                    meta.setDamage(durability + damage);
                 }
                 if (meta.getDamage() > inHand.getType().getMaxDurability()) {
                     player.getWorld().playSound(player.getLocation(), Sound.ENTITY_ITEM_BREAK, 1F, 1F);
