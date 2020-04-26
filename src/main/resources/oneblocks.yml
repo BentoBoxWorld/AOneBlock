@@ -19,7 +19,7 @@
     DARK_OAK_LEAVES: 100
     IRON_ORE: 300
     OAK_LOG: 2000
-    EMERALD_ORE: 40
+    EMERALD_ORE: 10
     PODZOL: 40
     BIRCH_LEAVES: 100
     DIRT: 1000
@@ -91,7 +91,7 @@
           ==: org.bukkit.inventory.ItemStack
           v: 2230
           type: LAPIS_LAZULI
-          amount: 8
+          amount: 2
         16:
           ==: org.bukkit.inventory.ItemStack
           v: 2230
@@ -191,14 +191,14 @@
   firstBlock: STONE
   biome: TAIGA
   blocks:
-    EMERALD_ORE: 10
+    EMERALD_ORE: 5
     COBWEB: 250
     DIRT: 500
     SANDSTONE: 100
     SAND: 100
     REDSTONE_ORE: 60
     COAL_ORE: 300
-    LAPIS_ORE: 30
+    LAPIS_ORE: 20
     ANDESITE: 200
     COBBLESTONE: 800
     DIORITE: 200
