@@ -15,10 +15,12 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
+import org.bukkit.Tag;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Chest;
+import org.bukkit.block.data.type.Leaves;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
@@ -303,6 +305,12 @@ public class BlockListener implements Listener {
         // Fill the chest
         if (type.equals(Material.CHEST) && nextBlock.getChest() != null) {
             fillChest(nextBlock, block);
+            return;
+        }
+        if (Tag.LEAVES.isTagged(type)) {
+            Leaves leaves = (Leaves)block.getState().getBlockData();
+            leaves.setPersistent(true);
+            block.setBlockData(leaves);
         }
     }
 
