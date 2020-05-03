@@ -19,6 +19,7 @@ import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemStack;
+import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jdt.annotation.Nullable;
 
 import com.google.common.io.Files;
@@ -46,38 +47,39 @@ public class OneBlocksManager {
      * @throws IOException - exception
      * @throws FileNotFoundException - exception
      */
-    public OneBlocksManager(AOneBlock addon) throws FileNotFoundException, IOException, InvalidConfigurationException {
+    public OneBlocksManager(AOneBlock addon) {
         this.addon = addon;
+        // Initialize block probabilities
+        blockProbs = new TreeMap<>();
         // Save the default oneblocks.yml file
         addon.saveResource(ONE_BLOCKS_YML, false);
-        loadPhases();
     }
 
     /**
      * Loads the game phases
      */
-    private void loadPhases() throws IOException, InvalidConfigurationException, NumberFormatException {
+    public void loadPhases() throws IOException, InvalidConfigurationException, NumberFormatException {
         // Clear block probabilities
         blockProbs = new TreeMap<>();
         // Load the config file
         YamlConfiguration oneBlocks = new YamlConfiguration();
-        oneBlocks.load(addon.getDataFolder() + File.separator + ONE_BLOCKS_YML);
+        // Check for file
+        File check = new File(addon.getDataFolder(), ONE_BLOCKS_YML);
+        if (!check.exists()) {
+            addon.logError(check.getAbsolutePath() + " does not exist!");
+            return;
+        }
+        try {
+            oneBlocks.load(check);
+        } catch (Exception e) {
+            addon.logError(e.getMessage());
+            return;
+        }
         for (String blockNumber : oneBlocks.getKeys(false)) {
             OneBlockPhase obPhase = new OneBlockPhase(blockNumber);
             // Get config Section
             ConfigurationSection phase = oneBlocks.getConfigurationSection(blockNumber);
-            // goto
-            if (phase.contains("gotoBlock")) {
-                obPhase.setGotoBlock(phase.getInt("gotoBlock", 0));
-            }
-            // name
-            obPhase.setPhaseName(phase.getString(NAME, blockNumber));
-            // biome
-            obPhase.setPhaseBiome(Biome.valueOf(phase.getString(BIOME, "PLAINS").toUpperCase()));
-            // First block
-            if (phase.contains(FIRST_BLOCK)) {
-                addFirstBlock(obPhase, phase.getString(FIRST_BLOCK));
-            }
+            initBlock(blockNumber, obPhase, phase);
             // Blocks
             addBlocks(obPhase, phase);
             // Mobs
@@ -90,7 +92,22 @@ public class OneBlocksManager {
         }
     }
 
-    private void addFirstBlock(OneBlockPhase obPhase, @Nullable String material) {
+    void initBlock(String blockNumber, OneBlockPhase obPhase, ConfigurationSection phase) {
+        // goto
+        if (phase.contains("gotoBlock")) {
+            obPhase.setGotoBlock(phase.getInt("gotoBlock", 0));
+        }
+        // name
+        obPhase.setPhaseName(phase.getString(NAME, blockNumber));
+        // biome
+        obPhase.setPhaseBiome(Biome.valueOf(phase.getString(BIOME, "PLAINS").toUpperCase()));
+        // First block
+        if (phase.contains(FIRST_BLOCK)) {
+            addFirstBlock(obPhase, phase.getString(FIRST_BLOCK));
+        }
+    }
+
+    void addFirstBlock(OneBlockPhase obPhase, @Nullable String material) {
         if (material == null) return;
         Material m = Material.matchMaterial(material);
         if (m == null || !m.isBlock()) {
@@ -100,7 +117,7 @@ public class OneBlocksManager {
         }
     }
 
-    private void addChests(OneBlockPhase obPhase, ConfigurationSection phase) {
+    void addChests(OneBlockPhase obPhase, ConfigurationSection phase) {
         if (phase.isConfigurationSection(CHESTS)) {
             ConfigurationSection chests = phase.getConfigurationSection(CHESTS);
             for (String chestId: chests.getKeys(false)) {
@@ -121,7 +138,7 @@ public class OneBlocksManager {
 
     }
 
-    private void addMobs(OneBlockPhase obPhase, ConfigurationSection phase) {
+    void addMobs(OneBlockPhase obPhase, ConfigurationSection phase) {
         if (phase.isConfigurationSection(MOBS)) {
             ConfigurationSection mobs = phase.getConfigurationSection(MOBS);
             for (String entity : mobs.getKeys(false)) {
@@ -142,7 +159,7 @@ public class OneBlocksManager {
 
     }
 
-    private void addBlocks(OneBlockPhase obPhase, ConfigurationSection phase) {
+    void addBlocks(OneBlockPhase obPhase, ConfigurationSection phase) {
         if (phase.isConfigurationSection(BLOCKS)) {
             ConfigurationSection blocks = phase.getConfigurationSection(BLOCKS);
             for (String material : blocks.getKeys(false)) {
@@ -183,6 +200,10 @@ public class OneBlocksManager {
         return blockProbs.values().stream().filter(p -> p.getPhaseName().replace(" ", "_").equalsIgnoreCase(name)).findFirst();
     }
 
+    /**
+     * Save the oneblock.yml file in memory to disk. Makes a backup.
+     * @return true if saved
+     */
     public boolean saveOneBlockConfig() {
         // Make the config file
         YamlConfiguration oneBlocks = new YamlConfiguration();
@@ -231,6 +252,19 @@ public class OneBlocksManager {
         ConfigurationSection blocks = phSec.createSection(BLOCKS);
         phase.getBlocks().forEach((k,v) -> blocks.set(k.name(), v));
 
+    }
+
+    /**
+     * Get the phase after this one
+     * @param phase - one block phase
+     * @return next phase or null if there isn't one
+     */
+    @Nullable
+    public OneBlockPhase getNextPhase(@NonNull OneBlockPhase phase) {
+        Integer blockNum = Integer.valueOf(phase.getBlockNumber());
+        Integer nextKey = blockProbs.ceilingKey(blockNum + 1);
+        addon.logWarning(phase.getPhaseName() + " starts at " + blockNum + (nextKey != null ? " and ends " + nextKey : ""));
+        return nextKey != null ? this.getPhase(nextKey) : null;
     }
 
     public void getProbs(OneBlockPhase phase) {
