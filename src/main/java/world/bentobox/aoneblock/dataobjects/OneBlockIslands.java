@@ -22,6 +22,8 @@ public class OneBlockIslands implements DataObject {
     @Expose
     private int blockNumber;
     @Expose
+    private long lifetime;
+    @Expose
     private String phaseName = "";
 
     private List<OneBlockObject> queue;
@@ -117,6 +119,20 @@ public class OneBlockIslands implements DataObject {
      */
     public void clearQueue() {
         queue.clear();
+    }
+
+    /**
+     * @return the loops
+     */
+    public long getLifetime() {
+        return lifetime;
+    }
+
+    /**
+     * @param loops the loops to set
+     */
+    public void setLifetime(long loops) {
+        this.lifetime = loops;
     }
 
 

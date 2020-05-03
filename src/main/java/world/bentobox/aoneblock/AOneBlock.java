@@ -69,6 +69,7 @@ public class AOneBlock extends GameModeAddon {
     public void onEnable(){
         try {
             oneBlockManager = new OneBlocksManager(this);
+            oneBlockManager.loadPhases();
             listener = new BlockListener(this);
             registerListener(listener);
             registerListener(new NoBlockHandler(this));

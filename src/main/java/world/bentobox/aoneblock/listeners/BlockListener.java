@@ -234,8 +234,13 @@ public class BlockListener implements Listener {
         OneBlockPhase phase = oneBlocksManager.getPhase(is.getBlockNumber());
         // Check for a goto
         if (phase.getGotoBlock() != null) {
-            phase = oneBlocksManager.getPhase(phase.getGotoBlock());
-            is.setBlockNumber(phase.getGotoBlock());
+            int gotoBlock = phase.getGotoBlock();
+            phase = oneBlocksManager.getPhase(gotoBlock);
+            // Store lifetime
+            is.setLifetime(is.getLifetime() + is.getBlockNumber());
+            // Set current block
+            is.setBlockNumber(gotoBlock);
+
         }
         // Announce the phase
         boolean newPhase = false;
