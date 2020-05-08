@@ -1,0 +1,30 @@
+---
+aoneblock:
+  commands:
+    admin:
+      setcount:
+        parameters: "<名称> <计数>"
+        description: 设置玩家的盖帽数
+        set: a [name]的计数设置为[number]
+      setchest:
+        parameters: "<阶段> <稀有>"
+        description: 将所看的胸部放在指定稀有度的阶段
+        unknown-phase: "＆c未知阶段。使用制表符完成功能来查看它们"
+        unknown-rarity: "＆c未知稀有。使用COMMON，UNCOMMON，RARE或EPIC"
+        look-at-chest: "＆c看看装满的箱子"
+        only-single-chest: "＆c只能设置单个箱子"
+        success: "＆a Chest成功添加到阶段"
+        failure: "＆c Chest无法添加到该阶段！请参阅控制台以获取错误"
+        chest-is-empty: "&c该箱子为空，因此无法添加"
+      sanity:
+        parameters: "<阶段>"
+        description: 在控制台中显示相概率的健全性检查
+        see-console: "＆a请参阅控制台以获取报告"
+    count:
+      description: 显示块数和相位
+      info: "＆a您正在＆a [name]阶段中阻止＆b [number]"
+    phases:
+      description: 显示所有阶段的列表
+      title: "＆2 OneBlock阶段"
+      name-syntax: "&a [name]"
+      description-syntax: "&b [number]块"
