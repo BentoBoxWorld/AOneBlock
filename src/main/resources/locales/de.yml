@@ -1,0 +1,19 @@
+---
+aoneblock:
+  commands:
+    admin:
+      setcount:
+        parameters: "<Name> <Anzahl>"
+        description: Setze die Blockanzahl des Spielers
+      setchest:
+        parameters: "<Phase> <Rarität>"
+        description: Versetzen Sie die betrachtete Truhe in eine Phase mit der angegebenen
+          Seltenheit
+      sanity:
+        parameters: "<Phase>"
+        description: Zeigen Sie eine Überprüfung der Phasenwahrscheinlichkeiten in
+          der Konsole an
+    count:
+      description: Zeige die Blockanzahl und Phase
+    phases:
+      description: Zeigen Sie eine Liste aller Phasen an
