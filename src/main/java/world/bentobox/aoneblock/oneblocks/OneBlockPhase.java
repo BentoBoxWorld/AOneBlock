@@ -17,6 +17,7 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemStack;
 import org.eclipse.jdt.annotation.Nullable;
 
+import world.bentobox.aoneblock.AOneBlock;
 import world.bentobox.aoneblock.oneblocks.OneBlockObject.Rarity;
 
 
@@ -118,7 +119,11 @@ public class OneBlockPhase {
      * @return OneBlockObject selected
      */
 
-    public OneBlockObject getNextBlock() {
+    public OneBlockObject getNextBlock(AOneBlock addon) {
+        if (total <1) {
+            addon.logError("Phase " + this.getPhaseName() + " has zero probability of generating blocks. Check oneblocks.yml. Is the block section missing?");
+            return this.getFirstBlock() != null ? getFirstBlock() : new OneBlockObject(Material.GRASS_BLOCK,1);
+        }
         OneBlockObject block = getRandomBlock(probMap, total);
         if (block.isEntity()) return block;
         return block.getMaterial().equals(Material.CHEST) && !chests.isEmpty() ? getRandomChest() : block;
@@ -132,7 +137,7 @@ public class OneBlockPhase {
         return list.isEmpty() ? new OneBlockObject(Material.CHEST, 0) : list.get(random.nextInt(list.size()));
     }
 
-    OneBlockObject getRandomBlock(TreeMap<Integer, OneBlockObject> probMap2, int total2) {
+    private OneBlockObject getRandomBlock(TreeMap<Integer, OneBlockObject> probMap2, int total2) {
         OneBlockObject temp = probMap2.get(random.nextInt(total2));
         if (temp == null) {
             temp = probMap2.ceilingEntry(random.nextInt(total2)).getValue();

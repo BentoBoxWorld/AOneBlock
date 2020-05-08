@@ -256,7 +256,7 @@ public class BlockListener implements Listener {
             is.clearQueue();
             // Add initial 5 blocks
             for (int j = 0; j < MAX_LOOK_AHEAD; j++) {
-                is.add(phase.getNextBlock());
+                is.add(phase.getNextBlock(addon));
             }
         }
         // Play warning sound for upcoming mobs
@@ -268,7 +268,7 @@ public class BlockListener implements Listener {
             });
         }
         // Get the next block
-        OneBlockObject nextBlock = newPhase && phase.getFirstBlock() != null ? phase.getFirstBlock() : is.pollAndAdd(phase.getNextBlock());
+        OneBlockObject nextBlock = newPhase && phase.getFirstBlock() != null ? phase.getFirstBlock() : is.pollAndAdd(phase.getNextBlock(addon));
         // Set the biome for the block and one block above it
         if (newPhase) {
             for (int x = -4; x <= 4; x++) {
