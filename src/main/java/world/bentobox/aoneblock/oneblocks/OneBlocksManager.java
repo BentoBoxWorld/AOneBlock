@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
@@ -25,6 +26,7 @@ import org.eclipse.jdt.annotation.Nullable;
 import com.google.common.io.Files;
 
 import world.bentobox.aoneblock.AOneBlock;
+import world.bentobox.aoneblock.dataobjects.OneBlockIslands;
 import world.bentobox.aoneblock.oneblocks.OneBlockObject.Rarity;
 
 public class OneBlocksManager {
@@ -344,5 +346,17 @@ public class OneBlocksManager {
 
     public void getAllProbs() {
         blockProbs.values().forEach(this::getProbs);
+    }
+
+    /**
+     * Get the next phase name
+     * @param obi - one block island
+     * @return next phase name or an empty string
+     */
+    public String getNextPhase(@NonNull OneBlockIslands obi) {
+        return getPhase(obi.getPhaseName())
+                .map(this::getNextPhase) // Next phase or null
+                .filter(Objects::nonNull)
+                .map(OneBlockPhase::getPhaseName).orElse("");
     }
 }

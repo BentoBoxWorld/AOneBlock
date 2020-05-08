@@ -74,10 +74,12 @@ public class AOneBlock extends GameModeAddon {
             registerListener(listener);
             registerListener(new NoBlockHandler(this));
             // Register placeholders
-            getPlugin().getPlaceholdersManager().registerPlaceholder(this,"visited_island_phase", this::getPhaseByUser);
-            getPlugin().getPlaceholdersManager().registerPlaceholder(this,"visited_island_count", this::getCountByUser);
-            getPlugin().getPlaceholdersManager().registerPlaceholder(this,"my_island_phase", this::getPhaseByIsland);
-            getPlugin().getPlaceholdersManager().registerPlaceholder(this,"my_island_count", this::getCountByIsland);
+            getPlugin().getPlaceholdersManager().registerPlaceholder(this,"visited_island_phase", this::getPhaseByLocation);
+            getPlugin().getPlaceholdersManager().registerPlaceholder(this,"visited_island_count", this::getCountByLocation);
+            getPlugin().getPlaceholdersManager().registerPlaceholder(this,"my_island_phase", this::getPhaseByOwner);
+            getPlugin().getPlaceholdersManager().registerPlaceholder(this,"my_island_count", this::getCountByOwner);
+            getPlugin().getPlaceholdersManager().registerPlaceholder(this,"visited_island_next_phase", this::getNextPhaseByLocation);
+            getPlugin().getPlaceholdersManager().registerPlaceholder(this,"my_island_next_phase", this::getNextPhaseByOwner);
         } catch (IOException | InvalidConfigurationException e) {
             // Disable
             logError("AOneBlock settings could not load (oneblock.yml error)! Addon disabled.");
@@ -88,14 +90,15 @@ public class AOneBlock extends GameModeAddon {
 
     }
 
-    private String getPhaseByUser(User user) {
+    // Placeholder methods
+    private String getPhaseByLocation(User user) {
         return getIslands().getProtectedIslandAt(user.getLocation())
                 .map(this::getOneBlocksIsland)
                 .map(OneBlockIslands::getPhaseName)
                 .orElse("");
     }
 
-    private String getCountByUser(User user) {
+    private String getCountByLocation(User user) {
         return getIslands().getProtectedIslandAt(user.getLocation())
                 .map(this::getOneBlocksIsland)
                 .map(OneBlockIslands::getBlockNumber)
@@ -103,14 +106,26 @@ public class AOneBlock extends GameModeAddon {
                 .orElse("");
     }
 
-    private String getPhaseByIsland(User user) {
+    private String getPhaseByOwner(User user) {
         Island i = getIslands().getIsland(getOverWorld(), user);
         return i == null ? "" : getOneBlocksIsland(i).getPhaseName();
     }
 
-    private String getCountByIsland(User user) {
+    private String getCountByOwner(User user) {
         Island i = getIslands().getIsland(getOverWorld(), user);
         return i == null ? "" : String.valueOf(getOneBlocksIsland(i).getBlockNumber());
+    }
+
+    private String getNextPhaseByLocation(User user) {
+        return getIslands().getProtectedIslandAt(user.getLocation())
+                .map(this::getOneBlocksIsland)
+                .map(obi -> this.getOneBlockManager().getNextPhase(obi))
+                .orElse("");
+    }
+
+    private String getNextPhaseByOwner(User user) {
+        Island i = getIslands().getIsland(getOverWorld(), user);
+        return i == null ? "" : this.getOneBlockManager().getNextPhase(getOneBlocksIsland(i));
     }
 
     @Override
