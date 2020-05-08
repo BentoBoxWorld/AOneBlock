@@ -192,6 +192,14 @@ public class OneBlocksManager {
     }
 
     /**
+     * Get a map of phase names and their start count
+     * @return map of phase names and start count
+     */
+    public Map<String, Integer> getPhaseMap() {
+        return blockProbs.entrySet().stream().collect(Collectors.toMap(e -> e.getValue().getPhaseName(), Map.Entry::getKey));
+    }
+
+    /**
      * Get phase by name. Name should have any spaces converted to underscores. Case insensitive.
      * @param name - name to search
      * @return optional OneBlockPhase

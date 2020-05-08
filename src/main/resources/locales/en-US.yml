@@ -9,7 +9,7 @@ aoneblock:
       setcount:
         parameters: "<name> <count>"
         description: "set player's block count"
-        set: "[name]'s count set to [number]"
+        set: "&a [name]'s count set to [number]"
       setchest:
         parameters: "<phase> <rarity>"
         description: "put the looked-at chest in a phase with the rarity specified"
@@ -26,4 +26,9 @@ aoneblock:
         see-console: "&a See the console for the report"
     count:
       description: show the block count and phase
-      info: "You are on block [number] in the [name] phase"
+      info: "&a You are on block &b [number] in the &a [name] phase"
+    phaselist:
+      description: show a list of all the phases
+      title: "&2 OneBlock Phases"
+      syntax: "&6 [name] &7- &b [number] blocks"
+      no-phases: "&c There are no phases!"
