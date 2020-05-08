@@ -26,3 +26,5 @@ aoneblock:
     phases:
       description: すべてのフェーズのリストを表示する
       title: "＆2 OneBlockフェーズ"
+      name-syntax: "&a[name]"
+      description-syntax: "&b [number]ブロック"
