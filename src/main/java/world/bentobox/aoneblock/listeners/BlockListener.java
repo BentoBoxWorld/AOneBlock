@@ -152,7 +152,7 @@ public class BlockListener implements Listener {
      * Save the island cache
      */
     public void saveCache() {
-        cache.values().forEach(handler::saveObject);
+        cache.values().forEach(handler::saveObjectAsync);
     }
 
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
@@ -172,7 +172,7 @@ public class BlockListener implements Listener {
         // Create a database entry
         OneBlockIslands is = new OneBlockIslands(island.getUniqueId());
         cache.put(island.getUniqueId(), is);
-        handler.saveObject(is);
+        handler.saveObjectAsync(is);
     }
 
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)

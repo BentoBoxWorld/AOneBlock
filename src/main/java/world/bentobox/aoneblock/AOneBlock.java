@@ -12,7 +12,7 @@ import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jdt.annotation.Nullable;
 
 import world.bentobox.aoneblock.commands.AdminCommand;
-import world.bentobox.aoneblock.commands.IslandCommand;
+import world.bentobox.aoneblock.commands.PlayerCommand;
 import world.bentobox.aoneblock.dataobjects.OneBlockIslands;
 import world.bentobox.aoneblock.generators.ChunkGeneratorWorld;
 import world.bentobox.aoneblock.listeners.BlockListener;
@@ -49,7 +49,7 @@ public class AOneBlock extends GameModeAddon {
         // Chunk generator
         chunkGenerator = settings.isUseOwnGenerator() ? null : new ChunkGeneratorWorld(this);
         // Register commands
-        playerCommand = new IslandCommand(this);
+        playerCommand = new PlayerCommand(this);
         adminCommand = new AdminCommand(this);
     }
 

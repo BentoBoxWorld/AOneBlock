@@ -41,6 +41,18 @@ public class Settings implements WorldSettings {
     @ConfigEntry(path = "aoneblock.command.admin", since = "1.3.0")
     private String adminCommand = "oba obadmin";
 
+    @ConfigComment("The default action for new player command call.")
+    @ConfigComment("Sub-command of main player command that will be run on first player command call.")
+    @ConfigComment("By default it is sub-command 'create'.")
+    @ConfigEntry(path = "bskyblock.command.new-player-action", since = "1.2.0")
+    private String defaultNewPlayerAction = "create";
+
+    @ConfigComment("The default action for player command.")
+    @ConfigComment("Sub-command of main player command that will be run on each player command call.")
+    @ConfigComment("By default it is sub-command 'go'.")
+    @ConfigEntry(path = "bskyblock.command.default-action", since = "1.2.0")
+    private String defaultPlayerAction = "go";
+
     /*      WORLD       */
     @ConfigComment("Friendly name for this world. Used in admin commands. Must be a single word")
     @ConfigEntry(path = "world.friendly-name")
@@ -431,6 +443,12 @@ public class Settings implements WorldSettings {
     @ConfigComment("Mobs that exit the island space where they were spawned will be removed.")
     @ConfigEntry(path = "protection.geo-limit-settings")
     private List<String> geoLimitSettings = new ArrayList<>();
+
+    @ConfigComment("AOneBlock blocked mobs.")
+    @ConfigComment("List of mobs that should not spawn in AOneBlock.")
+    @ConfigEntry(path = "protection.block-mobs", since = "1.2.0")
+    private List<String> mobLimitSettings = new ArrayList<>();
+
 
     // Invincible visitor settings
     @ConfigComment("Invincible visitors. List of damages that will not affect visitors.")
@@ -1621,5 +1639,50 @@ public class Settings implements WorldSettings {
      */
     public void setMobWarning(int mobWarning) {
         this.mobWarning = mobWarning;
+    }
+
+    /**
+     * @return the defaultNewPlayerAction
+     */
+    @Override
+    public String getDefaultNewPlayerAction() {
+        return defaultNewPlayerAction;
+    }
+
+    /**
+     * @param defaultNewPlayerAction the defaultNewPlayerAction to set
+     */
+    public void setDefaultNewPlayerAction(String defaultNewPlayerAction) {
+        this.defaultNewPlayerAction = defaultNewPlayerAction;
+    }
+
+    /**
+     * @return the defaultPlayerAction
+     */
+    @Override
+    public String getDefaultPlayerAction() {
+        return defaultPlayerAction;
+    }
+
+    /**
+     * @param defaultPlayerAction the defaultPlayerAction to set
+     */
+    public void setDefaultPlayerAction(String defaultPlayerAction) {
+        this.defaultPlayerAction = defaultPlayerAction;
+    }
+
+    /**
+     * @return the mobLimitSettings
+     */
+    @Override
+    public List<String> getMobLimitSettings() {
+        return mobLimitSettings;
+    }
+
+    /**
+     * @param mobLimitSettings the mobLimitSettings to set
+     */
+    public void setMobLimitSettings(List<String> mobLimitSettings) {
+        this.mobLimitSettings = mobLimitSettings;
     }
 }
