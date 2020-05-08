@@ -1,0 +1,17 @@
+---
+aoneblock:
+  commands:
+    admin:
+      setcount:
+        parameters: "<name> <count>"
+        description: nastavit počet bloků hráče
+      setchest:
+        parameters: "<phase> <rarity>"
+        description: dejte pohled na hrudník do fáze se specifikovanou vzácností
+      sanity:
+        parameters: "<fáze>"
+        description: zobrazí v konzoli kontrolu pravděpodobnosti fází
+    count:
+      description: zobrazit počet bloků a fázi
+    phases:
+      description: zobrazit seznam všech fází
