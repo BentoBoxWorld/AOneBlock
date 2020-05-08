@@ -1,0 +1,35 @@
+---
+aoneblock:
+  commands:
+    admin:
+      setcount:
+        parameters: "<Name> <Anzahl>"
+        description: Setze die Blockanzahl des Spielers
+        set: "&a [name] zählt auf [number]"
+      setchest:
+        parameters: "<Phase> <Rarität>"
+        description: Versetzen Sie die betrachtete Truhe in eine Phase mit der angegebenen
+          Seltenheit
+        chest-is-empty: "&c Diese Truhe ist leer und kann daher nicht hinzugefügt
+          werden"
+        unknown-phase: "&c Unbekannte Phase. Verwenden Sie tab-complete, um sie anzuzeigen"
+        unknown-rarity: "&c Unbekannte Seltenheit. Verwenden Sie COMMON, UNCOMMON,
+          RARE oder EPIC"
+        look-at-chest: "&c Sieh dir eine gefüllte Truhe an, um sie einzustellen"
+        only-single-chest: "&c Es können nur einzelne Truhen eingestellt werden"
+        success: "&a Eine Truhe erfolgreich zur Phase hinzugefügt"
+        failure: "&c Truhe konnte nicht zur Phase hinzugefügt werden! Siehe Konsole
+          für Fehler"
+      sanity:
+        parameters: "<Phase>"
+        description: Zeigen Sie eine Überprüfung der Phasenwahrscheinlichkeiten in
+          der Konsole an
+        see-console: "&a Den Bericht finden Sie in der Konsole"
+    count:
+      description: Zeige die Blockanzahl und Phase
+      info: "&a Sie befinden sich in der Phase &a [name] in Block &b [number]"
+    phases:
+      description: Zeigen Sie eine Liste aller Phasen an
+      title: "&2 OneBlock-Phasen"
+      name-syntax: "&a [name]"
+      description-syntax: "&b [number] Blöcke"
