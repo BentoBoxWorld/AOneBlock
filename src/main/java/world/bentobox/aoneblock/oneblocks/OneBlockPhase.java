@@ -15,6 +15,7 @@ import org.bukkit.World.Environment;
 import org.bukkit.block.Biome;
 import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemStack;
+import org.eclipse.jdt.annotation.Nullable;
 
 import world.bentobox.aoneblock.oneblocks.OneBlockObject.Rarity;
 
@@ -159,6 +160,7 @@ public class OneBlockPhase {
     /**
      * @return the firstBlock
      */
+    @Nullable
     public OneBlockObject getFirstBlock() {
         return firstBlock;
     }
@@ -236,6 +238,13 @@ public class OneBlockPhase {
      */
     public int getEntityTotal() {
         return entityTotal;
+    }
+
+    /**
+     * @return true if phase is a goto phase
+     */
+    public boolean isGotoPhase() {
+        return gotoBlock != null;
     }
 
 }

@@ -34,12 +34,12 @@ public class Settings implements WorldSettings {
     @ConfigComment("Player command. What command users will run to access their island.")
     @ConfigComment("To define alias, just separate commands with white space.")
     @ConfigEntry(path = "aoneblock.command.island", since = "1.3.0")
-    private String islandCommand = "ob oneblock";
+    private String playerCommandAliases = "ob oneblock";
 
     @ConfigComment("The admin command.")
     @ConfigComment("To define alias, just separate commands with white space.")
     @ConfigEntry(path = "aoneblock.command.admin", since = "1.3.0")
-    private String adminCommand = "oba obadmin";
+    private String adminCommandAliases = "oba obadmin";
 
     @ConfigComment("The default action for new player command call.")
     @ConfigComment("Sub-command of main player command that will be run on first player command call.")
@@ -1297,46 +1297,34 @@ public class Settings implements WorldSettings {
         this.banLimit = banLimit;
     }
 
-
     /**
-     * This method returns the islandCommand value.
-     * @return the value of islandCommand.
+     * @return the playerCommandAliases
      */
-    public String getIslandCommand()
-    {
-        return islandCommand;
+    @Override
+    public String getPlayerCommandAliases() {
+        return playerCommandAliases;
     }
 
-
     /**
-     * This method sets the islandCommand value.
-     * @param islandCommand the islandCommand new value.
-     *
+     * @param playerCommandAliases the playerCommandAliases to set
      */
-    public void setIslandCommand(String islandCommand)
-    {
-        this.islandCommand = islandCommand;
+    public void setPlayerCommandAliases(String playerCommandAliases) {
+        this.playerCommandAliases = playerCommandAliases;
     }
 
-
     /**
-     * This method returns the adminCommand value.
-     * @return the value of adminCommand.
+     * @return the adminCommandAliases
      */
-    public String getAdminCommand()
-    {
-        return adminCommand;
+    @Override
+    public String getAdminCommandAliases() {
+        return adminCommandAliases;
     }
 
-
     /**
-     * This method sets the adminCommand value.
-     * @param adminCommand the adminCommand new value.
-     *
+     * @param adminCommandAliases the adminCommandAliases to set
      */
-    public void setAdminCommand(String adminCommand)
-    {
-        this.adminCommand = adminCommand;
+    public void setAdminCommandAliases(String adminCommandAliases) {
+        this.adminCommandAliases = adminCommandAliases;
     }
 
     /**

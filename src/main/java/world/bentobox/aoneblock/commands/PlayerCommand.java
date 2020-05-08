@@ -18,7 +18,7 @@ public class PlayerCommand extends DefaultPlayerCommand {
         // Count
         new IslandCountCommand(this);
         // Phase list
-        new IslandPhaseListCommand(this);
+        new IslandPhasesCommand(this);
     }
 
 }

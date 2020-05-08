@@ -2153,7 +2153,7 @@
       rarity: EPIC
 '5000':
   name: Swamp
-  firstBlock: GRASS
+  firstBlock: GRASS_BLOCK
   biome: SWAMP
   blocks:
     OAK_LOG: 100
@@ -5624,6 +5624,7 @@
 '8500':
   name: Plenty
   biome: PLAINS
+  firstBlock: HAY_BLOCK
   blocks:
     GRASS_BLOCK: 1
     DARK_PRISMARINE: 1
@@ -6432,6 +6433,7 @@
 '9500':
   name: Desolation
   biome: BADLANDS
+  firstBlock: OBSIDIAN
   blocks:
     INFESTED_CHISELED_STONE_BRICKS: 10
     STRIPPED_OAK_LOG: 10
@@ -6753,6 +6755,7 @@
 '10500':
   name: The End
   biome: THE_END
+  firstBlock: END_STONE
   blocks:
     PURPLE_WOOL: 50
     PURPUR_BLOCK: 500

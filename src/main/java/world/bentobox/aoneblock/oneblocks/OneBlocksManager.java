@@ -194,11 +194,10 @@ public class OneBlocksManager {
     }
 
     /**
-     * Get a map of phase names and their start count
-     * @return map of phase names and start count
+     * @return the blockProbs
      */
-    public Map<String, Integer> getPhaseMap() {
-        return blockProbs.entrySet().stream().collect(Collectors.toMap(e -> e.getValue().getPhaseName(), Map.Entry::getKey));
+    public TreeMap<Integer, OneBlockPhase> getBlockProbs() {
+        return blockProbs;
     }
 
     /**

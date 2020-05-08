@@ -12,8 +12,8 @@ permissions:
   aoneblock.count:
     description: Allow use of the aoneblock count command
     default: true   
-  aoneblock.phaselist:
-    description: Allow the use of the phaselist command
+  aoneblock.phases:
+    description: Allow the use of the phases command
     default: false
   aoneblock.island:
    description: Allow island command usage
