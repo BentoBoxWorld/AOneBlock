@@ -1,0 +1,31 @@
+---
+aoneblock:
+  commands:
+    admin:
+      setcount:
+        parameters: "<name> <count>"
+        description: nastavit počet bloků hráče
+        set: "&a počet [name] je nastaven na [number]"
+      setchest:
+        parameters: "<phase> <rarity>"
+        description: dejte pohled na hrudník do fáze se specifikovanou vzácností
+        chest-is-empty: "&c Ten hrudník je prázdný, takže jej nelze přidat"
+        unknown-phase: "&c Neznámá fáze. Chcete-li si je prohlédnout, použijte tabulátor"
+        unknown-rarity: "&c Neznámá vzácnost. Používejte COMMON, UNCOMMON, RARE nebo
+          EPIC"
+        look-at-chest: "&c Podívejte se na naplněnou hruď a nastavte ji"
+        only-single-chest: "&c Lze nastavit pouze jednotlivé bedny"
+        success: "&a Hrudník byl úspěšně přidán do fáze"
+        failure: "&c Hrudník nelze přidat do fáze! Chyby najdete na konzole"
+      sanity:
+        parameters: "<fáze>"
+        description: zobrazí v konzoli kontrolu pravděpodobnosti fází
+        see-console: "&a Podívejte se do konzoly pro zprávu"
+    count:
+      description: zobrazit počet bloků a fázi
+      info: "&a Jste na bloku &b [number] ve fázi &a [name]"
+    phases:
+      description: zobrazit seznam všech fází
+      title: "&2 Fáze OneBlock"
+      name-syntax: "&a [name]"
+      description-syntax: "&b [number] bloků"
