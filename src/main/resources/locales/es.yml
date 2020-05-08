@@ -1,0 +1,18 @@
+---
+aoneblock:
+  commands:
+    admin:
+      setcount:
+        parameters: "<nombre> <cuenta>"
+        description: establecer el recuento de bloqueos del jugador
+      setchest:
+        parameters: "<phase> <rarity>"
+        description: poner el cofre mirado en una fase con la rareza especificada
+      sanity:
+        parameters: "<fase>"
+        description: muestra una comprobación de cordura de las probabilidades de
+          fase en la consola
+    count:
+      description: mostrar el recuento de bloques y la fase
+    phases:
+      description: muestra una lista de todas las fases
