@@ -44,13 +44,13 @@ public class Settings implements WorldSettings {
     @ConfigComment("The default action for new player command call.")
     @ConfigComment("Sub-command of main player command that will be run on first player command call.")
     @ConfigComment("By default it is sub-command 'create'.")
-    @ConfigEntry(path = "bskyblock.command.new-player-action", since = "1.2.0")
+    @ConfigEntry(path = "aoneblock.command.new-player-action", since = "1.2.0")
     private String defaultNewPlayerAction = "create";
 
     @ConfigComment("The default action for player command.")
     @ConfigComment("Sub-command of main player command that will be run on each player command call.")
     @ConfigComment("By default it is sub-command 'go'.")
-    @ConfigEntry(path = "bskyblock.command.default-action", since = "1.2.0")
+    @ConfigEntry(path = "aoneblock.command.default-action", since = "1.2.0")
     private String defaultPlayerAction = "go";
 
     /*      WORLD       */
