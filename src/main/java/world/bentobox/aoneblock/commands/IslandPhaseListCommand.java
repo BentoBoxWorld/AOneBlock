@@ -26,11 +26,6 @@ public class IslandPhaseListCommand extends CompositeCommand {
     }
 
     @Override
-    public boolean canExecute(User user, String label, List<String> args) {
-        return true;
-    }
-
-    @Override
     public boolean execute(User user, String label, List<String> args) {
         boolean noPhases = true;
         for (Entry<String, Integer> e : addon.getOneBlockManager().getPhaseMap().entrySet()) {
