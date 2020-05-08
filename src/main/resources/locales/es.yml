@@ -5,14 +5,27 @@ aoneblock:
       setcount:
         parameters: "<nombre> <cuenta>"
         description: establecer el recuento de bloqueos del jugador
+        set: "&a el recuento de [name] establecido en [number]"
       setchest:
         parameters: "<phase> <rarity>"
         description: poner el cofre mirado en una fase con la rareza especificada
+        chest-is-empty: "&c Ese cofre está vacío, así que no se puede agregar"
+        unknown-phase: "&c Fase desconocida. Use tab-complete para verlos"
+        unknown-rarity: "&c Rareza desconocida. Use COMMON, UNCOMMON, RARE o EPIC"
+        look-at-chest: "&c Mira un cofre lleno para configurarlo"
+        only-single-chest: "&c Solo se pueden configurar cofres individuales"
+        success: "&a Un Cofre agregado con éxito a la fase"
+        failure: "&c ¡No se pudo agregar el cofre a la fase! Ver consola para errores"
       sanity:
         parameters: "<fase>"
         description: muestra una comprobación de cordura de las probabilidades de
           fase en la consola
+        see-console: "&a Ver la consola para el informe"
     count:
       description: mostrar el recuento de bloques y la fase
+      info: "&a Estás en el bloque &b [number] en la fase &a [name]"
     phases:
       description: muestra una lista de todas las fases
+      title: "&2 Fases de OneBlock"
+      name-syntax: "&a [name]"
+      description-syntax: "&b [number] bloques"
