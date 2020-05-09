@@ -1,0 +1,18 @@
+---
+aoneblock:
+  commands:
+    admin:
+      setcount:
+        parameters: "<nome> <conto>"
+        description: imposta il conteggio dei blocchi del giocatore
+      setchest:
+        parameters: "<phase> <rarity>"
+        description: mettere il torace osservato in una fase con la rarità specificata
+      sanity:
+        parameters: "<Fase>"
+        description: visualizzare un controllo di integrità delle probabilità di fase
+          nella console
+    count:
+      description: mostra il conteggio dei blocchi e la fase
+    phases:
+      description: mostra un elenco di tutte le fasi
