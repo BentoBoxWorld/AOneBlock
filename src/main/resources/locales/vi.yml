@@ -1,0 +1,18 @@
+---
+aoneblock:
+  commands:
+    admin:
+      setcount:
+        parameters: "<tên> <đếm>"
+        description: thiết lập số lượng người chơi
+      setchest:
+        parameters: "<pha> <hiếm"
+        description: đặt rương nhìn vào trong một pha với độ hiếm được chỉ định
+      sanity:
+        parameters: "<pha>"
+        description: hiển thị kiểm tra độ tỉnh táo của xác suất pha trong bàn điều
+          khiển
+    count:
+      description: hiển thị số khối và pha
+    phases:
+      description: hiển thị một danh sách tất cả các giai đoạn
