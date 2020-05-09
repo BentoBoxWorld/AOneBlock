@@ -5,16 +5,28 @@ aoneblock:
       setcount:
         parameters: "<ad> <sayı>"
         description: oyuncunun blok sayısını ayarla
+        set: "&a [name] 'ın sayısı [number] olarak ayarlandı"
       setchest:
         parameters: "<faz> <delilik>"
         description: bakılan sandığı nadir görülen bir evreye koymak
         unknown-rarity: "& c Bilinmeyen nadirlik. ORTAK, UNCOMMON, NADİR veya EPIC
           kullanın"
         only-single-chest: "& c Yalnızca tek sandık ayarlanabilir"
+        chest-is-empty: "&c Bu sandık boş, bu yüzden eklenemez"
+        unknown-phase: "&c Bilinmeyen aşama. Bunları görmek için sekme-tamamlama özelliğini
+          kullanın"
+        look-at-chest: "&c Ayarlamak için dolu bir sandığa bakın"
+        success: "&a Sandık aşamaya başarıyla eklendi"
+        failure: "&c Göğüs faza eklenemedi! Hatalar için konsola bakın"
       sanity:
         parameters: "<Faz>"
         description: konsoldaki faz olasılıklarının akıl sağlığını kontrol etmek
+        see-console: "&a Rapor için konsola bakın"
     count:
       description: blok sayısını ve fazını göster
+      info: "&a [name] aşamasında blok &b [number] üzerindesiniz"
     phases:
       description: tüm aşamaların bir listesini göster
+      title: "&2 OneBlock Aşaması"
+      name-syntax: "&a [name]"
+      description-syntax: "&b [number] blokları"
