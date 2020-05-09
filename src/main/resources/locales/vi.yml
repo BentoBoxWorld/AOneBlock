@@ -5,14 +5,28 @@ aoneblock:
       setcount:
         parameters: "<tên> <đếm>"
         description: thiết lập số lượng người chơi
+        set: "&a số [name] được đặt thành [number]"
       setchest:
         parameters: "<pha> <hiếm"
         description: đặt rương nhìn vào trong một pha với độ hiếm được chỉ định
+        chest-is-empty: "&c Rương đó trống nên không thể thêm vào"
+        unknown-phase: "&c Giai đoạn chưa biết. Sử dụng tab-đầy đủ để xem chúng"
+        unknown-rarity: "&c hiếm có. Sử dụng CommON, UNCOMMON, RARE hoặc EPIC"
+        look-at-chest: "&c Nhìn vào một cái rương đầy để đặt nó"
+        only-single-chest: "&c Chỉ có thể đặt các rương đơn"
+        success: "&a Rương được thêm thành công vào pha"
+        failure: "&c Ngực không thể được thêm vào giai đoạn! Xem bảng điều khiển cho
+          các lỗi"
       sanity:
         parameters: "<pha>"
         description: hiển thị kiểm tra độ tỉnh táo của xác suất pha trong bàn điều
           khiển
+        see-console: "&a Xem bảng điều khiển cho báo cáo"
     count:
       description: hiển thị số khối và pha
+      info: "&a Bạn đang ở trên khối &b [number] trong giai đoạn &a [name]"
     phases:
       description: hiển thị một danh sách tất cả các giai đoạn
+      title: "&2 Giai đoạn OneBlock"
+      name-syntax: "&a [name]"
+      description-syntax: "&b [number] khối"
