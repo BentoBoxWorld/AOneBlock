@@ -1,0 +1,33 @@
+---
+aoneblock:
+  commands:
+    admin:
+      setcount:
+        parameters: "<név> <szám>"
+        description: állítsa be a játékos blokkszámát
+        set: "&a [name] számának beállítása [number]"
+      setchest:
+        parameters: "<fázis> <ritkaság>"
+        description: helyezze a nézett mellkasát egy szakaszba a megadott ritkasággal
+        success: és egy mellkas sikeresen hozzáadva a fázishoz
+        chest-is-empty: "&c A mellkas üres, ezért nem adható hozzá"
+        unknown-phase: "&c Ismeretlen fázis. A Tab-Complete használatával megtekintheti
+          őket"
+        unknown-rarity: "&c Ismeretlen ritkaság. Használjon COMMON, UNCOMMON, RARE
+          vagy EPIC"
+        look-at-chest: "&c Nézzen meg egy töltött mellkasat, hogy beállítsa"
+        only-single-chest: "&c Csak egyetlen ládát lehet beállítani"
+        failure: "&c A mellkas nem adható hozzá a fázishoz! A hibákat lásd a konzolon"
+      sanity:
+        parameters: "<Fázisban>"
+        description: jelenítse meg a fázis valószínűségeinek józanság-ellenőrzését
+          a konzolban
+        see-console: "&a Lásd a jelentés konzolt"
+    count:
+      description: mutassa meg a blokkok számát és a fázist
+      info: "&a Ön a &b [number] blokkban van a &a [name] fázisban"
+    phases:
+      description: az összes fázis felsorolása
+      title: "&2 OneBlock Fázis"
+      name-syntax: "&a [name]"
+      description-syntax: "&b [number] blokkolja"
