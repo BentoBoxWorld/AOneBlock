@@ -1,0 +1,17 @@
+---
+aoneblock:
+  commands:
+    admin:
+      setcount:
+        parameters: "<nom> <nombre>"
+        description: définir le nombre de blocs du joueur
+      setchest:
+        description: mettre la poitrine regardée dans une phase avec la rareté spécifiée
+      sanity:
+        parameters: "<phase>"
+        description: afficher un contrôle d'intégrité des probabilités de phase dans
+          la console
+    count:
+      description: afficher le nombre de blocs et la phase
+    phases:
+      description: afficher une liste de toutes les phases
