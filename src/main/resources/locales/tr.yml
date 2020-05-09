@@ -1,0 +1,20 @@
+---
+aoneblock:
+  commands:
+    admin:
+      setcount:
+        parameters: "<ad> <sayı>"
+        description: oyuncunun blok sayısını ayarla
+      setchest:
+        parameters: "<faz> <delilik>"
+        description: bakılan sandığı nadir görülen bir evreye koymak
+        unknown-rarity: "& c Bilinmeyen nadirlik. ORTAK, UNCOMMON, NADİR veya EPIC
+          kullanın"
+        only-single-chest: "& c Yalnızca tek sandık ayarlanabilir"
+      sanity:
+        parameters: "<Faz>"
+        description: konsoldaki faz olasılıklarının akıl sağlığını kontrol etmek
+    count:
+      description: blok sayısını ve fazını göster
+    phases:
+      description: tüm aşamaların bir listesini göster
