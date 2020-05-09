@@ -1,0 +1,19 @@
+---
+aoneblock:
+  commands:
+    admin:
+      setcount:
+        parameters: "<név> <szám>"
+        description: állítsa be a játékos blokkszámát
+      setchest:
+        parameters: "<fázis> <ritkaság>"
+        description: helyezze a nézett mellkasát egy szakaszba a megadott ritkasággal
+        success: és egy mellkas sikeresen hozzáadva a fázishoz
+      sanity:
+        parameters: "<Fázisban>"
+        description: jelenítse meg a fázis valószínűségeinek józanság-ellenőrzését
+          a konzolban
+    count:
+      description: mutassa meg a blokkok számát és a fázist
+    phases:
+      description: az összes fázis felsorolása
