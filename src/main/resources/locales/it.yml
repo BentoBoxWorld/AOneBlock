@@ -5,14 +5,28 @@ aoneblock:
       setcount:
         parameters: "<nome> <conto>"
         description: imposta il conteggio dei blocchi del giocatore
+        set: "&a il conteggio di [name] impostato su [number]"
       setchest:
         parameters: "<phase> <rarity>"
         description: mettere il torace osservato in una fase con la rarità specificata
+        chest-is-empty: "&c Quella cassa è vuota quindi non può essere aggiunta"
+        unknown-phase: "&c Fase sconosciuta. Usa tab-complete per vederli"
+        unknown-rarity: "&c Rarità sconosciuta. Utilizzare COMMON, UNCOMMON, RARE
+          o EPIC"
+        look-at-chest: "&c Guarda una cassa piena per impostarla"
+        only-single-chest: "&c Possono essere impostati solo singoli forzieri"
+        success: "&a Una cassa aggiunta correttamente alla fase"
+        failure: "&c Chest non può essere aggiunto alla fase! Vedi console per errori"
       sanity:
         parameters: "<Fase>"
         description: visualizzare un controllo di integrità delle probabilità di fase
           nella console
+        see-console: "&a Vedi la console per il rapporto"
     count:
       description: mostra il conteggio dei blocchi e la fase
+      info: "&a Sei sul blocco &b [number] nella fase &a [name]"
     phases:
       description: mostra un elenco di tutte le fasi
+      title: "&2 Fasi OneBlock"
+      name-syntax: "&a [name]"
+      description-syntax: "&b [number] blocchi"
