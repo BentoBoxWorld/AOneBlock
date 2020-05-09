@@ -1,0 +1,17 @@
+---
+aoneblock:
+  commands:
+    admin:
+      setcount:
+        parameters: "<ime> <broj>"
+        description: postavljanje broja blokova igrača
+      setchest:
+        parameters: "<phase> <rarity>"
+        description: stavite pregledani sanduk u fazu s specificiranom rijetkošću
+      sanity:
+        parameters: "<Faza>"
+        description: prikazati provjeru ispravnosti faznih vjerojatnosti u konzoli
+    count:
+      description: prikazuju broj i fazu bloka
+    phases:
+      description: prikažite popis svih faza
