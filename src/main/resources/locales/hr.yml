@@ -5,13 +5,27 @@ aoneblock:
       setcount:
         parameters: "<ime> <broj>"
         description: postavljanje broja blokova igrača
+        set: "&a broj [name] postavljen je na [number]"
       setchest:
         parameters: "<phase> <rarity>"
         description: stavite pregledani sanduk u fazu s specificiranom rijetkošću
+        chest-is-empty: "&c Taj je škrinja prazna pa se ne može dodati"
+        unknown-phase: "&c Nepoznata faza. Da biste ih vidjeli, upotrijebite karticu"
+        unknown-rarity: "&c Nepoznata rijetkost. Koristite COMMON, UNCOMMON, RARE
+          ili EPIC"
+        look-at-chest: "&c Pogledajte napunjen škrinju da ga postavite"
+        only-single-chest: "&c Mogu se postaviti samo pojedinačne škrinje"
+        success: "&a Komoda uspješno dodana u fazu"
+        failure: "&c Grudište se nije moglo dodati u fazu! Pogledajte konzolu za pogreške"
       sanity:
         parameters: "<Faza>"
         description: prikazati provjeru ispravnosti faznih vjerojatnosti u konzoli
+        see-console: "&a Pogledajte konzolu za izvješće"
     count:
       description: prikazuju broj i fazu bloka
+      info: "&a Nalazite se na bloku &b [number] u fazi &a [name]"
     phases:
       description: prikažite popis svih faza
+      title: "&2 OneBlock Faze"
+      name-syntax: "&a [name]"
+      description-syntax: "&b [number] blokova"
