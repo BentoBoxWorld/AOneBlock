@@ -5,13 +5,28 @@ aoneblock:
       setcount:
         parameters: "<nom> <nombre>"
         description: définir le nombre de blocs du joueur
+        set: "&a le nombre d'un [name] défini sur [number]"
       setchest:
         description: mettre la poitrine regardée dans une phase avec la rareté spécifiée
+        parameters: "<phase> <rareté>"
+        chest-is-empty: "&c Ce coffre est vide et ne peut donc pas être ajouté"
+        unknown-phase: "&c Phase inconnue. Utilisez tab-complete pour les voir"
+        unknown-rarity: "&c Rareté inconnue. Utilisez COMMON, UNCOMMON, RARE ou EPIC"
+        look-at-chest: "&c Regardez un coffre rempli pour le placer"
+        only-single-chest: "&c Seuls les coffres simples peuvent être définis"
+        success: "&a Un coffre ajouté avec succès à la phase"
+        failure: "&c Le coffre n'a pas pu être ajouté à la phase! Voir la console
+          pour les erreurs"
       sanity:
         parameters: "<phase>"
         description: afficher un contrôle d'intégrité des probabilités de phase dans
           la console
+        see-console: "&a Voir la console pour le rapport"
     count:
       description: afficher le nombre de blocs et la phase
+      info: "&a Vous êtes sur le bloc &b [number] dans la phase &a [name]"
     phases:
       description: afficher une liste de toutes les phases
+      title: "&2 Phases OneBlock"
+      name-syntax: "&a [name]"
+      description-syntax: "&b [number] blocs"
