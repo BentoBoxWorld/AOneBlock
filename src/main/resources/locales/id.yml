@@ -5,13 +5,27 @@ aoneblock:
       setcount:
         parameters: "<name> <count>"
         description: atur jumlah blok pemain
+        set: "&a hitungan [name] diatur ke [number]"
       setchest:
         parameters: "<phase> <rarity>"
         description: letakkan dada yang tampak dalam fase dengan kelangkaan yang ditentukan
+        chest-is-empty: "&c Peti itu kosong sehingga tidak bisa ditambahkan"
+        unknown-phase: "&c Fase tidak dikenal. Gunakan tab-complete untuk melihatnya"
+        unknown-rarity: "&c Kelangkaan tidak diketahui. Gunakan COMMON, UNCOMMON,
+          RARE atau EPIC"
+        look-at-chest: "&c Lihat peti berisi untuk mengaturnya"
+        only-single-chest: "&c Hanya peti tunggal yang dapat ditetapkan"
+        success: "&a Dada berhasil ditambahkan ke fase"
+        failure: "&c Dada tidak dapat ditambahkan ke fase! Lihat konsol untuk kesalahan"
       sanity:
         parameters: "<phase>"
         description: menampilkan pemeriksaan kewarasan dari probabilitas fase di konsol
+        see-console: "&a Lihat konsol untuk laporannya"
     count:
       description: perlihatkan jumlah blok dan fase
+      info: "&a Anda berada di blok &b [number] dalam fase &a [name]"
     phases:
       description: perlihatkan daftar semua fase
+      title: "&2 Fase OneBlock"
+      name-syntax: "&a [name]"
+      description-syntax: "&b [number] blok"
