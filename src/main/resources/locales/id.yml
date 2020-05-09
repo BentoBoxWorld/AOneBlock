@@ -1,0 +1,17 @@
+---
+aoneblock:
+  commands:
+    admin:
+      setcount:
+        parameters: "<name> <count>"
+        description: atur jumlah blok pemain
+      setchest:
+        parameters: "<phase> <rarity>"
+        description: letakkan dada yang tampak dalam fase dengan kelangkaan yang ditentukan
+      sanity:
+        parameters: "<phase>"
+        description: menampilkan pemeriksaan kewarasan dari probabilitas fase di konsol
+    count:
+      description: perlihatkan jumlah blok dan fase
+    phases:
+      description: perlihatkan daftar semua fase
