@@ -237,6 +237,8 @@ island:
   # Players might be able to hear hostile mobs up to this many blocks away
   # Minimum is 0 (no warning), max is 5
   mob-warning: 5
+  # Whether spawned mobs that need water to survive will spawn in a generated water block
+  water-mob-protection: true
   # Default max team size
   # Permission size cannot be less than the default below. 
   max-team-size: 4
