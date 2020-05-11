@@ -343,7 +343,7 @@ public class BlockListener implements Listener {
                 for (; y <= Math.min(bb.getMaxY() + 1, world.getMaxHeight()); y++) {
                     b = world.getBlockAt(new Location(world, x,y,z));
                     if (!b.getType().equals(Material.AIR) && !b.isLiquid()) b.breakNaturally();
-                    b.setType(WATER_ENTITIES.contains(e.getType()) ? Material.WATER : Material.AIR, false);
+                    b.setType(WATER_ENTITIES.contains(e.getType()) && addon.getSettings().isWaterMobProtection() ? Material.WATER : Material.AIR, false);
                 }
                 // Add air block on top for all water entities (required for dolphin, okay for others)
                 if (WATER_ENTITIES.contains(e.getType())) {

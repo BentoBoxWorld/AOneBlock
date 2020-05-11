@@ -227,6 +227,10 @@ public class Settings implements WorldSettings {
     @ConfigEntry(path = "island.mob-warning")
     private int mobWarning = 5;
 
+    @ConfigComment("Whether spawned mobs that need water to survive will spawn in a generated water block")
+    @ConfigEntry(path = "island.water-mob-protection")
+    private boolean waterMobProtection = true;
+
     @ConfigComment("Default max team size")
     @ConfigComment("Permission size cannot be less than the default below. ")
     @ConfigEntry(path = "island.max-team-size")
@@ -1627,6 +1631,20 @@ public class Settings implements WorldSettings {
      */
     public void setMobWarning(int mobWarning) {
         this.mobWarning = mobWarning;
+    }
+
+    /**
+     * @return the waterMobProtection
+     */
+    public boolean isWaterMobProtection() {
+        return waterMobProtection;
+    }
+
+    /**
+     * @param waterMobProtection the mobWarning to set
+     */
+    public void setWaterMobProtection(boolean waterMobProtection) {
+        this.waterMobProtection = waterMobProtection;
     }
 
     /**
