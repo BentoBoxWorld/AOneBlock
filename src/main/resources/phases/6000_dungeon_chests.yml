@@ -1,0 +1,1325 @@
+'6000':
+  chests:
+    '1':
+      contents:
+        0:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        1:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        2:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        3:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        4:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        5:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        6:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        7:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        8:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        9:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_FENCE
+        12:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: PISTON
+        13:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: BLAST_FURNACE
+        17:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_FENCE
+        18:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        19:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        20:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        21:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        22:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        23:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        24:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        25:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        26:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+      rarity: COMMON
+    '2':
+      contents:
+        0:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        1:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        2:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        3:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        4:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        5:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        6:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        7:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        8:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        9:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_FENCE
+        12:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: ARMOR_STAND
+        13:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: ANVIL
+        14:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: EXPERIENCE_BOTTLE
+        17:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_FENCE
+        18:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        19:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        20:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        21:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        22:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        23:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        24:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        25:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        26:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+      rarity: COMMON
+    '3':
+      contents:
+        0:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        1:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        2:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        3:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        4:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        5:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        6:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        7:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        8:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        9:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_FENCE
+        12:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: BONE
+          amount: 4
+        13:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: CAMPFIRE
+        14:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: BONE
+          amount: 4
+        17:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_FENCE
+        18:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        19:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        20:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        21:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        22:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        23:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        24:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        25:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        26:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+      rarity: COMMON
+    '4':
+      contents:
+        0:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        1:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        2:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        3:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        4:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        5:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        6:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        7:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        8:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        9:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_FENCE
+        12:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SHIELD
+        13:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: FLINT_AND_STEEL
+        14:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: EMERALD
+        17:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_FENCE
+        18:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        19:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        20:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        21:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        22:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        23:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        24:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        25:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        26:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+      rarity: COMMON
+    '5':
+      contents:
+        0:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        1:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        2:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        3:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        4:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        5:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        6:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        7:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        8:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        9:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_FENCE
+        12:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: NAME_TAG
+        13:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: MINECART
+        14:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: BONE
+        17:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_FENCE
+        18:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        19:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        20:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        21:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        22:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        23:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        24:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        25:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        26:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+      rarity: COMMON
+    '6':
+      contents:
+        0:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        1:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        2:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        3:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        4:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        5:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        6:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        7:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        8:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        9:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_FENCE
+        12:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: TRIPWIRE_HOOK
+        13:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: ENCHANTED_BOOK
+          meta:
+            ==: ItemMeta
+            meta-type: ENCHANTED
+            stored-enchants:
+              DAMAGE_UNDEAD: 3
+        14:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: TRIPWIRE_HOOK
+        17:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_FENCE
+        18:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        19:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        20:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        21:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        22:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        23:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        24:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        25:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        26:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+      rarity: UNCOMMON
+    '7':
+      contents:
+        0:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        1:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        2:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        3:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        4:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        5:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        6:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        7:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        8:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        9:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_FENCE
+        10:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: BONE
+        11:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: BONE
+        12:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: BONE
+        13:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: CAULDRON
+        14:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: BONE
+        15:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: BONE
+        16:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: BONE
+        17:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_FENCE
+        18:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        19:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        20:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        21:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        22:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        23:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        24:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        25:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        26:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+      rarity: UNCOMMON
+    '8':
+      contents:
+        0:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        1:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        2:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        3:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        4:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        5:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        6:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        7:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        8:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        9:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_FENCE
+        12:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: EMERALD
+        13:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: ENCHANTED_BOOK
+          meta:
+            ==: ItemMeta
+            meta-type: ENCHANTED
+            stored-enchants:
+              DAMAGE_ALL: 5
+        14:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: EMERALD
+        17:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_FENCE
+        18:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        19:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        20:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        21:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        22:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        23:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        24:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        25:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        26:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+      rarity: UNCOMMON
+    '9':
+      contents:
+        0:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        1:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        2:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        3:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        4:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        5:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        6:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        7:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        8:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        9:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_FENCE
+        13:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SKELETON_SKULL
+        17:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_FENCE
+        18:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        19:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        20:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        21:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        22:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        23:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        24:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        25:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        26:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+      rarity: UNCOMMON
+    '10':
+      contents:
+        0:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        1:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        2:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        3:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        4:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        5:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        6:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        7:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        8:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        9:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_FENCE
+        13:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: DIAMOND_SWORD
+        17:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_FENCE
+        18:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        19:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        20:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        21:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        22:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        23:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        24:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        25:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        26:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+      rarity: RARE
+    '11':
+      contents:
+        0:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        1:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        2:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        3:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        4:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        5:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        6:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        7:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        8:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        9:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_FENCE
+        12:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: ENCHANTED_BOOK
+          meta:
+            ==: ItemMeta
+            meta-type: ENCHANTED
+            stored-enchants:
+              PROTECTION_EXPLOSIONS: 3
+        13:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: CROSSBOW
+        17:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_FENCE
+        18:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        19:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        20:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        21:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        22:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        23:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        24:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        25:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        26:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+      rarity: RARE
+    '12':
+      contents:
+        0:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        1:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        2:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        3:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        4:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        5:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        6:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        7:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        8:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        9:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_FENCE
+        12:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: EXPERIENCE_BOTTLE
+        13:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: CLOCK
+        14:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: EXPERIENCE_BOTTLE
+        17:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_FENCE
+        18:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        19:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        20:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        21:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        22:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        23:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        24:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        25:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        26:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+      rarity: RARE
+    '13':
+      contents:
+        0:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        1:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        2:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        3:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        4:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        5:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        6:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        7:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        8:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        9:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_FENCE
+        13:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: ENCHANTING_TABLE
+        17:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_FENCE
+        18:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        19:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        20:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        21:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        22:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        23:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        24:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        25:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        26:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+      rarity: EPIC
+    '14':
+      contents:
+        0:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        1:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        2:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        3:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        4:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        5:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        6:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        7:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        8:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        9:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_FENCE
+        13:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: BREWING_STAND
+        17:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_FENCE
+        18:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        19:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        20:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        21:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        22:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        23:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        24:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        25:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+        26:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_PLANKS
+      rarity: EPIC

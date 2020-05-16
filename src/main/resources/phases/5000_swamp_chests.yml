@@ -1,0 +1,750 @@
+'5000':
+  chests:
+    '1':
+      contents:
+        0:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: VINE
+        18:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: VINE
+        8:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: VINE
+        26:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: VINE
+        13:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: RED_MUSHROOM_BLOCK
+      rarity: COMMON
+    '2':
+      contents:
+        0:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_LEAVES
+        18:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_LEAVES
+        8:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_LEAVES
+        26:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_LEAVES
+        13:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: BROWN_MUSHROOM_BLOCK
+      rarity: COMMON
+    '3':
+      contents:
+        0:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_LEAVES
+        18:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_LEAVES
+        8:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_LEAVES
+        26:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_LEAVES
+        13:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SLIME_BALL
+          amount: 2
+      rarity: COMMON
+    '4':
+      contents:
+        0:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_LEAVES
+        18:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_LEAVES
+        8:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_LEAVES
+        26:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_LEAVES
+        13:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: MUSHROOM_STEW
+      rarity: COMMON
+    '5':
+      contents:
+        0:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_LEAVES
+        18:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_LEAVES
+        8:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_LEAVES
+        26:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_LEAVES
+        13:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_BOAT
+      rarity: COMMON
+    '6':
+      contents:
+        0:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_LEAVES
+        17:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_LEAVES
+        18:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_LEAVES
+        8:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_LEAVES
+        9:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_LEAVES
+        26:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_LEAVES
+        13:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: WATER_BUCKET
+      rarity: UNCOMMON
+    '7':
+      contents:
+        0:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_LEAVES
+        17:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_LEAVES
+        18:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_LEAVES
+        8:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_LEAVES
+        9:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_LEAVES
+        26:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_LEAVES
+        13:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: BLUE_BED
+      rarity: UNCOMMON
+    '8':
+      contents:
+        0:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_LEAVES
+        17:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_LEAVES
+        18:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_LEAVES
+        8:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_LEAVES
+        9:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_LEAVES
+        26:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_LEAVES
+        11:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: BLUE_ORCHID
+        13:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: BLUE_ORCHID
+        15:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: BLUE_ORCHID
+      rarity: UNCOMMON
+    '9':
+      contents:
+        0:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_LEAVES
+        18:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_LEAVES
+        8:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_LEAVES
+        26:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_LEAVES
+        13:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SLIME_BALL
+          amount: 4
+      rarity: UNCOMMON
+    '10':
+      contents:
+        0:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: LILY_PAD
+        1:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_LEAVES
+        2:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_LEAVES
+        3:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_LEAVES
+        4:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_LEAVES
+        5:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_LEAVES
+        6:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_LEAVES
+        7:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_LEAVES
+        8:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: LILY_PAD
+        9:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: LILY_PAD
+        10:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SLIME_BALL
+        11:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SLIME_BALL
+        12:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SLIME_BALL
+        13:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SLIME_BALL
+        14:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SLIME_BALL
+        15:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SLIME_BALL
+        16:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SLIME_BALL
+        17:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: LILY_PAD
+        18:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: LILY_PAD
+        19:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_LEAVES
+        20:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_LEAVES
+        21:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_LEAVES
+        22:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_LEAVES
+        23:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_LEAVES
+        24:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_LEAVES
+        25:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_LEAVES
+        26:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: LILY_PAD
+      rarity: RARE
+    '11':
+      contents:
+        0:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: LILY_PAD
+        1:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_LEAVES
+        2:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_LEAVES
+        3:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_LEAVES
+        4:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_LEAVES
+        5:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_LEAVES
+        6:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_LEAVES
+        7:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_LEAVES
+        8:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: LILY_PAD
+        9:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: LILY_PAD
+        13:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: ENCHANTING_TABLE
+        17:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: LILY_PAD
+        18:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: LILY_PAD
+        19:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_LEAVES
+        20:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_LEAVES
+        21:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_LEAVES
+        22:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_LEAVES
+        23:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_LEAVES
+        24:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_LEAVES
+        25:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_LEAVES
+        26:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: LILY_PAD
+      rarity: RARE
+    '12':
+      contents:
+        0:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: VINE
+        1:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: VINE
+        2:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: VINE
+        3:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: VINE
+        4:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: VINE
+        5:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: VINE
+        6:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: VINE
+        7:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: VINE
+        8:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: VINE
+        9:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: VINE
+        13:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: ENCHANTED_BOOK
+          meta:
+            ==: ItemMeta
+            meta-type: ENCHANTED
+            stored-enchants:
+              KNOCKBACK: 2
+        17:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: VINE
+        18:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: VINE
+        19:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: VINE
+        20:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: VINE
+        21:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: VINE
+        22:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: VINE
+        23:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: VINE
+        24:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: VINE
+        25:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: VINE
+        26:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: VINE
+      rarity: RARE
+    '13':
+      contents:
+        0:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: VINE
+        1:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: VINE
+        2:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: VINE
+        3:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: VINE
+        4:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: VINE
+        5:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: VINE
+        6:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: VINE
+        7:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: VINE
+        8:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: VINE
+        9:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: VINE
+        13:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: ENCHANTED_BOOK
+          meta:
+            ==: ItemMeta
+            meta-type: ENCHANTED
+            stored-enchants:
+              DEPTH_STRIDER: 3
+        17:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: VINE
+        18:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: VINE
+        19:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: VINE
+        20:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: VINE
+        21:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: VINE
+        22:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: VINE
+        23:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: VINE
+        24:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: VINE
+        25:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: VINE
+        26:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: VINE
+      rarity: EPIC
+    '14':
+      contents:
+        0:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_LEAVES
+          amount: 3
+        1:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_LEAVES
+          amount: 3
+        2:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_LEAVES
+          amount: 3
+        3:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_LEAVES
+          amount: 3
+        4:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_LEAVES
+          amount: 3
+        5:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_LEAVES
+          amount: 3
+        6:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_LEAVES
+          amount: 3
+        7:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_LEAVES
+          amount: 3
+        8:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_LEAVES
+          amount: 3
+        9:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_LEAVES
+          amount: 3
+        11:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: ENCHANTED_BOOK
+          meta:
+            ==: ItemMeta
+            meta-type: ENCHANTED
+            stored-enchants:
+              DURABILITY: 2
+        13:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SLIME_BALL
+        15:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: ENCHANTED_BOOK
+          meta:
+            ==: ItemMeta
+            meta-type: ENCHANTED
+            stored-enchants:
+              DAMAGE_ALL: 5
+        17:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_LEAVES
+          amount: 3
+        18:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_LEAVES
+          amount: 3
+        19:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_LEAVES
+          amount: 3
+        20:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_LEAVES
+          amount: 3
+        21:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_LEAVES
+          amount: 3
+        22:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_LEAVES
+          amount: 3
+        23:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_LEAVES
+          amount: 3
+        24:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_LEAVES
+          amount: 3
+        25:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_LEAVES
+          amount: 3
+        26:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_LEAVES
+          amount: 3
+      rarity: EPIC

@@ -1,0 +1,32 @@
+'2000':
+  name: Winter
+  firstBlock: SNOW_BLOCK
+  biome: SNOWY_TAIGA
+  blocks:
+    COBBLESTONE: 900
+    SAND: 100
+    DIRT: 200
+    STONE: 1000
+    SPRUCE_LEAVES: 500
+    STRIPPED_SPRUCE_LOG: 200
+    ICE: 100
+    GOLD_ORE: 80
+    LAPIS_ORE: 80
+    CHEST: 150
+    SPRUCE_LOG: 500
+    SNOW_BLOCK: 1000
+  mobs:
+    COW: 10
+    STRAY: 150
+    ZOMBIE: 200
+    SPIDER: 40
+    SHEEP: 10
+    ENDERMAN: 10
+    WOLF: 100
+    SNOWMAN: 30
+    SKELETON: 100
+    POLAR_BEAR: 10
+    PIG: 10
+    CREEPER: 30
+    RABBIT: 50
+    CHICKEN: 10

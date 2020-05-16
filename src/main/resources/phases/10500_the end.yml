@@ -1,0 +1,16 @@
+'10500':
+  name: The End
+  firstBlock: END_STONE
+  biome: THE_END
+  blocks:
+    PURPUR_BLOCK: 500
+    END_STONE_BRICKS: 100
+    PURPLE_WOOL: 50
+    OBSIDIAN: 250
+    END_STONE: 1000
+    CHEST: 200
+    PURPLE_TERRACOTTA: 100
+    PURPUR_PILLAR: 100
+  mobs:
+    SHULKER: 80
+    ENDERMAN: 500
