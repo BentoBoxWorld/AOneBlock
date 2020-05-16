@@ -2,6 +2,7 @@ package world.bentobox.aoneblock.oneblocks;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.HashMap;
@@ -63,16 +64,38 @@ public class OneBlocksManager {
     public void loadPhases() throws IOException, InvalidConfigurationException, NumberFormatException {
         // Clear block probabilities
         blockProbs = new TreeMap<>();
+        // Check for folder
+        File check = new File(addon.getDataFolder(), "oneblocks");
+        if (check.mkdirs()) {
+            addon.log(check.getAbsolutePath() + " does not exist, made folder.");
+            // Check for oneblock.yml
+            File oneblockFile = new File(addon.getDataFolder(), ONE_BLOCKS_YML);
+            if (oneblockFile.exists()) {
+                // TODO Migrate to new folders
+                File renamedFile = new File(check, ONE_BLOCKS_YML);
+                Files.move(oneblockFile, renamedFile);
+                loadPhase(renamedFile);
+                this.saveOneBlockConfig();
+                oneblockFile.delete();
+                renamedFile.delete();
+                blockProbs.clear();
+            } else {
+                // TODO copy files from JAR
+            }
+        }
+        // Get files in folder
+        // Filter for files ending with .yml
+        FilenameFilter ymlFilter = (dir, name) -> name.toLowerCase(java.util.Locale.ENGLISH).endsWith(".yml");
+        for (File phaseFile : Objects.requireNonNull(check.listFiles(ymlFilter))) {
+            loadPhase(phaseFile);
+        }
+    }
+
+    private void loadPhase(File phaseFile) {
         // Load the config file
         YamlConfiguration oneBlocks = new YamlConfiguration();
-        // Check for file
-        File check = new File(addon.getDataFolder(), ONE_BLOCKS_YML);
-        if (!check.exists()) {
-            addon.logError(check.getAbsolutePath() + " does not exist!");
-            return;
-        }
         try {
-            oneBlocks.load(check);
+            oneBlocks.load(phaseFile);
         } catch (Exception e) {
             addon.logError(e.getMessage());
             return;
@@ -92,6 +115,7 @@ public class OneBlocksManager {
             Integer blockNum = Integer.valueOf(blockNumber);
             blockProbs.put(blockNum, obPhase);
         }
+
     }
 
     void initBlock(String blockNumber, OneBlockPhase obPhase, ConfigurationSection phase) {
@@ -214,9 +238,9 @@ public class OneBlocksManager {
      * @return true if saved
      */
     public boolean saveOneBlockConfig() {
-        // Make the config file
-        YamlConfiguration oneBlocks = new YamlConfiguration();
+        // Go through each phase
         blockProbs.values().forEach(p -> {
+            YamlConfiguration oneBlocks = new YamlConfiguration();
             ConfigurationSection phSec = oneBlocks.createSection(p.getBlockNumber());
             phSec.set(NAME, p.getPhaseName());
             if (p.getFirstBlock() != null) {
@@ -225,20 +249,34 @@ public class OneBlocksManager {
             phSec.set(BIOME, p.getPhaseBiome().name());
             saveBlocks(phSec, p);
             saveEntities(phSec, p);
+            try {
+                // Save
+                File phaseFile = new File(addon.getDataFolder() + File.separator + "oneblocks", getPhaseFileName(p) + ".yml");
+                oneBlocks.save(phaseFile);
+            } catch (IOException e) {
+                addon.logError("Could not save phase " + p.getPhaseName() + " " + e.getMessage());
+            }
+            if (p.isGotoPhase()) return;
+            // Save chests separately
+            oneBlocks = new YamlConfiguration();
+            phSec = oneBlocks.createSection(p.getBlockNumber());
             saveChests(phSec, p);
+            try {
+                // Save
+                File phaseFile = new File(addon.getDataFolder() + File.separator + "oneblocks", getPhaseFileName(p) + "_chests.yml");
+                oneBlocks.save(phaseFile);
+            } catch (IOException e) {
+                addon.logError("Could not save phase " + p.getPhaseName() + " " + e.getMessage());
+            }
+
         });
-        try {
-            // Make backup
-            File config = new File(addon.getDataFolder() + File.separator + ONE_BLOCKS_YML);
-            File configBak = new File(addon.getDataFolder() + File.separator + ONE_BLOCKS_YML + ".bak");
-            Files.copy(config, configBak);
-            oneBlocks.save(config);
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-            return false;
-        }
+
         return true;
+    }
+
+    private String getPhaseFileName(OneBlockPhase p) {
+        String name = p.isGotoPhase() ? "goto_" + p.getGotoBlock() : p.getPhaseName().toLowerCase();
+        return p.getBlockNumber() + "_" + name;
     }
 
     private void saveChests(ConfigurationSection phSec, OneBlockPhase phase) {
