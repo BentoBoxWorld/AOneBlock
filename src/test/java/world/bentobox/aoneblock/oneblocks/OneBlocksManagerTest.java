@@ -121,6 +121,7 @@ public class OneBlocksManagerTest {
     /**
      * @throws java.lang.Exception
      */
+    @SuppressWarnings("deprecation")
     @Before
     public void setUp() throws Exception {
         // Set up plugin
