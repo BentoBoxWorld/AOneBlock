@@ -12,7 +12,6 @@ import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.TreeMap;
-import java.util.jar.JarFile;
 import java.util.stream.Collectors;
 
 import org.bukkit.Material;
@@ -30,7 +29,6 @@ import com.google.common.io.Files;
 import world.bentobox.aoneblock.AOneBlock;
 import world.bentobox.aoneblock.dataobjects.OneBlockIslands;
 import world.bentobox.aoneblock.oneblocks.OneBlockObject.Rarity;
-import world.bentobox.bentobox.util.Util;
 
 public class OneBlocksManager {
 
@@ -43,7 +41,6 @@ public class OneBlocksManager {
     private static final String CONTENTS = "contents";
     private static final String MOBS = "mobs";
     private static final String BLOCKS = "blocks";
-    private static final String PHASES = "phases";
     private final AOneBlock addon;
     private TreeMap<Integer, OneBlockPhase> blockProbs;
 
@@ -57,6 +54,8 @@ public class OneBlocksManager {
         this.addon = addon;
         // Initialize block probabilities
         blockProbs = new TreeMap<>();
+        // Save the default oneblocks.yml file
+        addon.saveResource(ONE_BLOCKS_YML, false);
     }
 
     /**
@@ -66,13 +65,13 @@ public class OneBlocksManager {
         // Clear block probabilities
         blockProbs = new TreeMap<>();
         // Check for folder
-        File check = new File(addon.getDataFolder(), PHASES);
+        File check = new File(addon.getDataFolder(), "oneblocks");
         if (check.mkdirs()) {
             addon.log(check.getAbsolutePath() + " does not exist, made folder.");
             // Check for oneblock.yml
             File oneblockFile = new File(addon.getDataFolder(), ONE_BLOCKS_YML);
             if (oneblockFile.exists()) {
-                // Migrate to new folders
+                // TODO Migrate to new folders
                 File renamedFile = new File(check, ONE_BLOCKS_YML);
                 Files.move(oneblockFile, renamedFile);
                 loadPhase(renamedFile);
@@ -81,8 +80,7 @@ public class OneBlocksManager {
                 renamedFile.delete();
                 blockProbs.clear();
             } else {
-                // Copy files from JAR
-                copyPhasesFromAddonJar(check);
+                // TODO copy files from JAR
             }
         }
         // Get files in folder
@@ -93,22 +91,7 @@ public class OneBlocksManager {
         }
     }
 
-    /**
-     * Copies phase files from the addon jar to the file system
-     * @param check
-     * @param addon - addon
-     */
-    void copyPhasesFromAddonJar(File check) {
-        try (JarFile jar = new JarFile(addon.getFile())) {
-            // Obtain any locale files, save them and update
-            Util.listJarFiles(jar, PHASES, ".yml").forEach(lf -> addon.saveResource(lf, check, false, true));
-        } catch (Exception e) {
-            addon.logError(e.getMessage());
-        }
-    }
-
     private void loadPhase(File phaseFile) {
-        addon.log("Loading " + phaseFile.getName());
         // Load the config file
         YamlConfiguration oneBlocks = new YamlConfiguration();
         try {
@@ -193,7 +176,7 @@ public class OneBlocksManager {
                         throw new IOException("Entity type is not alive or spawnable");
                     }
                 } catch (Exception e) {
-                    addon.logError("Bad entity type in " + obPhase.getPhaseName() + ": " + entity);
+                    addon.logError("Bad entity type in " + ONE_BLOCKS_YML + ": " + entity);
                     addon.logError(e.getMessage());
                 }
             }
@@ -208,7 +191,7 @@ public class OneBlocksManager {
             for (String material : blocks.getKeys(false)) {
                 Material m = Material.matchMaterial(material);
                 if (m == null || !m.isBlock()) {
-                    addon.logError("Bad block material in " + obPhase.getPhaseName() + ": " + material);
+                    addon.logError("Bad block material in " + ONE_BLOCKS_YML + ": " + material);
                 } else {
                     obPhase.addBlock(m, blocks.getInt(material));
                 }
@@ -268,7 +251,7 @@ public class OneBlocksManager {
             saveEntities(phSec, p);
             try {
                 // Save
-                File phaseFile = new File(addon.getDataFolder() + File.separator + PHASES, getPhaseFileName(p) + ".yml");
+                File phaseFile = new File(addon.getDataFolder() + File.separator + "oneblocks", getPhaseFileName(p) + ".yml");
                 oneBlocks.save(phaseFile);
             } catch (IOException e) {
                 addon.logError("Could not save phase " + p.getPhaseName() + " " + e.getMessage());
@@ -280,7 +263,7 @@ public class OneBlocksManager {
             saveChests(phSec, p);
             try {
                 // Save
-                File phaseFile = new File(addon.getDataFolder() + File.separator + PHASES, getPhaseFileName(p) + "_chests.yml");
+                File phaseFile = new File(addon.getDataFolder() + File.separator + "oneblocks", getPhaseFileName(p) + "_chests.yml");
                 oneBlocks.save(phaseFile);
             } catch (IOException e) {
                 addon.logError("Could not save phase " + p.getPhaseName() + " " + e.getMessage());
