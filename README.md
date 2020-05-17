@@ -39,13 +39,9 @@ Q: I can't catch the blocks when I mine them! How do I do that?
 
 A: Yep. It's tough. You can't catch them all, but it *is* an infinite block!
 
-Q. How can I mine a block if I have no tools?
-
-A: The magic block allows you to mine anything with your hands (it *is* magic!) but it may take a long time.
-
 Q: Why do certain blocks spawn more frequently than others?
 
-A: They just do! You can set the relative probability in the file `oneblock.yml`.
+A: They just do! You can set the relative probability in the config files in the phases folder.
 
 Q. How do I know which is the magic block?
 
@@ -65,11 +61,11 @@ A: Each phase has a different set of mobs that can spawn. Be careful because the
 
 Q. I have no chance to react to hostile mobs spawning!
 
-A. Be prepared. Listen carefully when you mine a block and you will hear hostile mobs coming before they spawn. If you are in a hostile phase, then expect mobs and build defences to protect yourself. You can mine a block from quite far away.
+A. Be prepared. Listen carefully when you mine a block and you will hear hostile mobs coming before they spawn. If you are in a hostile phase, then expect mobs and build defenses to protect yourself. You can mine a block from quite far away.
 
-Q. When mobs spawn, my defences are destroyed! Why?
+Q. When mobs spawn, my defenses are destroyed! Why?
 
-A. Mobs must have space to spawn. If there's anything in the way, it'll be broken and dropped. You'll have to build accordingly.
+A. Mobs make space to spawn. If there's anything in the way, it'll be broken and dropped. You'll have to build accordingly.
 
 Q: Do chests spawn?
 
@@ -77,7 +73,7 @@ A: Yes. Chests spawn with random items in them from the current phase. There are
 
 Q: Is it possible to reach the Nether or End in this map?
 
-A: Yes, the vanilla Nether exists by default but there is no End world. 
+A: The vanilla Nether exists by default but there is no End world. 
 
 Q: What is the end goal?
 
@@ -88,20 +84,25 @@ A: It's whatever you want it to be!
 0. Install BentoBox and run it on the server at least once to create its data folders.
 1. Place this jar in the addons folder of the BentoBox plugin.
 2. Restart the server.
-3. The addon will create worlds and a data folder and inside the folder will be a config.yml and oneblock.yml files.
+3. The addon will create worlds and a data folder and inside the folder will be a config.yml and config files in phases folder.
 4. Stop the server.
-5. Edit config.yml and oneblock.yml files how you want.
+5. Edit config.yml and the .yml config files how you want.
 6. Delete any worlds that were created by default if you made changes that would affect them.
 7. Restart the server.
 
-## oneblock.yml
+## Phase config files
 
-The first number is how many blocks need to be mined to reach that phase.
-Each phase has a name, a biome and the following sections:
+The config files to make the phases are in the phases folder.
+
+There are two files per phase - a file that contains the blocks and mobs, and a file that contains the chests.
+
+The first number of any file is how many blocks need to be mined to reach that phase. This is the phase's key number.
+Each phase also has a name, a biome and the following sections:
 
 - blocks
 - mobs
-- chests
+
+In the chests file, it just has the phase number and a chests section.
 
 
 ### blocks
@@ -115,6 +116,8 @@ The mob section list mobs that can spawn and their relative probability along wi
 ### chests
 
 If CHEST is listed in the blocks section, then it will be randomly filled according to this section. You can define as many chests as you like. The first number is a unique chest number. Then follows the chest contents that includes the slot number and the item stack contents. Finally there is the chest's rarity, which can be COMMON, UNCOMMON, RARE or EPIC. The best way to set chests is to do it in game. Fill a chest with the contents you want and then while looking at it enter the command `/oba setchest <phase> <rarity>` where <phase> is the name of the phase and rarity is the rarity. Use Tab Complete to see the options. The chest will be automatically added to the oneblocks.yml file and be ready to use. Deleting chests must be done by editing the oneblocks.yml file for now and reloading the addon.
+
+Be very careful when editing the chest items and check that the material is a true Bukkit material and spelled correctly.
 
 ### Other Add-ons
 

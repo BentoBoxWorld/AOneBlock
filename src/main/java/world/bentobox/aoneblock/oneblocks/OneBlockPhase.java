@@ -121,7 +121,7 @@ public class OneBlockPhase {
 
     public OneBlockObject getNextBlock(AOneBlock addon) {
         if (total <1) {
-            addon.logError("Phase " + this.getPhaseName() + " has zero probability of generating blocks. Check oneblocks.yml. Is the block section missing?");
+            addon.logError("Phase " + this.getPhaseName() + " has zero probability of generating blocks. Check config file. Is the block section missing?");
             return this.getFirstBlock() != null ? getFirstBlock() : new OneBlockObject(Material.GRASS_BLOCK,1);
         }
         OneBlockObject block = getRandomBlock(probMap, total);
