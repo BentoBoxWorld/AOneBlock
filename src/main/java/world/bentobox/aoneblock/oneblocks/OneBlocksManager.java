@@ -78,9 +78,15 @@ public class OneBlocksManager {
             return;
         }
         for (String blockNumber : oneBlocks.getKeys(false)) {
-            OneBlockPhase obPhase = new OneBlockPhase(blockNumber);
+            Integer blockNum = Integer.valueOf(blockNumber);
+            OneBlockPhase obPhase = blockProbs.computeIfAbsent(blockNum, k -> new OneBlockPhase(blockNumber));
             // Get config Section
             ConfigurationSection phase = oneBlocks.getConfigurationSection(blockNumber);
+            // goto
+            if (phase.contains("gotoBlock")) {
+                obPhase.setGotoBlock(phase.getInt("gotoBlock", 0));
+                continue;
+            }
             initBlock(blockNumber, obPhase, phase);
             // Blocks
             addBlocks(obPhase, phase);
@@ -89,20 +95,19 @@ public class OneBlocksManager {
             // Chests
             addChests(obPhase, phase);
             // Add to the map
-            Integer blockNum = Integer.valueOf(blockNumber);
             blockProbs.put(blockNum, obPhase);
         }
     }
 
     void initBlock(String blockNumber, OneBlockPhase obPhase, ConfigurationSection phase) {
-        // goto
-        if (phase.contains("gotoBlock")) {
-            obPhase.setGotoBlock(phase.getInt("gotoBlock", 0));
+        if (phase.contains(NAME, true)) {
+            // name
+            obPhase.setPhaseName(phase.getString(NAME, blockNumber));
         }
-        // name
-        obPhase.setPhaseName(phase.getString(NAME, blockNumber));
         // biome
-        obPhase.setPhaseBiome(Biome.valueOf(phase.getString(BIOME, "PLAINS").toUpperCase()));
+        if (phase.contains(BIOME, true)) {
+            obPhase.setPhaseBiome(Biome.valueOf(phase.getString(BIOME, "PLAINS").toUpperCase()));
+        }
         // First block
         if (phase.contains(FIRST_BLOCK)) {
             addFirstBlock(obPhase, phase.getString(FIRST_BLOCK));
