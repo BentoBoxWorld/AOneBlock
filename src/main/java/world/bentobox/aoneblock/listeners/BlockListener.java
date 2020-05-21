@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Random;
 
 import org.bukkit.Bukkit;
@@ -31,6 +32,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.entity.EntitySpawnEvent;
 import org.bukkit.event.player.PlayerBucketFillEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
@@ -38,6 +40,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.util.BoundingBox;
 import org.bukkit.util.Vector;
 import org.eclipse.jdt.annotation.NonNull;
+import org.eclipse.jdt.annotation.Nullable;
 
 import world.bentobox.aoneblock.AOneBlock;
 import world.bentobox.aoneblock.dataobjects.OneBlockIslands;
@@ -183,7 +186,7 @@ public class BlockListener implements Listener {
             return;
         }
         Location l = e.getBlock().getLocation();
-        addon.getIslands().getIslandAt(l).filter(i -> l.equals(i.getCenter())).ifPresent(i -> process(e, i, e.getPlayer()));
+        addon.getIslands().getIslandAt(l).filter(i -> l.equals(i.getCenter())).ifPresent(i -> process(e, i, e.getPlayer(), e.getPlayer().getWorld()));
     }
 
     /**
@@ -196,10 +199,10 @@ public class BlockListener implements Listener {
             return;
         }
         Location l = e.getBlock().getLocation();
-        addon.getIslands().getIslandAt(l).filter(i -> l.equals(i.getCenter())).ifPresent(i -> process(e, i, e.getPlayer()));
+        addon.getIslands().getIslandAt(l).filter(i -> l.equals(i.getCenter())).ifPresent(i -> process(e, i, e.getPlayer(), e.getPlayer().getWorld()));
     }
 
-    private void process(Cancellable e, Island i, @NonNull Player player) {
+    private void process(Cancellable e, Island i, @Nullable Player player, @NonNull World world) {
         // Get island from cache or load it
         OneBlockIslands is = getIsland(i);
         // Get the phase for this island
@@ -218,11 +221,11 @@ public class BlockListener implements Listener {
         boolean newPhase = false;
         if (!is.getPhaseName().equalsIgnoreCase(phase.getPhaseName())) {
             cache.get(i.getUniqueId()).setPhaseName(phase.getPhaseName());
-            player.sendTitle(phase.getPhaseName(), null, -1, -1, -1);
+            if (player != null) player.sendTitle(phase.getPhaseName(), null, -1, -1, -1);
             newPhase = true;
         }
         // Get the block that is being broken
-        Block block = i.getCenter().toVector().toLocation(player.getWorld()).getBlock();
+        Block block = i.getCenter().toVector().toLocation(world).getBlock();
         // Fill a 5 block queue
         if (is.getQueue().isEmpty() || newPhase) {
             is.clearQueue();
@@ -253,7 +256,7 @@ public class BlockListener implements Listener {
         }
         // Entity
         if (nextBlock.isEntity()) {
-            e.setCancelled(true);
+            if (!(e instanceof EntitySpawnEvent)) e.setCancelled(true);
             // Entity spawns do not increment the block number or break the block
             spawnEntity(nextBlock, block);
             return;
@@ -261,13 +264,13 @@ public class BlockListener implements Listener {
         // Break the block
         if (e instanceof BlockBreakEvent) {
             e.setCancelled(true);
-            block.breakNaturally(player.getInventory().getItemInMainHand());
+            block.breakNaturally(Objects.requireNonNull(player).getInventory().getItemInMainHand());
             // Give exp
-            player.giveExp(((BlockBreakEvent)e).getExpToDrop());
+            Objects.requireNonNull(player).giveExp(((BlockBreakEvent)e).getExpToDrop());
             // Damage tool
-            damageTool(player, block);
+            damageTool(Objects.requireNonNull(player), block);
             spawnBlock(nextBlock, block);
-        } else if (e instanceof PlayerBucketFillEvent) {
+        } else if (e instanceof PlayerBucketFillEvent || e instanceof EntitySpawnEvent) {
             Bukkit.getScheduler().runTask(addon.getPlugin(), ()-> spawnBlock(nextBlock, block));
         }
         // Increment the block number

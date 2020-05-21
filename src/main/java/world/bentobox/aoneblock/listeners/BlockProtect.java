@@ -2,16 +2,13 @@ package world.bentobox.aoneblock.listeners;
 
 import org.bukkit.Color;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.block.Block;
 import org.bukkit.entity.EntityType;
-import org.bukkit.entity.FallingBlock;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockDamageEvent;
-import org.bukkit.event.block.BlockPhysicsEvent;
 import org.bukkit.event.block.BlockPistonExtendEvent;
 import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
@@ -88,18 +85,22 @@ public class BlockProtect implements Listener {
                 );
     }
 
+    /**
+     * Prevent falling blocks from happening
+     * @param e - event
+     */
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
-    public void onPhysics(EntitySpawnEvent e) {
+    public void onFallingBlockSpawn(EntitySpawnEvent e) {
         if (!e.getEntityType().equals(EntityType.FALLING_BLOCK) || !addon.inWorld(e.getEntity().getWorld())) {
             return;
         }
-        FallingBlock fb = (FallingBlock)e.getEntity();
         Location l = e.getLocation();
-        addon.getIslands().getIslandAt(l).filter(i -> l.equals(i.getCenter())).ifPresent(i -> {
-            e.setCancelled(true);
-            e.getLocation().getBlock().setBlockData(fb.getBlockData(), false);
-        });
-
+        // Dropped blocks do not spawn on integer locations, so we have to check block values independently
+        addon.getIslands().getIslandAt(l).filter(i -> l.getBlockX() == i.getCenter().getBlockX()
+                && l.getBlockY() == i.getCenter().getBlockY()
+                && l.getBlockZ() == i.getCenter().getBlockZ()
+                ).ifPresent(i -> e.setCancelled(true));
     }
+
 
 }
