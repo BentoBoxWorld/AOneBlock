@@ -31,9 +31,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockDamageEvent;
-import org.bukkit.event.entity.EntityChangeBlockEvent;
-import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.player.PlayerBucketFillEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
@@ -187,31 +184,6 @@ public class BlockListener implements Listener {
         }
         Location l = e.getBlock().getLocation();
         addon.getIslands().getIslandAt(l).filter(i -> l.equals(i.getCenter())).ifPresent(i -> process(e, i, e.getPlayer()));
-    }
-
-    /**
-     * Prevent entities other than players changing the magic block
-     * @param e - EntityChangeBlockEvent
-     */
-    @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
-    public void onBlockChange(final EntityChangeBlockEvent e) {
-        if (!addon.inWorld(e.getBlock().getWorld())) {
-            return;
-        }
-        Location l = e.getBlock().getLocation();
-        addon.getIslands().getIslandAt(l).filter(i -> l.equals(i.getCenter())).ifPresent(i -> e.setCancelled(true));
-    }
-
-    /**
-     * Blocks oneblocks from being blown up
-     * @param e - EntityExplodeEvent
-     */
-    @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
-    public void onExplosion(final EntityExplodeEvent e) {
-        if (!addon.inWorld(e.getEntity().getWorld())) {
-            return;
-        }
-        e.blockList().removeIf(b -> addon.getIslands().getIslandAt(b.getLocation()).filter(i -> b.getLocation().equals(i.getCenter())).isPresent());
     }
 
     /**
@@ -435,16 +407,6 @@ public class BlockListener implements Listener {
         return oneBlocksManager;
     }
 
-    @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
-    public void onBlockDamage(BlockDamageEvent e) {
-        if (!addon.inWorld(e.getBlock().getWorld())) {
-            return;
-        }
-        Block block = e.getBlock();
-        Location l = block.getLocation();
-        addon.getIslands().getIslandAt(l).filter(i -> l.equals(i.getCenter())).ifPresent(i ->
-        block.getWorld().spawnParticle(Particle.REDSTONE, l.add(new Vector(0.5, 1.0, 0.5)), 5, 0.1, 0, 0.1, 1, new Particle.DustOptions(Color.fromBGR(0,100,0), 1)));
-    }
     /*
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onRespawn(PlayerRespawnEvent e) {

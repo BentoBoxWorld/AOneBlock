@@ -16,6 +16,7 @@ import world.bentobox.aoneblock.commands.PlayerCommand;
 import world.bentobox.aoneblock.dataobjects.OneBlockIslands;
 import world.bentobox.aoneblock.generators.ChunkGeneratorWorld;
 import world.bentobox.aoneblock.listeners.BlockListener;
+import world.bentobox.aoneblock.listeners.BlockProtect;
 import world.bentobox.aoneblock.listeners.NoBlockHandler;
 import world.bentobox.aoneblock.oneblocks.OneBlocksManager;
 import world.bentobox.bentobox.api.addons.GameModeAddon;
@@ -73,6 +74,7 @@ public class AOneBlock extends GameModeAddon {
             listener = new BlockListener(this);
             registerListener(listener);
             registerListener(new NoBlockHandler(this));
+            registerListener(new BlockProtect(this));
             // Register placeholders
             getPlugin().getPlaceholdersManager().registerPlaceholder(this,"visited_island_phase", this::getPhaseByLocation);
             getPlugin().getPlaceholdersManager().registerPlaceholder(this,"visited_island_count", this::getCountByLocation);
