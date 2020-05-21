@@ -1,0 +1,664 @@
+'3000':
+  chests:
+    '1':
+      contents:
+        18:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        19:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        20:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        5:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: FISHING_ROD
+        21:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        22:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        23:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        24:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        25:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        10:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: ACACIA_BOAT
+        26:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        14:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: EXPERIENCE_BOTTLE
+          amount: 2
+      rarity: COMMON
+    '2':
+      contents:
+        18:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        19:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        20:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        21:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        22:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        23:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        24:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        25:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        10:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: BOWL
+        26:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        13:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: BIRCH_BOAT
+        15:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: OAK_TRAPDOOR
+      rarity: COMMON
+    '3':
+      contents:
+        2:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEA_PICKLE
+        10:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: LILY_PAD
+        11:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: LILY_PAD
+        12:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: LILY_PAD
+        16:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: BOOK
+          amount: 8
+        18:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        19:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        20:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        21:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        22:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        23:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        24:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        25:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        26:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+      rarity: COMMON
+    '4':
+      contents:
+        0:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: IRON_INGOT
+        2:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: IRON_INGOT
+        10:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: IRON_INGOT
+        13:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: COD_BUCKET
+        18:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        19:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        20:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        21:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        22:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        23:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        24:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        25:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        26:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+      rarity: COMMON
+    '5':
+      contents:
+        18:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        19:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        20:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        21:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        22:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        23:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        24:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        25:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        26:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        11:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SALMON_BUCKET
+        14:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: CHISELED_SANDSTONE
+          amount: 32
+      rarity: UNCOMMON
+    '6':
+      contents:
+        18:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        19:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        4:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: TROPICAL_FISH_BUCKET
+        20:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        21:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        22:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        23:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        24:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        25:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        26:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        12:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: DRIED_KELP_BLOCK
+        14:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: CHISELED_RED_SANDSTONE
+          amount: 32
+      rarity: UNCOMMON
+    '7':
+      contents:
+        0:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: LILY_PAD
+        1:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: LILY_PAD
+        2:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: LILY_PAD
+        3:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: LILY_PAD
+        4:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: LILY_PAD
+        5:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: LILY_PAD
+        6:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: LILY_PAD
+        7:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: LILY_PAD
+        8:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: LILY_PAD
+        9:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: CHISELED_SANDSTONE
+          amount: 8
+        13:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: PUFFERFISH_BUCKET
+        17:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: CHISELED_SANDSTONE
+          amount: 8
+        18:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        19:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        20:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        21:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        22:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        23:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        24:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        25:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        26:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+      rarity: UNCOMMON
+    '8':
+      contents:
+        18:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        19:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        20:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        21:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        22:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        23:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        24:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        25:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        26:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        11:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: ENCHANTED_BOOK
+          meta:
+            ==: ItemMeta
+            meta-type: ENCHANTED
+            stored-enchants:
+              FROST_WALKER: 1
+        13:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: HEART_OF_THE_SEA
+        15:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: ENCHANTED_BOOK
+          meta:
+            ==: ItemMeta
+            meta-type: ENCHANTED
+            stored-enchants:
+              OXYGEN: 2
+      rarity: RARE
+    '9':
+      contents:
+        1:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: NAUTILUS_SHELL
+        3:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: NAUTILUS_SHELL
+        4:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: ENCHANTED_BOOK
+          meta:
+            ==: ItemMeta
+            meta-type: ENCHANTED
+            stored-enchants:
+              LOOT_BONUS_BLOCKS: 2
+        5:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: NAUTILUS_SHELL
+        7:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: NAUTILUS_SHELL
+        9:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: NAUTILUS_SHELL
+        11:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: NAUTILUS_SHELL
+        13:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: NAUTILUS_SHELL
+        15:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: NAUTILUS_SHELL
+        17:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: NAUTILUS_SHELL
+        18:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        19:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        20:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        21:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        22:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        23:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        24:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        25:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        26:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+      rarity: RARE
+    '10':
+      contents:
+        18:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        19:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        20:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        21:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        22:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        23:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        24:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        25:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        26:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        11:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: CONDUIT
+        15:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: TURTLE_HELMET
+      rarity: EPIC
+    '11':
+      contents:
+        0:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: EMERALD
+        7:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: EMERALD
+        12:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEA_LANTERN
+        13:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: MUSIC_DISC_CHIRP
+        14:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: EXPERIENCE_BOTTLE
+          amount: 12
+        18:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        19:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        20:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        21:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        22:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        23:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+        24:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+          amount: 2
+        25:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+          amount: 2
+        26:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SEAGRASS
+          amount: 2
+      rarity: EPIC

@@ -1,0 +1,159 @@
+'2000':
+  chests:
+    '1':
+      contents:
+        0:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: CHAINMAIL_CHESTPLATE
+        1:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: CHAINMAIL_HELMET
+        2:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: CHAINMAIL_LEGGINGS
+        3:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: CHAINMAIL_BOOTS
+      rarity: COMMON
+    '2':
+      contents:
+        0:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: CYAN_BED
+        24:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: EXPERIENCE_BOTTLE
+          amount: 2
+        12:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: EXPERIENCE_BOTTLE
+          amount: 2
+      rarity: COMMON
+    '3':
+      contents:
+        0:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: CHARCOAL
+          amount: 64
+        11:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: GRINDSTONE
+        13:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: IRON_INGOT
+          amount: 4
+      rarity: COMMON
+    '4':
+      contents:
+        13:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: DAMAGED_ANVIL
+      rarity: UNCOMMON
+    '5':
+      contents:
+        3:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: EMERALD
+        5:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: EMERALD
+        21:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: EMERALD
+        23:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: EMERALD
+        13:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: IRON_INGOT
+          amount: 4
+      rarity: UNCOMMON
+    '6':
+      contents:
+        11:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: IRON_INGOT
+          amount: 4
+        14:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: ENCHANTED_BOOK
+          meta:
+            ==: ItemMeta
+            meta-type: ENCHANTED
+            stored-enchants:
+              PIERCING: 2
+      rarity: RARE
+    '7':
+      contents:
+        11:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: ENCHANTED_BOOK
+          meta:
+            ==: ItemMeta
+            meta-type: ENCHANTED
+            stored-enchants:
+              MENDING: 1
+        14:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: EXPERIENCE_BOTTLE
+          amount: 8
+      rarity: RARE
+    '8':
+      contents:
+        3:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: IRON_INGOT
+        4:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: IRON_INGOT
+        5:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: IRON_INGOT
+        21:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: IRON_INGOT
+        22:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: IRON_INGOT
+        23:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: IRON_INGOT
+        12:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: IRON_INGOT
+        13:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: MUSIC_DISC_CAT
+        14:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: IRON_INGOT
+      rarity: EPIC

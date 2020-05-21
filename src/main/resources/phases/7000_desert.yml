@@ -1,0 +1,19 @@
+'7000':
+  name: Desert
+  firstBlock: SAND
+  biome: DESERT
+  blocks:
+    SAND: 1000
+    STONE: 200
+    RED_SANDSTONE: 100
+    SANDSTONE: 500
+    RED_SAND: 100
+    CHEST: 100
+  mobs:
+    ZOMBIE: 30
+    SKELETON: 50
+    SPIDER: 50
+    HUSK: 100
+    CREEPER: 10
+    ENDERMAN: 10
+    RABBIT: 50

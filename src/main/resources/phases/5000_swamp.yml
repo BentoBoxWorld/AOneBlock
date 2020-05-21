@@ -1,0 +1,30 @@
+'5000':
+  name: Swamp
+  firstBlock: GRASS_BLOCK
+  biome: SWAMP
+  blocks:
+    COAL_ORE: 50
+    GRAVEL: 40
+    DIAMOND_ORE: 2
+    GOLD_ORE: 10
+    GRASS_BLOCK: 100
+    CHEST: 50
+    COBBLESTONE: 70
+    COARSE_DIRT: 10
+    OAK_LOG: 100
+    DIRT: 100
+    STONE: 10
+    OAK_LEAVES: 100
+    CLAY: 100
+    EMERALD_ORE: 5
+    LAPIS_ORE: 10
+  mobs:
+    WITCH: 50
+    ZOMBIE: 100
+    SKELETON: 100
+    ZOMBIE_VILLAGER: 10
+    CAT: 20
+    SLIME: 100
+    VILLAGER: 10
+    EVOKER: 2
+    CHICKEN: 20

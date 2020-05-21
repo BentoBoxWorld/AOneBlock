@@ -1,0 +1,550 @@
+'4000':
+  chests:
+    '1':
+      contents:
+        0:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: VINE
+        17:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: VINE
+        18:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: VINE
+        8:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: VINE
+        9:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: VINE
+        26:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: VINE
+        11:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: CARROT
+        14:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: JUNGLE_SAPLING
+      rarity: COMMON
+    '2':
+      contents:
+        0:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: VINE
+        17:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: VINE
+        18:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: VINE
+        20:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: COCOA_BEANS
+        8:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: VINE
+        9:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: VINE
+        26:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: VINE
+        12:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: JUNGLE_SAPLING
+        14:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: EGG
+      rarity: COMMON
+    '3':
+      contents:
+        0:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: VINE
+        17:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: VINE
+        18:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: VINE
+        8:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: VINE
+        9:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: VINE
+        26:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: VINE
+        12:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: BROWN_MUSHROOM
+        14:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: EXPERIENCE_BOTTLE
+        15:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: EXPERIENCE_BOTTLE
+      rarity: COMMON
+    '4':
+      contents:
+        0:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: VINE
+        17:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: VINE
+        2:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: COCOA_BEANS
+        18:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: VINE
+        8:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: VINE
+        24:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: SCAFFOLDING
+          amount: 32
+        9:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: VINE
+        26:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: VINE
+        13:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: JUNGLE_FENCE
+          amount: 64
+      rarity: COMMON
+    '5':
+      contents:
+        0:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: VINE
+        17:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: VINE
+        18:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: VINE
+        20:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: COCOA_BEANS
+        8:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: VINE
+        9:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: VINE
+        26:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: VINE
+        12:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: EMERALD
+          amount: 8
+        15:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: STONE_BRICKS
+          amount: 32
+      rarity: COMMON
+    '6':
+      contents:
+        0:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: VINE
+        17:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: VINE
+        18:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: VINE
+        8:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: VINE
+        9:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: VINE
+        26:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: VINE
+        11:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: ENCHANTED_BOOK
+          meta:
+            ==: ItemMeta
+            meta-type: ENCHANTED
+            stored-enchants:
+              SWEEPING_EDGE: 2
+        13:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: EXPERIENCE_BOTTLE
+          amount: 4
+        14:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: RED_MUSHROOM
+      rarity: UNCOMMON
+    '7':
+      contents:
+        0:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: VINE
+        17:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: VINE
+        18:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: VINE
+        4:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: MELON_SLICE
+        22:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: COCOA_BEANS
+        8:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: VINE
+        9:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: VINE
+        26:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: VINE
+        12:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: CARVED_PUMPKIN
+        14:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: POTION
+          meta:
+            ==: ItemMeta
+            meta-type: POTION
+            potion-type: minecraft:strong_regeneration
+      rarity: UNCOMMON
+    '8':
+      contents:
+        0:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: VINE
+        17:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: VINE
+        18:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: VINE
+        8:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: VINE
+        9:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: VINE
+        26:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: VINE
+        12:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: ENCHANTED_BOOK
+          meta:
+            ==: ItemMeta
+            meta-type: ENCHANTED
+            stored-enchants:
+              DAMAGE_UNDEAD: 2
+        14:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: EXPERIENCE_BOTTLE
+          amount: 2
+      rarity: UNCOMMON
+    '9':
+      contents:
+        0:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: VINE
+        17:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: VINE
+        18:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: VINE
+        8:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: VINE
+        9:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: VINE
+        26:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: VINE
+        12:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: ENCHANTED_BOOK
+          meta:
+            ==: ItemMeta
+            meta-type: ENCHANTED
+            stored-enchants:
+              PROTECTION_FALL: 1
+        14:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: EXPERIENCE_BOTTLE
+          amount: 2
+      rarity: UNCOMMON
+    '10':
+      contents:
+        0:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: VINE
+        17:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: VINE
+        18:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: VINE
+        8:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: VINE
+        9:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: VINE
+        26:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: VINE
+        12:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: ENCHANTED_BOOK
+          meta:
+            ==: ItemMeta
+            meta-type: ENCHANTED
+            stored-enchants:
+              THORNS: 2
+        14:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: EXPERIENCE_BOTTLE
+          amount: 2
+      rarity: UNCOMMON
+    '11':
+      contents:
+        0:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: VINE
+        17:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: VINE
+        18:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: VINE
+        4:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: BAMBOO
+        22:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: POTION
+          meta:
+            ==: ItemMeta
+            meta-type: POTION
+            potion-type: minecraft:long_weakness
+        8:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: VINE
+        9:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: VINE
+        26:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: VINE
+        12:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: LIME_DYE
+        13:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: LIME_DYE
+        14:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: LIME_DYE
+      rarity: RARE
+    '12':
+      contents:
+        0:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: VINE
+        17:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: VINE
+        18:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: VINE
+        22:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: POTION
+          meta:
+            ==: ItemMeta
+            meta-type: POTION
+            potion-type: minecraft:long_invisibility
+        8:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: VINE
+        9:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: VINE
+        26:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: VINE
+          amount: 2
+        13:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: MUSIC_DISC_FAR
+      rarity: EPIC
+    '13':
+      contents:
+        0:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: VINE
+        17:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: VINE
+        18:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: VINE
+        8:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: VINE
+        9:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: VINE
+        26:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: VINE
+        12:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: STICKY_PISTON
+          amount: 2
+        13:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: STICKY_PISTON
+          amount: 2
+        14:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: STICKY_PISTON
+          amount: 2
+        15:
+          ==: org.bukkit.inventory.ItemStack
+          v: 2230
+          type: STICKY_PISTON
+          amount: 2
+      rarity: EPIC

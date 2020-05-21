@@ -1,0 +1,31 @@
+'700':
+  name: Underground
+  firstBlock: STONE
+  biome: TAIGA
+  blocks:
+    COAL_ORE: 300
+    GRAVEL: 200
+    REDSTONE_ORE: 60
+    DIAMOND_ORE: 30
+    GOLD_ORE: 100
+    IRON_ORE: 300
+    CHEST: 100
+    COBBLESTONE: 800
+    SAND: 100
+    GRANITE: 100
+    COBWEB: 250
+    DIRT: 500
+    STONE: 1000
+    OBSIDIAN: 10
+    ANDESITE: 200
+    SANDSTONE: 100
+    EMERALD_ORE: 5
+    LAPIS_ORE: 20
+    DIORITE: 200
+  mobs:
+    CAVE_SPIDER: 40
+    ZOMBIE: 300
+    SKELETON: 200
+    CREEPER: 30
+    ENDERMAN: 20
+    BAT: 30
