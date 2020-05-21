@@ -236,7 +236,14 @@ public class OneBlocksManager {
      * @return list of phase names with spaces replaced by underscore so they are one word
      */
     public List<String> getPhaseList() {
-        return blockProbs.values().stream().map(p -> p.getPhaseName().replace(" ", "_")).collect(Collectors.toList());
+        return blockProbs.values()
+                .stream()
+                .map(p ->
+                p.getPhaseName())
+                .filter(n -> n != null)
+                .map(n ->
+                n.replace(" ", "_"))
+                .collect(Collectors.toList());
     }
 
     /**
@@ -252,7 +259,7 @@ public class OneBlocksManager {
      * @return optional OneBlockPhase
      */
     public Optional<OneBlockPhase> getPhase(String name) {
-        return blockProbs.values().stream().filter(p -> p.getPhaseName().replace(" ", "_").equalsIgnoreCase(name)).findFirst();
+        return blockProbs.values().stream().filter(p -> p.getPhaseName() != null && p.getPhaseName().replace(" ", "_").equalsIgnoreCase(name)).findFirst();
     }
 
     /**

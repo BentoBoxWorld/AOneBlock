@@ -63,6 +63,7 @@ public class OneBlockPhase {
     /**
      * @return the phaseName
      */
+    @Nullable
     public String getPhaseName() {
         return phaseName;
     }

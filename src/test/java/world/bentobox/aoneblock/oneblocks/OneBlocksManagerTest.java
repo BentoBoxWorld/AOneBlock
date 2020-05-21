@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Comparator;
+import java.util.List;
 import java.util.jar.JarEntry;
 import java.util.jar.JarOutputStream;
 
@@ -96,7 +97,10 @@ public class OneBlocksManagerTest {
         oneBlocks = new YamlConfiguration();
         oneBlocks.loadFromString(oneblocks);
         // Save
-        File obFile = new File("oneblocks.yml");
+        File obFileDir = new File("phases");
+
+        File obFile = new File(obFileDir, "0_plains.yml");
+        obFileDir.mkdirs();
         oneBlocks.save(obFile);
         /*
         // Copy over block config file from src folder
@@ -163,8 +167,9 @@ public class OneBlocksManagerTest {
 
         new File("addon.jar").delete();
         new File("config.yml").delete();
-        new File("oneblocks.yml").delete();
+
         deleteAll(new File("addons"));
+        deleteAll(new File("phases"));
     }
 
     private static void deleteAll(File file) throws IOException {
@@ -177,10 +182,11 @@ public class OneBlocksManagerTest {
     }
     /**
      * Test method for {@link world.bentobox.aoneblock.oneblocks.OneBlocksManager#OneBlocksManager(world.bentobox.aoneblock.AOneBlock)}.
+     * @throws IOException
      */
     @Test
-    public void testOneBlocksManager() {
-        File f = new File(addon.getDataFolder(), "oneblocks.yml");
+    public void testOneBlocksManager() throws IOException {
+        File f = new File("phases", "0_plains.yml");
         assertTrue(f.exists());
     }
 
@@ -209,6 +215,7 @@ public class OneBlocksManagerTest {
 
 
     }
+
     /**
      * Test method for {@link world.bentobox.aoneblock.oneblocks.OneBlocksManager#getPhaseList()}.
      * @throws InvalidConfigurationException
@@ -218,7 +225,11 @@ public class OneBlocksManagerTest {
     @Test
     public void testGetPhaseList() throws NumberFormatException, IOException, InvalidConfigurationException {
         testLoadPhases();
-        assertTrue(obm.getPhaseList().size() == 3);
+        List<String> l = obm.getPhaseList();
+        assertTrue(l.size() == 2);
+        assertEquals("Plains", l.get(0));
+        assertEquals("Underground", l.get(1));
+
     }
 
     /**
