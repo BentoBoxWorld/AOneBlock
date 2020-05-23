@@ -44,6 +44,9 @@ import org.eclipse.jdt.annotation.Nullable;
 
 import world.bentobox.aoneblock.AOneBlock;
 import world.bentobox.aoneblock.dataobjects.OneBlockIslands;
+import world.bentobox.aoneblock.events.MagicBlockEntityEvent;
+import world.bentobox.aoneblock.events.MagicBlockEvent;
+import world.bentobox.aoneblock.events.MagicBlockPhaseEvent;
 import world.bentobox.aoneblock.oneblocks.MobAspects;
 import world.bentobox.aoneblock.oneblocks.OneBlockObject;
 import world.bentobox.aoneblock.oneblocks.OneBlockPhase;
@@ -253,24 +256,36 @@ public class BlockListener implements Listener {
                     }
                 }
             }
+            // Fire new phase event
+            Bukkit.getPluginManager().callEvent(new MagicBlockPhaseEvent(i, player.getUniqueId(), block, phase.getPhaseName(), is.getBlockNumber()));
         }
         // Entity
         if (nextBlock.isEntity()) {
             if (!(e instanceof EntitySpawnEvent)) e.setCancelled(true);
             // Entity spawns do not increment the block number or break the block
             spawnEntity(nextBlock, block);
+            // Fire event
+            Bukkit.getPluginManager().callEvent(new MagicBlockEntityEvent(i, player.getUniqueId(), block, nextBlock.getEntityType()));
             return;
         }
         // Break the block
         if (e instanceof BlockBreakEvent) {
             e.setCancelled(true);
-            block.breakNaturally(Objects.requireNonNull(player).getInventory().getItemInMainHand());
+            ItemStack tool = Objects.requireNonNull(player).getInventory().getItemInMainHand();
+            block.breakNaturally(tool);
             // Give exp
             Objects.requireNonNull(player).giveExp(((BlockBreakEvent)e).getExpToDrop());
             // Damage tool
             damageTool(Objects.requireNonNull(player), block);
             spawnBlock(nextBlock, block);
-        } else if (e instanceof PlayerBucketFillEvent || e instanceof EntitySpawnEvent) {
+            // Fire event
+            Bukkit.getPluginManager().callEvent(new MagicBlockEvent(i, player.getUniqueId(), tool, block, nextBlock.getMaterial()));
+        } else if (e instanceof PlayerBucketFillEvent) {
+            Bukkit.getScheduler().runTask(addon.getPlugin(), ()-> spawnBlock(nextBlock, block));
+            // Fire event
+            ItemStack tool = Objects.requireNonNull(player).getInventory().getItemInMainHand();
+            Bukkit.getPluginManager().callEvent(new MagicBlockEvent(i, player.getUniqueId(), tool, block, nextBlock.getMaterial()));
+        } else if (e instanceof EntitySpawnEvent) {
             Bukkit.getScheduler().runTask(addon.getPlugin(), ()-> spawnBlock(nextBlock, block));
         }
         // Increment the block number
