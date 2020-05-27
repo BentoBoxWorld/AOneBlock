@@ -275,7 +275,9 @@ public class OneBlocksManager {
             if (p.getFirstBlock() != null) {
                 phSec.set(FIRST_BLOCK, p.getFirstBlock().getMaterial().name());
             }
-            phSec.set(BIOME, p.getPhaseBiome().name());
+            if (p.getPhaseBiome() != null) {
+                phSec.set(BIOME, p.getPhaseBiome().name());
+            }
             saveBlocks(phSec, p);
             saveEntities(phSec, p);
             try {

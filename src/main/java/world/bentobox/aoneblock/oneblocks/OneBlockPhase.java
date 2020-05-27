@@ -78,6 +78,7 @@ public class OneBlockPhase {
     /**
      * @return the phaseBiome
      */
+    @Nullable
     public Biome getPhaseBiome() {
         return phaseBiome;
     }
