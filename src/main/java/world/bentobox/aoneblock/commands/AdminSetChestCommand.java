@@ -90,7 +90,7 @@ public class AdminSetChestCommand extends CompositeCommand {
         // Get the items
         Map<Integer, ItemStack> items = new HashMap<>();
         for (int slot = 0; slot < chest.getInventory().getSize(); slot++) {
-            ItemStack item = chest.getInventory().getItem(slot);
+            ItemStack item = chest.getInventory().getItem(slot).clone();
             if (item != null && !item.getType().equals(Material.AIR)) {
                 items.put(slot, item);
             }
