@@ -33,9 +33,9 @@
     EMERALD_ORE: 10
     GRASS_PATH: 100
   mobs:
-    COW: 300
-    SPIDER: 150
-    SHEEP: 150
-    PIG: 300
-    VILLAGER: 30
-    CHICKEN: 400
+    COW: 150
+    SPIDER: 75
+    SHEEP: 75
+    PIG: 150
+    VILLAGER: 15
+    CHICKEN: 200
