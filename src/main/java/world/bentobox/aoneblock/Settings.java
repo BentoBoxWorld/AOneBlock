@@ -221,6 +221,10 @@ public class Settings implements WorldSettings {
     // ---------------------------------------------
 
     /*      ISLAND      */
+    @ConfigComment("Drop broken blocks on top of magic block")
+    @ConfigEntry(path = "island.drop-on-top", since = "1.3.0")
+    private boolean dropOnTop = true;
+
     @ConfigComment("Magic block mob warning")
     @ConfigComment("Players might be able to hear hostile mobs up to this many blocks away")
     @ConfigComment("Minimum is 0 (no warning), max is 5")
@@ -1691,4 +1695,12 @@ public class Settings implements WorldSettings {
     public void setMobLimitSettings(List<String> mobLimitSettings) {
         this.mobLimitSettings = mobLimitSettings;
     }
+
+	public boolean isDropOnTop() {
+		return dropOnTop;
+	}
+
+	public void setDropOnTop(boolean dropOnTop) {
+		this.dropOnTop = dropOnTop;
+	}
 }

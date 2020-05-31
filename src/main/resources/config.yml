@@ -233,6 +233,8 @@ endGenerate: false
 endIslands: false
 dragonSpawn: false
 island:
+  # Drop broken blocks on top of magic block
+  drop-on-top: true
   # Magic block mob warning
   # Players might be able to hear hostile mobs up to this many blocks away
   # Minimum is 0 (no warning), max is 5

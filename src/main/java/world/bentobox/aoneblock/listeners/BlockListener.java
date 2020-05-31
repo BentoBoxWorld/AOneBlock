@@ -272,7 +272,14 @@ public class BlockListener implements Listener {
         if (e instanceof BlockBreakEvent) {
             e.setCancelled(true);
             ItemStack tool = Objects.requireNonNull(player).getInventory().getItemInMainHand();
-            block.breakNaturally(tool);
+            if (addon.getSettings().isDropOnTop()) {            	
+            	// Drop the drops
+            	block.getDrops(tool, player).forEach(item -> world.dropItem(block.getRelative(BlockFace.UP).getLocation().add(new Vector(0.5, 0, 0.5)), item));
+            	// Set the air
+            	block.setType(Material.AIR);
+            } else {
+            	block.breakNaturally(tool);
+            }
             // Give exp
             Objects.requireNonNull(player).giveExp(((BlockBreakEvent)e).getExpToDrop());
             // Damage tool
