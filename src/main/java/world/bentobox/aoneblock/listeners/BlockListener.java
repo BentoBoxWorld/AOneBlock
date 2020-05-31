@@ -56,6 +56,7 @@ import world.bentobox.bentobox.api.events.island.IslandEvent.IslandDeleteEvent;
 import world.bentobox.bentobox.api.events.island.IslandEvent.IslandResettedEvent;
 import world.bentobox.bentobox.database.Database;
 import world.bentobox.bentobox.database.objects.Island;
+import world.bentobox.bentobox.util.Util;
 
 /**
  * @author tastybento
@@ -160,13 +161,17 @@ public class BlockListener implements Listener {
 
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onNewIsland(IslandCreatedEvent e) {
-        setUp(e.getIsland());
+        if (addon.inWorld(e.getIsland().getWorld())) {
+            setUp(e.getIsland());
+        }
     }
 
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onDeletedIsland(IslandDeleteEvent e) {
-        cache.remove(e.getIsland().getUniqueId());
-        handler.deleteID(e.getIsland().getUniqueId());
+        if (addon.inWorld(e.getIsland().getWorld())) {
+            cache.remove(e.getIsland().getUniqueId());
+            handler.deleteID(e.getIsland().getUniqueId());
+        }
     }
 
     private void setUp(Island island) {
@@ -180,7 +185,9 @@ public class BlockListener implements Listener {
 
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onNewIsland(IslandResettedEvent e) {
-        setUp(e.getIsland());
+        if (addon.inWorld(e.getIsland().getWorld())) {
+            setUp(e.getIsland());
+        }
     }
 
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
@@ -198,11 +205,10 @@ public class BlockListener implements Listener {
      */
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onBlockBreak(final PlayerBucketFillEvent e) {
-        if (!addon.inWorld(e.getBlock().getWorld())) {
-            return;
+        if (addon.inWorld(e.getBlock().getWorld())) {
+            Location l = e.getBlock().getLocation();
+            addon.getIslands().getIslandAt(l).filter(i -> l.equals(i.getCenter())).ifPresent(i -> process(e, i, e.getPlayer(), e.getPlayer().getWorld()));
         }
-        Location l = e.getBlock().getLocation();
-        addon.getIslands().getIslandAt(l).filter(i -> l.equals(i.getCenter())).ifPresent(i -> process(e, i, e.getPlayer(), e.getPlayer().getWorld()));
     }
 
     private void process(Cancellable e, Island i, @Nullable Player player, @NonNull World world) {
@@ -272,13 +278,13 @@ public class BlockListener implements Listener {
         if (e instanceof BlockBreakEvent) {
             e.setCancelled(true);
             ItemStack tool = Objects.requireNonNull(player).getInventory().getItemInMainHand();
-            if (addon.getSettings().isDropOnTop()) {            	
-            	// Drop the drops
-            	block.getDrops(tool, player).forEach(item -> world.dropItem(block.getRelative(BlockFace.UP).getLocation().add(new Vector(0.5, 0, 0.5)), item));
-            	// Set the air
-            	block.setType(Material.AIR);
+            if (addon.getSettings().isDropOnTop()) {
+                // Drop the drops
+                block.getDrops(tool, player).forEach(item -> world.dropItem(block.getRelative(BlockFace.UP).getLocation().add(new Vector(0.5, 0, 0.5)), item));
+                // Set the air
+                block.setType(Material.AIR);
             } else {
-            	block.breakNaturally(tool);
+                block.breakNaturally(tool);
             }
             // Give exp
             Objects.requireNonNull(player).giveExp(((BlockBreakEvent)e).getExpToDrop());
