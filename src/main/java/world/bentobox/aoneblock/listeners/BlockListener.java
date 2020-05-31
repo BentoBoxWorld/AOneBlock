@@ -176,7 +176,7 @@ public class BlockListener implements Listener {
 
     private void setUp(Island island) {
         // Set the bedrock to the initial block
-        island.getCenter().getBlock().setType(Material.GRASS_BLOCK);
+        Util.getChunkAtAsync(island.getCenter()).thenRun(() -> island.getCenter().getBlock().setType(Material.GRASS_BLOCK));
         // Create a database entry
         OneBlockIslands is = new OneBlockIslands(island.getUniqueId());
         cache.put(island.getUniqueId(), is);
