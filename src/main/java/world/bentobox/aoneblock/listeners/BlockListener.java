@@ -280,7 +280,12 @@ public class BlockListener implements Listener {
             ItemStack tool = Objects.requireNonNull(player).getInventory().getItemInMainHand();
             if (addon.getSettings().isDropOnTop()) {
                 // Drop the drops
-                block.getDrops(tool, player).forEach(item -> world.dropItem(block.getRelative(BlockFace.UP).getLocation().add(new Vector(0.5, 0, 0.5)), item));
+                block.getDrops(tool, player).stream()
+                .filter(Objects::nonNull)
+                .filter(item -> !item.getType().equals(Material.AIR))
+                .forEach(item -> world.dropItem(block.getRelative(BlockFace.UP).getLocation()
+                        .add(new Vector(0.5, 0, 0.5)), item)
+                        .setVelocity(new Vector(0,0,0)));
                 // Set the air
                 block.setType(Material.AIR);
             } else {
