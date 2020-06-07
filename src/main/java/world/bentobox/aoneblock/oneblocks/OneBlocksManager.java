@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FilenameFilter;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -147,7 +148,15 @@ public class OneBlocksManager {
         }
         // biome
         if (phase.contains(BIOME, true)) {
-            obPhase.setPhaseBiome(Biome.valueOf(phase.getString(BIOME, "PLAINS").toUpperCase()));
+            Biome biome = Biome.PLAINS;
+            try {
+                biome = Biome.valueOf(phase.getString(BIOME, "PLAINS").toUpperCase());
+            } catch (Exception e){
+                addon.logError("Rarity value of " + phase.getString(BIOME, "UNKNOWN").toUpperCase() + " is invalid! Use one of these...");
+                addon.logError(Arrays.stream(Biome.values()).map(Biome::name).collect(Collectors.joining(",")));
+                biome = Biome.PLAINS;
+            }
+            obPhase.setPhaseBiome(biome);
         }
         // First block
         if (phase.contains(FIRST_BLOCK)) {
@@ -170,7 +179,14 @@ public class OneBlocksManager {
             ConfigurationSection chests = phase.getConfigurationSection(CHESTS);
             for (String chestId: chests.getKeys(false)) {
                 ConfigurationSection chest = chests.getConfigurationSection(chestId);
-                Rarity rarity = OneBlockObject.Rarity.valueOf(chest.getString(RARITY, "COMMON").toUpperCase());
+                Rarity rarity = Rarity.COMMON;
+                try {
+                    rarity = OneBlockObject.Rarity.valueOf(chest.getString(RARITY, "COMMON").toUpperCase());
+                } catch (Exception e) {
+                    addon.logError("Rarity value of " + chest.getString(RARITY, "UNKNOWN") + " is invalid! Use one of these...");
+                    addon.logError(Arrays.stream(Rarity.values()).map(Rarity::name).collect(Collectors.joining(",")));
+                    rarity = Rarity.COMMON;
+                }
                 Map<Integer, ItemStack> items = new HashMap<>();
                 ConfigurationSection contents = chest.getConfigurationSection(CONTENTS);
                 if (contents != null) {
@@ -195,11 +211,17 @@ public class OneBlocksManager {
                     if (et.isSpawnable() && et.isAlive()) {
                         obPhase.addMob(et, mobs.getInt(entity));
                     } else {
-                        throw new IOException("Entity type is not alive or spawnable");
+                        throw new IOException("Entity type is not alive or spawnable.");
                     }
                 } catch (Exception e) {
                     addon.logError("Bad entity type in " + obPhase.getPhaseName() + ": " + entity);
                     addon.logError(e.getMessage());
+                    addon.logError("Try one of these...");
+                    addon.logError(Arrays.stream(EntityType.values())
+                            .filter(EntityType::isSpawnable)
+                            .filter(EntityType::isAlive)
+                            .map(EntityType::name).collect(Collectors.joining(",")));
+
                 }
             }
         }
