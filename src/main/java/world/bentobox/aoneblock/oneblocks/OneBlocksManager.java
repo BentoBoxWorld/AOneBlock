@@ -293,15 +293,20 @@ public class OneBlocksManager {
         blockProbs.values().forEach(p -> {
             YamlConfiguration oneBlocks = new YamlConfiguration();
             ConfigurationSection phSec = oneBlocks.createSection(p.getBlockNumber());
-            phSec.set(NAME, p.getPhaseName());
-            if (p.getFirstBlock() != null) {
-                phSec.set(FIRST_BLOCK, p.getFirstBlock().getMaterial().name());
+            // Check for a goto block
+            if (p.isGotoPhase()) {
+                phSec.set("gotoBlock", p.getGotoBlock());
+            } else {
+                phSec.set(NAME, p.getPhaseName());
+                if (p.getFirstBlock() != null) {
+                    phSec.set(FIRST_BLOCK, p.getFirstBlock().getMaterial().name());
+                }
+                if (p.getPhaseBiome() != null) {
+                    phSec.set(BIOME, p.getPhaseBiome().name());
+                }
+                saveBlocks(phSec, p);
+                saveEntities(phSec, p);
             }
-            if (p.getPhaseBiome() != null) {
-                phSec.set(BIOME, p.getPhaseBiome().name());
-            }
-            saveBlocks(phSec, p);
-            saveEntities(phSec, p);
             try {
                 // Save
                 File phaseFile = new File(addon.getDataFolder() + File.separator + PHASES, getPhaseFileName(p) + ".yml");
@@ -309,6 +314,7 @@ public class OneBlocksManager {
             } catch (IOException e) {
                 addon.logError("Could not save phase " + p.getPhaseName() + " " + e.getMessage());
             }
+            // No chests in goto phases
             if (p.isGotoPhase()) return;
             // Save chests separately
             oneBlocks = new YamlConfiguration();
@@ -328,8 +334,10 @@ public class OneBlocksManager {
     }
 
     private String getPhaseFileName(OneBlockPhase p) {
-        String name = p.isGotoPhase() ? "goto_" + p.getGotoBlock() : p.getPhaseName().toLowerCase();
-        return p.getBlockNumber() + "_" + name;
+        if (p.isGotoPhase()) {
+            return p.getBlockNumber() + "_goto_" + p.getGotoBlock();
+        }
+        return p.getBlockNumber() + "_" + p.getPhaseName().toLowerCase();
     }
 
     private void saveChests(ConfigurationSection phSec, OneBlockPhase phase) {
