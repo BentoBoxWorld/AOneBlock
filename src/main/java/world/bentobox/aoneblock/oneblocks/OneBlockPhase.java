@@ -19,6 +19,7 @@ import org.eclipse.jdt.annotation.Nullable;
 
 import world.bentobox.aoneblock.AOneBlock;
 import world.bentobox.aoneblock.oneblocks.OneBlockObject.Rarity;
+import world.bentobox.bentobox.BentoBox;
 
 
 public class OneBlockPhase {
@@ -134,8 +135,10 @@ public class OneBlockPhase {
     private OneBlockObject getRandomChest() {
         // Get the right type of chest
         Rarity r = CHEST_CHANCES.getOrDefault(CHEST_CHANCES.ceilingKey(random.nextDouble()), Rarity.COMMON);
-        List<OneBlockObject> list = chests.getOrDefault(r, Collections.emptyList());
-
+        // If the chest lists have no common fallback, then return empty chest
+        if (!chests.containsKey(r) && !chests.containsKey(Rarity.COMMON)) return new OneBlockObject(Material.CHEST, 0);
+        // Get the rare chest or worse case the common one
+        List<OneBlockObject> list = chests.containsKey(r) ? chests.get(r) : chests.get(Rarity.COMMON);
         // Pick one from the list or return an empty chest. Note list.get() can return nothing
         return list.isEmpty() ? new OneBlockObject(Material.CHEST, 0) : list.get(random.nextInt(list.size()));
     }
