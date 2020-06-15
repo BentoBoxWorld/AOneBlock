@@ -190,7 +190,7 @@ public class BlockListener implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onBlockBreak(final BlockBreakEvent e) {
         if (!addon.inWorld(e.getBlock().getWorld())) {
             return;
