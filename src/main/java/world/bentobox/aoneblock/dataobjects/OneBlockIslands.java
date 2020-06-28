@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.bukkit.entity.EntityType;
+import org.eclipse.jdt.annotation.NonNull;
 
 import com.google.gson.annotations.Expose;
 
@@ -31,8 +32,9 @@ public class OneBlockIslands implements DataObject {
     /**
      * @return the phaseName
      */
+    @NonNull
     public String getPhaseName() {
-        return phaseName;
+        return phaseName == null ? "" : phaseName;
     }
 
     /**
