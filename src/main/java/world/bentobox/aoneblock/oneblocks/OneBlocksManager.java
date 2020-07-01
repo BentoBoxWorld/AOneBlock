@@ -26,6 +26,7 @@ import org.bukkit.inventory.ItemStack;
 import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jdt.annotation.Nullable;
 
+import com.google.common.base.Enums;
 import com.google.common.io.Files;
 
 import world.bentobox.aoneblock.AOneBlock;
@@ -148,20 +149,27 @@ public class OneBlocksManager {
         }
         // biome
         if (phase.contains(BIOME, true)) {
-            Biome biome = Biome.PLAINS;
-            try {
-                biome = Biome.valueOf(phase.getString(BIOME, "PLAINS").toUpperCase());
-            } catch (Exception e){
-                addon.logError("Rarity value of " + phase.getString(BIOME, "UNKNOWN").toUpperCase() + " is invalid! Use one of these...");
-                addon.logError(Arrays.stream(Biome.values()).map(Biome::name).collect(Collectors.joining(",")));
-                biome = Biome.PLAINS;
-            }
-            obPhase.setPhaseBiome(biome);
+            obPhase.setPhaseBiome(getBiome(phase.getString(BIOME)));
         }
         // First block
         if (phase.contains(FIRST_BLOCK)) {
             addFirstBlock(obPhase, phase.getString(FIRST_BLOCK));
         }
+    }
+
+    private Biome getBiome(String string) {
+        if (string == null) return Biome.PLAINS;
+        if (Enums.getIfPresent(Biome.class, string).isPresent()) {
+            return Biome.valueOf(string);
+        }
+        // Special case for nether
+        if (string.equals("NETHER")) {
+            addon.logWarning("Change biome to NETHER_WASTES for 1.16.1+");
+            return Biome.NETHER_WASTES;
+        }
+        addon.logError("Biome " + string.toUpperCase() + " is invalid! Use one of these...");
+        addon.logError(Arrays.stream(Biome.values()).map(Biome::name).collect(Collectors.joining(",")));
+        return Biome.PLAINS;
     }
 
     void addFirstBlock(OneBlockPhase obPhase, @Nullable String material) {

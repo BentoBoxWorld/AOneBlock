@@ -1,7 +1,7 @@
 '7500':
   name: The Nether
   firstBlock: NETHERRACK
-  biome: NETHER_WASTES
+  biome: NETHER
   blocks:
     GRAVEL: 300
     NETHER_QUARTZ_ORE: 300
