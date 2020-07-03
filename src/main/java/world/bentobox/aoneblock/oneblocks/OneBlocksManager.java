@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
@@ -163,9 +164,8 @@ public class OneBlocksManager {
             return Biome.valueOf(string);
         }
         // Special case for nether
-        if (string.equals("NETHER")) {
-            addon.logWarning("Change biome to NETHER_WASTES for 1.16.1+");
-            return Biome.NETHER_WASTES;
+        if (string.equals("NETHER") || string.equals("NETHER_WASTES")) {
+            return Enums.getIfPresent(Biome.class, "NETHER").or(Enums.getIfPresent(Biome.class, "NETHER_WASTES").or(Biome.PLAINS));
         }
         addon.logError("Biome " + string.toUpperCase() + " is invalid! Use one of these...");
         addon.logError(Arrays.stream(Biome.values()).map(Biome::name).collect(Collectors.joining(",")));
@@ -214,27 +214,33 @@ public class OneBlocksManager {
         if (phase.isConfigurationSection(MOBS)) {
             ConfigurationSection mobs = phase.getConfigurationSection(MOBS);
             for (String entity : mobs.getKeys(false)) {
-                try {
-                    EntityType et = EntityType.valueOf(entity.toUpperCase());
-                    if (et.isSpawnable() && et.isAlive()) {
-                        obPhase.addMob(et, mobs.getInt(entity));
-                    } else {
-                        throw new IOException("Entity type is not alive or spawnable.");
-                    }
-                } catch (Exception e) {
+                String name = entity.toUpperCase(Locale.ENGLISH);
+                EntityType et = null;
+                // Pig zombie handling
+                if (name.equals("PIG_ZOMBIE") || name.equals("ZOMBIFIED_PIGLIN")) {
+                    et = Enums.getIfPresent(EntityType.class, "ZOMBIFIED_PIGLIN")
+                            .or(Enums.getIfPresent(EntityType.class, "PIG_ZOMBIE").or(EntityType.PIG));
+                } else {
+                    et = Enums.getIfPresent(EntityType.class, name).orNull();
+                }
+                if (et == null) {
+                    // Does not exist
                     addon.logError("Bad entity type in " + obPhase.getPhaseName() + ": " + entity);
-                    addon.logError(e.getMessage());
                     addon.logError("Try one of these...");
                     addon.logError(Arrays.stream(EntityType.values())
                             .filter(EntityType::isSpawnable)
                             .filter(EntityType::isAlive)
                             .map(EntityType::name).collect(Collectors.joining(",")));
-
+                    return;
+                }
+                if (et.isSpawnable() && et.isAlive()) {
+                    obPhase.addMob(et, mobs.getInt(entity));
+                } else {
+                    addon.logError("Entity type is not spawnable " + obPhase.getPhaseName() + ": " + entity);
                 }
             }
+
         }
-
-
     }
 
     void addBlocks(OneBlockPhase obPhase, ConfigurationSection phase) {
