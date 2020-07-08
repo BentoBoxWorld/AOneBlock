@@ -216,6 +216,8 @@ public class BlockListener implements Listener {
         OneBlockIslands is = getIsland(i);
         // Get the phase for this island
         OneBlockPhase phase = oneBlocksManager.getPhase(is.getBlockNumber());
+        // Store the original phase in case it changes.
+        String originalPhase = is.getPhaseName();
         // Check for a goto
         if (phase.getGotoBlock() != null) {
             int gotoBlock = phase.getGotoBlock();
@@ -263,7 +265,7 @@ public class BlockListener implements Listener {
                 }
             }
             // Fire new phase event
-            Bukkit.getPluginManager().callEvent(new MagicBlockPhaseEvent(i, player.getUniqueId(), block, phase.getPhaseName(), is.getBlockNumber()));
+            Bukkit.getPluginManager().callEvent(new MagicBlockPhaseEvent(i, player.getUniqueId(), block, phase.getPhaseName(), originalPhase, is.getBlockNumber()));
         }
         // Entity
         if (nextBlock.isEntity()) {
