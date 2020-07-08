@@ -15,6 +15,7 @@ import world.bentobox.bentobox.database.objects.Island;
 public class MagicBlockPhaseEvent extends AbstractMagicBlockEvent {
 
     protected final String phase;
+    protected final String oldPhase;
     protected final int blockNumber;
     /**
      * @param island
@@ -23,13 +24,14 @@ public class MagicBlockPhaseEvent extends AbstractMagicBlockEvent {
      * @param phase
      * @param blockNumber
      */
-    public MagicBlockPhaseEvent(Island island, UUID playerUUID, Block block, String phase, int blockNumber) {
+    public MagicBlockPhaseEvent(Island island, UUID playerUUID, Block block, String phase, String oldPhase, int blockNumber) {
         super(island, playerUUID, block);
         this.phase = phase;
+        this.oldPhase = oldPhase;
         this.blockNumber = blockNumber;
     }
     /**
-     * @return the phase
+     * @return the new phase
      */
     @NonNull
     public String getPhase() {
@@ -41,5 +43,10 @@ public class MagicBlockPhaseEvent extends AbstractMagicBlockEvent {
     public int getBlockNumber() {
         return blockNumber;
     }
-
+    /**
+     * @return the original phase
+     */
+    public String getOldPhase() {
+        return oldPhase;
+    }
 }
