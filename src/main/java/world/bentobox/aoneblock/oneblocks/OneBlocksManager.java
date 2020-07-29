@@ -110,7 +110,7 @@ public class OneBlocksManager {
         }
     }
 
-    private void loadPhase(File phaseFile) {
+    private void loadPhase(File phaseFile) throws IOException {
         addon.log("Loading " + phaseFile.getName());
         // Load the config file
         YamlConfiguration oneBlocks = new YamlConfiguration();
@@ -143,17 +143,26 @@ public class OneBlocksManager {
 
     }
 
-    void initBlock(String blockNumber, OneBlockPhase obPhase, ConfigurationSection phase) {
+    void initBlock(String blockNumber, OneBlockPhase obPhase, ConfigurationSection phase) throws IOException {
         if (phase.contains(NAME, true)) {
+            if (obPhase.getPhaseName() != null) {
+                throw new IOException("Block " + blockNumber + ": Phase name trying to be set to " + phase.getString(NAME) + " but already set to " + obPhase.getPhaseName() + ". Duplicate phase file?");
+            }
             // name
             obPhase.setPhaseName(phase.getString(NAME, blockNumber));
         }
         // biome
         if (phase.contains(BIOME, true)) {
+            if (obPhase.getPhaseBiome() != null) {
+                throw new IOException("Block " + blockNumber + ": Biome trying to be set to " + phase.getString(BIOME) + " but already set to " + obPhase.getPhaseBiome() + " Duplicate phase file?");
+            }
             obPhase.setPhaseBiome(getBiome(phase.getString(BIOME)));
         }
         // First block
         if (phase.contains(FIRST_BLOCK)) {
+            if (obPhase.getFirstBlock() != null) {
+                throw new IOException("Block " + blockNumber + ": First block trying to be set to " + phase.getString(FIRST_BLOCK) + " but already set to " + obPhase.getFirstBlock() + " Duplicate phase file?");
+            }
             addFirstBlock(obPhase, phase.getString(FIRST_BLOCK));
         }
     }
@@ -182,8 +191,11 @@ public class OneBlocksManager {
         }
     }
 
-    void addChests(OneBlockPhase obPhase, ConfigurationSection phase) {
+    void addChests(OneBlockPhase obPhase, ConfigurationSection phase) throws IOException {
         if (phase.isConfigurationSection(CHESTS)) {
+            if (!obPhase.getChests().isEmpty()) {
+                throw new IOException(obPhase.getPhaseName() + ": Chests cannot be set more than once. Duplicate file?");
+            }
             ConfigurationSection chests = phase.getConfigurationSection(CHESTS);
             for (String chestId: chests.getKeys(false)) {
                 ConfigurationSection chest = chests.getConfigurationSection(chestId);
@@ -210,8 +222,11 @@ public class OneBlocksManager {
 
     }
 
-    void addMobs(OneBlockPhase obPhase, ConfigurationSection phase) {
+    void addMobs(OneBlockPhase obPhase, ConfigurationSection phase) throws IOException {
         if (phase.isConfigurationSection(MOBS)) {
+            if (!obPhase.getMobs().isEmpty()) {
+                throw new IOException(obPhase.getPhaseName() + ": Mobs cannot be set more than once. Duplicate file?");
+            }
             ConfigurationSection mobs = phase.getConfigurationSection(MOBS);
             for (String entity : mobs.getKeys(false)) {
                 String name = entity.toUpperCase(Locale.ENGLISH);

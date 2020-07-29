@@ -86,7 +86,6 @@ public class AOneBlock extends GameModeAddon {
             // Disable
             logError("AOneBlock settings could not load (oneblock.yml error)! Addon disabled.");
             logError(e.getMessage());
-            e.printStackTrace();
             setState(State.DISABLED);
         }
 
