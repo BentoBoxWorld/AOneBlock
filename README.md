@@ -7,9 +7,9 @@ Credit for the original idea: IJAminecraft.
 ## About
 AOneBlock puts you on a block in space. There is only one block. What do you do next?
 
-## Development Status
+## Documentation
 
-The game is in Alpha stage.
+See BentoBox Docs [docs.bentobox.world](https://docs.bentobox.world/en/latest/gamemodes/AOneBlock/Permissions/) for documentation.
 
 ## Commands
 
