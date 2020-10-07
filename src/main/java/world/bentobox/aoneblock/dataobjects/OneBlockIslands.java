@@ -11,11 +11,13 @@ import com.google.gson.annotations.Expose;
 
 import world.bentobox.aoneblock.oneblocks.OneBlockObject;
 import world.bentobox.bentobox.database.objects.DataObject;
+import world.bentobox.bentobox.database.objects.Table;
 
 /**
  * @author tastybento
  *
  */
+@Table(name = "OneBlockIslands")
 public class OneBlockIslands implements DataObject {
 
     @Expose
