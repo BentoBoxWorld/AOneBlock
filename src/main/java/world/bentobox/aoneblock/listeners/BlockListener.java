@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Random;
+import java.util.concurrent.CompletableFuture;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
@@ -234,6 +235,10 @@ public class BlockListener implements Listener {
             cache.get(i.getUniqueId()).setPhaseName(phase.getPhaseName());
             if (player != null) player.sendTitle(phase.getPhaseName(), null, -1, -1, -1);
             newPhase = true;
+            saveIsland(i);
+        } else if (is.getBlockNumber() % MAX_LOOK_AHEAD == 0) {
+            // Save island data every MAX_LOOK_AHEAD blocks.
+            saveIsland(i);
         }
         // Get the block that is being broken
         Block block = i.getCenter().toVector().toLocation(world).getBlock();
@@ -445,9 +450,16 @@ public class BlockListener implements Listener {
         return oneBlocksManager;
     }
 
-    /*
-    @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
-    public void onRespawn(PlayerRespawnEvent e) {
+    /**
+     * Saves the island progress to the database async
+     * @param island - island
+     * @return CompletableFuture - true if saved, false if not
+     */
+    public CompletableFuture<Boolean> saveIsland(Island island) {
+        if (cache.containsKey(island.getUniqueId())) {
+            return handler.saveObjectAsync(cache.get(island.getUniqueId()));
+        }
+        return CompletableFuture.completedFuture(false);
+    }
 
-    } */
 }

@@ -17,6 +17,7 @@ import world.bentobox.aoneblock.dataobjects.OneBlockIslands;
 import world.bentobox.aoneblock.generators.ChunkGeneratorWorld;
 import world.bentobox.aoneblock.listeners.BlockListener;
 import world.bentobox.aoneblock.listeners.BlockProtect;
+import world.bentobox.aoneblock.listeners.JoinLeaveListener;
 import world.bentobox.aoneblock.listeners.NoBlockHandler;
 import world.bentobox.aoneblock.oneblocks.OneBlocksManager;
 import world.bentobox.bentobox.api.addons.GameModeAddon;
@@ -38,7 +39,7 @@ public class AOneBlock extends GameModeAddon {
     private Settings settings;
     private ChunkGeneratorWorld chunkGenerator;
     private final Config<Settings> configObject = new Config<>(this, Settings.class);
-    private BlockListener listener;
+    private BlockListener blockListener;
     private OneBlocksManager oneBlockManager;
 
     @Override
@@ -71,10 +72,11 @@ public class AOneBlock extends GameModeAddon {
         try {
             oneBlockManager = new OneBlocksManager(this);
             oneBlockManager.loadPhases();
-            listener = new BlockListener(this);
-            registerListener(listener);
+            blockListener = new BlockListener(this);
+            registerListener(blockListener);
             registerListener(new NoBlockHandler(this));
             registerListener(new BlockProtect(this));
+            registerListener(new JoinLeaveListener(this));
             // Register placeholders
             getPlugin().getPlaceholdersManager().registerPlaceholder(this,"visited_island_phase", this::getPhaseByLocation);
             getPlugin().getPlaceholdersManager().registerPlaceholder(this,"visited_island_count", this::getCountByLocation);
@@ -132,11 +134,13 @@ public class AOneBlock extends GameModeAddon {
     @Override
     public void onDisable() {
         // save cache
-        listener.saveCache();
+        blockListener.saveCache();
     }
 
     @Override
     public void onReload() {
+        // save cache
+        blockListener.saveCache();
         if (loadSettings()) {
             log("Reloaded AOneBlock settings");
         }
@@ -233,10 +237,19 @@ public class AOneBlock extends GameModeAddon {
      */
     @NonNull
     public OneBlockIslands getOneBlocksIsland(Island i) {
-        return listener.getIsland(i);
+        return blockListener.getIsland(i);
     }
 
     public OneBlocksManager getOneBlockManager() {
         return oneBlockManager;
     }
+
+    /**
+     * @return the blockListener
+     */
+    public BlockListener getBlockListener() {
+        return blockListener;
+    }
+
+
 }
