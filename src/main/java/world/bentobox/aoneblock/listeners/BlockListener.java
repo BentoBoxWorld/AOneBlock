@@ -474,13 +474,13 @@ public class BlockListener implements Listener {
     /**
      * Saves the island progress to the database async
      * @param island - island
-     * @return CompletableFuture - true if saved, false if not
+     * @return CompletableFuture - true if saved or not in cache, false if save failed
      */
     public CompletableFuture<Boolean> saveIsland(Island island) {
         if (cache.containsKey(island.getUniqueId())) {
             return handler.saveObjectAsync(cache.get(island.getUniqueId()));
         }
-        return CompletableFuture.completedFuture(false);
+        return CompletableFuture.completedFuture(true);
     }
 
 }
