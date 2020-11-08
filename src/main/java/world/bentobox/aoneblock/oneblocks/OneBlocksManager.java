@@ -249,7 +249,9 @@ public class OneBlocksManager {
                     return;
                 }
                 if (et.isSpawnable() && et.isAlive()) {
-                    obPhase.addMob(et, mobs.getInt(entity));
+                    if (mobs.getInt(entity) > 0) {
+                        obPhase.addMob(et, mobs.getInt(entity));
+                    }
                 } else {
                     addon.logError("Entity type is not spawnable " + obPhase.getPhaseName() + ": " + entity);
                 }
