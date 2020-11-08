@@ -117,6 +117,7 @@ public class BlockListener implements Listener {
 
     private static final Map<EntityType, MobAspects> MOB_ASPECTS;
     public static final int MAX_LOOK_AHEAD = 5;
+    public static final int SAVE_EVERY = 50;
     static {
         Map<EntityType, MobAspects> m = new HashMap<>();
         m.put(EntityType.ZOMBIE, new MobAspects(Sound.ENTITY_ZOMBIE_AMBIENT, Color.fromRGB(74, 99, 53)));
@@ -236,7 +237,7 @@ public class BlockListener implements Listener {
             if (player != null) player.sendTitle(phase.getPhaseName(), null, -1, -1, -1);
             newPhase = true;
             saveIsland(i);
-        } else if (is.getBlockNumber() % MAX_LOOK_AHEAD == 0) {
+        } else if (is.getBlockNumber() % SAVE_EVERY == 0) {
             // Save island data every MAX_LOOK_AHEAD blocks.
             saveIsland(i);
         }
