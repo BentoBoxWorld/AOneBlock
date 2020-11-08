@@ -222,6 +222,7 @@ public class Settings implements WorldSettings {
 
     /*      ISLAND      */
     @ConfigComment("Drop broken blocks on top of magic block")
+    @ConfigComment("If you want Jobs or other plugins to recognize magic block breaking this must be false")
     @ConfigEntry(path = "island.drop-on-top", since = "1.3.0")
     private boolean dropOnTop = true;
 
@@ -1696,11 +1697,11 @@ public class Settings implements WorldSettings {
         this.mobLimitSettings = mobLimitSettings;
     }
 
-	public boolean isDropOnTop() {
-		return dropOnTop;
-	}
+    public boolean isDropOnTop() {
+        return dropOnTop;
+    }
 
-	public void setDropOnTop(boolean dropOnTop) {
-		this.dropOnTop = dropOnTop;
-	}
+    public void setDropOnTop(boolean dropOnTop) {
+        this.dropOnTop = dropOnTop;
+    }
 }

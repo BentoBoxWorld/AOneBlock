@@ -283,28 +283,7 @@ public class BlockListener implements Listener {
         }
         // Break the block
         if (e instanceof BlockBreakEvent) {
-            e.setCancelled(true);
-            ItemStack tool = Objects.requireNonNull(player).getInventory().getItemInMainHand();
-            if (addon.getSettings().isDropOnTop()) {
-                // Drop the drops
-                block.getDrops(tool, player).stream()
-                .filter(Objects::nonNull)
-                .filter(item -> !item.getType().equals(Material.AIR))
-                .forEach(item -> world.dropItem(block.getRelative(BlockFace.UP).getLocation()
-                        .add(new Vector(0.5, 0, 0.5)), item)
-                        .setVelocity(new Vector(0,0,0)));
-                // Set the air
-                block.setType(Material.AIR);
-            } else {
-                block.breakNaturally(tool);
-            }
-            // Give exp
-            Objects.requireNonNull(player).giveExp(((BlockBreakEvent)e).getExpToDrop());
-            // Damage tool
-            damageTool(Objects.requireNonNull(player), block);
-            spawnBlock(nextBlock, block);
-            // Fire event
-            Bukkit.getPluginManager().callEvent(new MagicBlockEvent(i, player.getUniqueId(), tool, block, nextBlock.getMaterial()));
+            breakBlock(e, player, block, world, nextBlock, i);
         } else if (e instanceof PlayerBucketFillEvent) {
             Bukkit.getScheduler().runTask(addon.getPlugin(), ()-> spawnBlock(nextBlock, block));
             // Fire event
@@ -315,6 +294,47 @@ public class BlockListener implements Listener {
         }
         // Increment the block number
         is.incrementBlockNumber();
+    }
+
+    private void breakBlock(Cancellable e, @Nullable Player player, Block block, @NonNull World world, OneBlockObject nextBlock, Island i) {
+        ItemStack tool = Objects.requireNonNull(player).getInventory().getItemInMainHand();
+        if (addon.getSettings().isDropOnTop()) {
+            breakBlockOnTop(e, player, block, world, nextBlock, i);
+        } else {
+            // Break normally and lift the player up so they don't fall
+            Bukkit.getScheduler().runTask(addon.getPlugin(), () -> spawnBlock(nextBlock, block));
+            if (player.getLocation().getBlock().equals(block)) {
+                double delta = 1 - player.getLocation().getY() - block.getY();
+                player.teleport(player.getLocation().add(new Vector(0, delta, 0)));
+            } else if (player.getLocation().getBlock().equals(block.getRelative(BlockFace.UP))) {
+                player.teleport(player.getLocation());
+            }
+        }
+        // Fire event
+        Bukkit.getPluginManager().callEvent(new MagicBlockEvent(i, player.getUniqueId(), tool, block, nextBlock.getMaterial()));
+    }
+
+    private void breakBlockOnTop(Cancellable e, @Nullable Player player, Block block, @NonNull World world, OneBlockObject nextBlock, Island i) {
+        e.setCancelled(true);
+        ItemStack tool = Objects.requireNonNull(player).getInventory().getItemInMainHand();
+        if (addon.getSettings().isDropOnTop()) {
+            // Drop the drops
+            block.getDrops(tool, player).stream()
+            .filter(Objects::nonNull)
+            .filter(item -> !item.getType().equals(Material.AIR))
+            .forEach(item -> world.dropItem(block.getRelative(BlockFace.UP).getLocation()
+                    .add(new Vector(0.5, 0, 0.5)), item)
+                    .setVelocity(new Vector(0,0,0)));
+            // Set the air
+            block.setType(Material.AIR);
+        } else {
+            block.breakNaturally(tool);
+        }
+        // Give exp
+        Objects.requireNonNull(player).giveExp(((BlockBreakEvent)e).getExpToDrop());
+        // Damage tool
+        damageTool(Objects.requireNonNull(player), block);
+        spawnBlock(nextBlock, block);
     }
 
     private void spawnBlock(OneBlockObject nextBlock, Block block) {

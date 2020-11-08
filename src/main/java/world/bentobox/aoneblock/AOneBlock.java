@@ -63,6 +63,9 @@ public class AOneBlock extends GameModeAddon {
             logError("AOneBlock settings could not load! Addon disabled.");
             setState(State.DISABLED);
             return false;
+        } else {
+            // Save the settings
+            configObject.saveConfigObject(settings);
         }
         return true;
     }
