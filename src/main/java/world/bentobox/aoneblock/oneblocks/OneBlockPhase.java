@@ -142,9 +142,10 @@ public class OneBlockPhase {
     }
 
     private OneBlockObject getRandomBlock(TreeMap<Integer, OneBlockObject> probMap2, int total2) {
-        OneBlockObject temp = probMap2.get(random.nextInt(total2));
+        // Use +1 on the bound because the random choice is exclusive
+        OneBlockObject temp = probMap2.get(random.nextInt(total2+1));
         if (temp == null) {
-            temp = probMap2.ceilingEntry(random.nextInt(total2)).getValue();
+            temp = probMap2.ceilingEntry(random.nextInt(total2+1)).getValue();
         }
         if (temp == null) {
             temp = probMap2.firstEntry().getValue();
