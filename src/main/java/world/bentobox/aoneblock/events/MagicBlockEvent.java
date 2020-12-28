@@ -4,6 +4,7 @@ import java.util.UUID;
 
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.event.HandlerList;
 import org.bukkit.inventory.ItemStack;
 import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jdt.annotation.Nullable;
@@ -19,6 +20,16 @@ public class MagicBlockEvent extends AbstractMagicBlockEvent {
 
     protected final ItemStack tool;
     protected final Material nextBlockMaterial;
+    private static final HandlerList handlers = new HandlerList();
+
+    @Override
+    public HandlerList getHandlers() {
+        return getHandlerList();
+    }
+
+    public static HandlerList getHandlerList() {
+        return handlers;
+    }
 
     /**
      * @param island - island where the magic block is located

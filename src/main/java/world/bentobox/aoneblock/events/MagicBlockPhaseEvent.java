@@ -3,6 +3,7 @@ package world.bentobox.aoneblock.events;
 import java.util.UUID;
 
 import org.bukkit.block.Block;
+import org.bukkit.event.HandlerList;
 import org.eclipse.jdt.annotation.NonNull;
 
 import world.bentobox.bentobox.database.objects.Island;
@@ -17,6 +18,17 @@ public class MagicBlockPhaseEvent extends AbstractMagicBlockEvent {
     protected final String phase;
     protected final String oldPhase;
     protected final int blockNumber;
+    private static final HandlerList handlers = new HandlerList();
+
+    @Override
+    public HandlerList getHandlers() {
+        return getHandlerList();
+    }
+
+    public static HandlerList getHandlerList() {
+        return handlers;
+    }
+
     /**
      * @param island
      * @param playerUUID
