@@ -1,9 +1,9 @@
 package world.bentobox.aoneblock.listeners;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,6 +19,7 @@ import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.Tag;
 import org.bukkit.World;
+import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Chest;
@@ -74,9 +75,9 @@ public class BlockListener implements Listener {
     /**
      * Tools that take damage. See https://minecraft.gamepedia.com/Item_durability#Tool_durability
      */
-    private final static Map<Material, Integer> TOOLS;
+    private static final Map<Material, Integer> TOOLS;
     static {
-        Map<Material, Integer> t = new HashMap<>();
+        Map<Material, Integer> t = new EnumMap<>(Material.class);
         t.put(Material.DIAMOND_AXE, 1);
         t.put(Material.DIAMOND_SHOVEL, 1);
         t.put(Material.DIAMOND_PICKAXE, 1);
@@ -104,7 +105,7 @@ public class BlockListener implements Listener {
     /**
      * Water entities
      */
-    private final static List<EntityType> WATER_ENTITIES = Arrays.asList(
+    private static final List<EntityType> WATER_ENTITIES = Arrays.asList(
             EntityType.GUARDIAN,
             EntityType.ELDER_GUARDIAN,
             EntityType.SQUID,
@@ -119,7 +120,7 @@ public class BlockListener implements Listener {
     public static final int MAX_LOOK_AHEAD = 5;
     public static final int SAVE_EVERY = 50;
     static {
-        Map<EntityType, MobAspects> m = new HashMap<>();
+        Map<EntityType, MobAspects> m = new EnumMap<>(EntityType.class);
         m.put(EntityType.ZOMBIE, new MobAspects(Sound.ENTITY_ZOMBIE_AMBIENT, Color.fromRGB(74, 99, 53)));
         m.put(EntityType.CREEPER, new MobAspects(Sound.ENTITY_CREEPER_PRIMED, Color.fromRGB(125, 255, 106)));
         m.put(EntityType.SKELETON, new MobAspects(Sound.ENTITY_SKELETON_AMBIENT, Color.fromRGB(211, 211, 211)));
@@ -145,9 +146,8 @@ public class BlockListener implements Listener {
      * @param addon - OneBlock
      * @throws InvalidConfigurationException - exception
      * @throws IOException - exception
-     * @throws FileNotFoundException - exception
      */
-    public BlockListener(AOneBlock addon) throws FileNotFoundException, IOException, InvalidConfigurationException {
+    public BlockListener(AOneBlock addon) throws IOException, InvalidConfigurationException {
         this.addon = addon;
         handler = new Database<>(addon, OneBlockIslands.class);
         cache = new HashMap<>();
@@ -231,16 +231,7 @@ public class BlockListener implements Listener {
 
         }
         // Announce the phase
-        boolean newPhase = false;
-        if (!is.getPhaseName().equalsIgnoreCase(phase.getPhaseName())) {
-            cache.get(i.getUniqueId()).setPhaseName(phase.getPhaseName());
-            if (player != null) player.sendTitle(phase.getPhaseName(), null, -1, -1, -1);
-            newPhase = true;
-            saveIsland(i);
-        } else if (is.getBlockNumber() % SAVE_EVERY == 0) {
-            // Save island data every MAX_LOOK_AHEAD blocks.
-            saveIsland(i);
-        }
+        boolean newPhase = checkPhase(player, i, is, phase.getPhaseName());
         // Get the block that is being broken
         Block block = i.getCenter().toVector().toLocation(world).getBlock();
         // Fill a 5 block queue
@@ -253,23 +244,13 @@ public class BlockListener implements Listener {
         }
         // Play warning sound for upcoming mobs
         if (addon.getSettings().getMobWarning() > 0) {
-            List<EntityType> opMob = is.getNearestMob(addon.getSettings().getMobWarning());
-            opMob.stream().filter(MOB_ASPECTS::containsKey).map(MOB_ASPECTS::get).forEach(s -> {
-                block.getWorld().playSound(block.getLocation(), s.getSound(), 1F, 1F);
-                block.getWorld().spawnParticle(Particle.REDSTONE, block.getLocation().add(new Vector(0.5, 1.0, 0.5)), 10, 0.5, 0, 0.5, 1, new Particle.DustOptions(s.getColor(), 1));
-            });
+            playWarning(is, block);
         }
         // Get the next block
         OneBlockObject nextBlock = newPhase && phase.getFirstBlock() != null ? phase.getFirstBlock() : is.pollAndAdd(phase.getNextBlock(addon));
         // Set the biome for the block and one block above it
         if (newPhase) {
-            for (int x = -4; x <= 4; x++) {
-                for (int z = -4; z <= 4; z++) {
-                    for (int y = -4; y <= 4; y++) {
-                        block.getWorld().setBiome(block.getX() + x, block.getY() + y, block.getZ() + z, phase.getPhaseBiome());
-                    }
-                }
-            }
+            setBiome(block, phase.getPhaseBiome());
             // Fire new phase event
             Bukkit.getPluginManager().callEvent(new MagicBlockPhaseEvent(i, player.getUniqueId(), block, phase.getPhaseName(), originalPhase, is.getBlockNumber()));
         }
@@ -297,10 +278,45 @@ public class BlockListener implements Listener {
         is.incrementBlockNumber();
     }
 
+    private void playWarning(OneBlockIslands is, Block block) {
+        List<EntityType> opMob = is.getNearestMob(addon.getSettings().getMobWarning());
+        opMob.stream().filter(MOB_ASPECTS::containsKey).map(MOB_ASPECTS::get).forEach(s -> {
+            block.getWorld().playSound(block.getLocation(), s.getSound(), 1F, 1F);
+            block.getWorld().spawnParticle(Particle.REDSTONE, block.getLocation().add(new Vector(0.5, 1.0, 0.5)), 10, 0.5, 0, 0.5, 1, new Particle.DustOptions(s.getColor(), 1));
+        });
+
+    }
+
+    private boolean checkPhase(@Nullable Player player, Island i, OneBlockIslands is, @Nullable String phaseName) {
+        if (!is.getPhaseName().equalsIgnoreCase(phaseName)) {
+            cache.get(i.getUniqueId()).setPhaseName(phaseName);
+            if (player != null) player.sendTitle(phaseName, null, -1, -1, -1);
+            saveIsland(i);
+            return true;
+        } else if (is.getBlockNumber() % SAVE_EVERY == 0) {
+            // Save island data every MAX_LOOK_AHEAD blocks.
+            saveIsland(i);
+        }
+        return false;
+    }
+
+    private void setBiome(Block block, @Nullable Biome biome) {
+        if (biome == null) {
+            return;
+        }
+        for (int x = -4; x <= 4; x++) {
+            for (int z = -4; z <= 4; z++) {
+                for (int y = -4; y <= 4; y++) {
+                    block.getWorld().setBiome(block.getX() + x, block.getY() + y, block.getZ() + z, biome);
+                }
+            }
+        }
+    }
+
     private void breakBlock(Cancellable e, @Nullable Player player, Block block, @NonNull World world, OneBlockObject nextBlock, Island i) {
         ItemStack tool = Objects.requireNonNull(player).getInventory().getItemInMainHand();
         if (addon.getSettings().isDropOnTop()) {
-            breakBlockOnTop(e, player, block, world, nextBlock, i);
+            breakBlockOnTop(e, player, block, world, nextBlock);
         } else {
             // Break normally and lift the player up so they don't fall
             Bukkit.getScheduler().runTask(addon.getPlugin(), () -> spawnBlock(nextBlock, block));
@@ -315,7 +331,7 @@ public class BlockListener implements Listener {
         Bukkit.getPluginManager().callEvent(new MagicBlockEvent(i, player.getUniqueId(), tool, block, nextBlock.getMaterial()));
     }
 
-    private void breakBlockOnTop(Cancellable e, @Nullable Player player, Block block, @NonNull World world, OneBlockObject nextBlock, Island i) {
+    private void breakBlockOnTop(Cancellable e, @Nullable Player player, Block block, @NonNull World world, OneBlockObject nextBlock) {
         e.setCancelled(true);
         ItemStack tool = Objects.requireNonNull(player).getInventory().getItemInMainHand();
         if (addon.getSettings().isDropOnTop()) {

@@ -6,6 +6,7 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 
@@ -21,7 +22,7 @@ import world.bentobox.aoneblock.oneblocks.OneBlockObject.Rarity;
 
 
 public class OneBlockPhase {
-    public static final TreeMap<Double, Rarity> CHEST_CHANCES = new TreeMap<>();
+    protected static final SortedMap<Double, Rarity> CHEST_CHANCES = new TreeMap<>();
     static {
         CHEST_CHANCES.put(0.62D, Rarity.COMMON);
         CHEST_CHANCES.put(0.87D, Rarity.UNCOMMON);
@@ -132,7 +133,7 @@ public class OneBlockPhase {
 
     private OneBlockObject getRandomChest() {
         // Get the right type of chest
-        Rarity r = CHEST_CHANCES.getOrDefault(CHEST_CHANCES.ceilingKey(random.nextDouble()), Rarity.COMMON);
+        Rarity r = CHEST_CHANCES.getOrDefault(((TreeMap<Double, Rarity>) CHEST_CHANCES).ceilingKey(random.nextDouble()), Rarity.COMMON);
         // If the chest lists have no common fallback, then return empty chest
         if (!chests.containsKey(r) && !chests.containsKey(Rarity.COMMON)) return new OneBlockObject(Material.CHEST, 0);
         // Get the rare chest or worse case the common one
@@ -204,7 +205,7 @@ public class OneBlockPhase {
      * @return map of mob type and its relative probability
      */
     public Map<EntityType, Integer> getMobs() {
-        return probMap.values().stream().filter(o -> o.isEntity()).collect(Collectors.toMap(OneBlockObject::getEntityType, OneBlockObject::getProb));
+        return probMap.values().stream().filter(OneBlockObject::isEntity).collect(Collectors.toMap(OneBlockObject::getEntityType, OneBlockObject::getProb));
     }
 
     /**
@@ -212,7 +213,7 @@ public class OneBlockPhase {
      * @return map of materials and relative probabilities
      */
     public Map<Material, Integer> getBlocks() {
-        return probMap.values().stream().filter(o -> o.isMaterial()).collect(Collectors.toMap(OneBlockObject::getMaterial, OneBlockObject::getProb));
+        return probMap.values().stream().filter(OneBlockObject::isMaterial).collect(Collectors.toMap(OneBlockObject::getMaterial, OneBlockObject::getProb));
     }
 
     /**

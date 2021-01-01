@@ -29,7 +29,7 @@ public class JoinLeaveListener implements Listener {
         Island island = addon.getIslands().getIsland(addon.getOverWorld(), e.getPlayer().getUniqueId());
         if (island != null) {
             addon.getBlockListener().saveIsland(island).thenAccept(r -> {
-                if (!r) {
+                if (Boolean.FALSE.equals(r)) {
                     addon.logError("Could not save AOneBlock island at " + Util.xyz(island.getCenter().toVector()) + " to database " + island.getUniqueId());
                 }
             });

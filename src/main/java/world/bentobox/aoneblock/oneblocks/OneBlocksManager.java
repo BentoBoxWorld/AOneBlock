@@ -47,6 +47,7 @@ public class OneBlocksManager {
     private static final String MOBS = "mobs";
     private static final String BLOCKS = "blocks";
     private static final String PHASES = "phases";
+    private static final String GOTO_BLOCK = "gotoBlock";
     private final AOneBlock addon;
     private TreeMap<Integer, OneBlockPhase> blockProbs;
 
@@ -65,7 +66,7 @@ public class OneBlocksManager {
     /**
      * Loads the game phases
      */
-    public void loadPhases() throws IOException, InvalidConfigurationException, NumberFormatException {
+    public void loadPhases() throws IOException, NumberFormatException {
         // Clear block probabilities
         blockProbs = new TreeMap<>();
         // Check for folder
@@ -80,8 +81,8 @@ public class OneBlocksManager {
                 Files.move(oneblockFile, renamedFile);
                 loadPhase(renamedFile);
                 this.saveOneBlockConfig();
-                oneblockFile.delete();
-                renamedFile.delete();
+                java.nio.file.Files.delete(oneblockFile.toPath());
+                java.nio.file.Files.delete(renamedFile.toPath());
                 blockProbs.clear();
             } else {
                 // Copy files from JAR
@@ -126,8 +127,8 @@ public class OneBlocksManager {
             // Get config Section
             ConfigurationSection phase = oneBlocks.getConfigurationSection(blockNumber);
             // goto
-            if (phase.contains("gotoBlock")) {
-                obPhase.setGotoBlock(phase.getInt("gotoBlock", 0));
+            if (phase.contains(GOTO_BLOCK)) {
+                obPhase.setGotoBlock(phase.getInt(GOTO_BLOCK, 0));
                 continue;
             }
             initBlock(blockNumber, obPhase, phase);
@@ -211,7 +212,7 @@ public class OneBlocksManager {
                 ConfigurationSection contents = chest.getConfigurationSection(CONTENTS);
                 if (contents != null) {
                     for (String index : contents.getKeys(false)) {
-                        int slot = Integer.valueOf(index);
+                        int slot = Integer.parseInt(index);
                         ItemStack item = contents.getItemStack(index);
                         if (item != null) items.put(slot, item);
                     }
@@ -326,7 +327,7 @@ public class OneBlocksManager {
             ConfigurationSection phSec = oneBlocks.createSection(p.getBlockNumber());
             // Check for a goto block
             if (p.isGotoPhase()) {
-                phSec.set("gotoBlock", p.getGotoBlock());
+                phSec.set(GOTO_BLOCK, p.getGotoBlock());
             } else {
                 phSec.set(NAME, p.getPhaseName());
                 if (p.getFirstBlock() != null) {
