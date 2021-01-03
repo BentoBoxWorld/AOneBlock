@@ -2,6 +2,7 @@
   name: Plains
   firstBlock: GRASS_BLOCK
   biome: PLAINS
+  # Commands
   # A list of commands can be run at the start and end of a phase. Commands are run as the Console
   # unless the command is prefixed with [SUDO], then the command is run as the player
   # triggering the commands.
@@ -21,6 +22,20 @@
   # - broadcast [player] just started OneBlock!
   # end-commands:
   # - [SUDO]summon minecraft:wither
+  #
+  # Requirements
+  # You can stipulate a set of requirements to start the phase:
+  # 
+  # economy-balance - the minimum player's economy balance (Requires Vault and an economy plugin)
+  # bank-balance - the minimum island bank balance (requires Bank Addon)
+  # level - the island level (Requires Levels Addon)
+  # permission - a permission string
+  #
+  # Example:
+  # requirements:
+  #   bank-balance: 10000
+  #   level: 10
+  #   permission: ready.for.battle
   
   blocks:
     PODZOL: 40

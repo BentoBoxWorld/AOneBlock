@@ -7,8 +7,9 @@ package world.bentobox.aoneblock.oneblocks;
  */
 public class Requirement {
     public enum ReqType {
-        MONEY("money", Double.class),
-        LEVEL("level", Integer.class),
+        ECO("economy-balance", Double.class),
+        BANK("bank-balance", Double.class),
+        LEVEL("level", Long.class),
         PERMISSION("permission", String.class);
 
         private final String key;
@@ -46,17 +47,24 @@ public class Requirement {
     }
 
     /**
-     * @return the money
+     * @return the bank balance req
      */
-    public double getMoney() {
+    public double getBank() {
+        return (double)requirement;
+    }
+
+    /**
+     * @return the economy balance req
+     */
+    public double getEco() {
         return (double)requirement;
     }
 
     /**
      * @return the level
      */
-    public int getLevel() {
-        return (int)requirement;
+    public long getLevel() {
+        return (long)requirement;
     }
 
     /**
