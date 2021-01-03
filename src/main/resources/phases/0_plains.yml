@@ -12,7 +12,7 @@
   # [phase] - the name of this phase
   # [blocks] - the number of blocks broken
   # [level] - your island level (Requires Levels Addon)
-  # [balance] - your island bank balance (Requires Bank Addon)
+  # [bank-balance] - your island bank balance (Requires Bank Addon)
   # [eco-balance] - player's economy balance (Requires Vault and an economy plugin)
   #
   # Examples:
