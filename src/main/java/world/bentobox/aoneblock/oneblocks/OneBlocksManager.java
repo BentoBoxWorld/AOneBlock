@@ -317,9 +317,8 @@ public class OneBlocksManager {
     public List<String> getPhaseList() {
         return blockProbs.values()
                 .stream()
-                .map(p ->
-                p.getPhaseName())
-                .filter(n -> n != null)
+                .map(OneBlockPhase::getPhaseName)
+                .filter(Objects::nonNull)
                 .map(n ->
                 n.replace(" ", "_"))
                 .collect(Collectors.toList());

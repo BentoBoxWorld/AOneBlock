@@ -412,7 +412,7 @@ public class BlockListener implements Listener {
         // Give exp
         Objects.requireNonNull(player).giveExp(((BlockBreakEvent)e).getExpToDrop());
         // Damage tool
-        damageTool(Objects.requireNonNull(player), block);
+        damageTool(Objects.requireNonNull(player));
         spawnBlock(nextBlock, block);
     }
 
@@ -438,12 +438,8 @@ public class BlockListener implements Listener {
         Location spawnLoc = block.getLocation().add(new Vector(0.5D, 1D, 0.5D));
         Entity entity = block.getWorld().spawnEntity(spawnLoc, nextBlock.getEntityType());
         // Make space for entity - this will blot out blocks
-        if (entity != null) {
-            makeSpace(entity);
-            block.getWorld().playSound(block.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 1F, 2F);
-        } else {
-            addon.logWarning("Could not spawn entity at " + spawnLoc);
-        }
+        makeSpace(entity);
+        block.getWorld().playSound(block.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 1F, 2F);
     }
 
     private void makeSpace(@NonNull Entity e) {
@@ -498,7 +494,7 @@ public class BlockListener implements Listener {
         return cache.containsKey(i.getUniqueId()) ? cache.get(i.getUniqueId()) : loadIsland(i.getUniqueId());
     }
 
-    private void damageTool(@NonNull Player player, @NonNull Block block) {
+    private void damageTool(@NonNull Player player) {
         ItemStack inHand = player.getInventory().getItemInMainHand();
         ItemMeta itemMeta = inHand.getItemMeta();
 
