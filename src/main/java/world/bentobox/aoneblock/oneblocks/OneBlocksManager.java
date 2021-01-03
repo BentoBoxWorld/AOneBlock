@@ -1,9 +1,9 @@
 package world.bentobox.aoneblock.oneblocks;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FilenameFilter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -20,7 +20,6 @@ import java.util.stream.Collectors;
 import org.bukkit.Material;
 import org.bukkit.block.Biome;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemStack;
@@ -33,6 +32,7 @@ import com.google.common.io.Files;
 import world.bentobox.aoneblock.AOneBlock;
 import world.bentobox.aoneblock.dataobjects.OneBlockIslands;
 import world.bentobox.aoneblock.oneblocks.OneBlockObject.Rarity;
+import world.bentobox.aoneblock.oneblocks.Requirement.ReqType;
 import world.bentobox.bentobox.util.Util;
 
 public class OneBlocksManager {
@@ -48,14 +48,14 @@ public class OneBlocksManager {
     private static final String BLOCKS = "blocks";
     private static final String PHASES = "phases";
     private static final String GOTO_BLOCK = "gotoBlock";
+    private static final String START_COMMANDS = "start-commands";
+    private static final String END_COMMANDS = "end-commands";
+    private static final String REQUIREMENTS = "requirements";
     private final AOneBlock addon;
     private TreeMap<Integer, OneBlockPhase> blockProbs;
 
     /**
      * @param addon - addon
-     * @throws InvalidConfigurationException - exception
-     * @throws IOException - exception
-     * @throws FileNotFoundException - exception
      */
     public OneBlocksManager(AOneBlock addon) {
         this.addon = addon;
@@ -65,8 +65,9 @@ public class OneBlocksManager {
 
     /**
      * Loads the game phases
+     * @throws IOException - if config file has bad syntax or migration fails
      */
-    public void loadPhases() throws IOException, NumberFormatException {
+    public void loadPhases() throws IOException {
         // Clear block probabilities
         blockProbs = new TreeMap<>();
         // Check for folder
@@ -138,11 +139,16 @@ public class OneBlocksManager {
             addMobs(obPhase, phase);
             // Chests
             addChests(obPhase, phase);
+            // Commands
+            addCommands(obPhase, phase);
+            // Requirements
+            addRequirements(obPhase, phase);
             // Add to the map
             blockProbs.put(blockNum, obPhase);
         }
-
     }
+
+
 
     void initBlock(String blockNumber, OneBlockPhase obPhase, ConfigurationSection phase) throws IOException {
         if (phase.contains(NAME, true)) {
@@ -192,89 +198,108 @@ public class OneBlocksManager {
         }
     }
 
-    void addChests(OneBlockPhase obPhase, ConfigurationSection phase) throws IOException {
-        if (phase.isConfigurationSection(CHESTS)) {
-            if (!obPhase.getChests().isEmpty()) {
-                throw new IOException(obPhase.getPhaseName() + ": Chests cannot be set more than once. Duplicate file?");
-            }
-            ConfigurationSection chests = phase.getConfigurationSection(CHESTS);
-            for (String chestId: chests.getKeys(false)) {
-                ConfigurationSection chest = chests.getConfigurationSection(chestId);
-                Rarity rarity = Rarity.COMMON;
-                try {
-                    rarity = OneBlockObject.Rarity.valueOf(chest.getString(RARITY, "COMMON").toUpperCase());
-                } catch (Exception e) {
-                    addon.logError("Rarity value of " + chest.getString(RARITY, "UNKNOWN") + " is invalid! Use one of these...");
-                    addon.logError(Arrays.stream(Rarity.values()).map(Rarity::name).collect(Collectors.joining(",")));
-                    rarity = Rarity.COMMON;
-                }
-                Map<Integer, ItemStack> items = new HashMap<>();
-                ConfigurationSection contents = chest.getConfigurationSection(CONTENTS);
-                if (contents != null) {
-                    for (String index : contents.getKeys(false)) {
-                        int slot = Integer.parseInt(index);
-                        ItemStack item = contents.getItemStack(index);
-                        if (item != null) items.put(slot, item);
-                    }
-                }
-                obPhase.addChest(items, rarity);
+    void addCommands(OneBlockPhase obPhase, ConfigurationSection phase) {
+        obPhase.setStartCommands(phase.getStringList(START_COMMANDS));
+        obPhase.setEndCommands(phase.getStringList(END_COMMANDS));
+    }
+
+    void addRequirements(OneBlockPhase obPhase, ConfigurationSection phase) {
+        List<Requirement> reqList = new ArrayList<>();
+        if (!phase.isConfigurationSection(REQUIREMENTS)) {
+            return;
+        }
+        for (ReqType key : Requirement.ReqType.values()) {
+            ConfigurationSection reqs = phase.getConfigurationSection(REQUIREMENTS);
+            if (reqs.contains(key.getKey())) {
+                reqList.add(new Requirement(key, reqs.get(key.getKey())));
             }
         }
+        obPhase.setRequirements(reqList);
+    }
 
+    void addChests(OneBlockPhase obPhase, ConfigurationSection phase) throws IOException {
+        if (!phase.isConfigurationSection(CHESTS)) {
+            return;
+        }
+        if (!obPhase.getChests().isEmpty()) {
+            throw new IOException(obPhase.getPhaseName() + ": Chests cannot be set more than once. Duplicate file?");
+        }
+        ConfigurationSection chests = phase.getConfigurationSection(CHESTS);
+        for (String chestId: chests.getKeys(false)) {
+            ConfigurationSection chest = chests.getConfigurationSection(chestId);
+            Rarity rarity = Rarity.COMMON;
+            try {
+                rarity = OneBlockObject.Rarity.valueOf(chest.getString(RARITY, "COMMON").toUpperCase());
+            } catch (Exception e) {
+                addon.logError("Rarity value of " + chest.getString(RARITY, "UNKNOWN") + " is invalid! Use one of these...");
+                addon.logError(Arrays.stream(Rarity.values()).map(Rarity::name).collect(Collectors.joining(",")));
+                rarity = Rarity.COMMON;
+            }
+            Map<Integer, ItemStack> items = new HashMap<>();
+            ConfigurationSection contents = chest.getConfigurationSection(CONTENTS);
+            if (contents != null) {
+                for (String index : contents.getKeys(false)) {
+                    int slot = Integer.parseInt(index);
+                    ItemStack item = contents.getItemStack(index);
+                    if (item != null) items.put(slot, item);
+                }
+            }
+            obPhase.addChest(items, rarity);
+        }
     }
 
     void addMobs(OneBlockPhase obPhase, ConfigurationSection phase) throws IOException {
-        if (phase.isConfigurationSection(MOBS)) {
-            if (!obPhase.getMobs().isEmpty()) {
-                throw new IOException(obPhase.getPhaseName() + ": Mobs cannot be set more than once. Duplicate file?");
+        if (!phase.isConfigurationSection(MOBS)) {
+            return;
+        }
+        if (!obPhase.getMobs().isEmpty()) {
+            throw new IOException(obPhase.getPhaseName() + ": Mobs cannot be set more than once. Duplicate file?");
+        }
+        ConfigurationSection mobs = phase.getConfigurationSection(MOBS);
+        for (String entity : mobs.getKeys(false)) {
+            String name = entity.toUpperCase(Locale.ENGLISH);
+            EntityType et = null;
+            // Pig zombie handling
+            if (name.equals("PIG_ZOMBIE") || name.equals("ZOMBIFIED_PIGLIN")) {
+                et = Enums.getIfPresent(EntityType.class, "ZOMBIFIED_PIGLIN")
+                        .or(Enums.getIfPresent(EntityType.class, "PIG_ZOMBIE").or(EntityType.PIG));
+            } else {
+                et = Enums.getIfPresent(EntityType.class, name).orNull();
             }
-            ConfigurationSection mobs = phase.getConfigurationSection(MOBS);
-            for (String entity : mobs.getKeys(false)) {
-                String name = entity.toUpperCase(Locale.ENGLISH);
-                EntityType et = null;
-                // Pig zombie handling
-                if (name.equals("PIG_ZOMBIE") || name.equals("ZOMBIFIED_PIGLIN")) {
-                    et = Enums.getIfPresent(EntityType.class, "ZOMBIFIED_PIGLIN")
-                            .or(Enums.getIfPresent(EntityType.class, "PIG_ZOMBIE").or(EntityType.PIG));
-                } else {
-                    et = Enums.getIfPresent(EntityType.class, name).orNull();
-                }
-                if (et == null) {
-                    // Does not exist
-                    addon.logError("Bad entity type in " + obPhase.getPhaseName() + ": " + entity);
-                    addon.logError("Try one of these...");
-                    addon.logError(Arrays.stream(EntityType.values())
-                            .filter(EntityType::isSpawnable)
-                            .filter(EntityType::isAlive)
-                            .map(EntityType::name).collect(Collectors.joining(",")));
-                    return;
-                }
-                if (et.isSpawnable() && et.isAlive()) {
-                    if (mobs.getInt(entity) > 0) {
-                        obPhase.addMob(et, mobs.getInt(entity));
-                    }
-                } else {
-                    addon.logError("Entity type is not spawnable " + obPhase.getPhaseName() + ": " + entity);
-                }
+            if (et == null) {
+                // Does not exist
+                addon.logError("Bad entity type in " + obPhase.getPhaseName() + ": " + entity);
+                addon.logError("Try one of these...");
+                addon.logError(Arrays.stream(EntityType.values())
+                        .filter(EntityType::isSpawnable)
+                        .filter(EntityType::isAlive)
+                        .map(EntityType::name).collect(Collectors.joining(",")));
+                return;
             }
-
+            if (et.isSpawnable() && et.isAlive()) {
+                if (mobs.getInt(entity) > 0) {
+                    obPhase.addMob(et, mobs.getInt(entity));
+                }
+            } else {
+                addon.logError("Entity type is not spawnable " + obPhase.getPhaseName() + ": " + entity);
+            }
         }
     }
 
     void addBlocks(OneBlockPhase obPhase, ConfigurationSection phase) {
-        if (phase.isConfigurationSection(BLOCKS)) {
-            ConfigurationSection blocks = phase.getConfigurationSection(BLOCKS);
-            for (String material : blocks.getKeys(false)) {
-                Material m = Material.matchMaterial(material);
-                if (m == null || !m.isBlock()) {
-                    addon.logError("Bad block material in " + obPhase.getPhaseName() + ": " + material);
-                } else {
-                    obPhase.addBlock(m, blocks.getInt(material));
-                }
-
-            }
+        if (!phase.isConfigurationSection(BLOCKS)) {
+            return;
         }
+        ConfigurationSection blocks = phase.getConfigurationSection(BLOCKS);
+        for (String material : blocks.getKeys(false)) {
+            Material m = Material.matchMaterial(material);
+            if (m == null || !m.isBlock()) {
+                addon.logError("Bad block material in " + obPhase.getPhaseName() + ": " + material);
+            } else {
+                obPhase.addBlock(m, blocks.getInt(material));
+            }
 
+        }
     }
 
     /**

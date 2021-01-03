@@ -6,7 +6,6 @@ import org.bukkit.World;
 import org.bukkit.World.Environment;
 import org.bukkit.WorldCreator;
 import org.bukkit.WorldType;
-import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.generator.ChunkGenerator;
 import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jdt.annotation.Nullable;
@@ -87,7 +86,7 @@ public class AOneBlock extends GameModeAddon {
             getPlugin().getPlaceholdersManager().registerPlaceholder(this,"my_island_count", this::getCountByOwner);
             getPlugin().getPlaceholdersManager().registerPlaceholder(this,"visited_island_next_phase", this::getNextPhaseByLocation);
             getPlugin().getPlaceholdersManager().registerPlaceholder(this,"my_island_next_phase", this::getNextPhaseByOwner);
-        } catch (IOException | InvalidConfigurationException e) {
+        } catch (IOException e) {
             // Disable
             logError("AOneBlock settings could not load (oneblock.yml error)! Addon disabled.");
             logError(e.getMessage());

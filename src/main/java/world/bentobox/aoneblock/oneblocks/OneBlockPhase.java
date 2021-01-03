@@ -47,10 +47,21 @@ public class OneBlockPhase {
     private Integer gotoBlock;
     private int blockTotal = 0;
     private int entityTotal = 0;
+    private List<String> startCommands;
+    private List<String> endCommands;
+    private List<Requirement> requirements;
 
 
+    /**
+     * Construct a phase that starts at blockNumber. Phase continues forever until
+     * another phase starts.
+     * @param blockNumber - starting block number
+     */
     public OneBlockPhase(String blockNumber) {
         this.blockNumber = blockNumber;
+        startCommands = new ArrayList<>();
+        endCommands = new ArrayList<>();
+        requirements = new ArrayList<>();
     }
 
     /**
@@ -257,5 +268,49 @@ public class OneBlockPhase {
     public boolean isGotoPhase() {
         return gotoBlock != null;
     }
+
+    /**
+     * @return the commands
+     */
+    public List<String> getStartCommands() {
+        return startCommands;
+    }
+
+    /**
+     * @param commands the commands to set
+     */
+    public void setStartCommands(List<String> commands) {
+        this.startCommands = commands;
+    }
+
+    /**
+     * @return the requirements
+     */
+    public List<Requirement> getRequirements() {
+        return requirements;
+    }
+
+    /**
+     * @param requirements the requirements to set
+     */
+    public void setRequirements(List<Requirement> requirements) {
+        this.requirements = requirements;
+    }
+
+    /**
+     * @return the endCommands
+     */
+    public List<String> getEndCommands() {
+        return endCommands;
+    }
+
+    /**
+     * @param endCommands the endCommands to set
+     */
+    public void setEndCommands(List<String> endCommands) {
+        this.endCommands = endCommands;
+    }
+
+
 
 }

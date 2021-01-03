@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Random;
 import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
@@ -24,7 +25,6 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Chest;
 import org.bukkit.block.data.type.Leaves;
-import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -53,12 +53,15 @@ import world.bentobox.aoneblock.oneblocks.MobAspects;
 import world.bentobox.aoneblock.oneblocks.OneBlockObject;
 import world.bentobox.aoneblock.oneblocks.OneBlockPhase;
 import world.bentobox.aoneblock.oneblocks.OneBlocksManager;
+import world.bentobox.bank.Bank;
 import world.bentobox.bentobox.api.events.island.IslandCreatedEvent;
 import world.bentobox.bentobox.api.events.island.IslandDeleteEvent;
 import world.bentobox.bentobox.api.events.island.IslandResettedEvent;
+import world.bentobox.bentobox.api.user.User;
 import world.bentobox.bentobox.database.Database;
 import world.bentobox.bentobox.database.objects.Island;
 import world.bentobox.bentobox.util.Util;
+import world.bentobox.level.Level;
 
 /**
  * @author tastybento
@@ -144,10 +147,9 @@ public class BlockListener implements Listener {
 
     /**
      * @param addon - OneBlock
-     * @throws InvalidConfigurationException - exception
      * @throws IOException - exception
      */
-    public BlockListener(AOneBlock addon) throws IOException, InvalidConfigurationException {
+    public BlockListener(@NonNull AOneBlock addon) {
         this.addon = addon;
         handler = new Database<>(addon, OneBlockIslands.class);
         cache = new HashMap<>();
@@ -176,7 +178,7 @@ public class BlockListener implements Listener {
         }
     }
 
-    private void setUp(Island island) {
+    private void setUp(@NonNull Island island) {
         // Set the bedrock to the initial block
         Util.getChunkAtAsync(island.getCenter()).thenRun(() -> island.getCenter().getBlock().setType(Material.GRASS_BLOCK));
         // Create a database entry
@@ -213,7 +215,7 @@ public class BlockListener implements Listener {
         }
     }
 
-    private void process(Cancellable e, Island i, @Nullable Player player, @NonNull World world) {
+    private void process(@NonNull Cancellable e, @NonNull Island i, @Nullable Player player, @NonNull World world) {
         // Get island from cache or load it
         OneBlockIslands is = getIsland(i);
         // Get the phase for this island
@@ -230,8 +232,12 @@ public class BlockListener implements Listener {
             is.setBlockNumber(gotoBlock);
 
         }
-        // Announce the phase
-        boolean newPhase = checkPhase(player, i, is, phase.getPhaseName());
+        // Check for new phase and run commands if required
+        boolean newPhase = checkPhase(player, i, is, phase);
+        if (!newPhase && is.getBlockNumber() % SAVE_EVERY == 0) {
+            // Save island data every MAX_LOOK_AHEAD blocks.
+            saveIsland(i);
+        }
         // Get the block that is being broken
         Block block = i.getCenter().toVector().toLocation(world).getBlock();
         // Fill a 5 block queue
@@ -278,7 +284,7 @@ public class BlockListener implements Listener {
         is.incrementBlockNumber();
     }
 
-    private void playWarning(OneBlockIslands is, Block block) {
+    private void playWarning(@NonNull OneBlockIslands is, @NonNull Block block) {
         List<EntityType> opMob = is.getNearestMob(addon.getSettings().getMobWarning());
         opMob.stream().filter(MOB_ASPECTS::containsKey).map(MOB_ASPECTS::get).forEach(s -> {
             block.getWorld().playSound(block.getLocation(), s.getSound(), 1F, 1F);
@@ -287,20 +293,76 @@ public class BlockListener implements Listener {
 
     }
 
-    private boolean checkPhase(@Nullable Player player, Island i, OneBlockIslands is, @Nullable String phaseName) {
+    /**
+     * Check whether this phase is done or not.
+     * @param player - player
+     * @param i - island
+     * @param is - OneBlockIslands object
+     * @param phase - current phase name
+     * @return true if this is a new phase, false if not
+     */
+    private boolean checkPhase(@Nullable Player player, @NonNull Island i, @NonNull OneBlockIslands is, @NonNull OneBlockPhase phase) {
+        String phaseName = phase.getPhaseName();
         if (!is.getPhaseName().equalsIgnoreCase(phaseName)) {
-            cache.get(i.getUniqueId()).setPhaseName(phaseName);
-            if (player != null) player.sendTitle(phaseName, null, -1, -1, -1);
+            // Run previous phase end commands
+            oneBlocksManager.getPhase(is.getPhaseName()).ifPresent(oldPhase ->
+            Util.runCommands(User.getInstance(player),
+                    replacePlaceholders(player, oldPhase.getPhaseName(), phase.getBlockNumber(), i, oldPhase.getEndCommands()),
+                    "Commands run for end of " + oldPhase.getPhaseName()));
+            // Set the phase name
+            is.setPhaseName(phaseName);
+            if (player != null) {
+                player.sendTitle(phaseName, null, -1, -1, -1);
+            }
+            // Run phase start commands
+            Util.runCommands(User.getInstance(player),
+                    replacePlaceholders(player, phase.getPhaseName(), phase.getBlockNumber(), i, phase.getStartCommands()),
+                    "Commands run for start of " + phaseName);
             saveIsland(i);
             return true;
-        } else if (is.getBlockNumber() % SAVE_EVERY == 0) {
-            // Save island data every MAX_LOOK_AHEAD blocks.
-            saveIsland(i);
         }
         return false;
     }
 
-    private void setBiome(Block block, @Nullable Biome biome) {
+    /**
+     * Replaces placeholders in commands.
+     * <pre>
+     * [island] - Island name
+     * [owner] - Island owner's name
+     * [player] - The name of the player who broke the block triggering the commands
+     * [phase] - the name of this phase
+     * [blocks] - the number of blocks broken
+     * [level] - island level (Requires Levels Addon)
+     * [bank-balance] - island bank balance (Requires Bank Addon)
+     * [eco-balance] - player's economy balance (Requires Vault and an economy plugin)
+     * </pre>
+     *
+     * @param player - player
+     * @param phaseName - phase name
+     * @param phaseNumber - phase's block number
+     * @param i - island
+     * @param commands - list of commands
+     * @return list of commands with placeholders replaced
+     */
+    @NonNull
+    List<String> replacePlaceholders(@Nullable Player player, String phaseName, String phaseNumber, @NonNull Island i, List<String> commands) {
+        return commands.stream().map(c -> {
+            long level = addon.getAddonByName("Level").map(l -> ((Level)l).getIslandLevel(addon.getOverWorld(), i.getOwner())).orElse(0L);
+            double balance = addon.getAddonByName("Bank").map(b -> ((Bank)b).getBankManager().getBalance(i).getValue()).orElse(0D);
+            double ecoBalance = addon.getPlugin().getVault().map(v -> v.getBalance(User.getInstance(player), addon.getOverWorld())).orElse(0D);
+
+            return c.replace("[island]", i.getName())
+                    .replace("[owner]", addon.getPlayers().getName(i.getOwner()))
+                    .replace("[phase]", phaseName)
+                    .replace("[blocks]", phaseNumber)
+                    .replace("[level]", String.valueOf(level))
+                    .replace("[bank-balance]", String.valueOf(balance))
+                    .replace("[eco-balance]", String.valueOf(ecoBalance));
+
+        }).collect(Collectors.toList());
+    }
+
+    private void setBiome(@NonNull Block block, @Nullable Biome biome) {
         if (biome == null) {
             return;
         }
@@ -313,7 +375,7 @@ public class BlockListener implements Listener {
         }
     }
 
-    private void breakBlock(Cancellable e, @Nullable Player player, Block block, @NonNull World world, OneBlockObject nextBlock, Island i) {
+    private void breakBlock(@NonNull Cancellable e, @Nullable Player player, Block block, @NonNull World world, @NonNull OneBlockObject nextBlock, @NonNull Island i) {
         ItemStack tool = Objects.requireNonNull(player).getInventory().getItemInMainHand();
         if (addon.getSettings().isDropOnTop()) {
             breakBlockOnTop(e, player, block, world, nextBlock);
@@ -331,7 +393,7 @@ public class BlockListener implements Listener {
         Bukkit.getPluginManager().callEvent(new MagicBlockEvent(i, player.getUniqueId(), tool, block, nextBlock.getMaterial()));
     }
 
-    private void breakBlockOnTop(Cancellable e, @Nullable Player player, Block block, @NonNull World world, OneBlockObject nextBlock) {
+    private void breakBlockOnTop(@NonNull Cancellable e, @Nullable Player player, @NonNull Block block, @NonNull World world, @NonNull OneBlockObject nextBlock) {
         e.setCancelled(true);
         ItemStack tool = Objects.requireNonNull(player).getInventory().getItemInMainHand();
         if (addon.getSettings().isDropOnTop()) {
@@ -354,7 +416,7 @@ public class BlockListener implements Listener {
         spawnBlock(nextBlock, block);
     }
 
-    private void spawnBlock(OneBlockObject nextBlock, Block block) {
+    private void spawnBlock(@NonNull OneBlockObject nextBlock, @NonNull Block block) {
         @NonNull
         Material type = nextBlock.getMaterial();
         // Place new block with no physics
@@ -371,7 +433,7 @@ public class BlockListener implements Listener {
         }
     }
 
-    private void spawnEntity(OneBlockObject nextBlock, Block block) {
+    private void spawnEntity(@NonNull OneBlockObject nextBlock, @NonNull Block block) {
         if (block.isEmpty()) block.setType(Material.STONE);
         Location spawnLoc = block.getLocation().add(new Vector(0.5D, 1D, 0.5D));
         Entity entity = block.getWorld().spawnEntity(spawnLoc, nextBlock.getEntityType());
@@ -384,7 +446,7 @@ public class BlockListener implements Listener {
         }
     }
 
-    private void makeSpace(Entity e) {
+    private void makeSpace(@NonNull Entity e) {
         World world = e.getWorld();
         // Make space for entity based on the entity's size
         BoundingBox bb = e.getBoundingBox();
@@ -405,7 +467,7 @@ public class BlockListener implements Listener {
         }
     }
 
-    private void fillChest(OneBlockObject nextBlock, Block block) {
+    private void fillChest(@NonNull OneBlockObject nextBlock, @NonNull Block block) {
         Chest chest = (Chest)block.getState();
         nextBlock.getChest().forEach(chest.getBlockInventory()::setItem);
         Color color = Color.fromBGR(0,255,255); // yellow
@@ -432,11 +494,11 @@ public class BlockListener implements Listener {
      * @return one block island
      */
     @NonNull
-    public OneBlockIslands getIsland(Island i) {
+    public OneBlockIslands getIsland(@NonNull Island i) {
         return cache.containsKey(i.getUniqueId()) ? cache.get(i.getUniqueId()) : loadIsland(i.getUniqueId());
     }
 
-    private void damageTool(@NonNull Player player, Block block) {
+    private void damageTool(@NonNull Player player, @NonNull Block block) {
         ItemStack inHand = player.getInventory().getItemInMainHand();
         ItemMeta itemMeta = inHand.getItemMeta();
 
@@ -468,7 +530,7 @@ public class BlockListener implements Listener {
     }
 
     @NonNull
-    private OneBlockIslands loadIsland(String uniqueId) {
+    private OneBlockIslands loadIsland(@NonNull String uniqueId) {
         if (handler.objectExists(uniqueId)) {
             OneBlockIslands island = handler.loadObject(uniqueId);
             if (island != null) {
@@ -492,7 +554,7 @@ public class BlockListener implements Listener {
      * @param island - island
      * @return CompletableFuture - true if saved or not in cache, false if save failed
      */
-    public CompletableFuture<Boolean> saveIsland(Island island) {
+    public CompletableFuture<Boolean> saveIsland(@NonNull Island island) {
         if (cache.containsKey(island.getUniqueId())) {
             return handler.saveObjectAsync(cache.get(island.getUniqueId()));
         }

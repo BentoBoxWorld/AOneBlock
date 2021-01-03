@@ -2,6 +2,26 @@
   name: Plains
   firstBlock: GRASS_BLOCK
   biome: PLAINS
+  # A list of commands can be run at the start and end of a phase. Commands are run as the Console
+  # unless the command is prefixed with [SUDO], then the command is run as the player
+  # triggering the commands.
+  # These placeholders in the command string will be replaced with the appropriate value:
+  # [island] - Island name
+  # [owner] - Island owner's name
+  # [player] - The name of the player who broke the block triggering the commands
+  # [phase] - the name of this phase
+  # [blocks] - the number of blocks broken
+  # [level] - your island level (Requires Levels Addon)
+  # [balance] - your island bank balance (Requires Bank Addon)
+  # [eco-balance] - player's economy balance (Requires Vault and an economy plugin)
+  #
+  # Examples:
+  # start-commands:
+  # - give [player] WOODEN_AXE
+  # - broadcast [player] just started OneBlock!
+  # end-commands:
+  # - [SUDO]summon minecraft:wither
+  
   blocks:
     PODZOL: 40
     MYCELIUM: 40
