@@ -414,20 +414,23 @@ public class BlockListener implements Listener {
      */
     @NonNull
     List<String> replacePlaceholders(@Nullable Player player, String phaseName, String phaseNumber, @NonNull Island i, List<String> commands) {
-        return commands.stream().map(c -> {
-            long level = addon.getAddonByName("Level").map(l -> ((Level)l).getIslandLevel(addon.getOverWorld(), i.getOwner())).orElse(0L);
-            double balance = addon.getAddonByName("Bank").map(b -> ((Bank)b).getBankManager().getBalance(i).getValue()).orElse(0D);
-            double ecoBalance = addon.getPlugin().getVault().map(v -> v.getBalance(User.getInstance(player), addon.getOverWorld())).orElse(0D);
+        return commands.stream()
+                .map(c -> {
+                    long level = addon.getAddonByName("Level").map(l -> ((Level)l).getIslandLevel(addon.getOverWorld(), i.getOwner())).orElse(0L);
+                    double balance = addon.getAddonByName("Bank").map(b -> ((Bank)b).getBankManager().getBalance(i).getValue()).orElse(0D);
+                    double ecoBalance = addon.getPlugin().getVault().map(v -> v.getBalance(User.getInstance(player), addon.getOverWorld())).orElse(0D);
 
-            return c.replace("[island]", i.getName())
-                    .replace("[owner]", addon.getPlayers().getName(i.getOwner()))
-                    .replace("[phase]", phaseName)
-                    .replace("[blocks]", phaseNumber)
-                    .replace("[level]", String.valueOf(level))
-                    .replace("[bank-balance]", String.valueOf(balance))
-                    .replace("[eco-balance]", String.valueOf(ecoBalance));
+                    return c.replace("[island]", i.getName())
+                            .replace("[owner]", addon.getPlayers().getName(i.getOwner()))
+                            .replace("[phase]", phaseName)
+                            .replace("[blocks]", phaseNumber)
+                            .replace("[level]", String.valueOf(level))
+                            .replace("[bank-balance]", String.valueOf(balance))
+                            .replace("[eco-balance]", String.valueOf(ecoBalance));
 
-        }).collect(Collectors.toList());
+                })
+                .map(c -> addon.getPlugin().getPlaceholdersManager().replacePlaceholders(player, c))
+                .collect(Collectors.toList());
     }
 
     private void setBiome(@NonNull Block block, @Nullable Biome biome) {

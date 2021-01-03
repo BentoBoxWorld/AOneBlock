@@ -3,8 +3,11 @@ package world.bentobox.aoneblock.listeners;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.times;
 
 import java.beans.IntrospectionException;
 import java.io.File;
@@ -47,6 +50,7 @@ import world.bentobox.bentobox.database.AbstractDatabaseHandler;
 import world.bentobox.bentobox.database.DatabaseSetup;
 import world.bentobox.bentobox.database.DatabaseSetup.DatabaseType;
 import world.bentobox.bentobox.database.objects.Island;
+import world.bentobox.bentobox.managers.PlaceholdersManager;
 import world.bentobox.bentobox.managers.PlayersManager;
 import world.bentobox.bentobox.util.Util;
 import world.bentobox.level.Level;
@@ -87,6 +91,8 @@ public class BlockListenerTest {
     private Bank bank;
     @Mock
     private Level level;
+    @Mock
+    private PlaceholdersManager phm;
 
     @SuppressWarnings("unchecked")
     @BeforeClass
@@ -115,6 +121,9 @@ public class BlockListenerTest {
         DatabaseType value = DatabaseType.JSON;
         when(plugin.getSettings()).thenReturn(pluginSettings);
         when(pluginSettings.getDatabaseType()).thenReturn(value);
+        when(plugin.getPlaceholdersManager()).thenReturn(phm);
+        // Placeholders
+        when(phm.replacePlaceholders(any(), anyString())).thenAnswer(a -> (String)a.getArgument(1, String.class));
 
         // Addon
         when(addon.getPlugin()).thenReturn(plugin);
@@ -193,6 +202,7 @@ public class BlockListenerTest {
         assertEquals(2, r.size());
         assertEquals("no replacement", r.get(0));
         assertEquals("island_name tastybento2 phaseName 1000 1000 100000.0 0.0", r.get(1));
+        verify(phm, times(2)).replacePlaceholders(eq(player), any());
     }
 
 }
