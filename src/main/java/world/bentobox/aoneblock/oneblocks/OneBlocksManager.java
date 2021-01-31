@@ -427,7 +427,6 @@ public class OneBlocksManager {
     public OneBlockPhase getNextPhase(@NonNull OneBlockPhase phase) {
         Integer blockNum = Integer.valueOf(phase.getBlockNumber());
         Integer nextKey = blockProbs.ceilingKey(blockNum + 1);
-        addon.logWarning(phase.getPhaseName() + " starts at " + blockNum + (nextKey != null ? " and ends " + nextKey : ""));
         return nextKey != null ? this.getPhase(nextKey) : null;
     }
 
@@ -435,7 +434,6 @@ public class OneBlocksManager {
         // Find the phase after this one
         Integer blockNum = Integer.valueOf(phase.getBlockNumber());
         Integer nextKey = blockProbs.ceilingKey(blockNum + 1);
-        addon.logWarning(phase.getPhaseName() + " starts at " + blockNum + (nextKey != null ? " and ends " + nextKey : ""));
         if (nextKey != null) {
             // This is the size of the phase in blocks
             int phaseSize = nextKey - blockNum;
