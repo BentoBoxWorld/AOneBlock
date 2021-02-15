@@ -1,6 +1,7 @@
 package world.bentobox.aoneblock;
 
 import java.io.IOException;
+import java.util.Optional;
 
 import org.bukkit.World;
 import org.bukkit.World.Environment;
@@ -18,6 +19,7 @@ import world.bentobox.aoneblock.listeners.BlockListener;
 import world.bentobox.aoneblock.listeners.BlockProtect;
 import world.bentobox.aoneblock.listeners.JoinLeaveListener;
 import world.bentobox.aoneblock.listeners.NoBlockHandler;
+import world.bentobox.aoneblock.oneblocks.OneBlockPhase;
 import world.bentobox.aoneblock.oneblocks.OneBlocksManager;
 import world.bentobox.bentobox.api.addons.GameModeAddon;
 import world.bentobox.bentobox.api.configuration.Config;
@@ -86,6 +88,8 @@ public class AOneBlock extends GameModeAddon {
             getPlugin().getPlaceholdersManager().registerPlaceholder(this,"my_island_count", this::getCountByOwner);
             getPlugin().getPlaceholdersManager().registerPlaceholder(this,"visited_island_next_phase", this::getNextPhaseByLocation);
             getPlugin().getPlaceholdersManager().registerPlaceholder(this,"my_island_next_phase", this::getNextPhaseByOwner);
+            getPlugin().getPlaceholdersManager().registerPlaceholder(this,"my_island_block_left", this::getBlockLeftByOwner);
+            getPlugin().getPlaceholdersManager().registerPlaceholder(this,"visited_island_block_left", this::getBlockLeftByLocation);
         } catch (IOException e) {
             // Disable
             logError("AOneBlock settings could not load (oneblock.yml error)! Addon disabled.");
@@ -131,6 +135,34 @@ public class AOneBlock extends GameModeAddon {
     private String getNextPhaseByOwner(User user) {
         Island i = getIslands().getIsland(getOverWorld(), user);
         return i == null ? "" : this.getOneBlockManager().getNextPhase(getOneBlocksIsland(i));
+    }
+
+    private String getBlockLeftByOwner(User user) {
+        Island i = getIslands().getIsland(getOverWorld(), user);
+        if (i == null) {
+            return "";
+        }
+        OneBlockIslands obi = getOneBlocksIsland(i);
+        return this.getOneBlockManager().getPhase(this.getOneBlockManager().getNextPhase(obi))
+                .map(OneBlockPhase::getBlockNumber)
+                .map(Integer::parseInt)
+                .map(number -> number - obi.getBlockNumber())
+                .map(String::valueOf)
+                .orElse("");
+    }
+
+    private String getBlockLeftByLocation(User user) {
+        Optional<Island> i = getIslands().getProtectedIslandAt(user.getLocation());
+        if (!i.isPresent()) {
+            return "";
+        }
+        OneBlockIslands obi = getOneBlocksIsland(i.get());
+        return this.getOneBlockManager().getPhase(this.getOneBlockManager().getNextPhase(obi))
+                .map(OneBlockPhase::getBlockNumber)
+                .map(Integer::parseInt)
+                .map(number -> number - obi.getBlockNumber())
+                .map(String::valueOf)
+                .orElse("");
     }
 
     @Override
