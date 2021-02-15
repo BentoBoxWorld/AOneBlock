@@ -4,11 +4,11 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.EnumMap;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Random;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
@@ -154,7 +154,7 @@ public class BlockListener implements Listener {
     public BlockListener(@NonNull AOneBlock addon) {
         this.addon = addon;
         handler = new Database<>(addon, OneBlockIslands.class);
-        cache = new HashMap<>();
+        cache = new ConcurrentHashMap<>();
         oneBlocksManager = addon.getOneBlockManager();
     }
 
