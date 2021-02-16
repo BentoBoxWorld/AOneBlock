@@ -511,4 +511,18 @@ public class OneBlocksManager {
                 .filter(Objects::nonNull)
                 .map(OneBlockPhase::getPhaseName).orElse("");
     }
+
+    /**
+     * Get the blocks left to the next phase
+     * @param obi - one block island
+     * @return the number of blocks left or an empty string
+     */
+    public String getBlockLeftToNextPhase(@NonNull OneBlockIslands obi) {
+        return getPhase(getNextPhase(obi))
+                .map(OneBlockPhase::getBlockNumber)
+                .map(Integer::parseInt)
+                .map(number -> number - obi.getBlockNumber())
+                .map(String::valueOf)
+                .orElse("");
+    }
 }

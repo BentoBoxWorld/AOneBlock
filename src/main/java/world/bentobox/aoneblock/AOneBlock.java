@@ -1,7 +1,6 @@
 package world.bentobox.aoneblock;
 
 import java.io.IOException;
-import java.util.Optional;
 
 import org.bukkit.World;
 import org.bukkit.World.Environment;
@@ -19,7 +18,6 @@ import world.bentobox.aoneblock.listeners.BlockListener;
 import world.bentobox.aoneblock.listeners.BlockProtect;
 import world.bentobox.aoneblock.listeners.JoinLeaveListener;
 import world.bentobox.aoneblock.listeners.NoBlockHandler;
-import world.bentobox.aoneblock.oneblocks.OneBlockPhase;
 import world.bentobox.aoneblock.oneblocks.OneBlocksManager;
 import world.bentobox.bentobox.api.addons.GameModeAddon;
 import world.bentobox.bentobox.api.configuration.Config;
@@ -139,29 +137,13 @@ public class AOneBlock extends GameModeAddon {
 
     private String getBlockLeftByOwner(User user) {
         Island i = getIslands().getIsland(getOverWorld(), user);
-        if (i == null) {
-            return "";
-        }
-        OneBlockIslands obi = getOneBlocksIsland(i);
-        return this.getOneBlockManager().getPhase(this.getOneBlockManager().getNextPhase(obi))
-                .map(OneBlockPhase::getBlockNumber)
-                .map(Integer::parseInt)
-                .map(number -> number - obi.getBlockNumber())
-                .map(String::valueOf)
-                .orElse("");
+        return i == null ? "" : this.getOneBlockManager().getBlockLeftToNextPhase(getOneBlocksIsland(i));
     }
 
     private String getBlockLeftByLocation(User user) {
-        Optional<Island> i = getIslands().getProtectedIslandAt(user.getLocation());
-        if (!i.isPresent()) {
-            return "";
-        }
-        OneBlockIslands obi = getOneBlocksIsland(i.get());
-        return this.getOneBlockManager().getPhase(this.getOneBlockManager().getNextPhase(obi))
-                .map(OneBlockPhase::getBlockNumber)
-                .map(Integer::parseInt)
-                .map(number -> number - obi.getBlockNumber())
-                .map(String::valueOf)
+        return getIslands().getProtectedIslandAt(user.getLocation())
+                .map(this::getOneBlocksIsland)
+                .map(obi -> this.getOneBlockManager().getBlockLeftToNextPhase(obi))
                 .orElse("");
     }
 
