@@ -172,8 +172,9 @@ public class AOneBlock extends GameModeAddon {
     private String getNextPhaseBlocksByOwner(User user) {
         if (user == null || user.getUniqueId() == null) return "";
         Island i = getIslands().getIsland(getOverWorld(), user);
+        if (i == null) return "";
         int num = getOneBlockManager().getNextPhaseBlocks(getOneBlocksIsland(i));
-        return i == null ? "" : num < 0 ? user.getTranslation("aoneblock.placeholders.infinite") : String.valueOf(num);
+        return num < 0 ? user.getTranslation("aoneblock.placeholders.infinite") : String.valueOf(num);
     }
 
     private String getPercentDoneByLocation(User user) {
@@ -188,8 +189,7 @@ public class AOneBlock extends GameModeAddon {
     private String getPercentDoneByOwner(User user) {
         if (user == null || user.getUniqueId() == null) return "";
         Island i = getIslands().getIsland(getOverWorld(), user);
-        double num = getOneBlockManager().getPercentageDone(getOneBlocksIsland(i));
-        return i == null ? "" : String.valueOf(Math.round(num) + "%");
+        return i == null ? "" : String.valueOf(Math.round(getOneBlockManager().getPercentageDone(getOneBlocksIsland(i))) + "%");
     }
 
     private String getDoneScaleByLocation(User user) {
@@ -204,8 +204,7 @@ public class AOneBlock extends GameModeAddon {
     private String getDoneScaleByOwner(User user) {
         if (user == null || user.getUniqueId() == null) return "";
         Island i = getIslands().getIsland(getOverWorld(), user);
-        double num = getOneBlockManager().getPercentageDone(getOneBlocksIsland(i));
-        return i == null ? "" : SCALE.floorEntry(num).getValue();
+        return i == null ? "" : SCALE.floorEntry(getOneBlockManager().getPercentageDone(getOneBlocksIsland(i))).getValue();
     }
 
     @Override
