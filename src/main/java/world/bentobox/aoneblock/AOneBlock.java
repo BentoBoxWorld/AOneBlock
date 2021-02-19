@@ -102,10 +102,10 @@ public class AOneBlock extends GameModeAddon {
             getPlugin().getPlaceholdersManager().registerPlaceholder(this,"my_island_next_phase", this::getNextPhaseByOwner);
             getPlugin().getPlaceholdersManager().registerPlaceholder(this,"my_island_blocks_to_next_phase", this::getNextPhaseBlocksByOwner);
             getPlugin().getPlaceholdersManager().registerPlaceholder(this,"visited_island_blocks_to_next_phase", this::getNextPhaseBlocksByLocation);
-            getPlugin().getPlaceholdersManager().registerPlaceholder(this,"my_island_percent_to_next_phase", this::getPercentToNextPhaseByOwner);
-            getPlugin().getPlaceholdersManager().registerPlaceholder(this,"visited_island_percent_to_next_phase", this::getPercentToNextPhaseByLocation);
-            getPlugin().getPlaceholdersManager().registerPlaceholder(this,"my_island_scale_to_next_phase", this::getScaleToNextPhaseByOwner);
-            getPlugin().getPlaceholdersManager().registerPlaceholder(this,"visited_island_scale_to_next_phase", this::getScaleToNextPhaseByLocation);
+            getPlugin().getPlaceholdersManager().registerPlaceholder(this,"my_island_percent_done", this::getPercentDoneByOwner);
+            getPlugin().getPlaceholdersManager().registerPlaceholder(this,"visited_island_percent_done", this::getPercentDoneByLocation);
+            getPlugin().getPlaceholdersManager().registerPlaceholder(this,"my_island_done_scale", this::getDoneScaleByOwner);
+            getPlugin().getPlaceholdersManager().registerPlaceholder(this,"visited_island_done_scale", this::getDoneScaleByLocation);
 
         } catch (IOException e) {
             // Disable
@@ -176,7 +176,7 @@ public class AOneBlock extends GameModeAddon {
         return i == null ? "" : num < 0 ? user.getTranslation("aoneblock.placeholders.infinite") : String.valueOf(num);
     }
 
-    private String getPercentToNextPhaseByLocation(User user) {
+    private String getPercentDoneByLocation(User user) {
         if (user == null || user.getUniqueId() == null) return "";
         return getIslands().getProtectedIslandAt(user.getLocation())
                 .map(this::getOneBlocksIsland)
@@ -185,14 +185,14 @@ public class AOneBlock extends GameModeAddon {
                 .orElse("");
     }
 
-    private String getPercentToNextPhaseByOwner(User user) {
+    private String getPercentDoneByOwner(User user) {
         if (user == null || user.getUniqueId() == null) return "";
         Island i = getIslands().getIsland(getOverWorld(), user);
         double num = getOneBlockManager().getPercentageDone(getOneBlocksIsland(i));
         return i == null ? "" : String.valueOf(Math.round(num) + "%");
     }
 
-    private String getScaleToNextPhaseByLocation(User user) {
+    private String getDoneScaleByLocation(User user) {
         if (user == null || user.getUniqueId() == null) return "";
         return getIslands().getProtectedIslandAt(user.getLocation())
                 .map(this::getOneBlocksIsland)
@@ -201,7 +201,7 @@ public class AOneBlock extends GameModeAddon {
                 .orElse("");
     }
 
-    private String getScaleToNextPhaseByOwner(User user) {
+    private String getDoneScaleByOwner(User user) {
         if (user == null || user.getUniqueId() == null) return "";
         Island i = getIslands().getIsland(getOverWorld(), user);
         double num = getOneBlockManager().getPercentageDone(getOneBlocksIsland(i));
