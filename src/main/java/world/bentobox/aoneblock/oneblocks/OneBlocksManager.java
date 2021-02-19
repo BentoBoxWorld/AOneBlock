@@ -452,9 +452,9 @@ public class OneBlocksManager {
         OneBlockPhase thisPhase = this.getPhase(blockNum);
         Integer nextKey = blockProbs.ceilingKey(blockNum + 1);
         OneBlockPhase nextPhase = this.getPhase(nextKey);
+        if (nextPhase == null) return 0;
         int phaseSize = nextPhase.getBlockNumberValue() - thisPhase.getBlockNumberValue();
-        double percentage = 100 * (double)(nextPhase.getBlockNumberValue() - obi.getBlockNumber()) / phaseSize;
-        return nextPhase == null ? 0 : percentage;
+        return 100D - (100 * (double)(nextPhase.getBlockNumberValue() - obi.getBlockNumber()) / phaseSize);
     }
 
 
