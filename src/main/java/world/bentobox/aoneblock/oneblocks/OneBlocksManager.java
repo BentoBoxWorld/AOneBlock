@@ -454,8 +454,7 @@ public class OneBlocksManager {
         OneBlockPhase nextPhase = this.getPhase(nextKey);
         if (nextPhase == null) return 0;
         int phaseSize = nextPhase.getBlockNumberValue() - thisPhase.getBlockNumberValue();
-        int thisPhaseBlocks = obi.getBlockNumber() - thisPhase.getBlockNumberValue();
-        return (100D * thisPhaseBlocks) / phaseSize;
+        return 100D - (100 * (double)(nextPhase.getBlockNumberValue() - obi.getBlockNumber()) / phaseSize);
     }
 
 
