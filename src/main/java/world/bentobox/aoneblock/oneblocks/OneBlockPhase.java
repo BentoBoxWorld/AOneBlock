@@ -72,6 +72,14 @@ public class OneBlockPhase {
     }
 
     /**
+     * Get the block number as an integer
+     * @return the integer value of the blockNumber
+     */
+    public int getBlockNumberValue() {
+        return Integer.parseInt(blockNumber);
+    }
+
+    /**
      * @return the phaseName
      */
     @Nullable

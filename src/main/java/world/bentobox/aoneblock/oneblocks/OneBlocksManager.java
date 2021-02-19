@@ -425,10 +425,38 @@ public class OneBlocksManager {
      */
     @Nullable
     public OneBlockPhase getNextPhase(@NonNull OneBlockPhase phase) {
-        Integer blockNum = Integer.valueOf(phase.getBlockNumber());
+        Integer blockNum = phase.getBlockNumberValue();
         Integer nextKey = blockProbs.ceilingKey(blockNum + 1);
         return nextKey != null ? this.getPhase(nextKey) : null;
     }
+
+    /**
+     * Get the number of blocks until the next phase after this one
+     * @param obi - one block island
+     * @return number of blocks to the next phase. If there is no phase after -1 is returned.
+     */
+    public int getNextPhaseBlocks(@NonNull OneBlockIslands obi) {
+        Integer blockNum = Integer.valueOf(obi.getBlockNumber());
+        Integer nextKey = blockProbs.ceilingKey(blockNum + 1);
+        OneBlockPhase nextPhase = this.getPhase(nextKey);
+        return nextPhase == null ? -1 : (nextPhase.getBlockNumberValue() - obi.getBlockNumber());
+    }
+
+    /**
+     * Get the percentage done of this phase
+     * @param obi - one block island
+     * @return percentage done. If there is no next phase then return 0
+     */
+    public double getPercentageDone(@NonNull OneBlockIslands obi) {
+        int blockNum = Integer.valueOf(obi.getBlockNumber());
+        OneBlockPhase thisPhase = this.getPhase(blockNum);
+        Integer nextKey = blockProbs.ceilingKey(blockNum + 1);
+        OneBlockPhase nextPhase = this.getPhase(nextKey);
+        int phaseSize = nextPhase.getBlockNumberValue() - thisPhase.getBlockNumberValue();
+        double percentage = 100 * (double)(nextPhase.getBlockNumberValue() - obi.getBlockNumber()) / phaseSize;
+        return nextPhase == null ? 0 : percentage;
+    }
+
 
     public void getProbs(OneBlockPhase phase) {
         // Find the phase after this one
