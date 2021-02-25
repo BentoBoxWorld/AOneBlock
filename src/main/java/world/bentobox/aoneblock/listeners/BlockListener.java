@@ -34,6 +34,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.entity.EntityInteractEvent;
 import org.bukkit.event.entity.EntitySpawnEvent;
 import org.bukkit.event.player.PlayerBucketFillEvent;
 import org.bukkit.inventory.ItemStack;
@@ -206,6 +207,19 @@ public class BlockListener implements Listener {
     }
 
     /**
+     * Handles JetsMinions. These are special armor stands. Requires Minions 6.9.3 or later
+     * @param e - event
+     */
+    @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
+    public void onBlockBreakByMinion(final EntityInteractEvent e) {
+        if (!addon.inWorld(e.getBlock().getWorld()) || !e.getEntityType().equals(EntityType.ARMOR_STAND)) {
+            return;
+        }
+        Location l = e.getBlock().getLocation();
+        addon.getIslands().getIslandAt(l).filter(i -> l.equals(i.getCenter())).ifPresent(i -> process(e, i, null, e.getBlock().getWorld()));
+    }
+
+    /**
      * Check for water grabbing
      * @param e - event (note that you cannot register PlayerBucketEvent)
      */
@@ -293,6 +307,11 @@ public class BlockListener implements Listener {
             Bukkit.getPluginManager().callEvent(new MagicBlockEvent(i, player.getUniqueId(), tool, block, nextBlock.getMaterial()));
         } else if (e instanceof EntitySpawnEvent) {
             Bukkit.getScheduler().runTask(addon.getPlugin(), ()-> spawnBlock(nextBlock, block));
+        } else if (e instanceof EntityInteractEvent) {
+            // Minion breaking block
+            Bukkit.getScheduler().runTask(addon.getPlugin(), () -> spawnBlock(nextBlock, block));
+            // Fire event
+            Bukkit.getPluginManager().callEvent(new MagicBlockEvent(i, null, null, block, nextBlock.getMaterial()));
         }
         // Increment the block number
         is.incrementBlockNumber();
