@@ -286,7 +286,7 @@ public class BlockListener implements Listener {
         if (newPhase) {
             setBiome(block, phase.getPhaseBiome());
             // Fire new phase event
-            Bukkit.getPluginManager().callEvent(new MagicBlockPhaseEvent(i, player.getUniqueId(), block, phase.getPhaseName(), originalPhase, is.getBlockNumber()));
+            Bukkit.getPluginManager().callEvent(new MagicBlockPhaseEvent(i, player == null ? null : player.getUniqueId(), block, phase.getPhaseName(), originalPhase, is.getBlockNumber()));
         }
         // Entity
         if (nextBlock.isEntity()) {
@@ -294,7 +294,7 @@ public class BlockListener implements Listener {
             // Entity spawns do not increment the block number or break the block
             spawnEntity(nextBlock, block);
             // Fire event
-            Bukkit.getPluginManager().callEvent(new MagicBlockEntityEvent(i, player.getUniqueId(), block, nextBlock.getEntityType()));
+            Bukkit.getPluginManager().callEvent(new MagicBlockEntityEvent(i, player == null ? null : player.getUniqueId(), block, nextBlock.getEntityType()));
             return;
         }
         // Break the block
@@ -358,7 +358,7 @@ public class BlockListener implements Listener {
                     return false;
                 }).orElse(false);
             case PERMISSION:
-                if (!player.hasPermission(r.getPermission())) {
+                if (player != null && !player.hasPermission(r.getPermission())) {
                     User.getInstance(player).sendMessage("aoneblock.phase.insufficient-permission", TextVariables.NAME, String.valueOf(r.getPermission()));
                     return true;
                 }

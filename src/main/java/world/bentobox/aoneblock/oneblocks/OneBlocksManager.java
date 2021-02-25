@@ -305,10 +305,12 @@ public class OneBlocksManager {
     /**
      * Return the current phase for the block count
      * @param blockCount - number of blocks mined
-     * @return the one block phase currently in action
+     * @return the one block phase based on blockCount or null if there is none
      */
+    @Nullable
     public OneBlockPhase getPhase(int blockCount) {
-        return blockProbs.floorEntry(blockCount).getValue();
+        Entry<Integer, OneBlockPhase> en = blockProbs.floorEntry(blockCount);
+        return en != null ? en.getValue() : null;
     }
 
     /**
@@ -448,13 +450,15 @@ public class OneBlocksManager {
      * @return percentage done. If there is no next phase then return 0
      */
     public double getPercentageDone(@NonNull OneBlockIslands obi) {
-        int blockNum = Integer.valueOf(obi.getBlockNumber());
+        int blockNum = obi.getBlockNumber();
         OneBlockPhase thisPhase = this.getPhase(blockNum);
         Integer nextKey = blockProbs.ceilingKey(blockNum + 1);
         OneBlockPhase nextPhase = this.getPhase(nextKey);
+        if (nextPhase == null) {
+            return 0;
+        }
         int phaseSize = nextPhase.getBlockNumberValue() - thisPhase.getBlockNumberValue();
-        double percentage = 100 * (double)(nextPhase.getBlockNumberValue() - obi.getBlockNumber()) / phaseSize;
-        return nextPhase == null ? 0 : percentage;
+        return 100 * (double)(nextPhase.getBlockNumberValue() - obi.getBlockNumber()) / phaseSize;
     }
 
 
