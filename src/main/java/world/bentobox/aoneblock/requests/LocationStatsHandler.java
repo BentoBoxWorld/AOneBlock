@@ -10,7 +10,15 @@ import world.bentobox.bentobox.api.addons.request.AddonRequestHandler;
 import world.bentobox.bentobox.api.user.User;
 
 /**
- * Provides stats based on the user's location
+ * Provides stats based on the user's location.<br>
+ * Submit "player" -> UUID to {@link #handle(Map)}.<br>
+ * Return map is a Map<String, String> of the following:
+ *      <ul><li>"count" - block count of island</li>
+ *      <li>"doneScale" - character scale of phase completion</li>
+ *      <li>"nextPhaseBlocks" - number of blocks to next phase</li>
+ *      <li>"nextPhase" - next phase name</li>
+ *      <li>"percentDone" - percentage done of this phase</li>
+ *      <li>"phase" - current phase name</li></ul>
  * @author tastybento
  *
  */

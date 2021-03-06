@@ -21,7 +21,6 @@ import world.bentobox.aoneblock.listeners.NoBlockHandler;
 import world.bentobox.aoneblock.oneblocks.OneBlocksManager;
 import world.bentobox.aoneblock.requests.IslandStatsHandler;
 import world.bentobox.aoneblock.requests.LocationStatsHandler;
-import world.bentobox.aoneblock.requests.PlaceholdersManager;
 import world.bentobox.bentobox.api.addons.GameModeAddon;
 import world.bentobox.bentobox.api.configuration.Config;
 import world.bentobox.bentobox.api.configuration.WorldSettings;

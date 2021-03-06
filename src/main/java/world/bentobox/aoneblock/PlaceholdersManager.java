@@ -1,8 +1,7 @@
-package world.bentobox.aoneblock.requests;
+package world.bentobox.aoneblock;
 
 import java.util.TreeMap;
 
-import world.bentobox.aoneblock.AOneBlock;
 import world.bentobox.aoneblock.dataobjects.OneBlockIslands;
 import world.bentobox.bentobox.api.user.User;
 import world.bentobox.bentobox.database.objects.Island;
