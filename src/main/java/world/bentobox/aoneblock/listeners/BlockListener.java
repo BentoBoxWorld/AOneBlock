@@ -262,7 +262,7 @@ public class BlockListener implements Listener {
             saveIsland(i);
         }
         // Check if requirements met
-        if (phaseRequirementsFail(player, i, is, phase, world)) {
+        if (phaseRequirementsFail(player, i, phase, world)) {
             e.setCancelled(true);
             return;
         }
@@ -326,7 +326,7 @@ public class BlockListener implements Listener {
      * @param world
      * @return
      */
-    private boolean phaseRequirementsFail(@Nullable Player player, @NonNull Island i, OneBlockIslands is, OneBlockPhase phase, @NonNull World world) {
+    private boolean phaseRequirementsFail(@Nullable Player player, @NonNull Island i, OneBlockPhase phase, @NonNull World world) {
         if (phase.getRequirements().isEmpty()) {
             return false;
         }

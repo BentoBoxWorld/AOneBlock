@@ -125,7 +125,10 @@ public class PlaceholdersManager {
         if (user == null || user.getUniqueId() == null) return "";
         Island i = addon.getIslands().getIsland(addon.getOverWorld(), user);
         int num = addon.getOneBlockManager().getNextPhaseBlocks(addon.getOneBlocksIsland(i));
-        return i == null ? "" : num < 0 ? user.getTranslation("aoneblock.placeholders.infinite") : String.valueOf(num);
+        if (i == null) {
+            return "";
+        }
+        return num < 0 ? user.getTranslation("aoneblock.placeholders.infinite") : String.valueOf(num);
     }
 
     /**

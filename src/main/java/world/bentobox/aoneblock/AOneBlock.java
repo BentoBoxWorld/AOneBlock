@@ -172,26 +172,31 @@ public class AOneBlock extends GameModeAddon {
         World w = settings.isUseOwnGenerator() ? wc.createWorld() : wc.generator(chunkGenerator2).createWorld();
         // Set spawn rates
         if (w != null) {
-            if (getSettings().getSpawnLimitMonsters() > 0) {
-                w.setMonsterSpawnLimit(getSettings().getSpawnLimitMonsters());
-            }
-            if (getSettings().getSpawnLimitAmbient() > 0) {
-                w.setAmbientSpawnLimit(getSettings().getSpawnLimitAmbient());
-            }
-            if (getSettings().getSpawnLimitAnimals() > 0) {
-                w.setAnimalSpawnLimit(getSettings().getSpawnLimitAnimals());
-            }
-            if (getSettings().getSpawnLimitWaterAnimals() > 0) {
-                w.setWaterAnimalSpawnLimit(getSettings().getSpawnLimitWaterAnimals());
-            }
-            if (getSettings().getTicksPerAnimalSpawns() > 0) {
-                w.setTicksPerAnimalSpawns(getSettings().getTicksPerAnimalSpawns());
-            }
-            if (getSettings().getTicksPerMonsterSpawns() > 0) {
-                w.setTicksPerMonsterSpawns(getSettings().getTicksPerMonsterSpawns());
-            }
+            setSpawnRates(w);
         }
         return w;
+
+    }
+
+    private void setSpawnRates(World w) {
+        if (getSettings().getSpawnLimitMonsters() > 0) {
+            w.setMonsterSpawnLimit(getSettings().getSpawnLimitMonsters());
+        }
+        if (getSettings().getSpawnLimitAmbient() > 0) {
+            w.setAmbientSpawnLimit(getSettings().getSpawnLimitAmbient());
+        }
+        if (getSettings().getSpawnLimitAnimals() > 0) {
+            w.setAnimalSpawnLimit(getSettings().getSpawnLimitAnimals());
+        }
+        if (getSettings().getSpawnLimitWaterAnimals() > 0) {
+            w.setWaterAnimalSpawnLimit(getSettings().getSpawnLimitWaterAnimals());
+        }
+        if (getSettings().getTicksPerAnimalSpawns() > 0) {
+            w.setTicksPerAnimalSpawns(getSettings().getTicksPerAnimalSpawns());
+        }
+        if (getSettings().getTicksPerMonsterSpawns() > 0) {
+            w.setTicksPerMonsterSpawns(getSettings().getTicksPerMonsterSpawns());
+        }
 
     }
 

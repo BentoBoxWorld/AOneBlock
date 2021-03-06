@@ -2,12 +2,12 @@ package world.bentobox.aoneblock.listeners;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.beans.IntrospectionException;
 import java.io.File;
@@ -149,7 +149,7 @@ public class BlockListenerTest {
         BankManager bm = mock(BankManager.class);
         when(bank.getBankManager()).thenReturn(bm);
         // Phat balance to start
-        when(bm.getBalance(eq(island))).thenReturn(new Money(100000D));
+        when(bm.getBalance(island)).thenReturn(new Money(100000D));
         when(addon.getAddonByName("Bank")).thenReturn(Optional.of(bank));
         // Level
         when(level.getIslandLevel(eq(world), any())).thenReturn(1000L);
