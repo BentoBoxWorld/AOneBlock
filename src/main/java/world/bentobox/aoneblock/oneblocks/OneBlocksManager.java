@@ -100,13 +100,12 @@ public class OneBlocksManager {
 
     /**
      * Copies phase files from the addon jar to the file system
-     * @param check
-     * @param addon - addon
+     * @param file - the file to copy
      */
-    void copyPhasesFromAddonJar(File check) {
+    void copyPhasesFromAddonJar(File file) {
         try (JarFile jar = new JarFile(addon.getFile())) {
             // Obtain any locale files, save them and update
-            Util.listJarFiles(jar, PHASES, ".yml").forEach(lf -> addon.saveResource(lf, check, false, true));
+            Util.listJarFiles(jar, PHASES, ".yml").forEach(lf -> addon.saveResource(lf, file, false, true));
         } catch (Exception e) {
             addon.logError(e.getMessage());
         }

@@ -6,10 +6,26 @@ package world.bentobox.aoneblock.oneblocks;
  *
  */
 public class Requirement {
+    /**
+     * Requirement type enum
+     *
+     */
     public enum ReqType {
+        /**
+         * Economy balance
+         */
         ECO("economy-balance", Double.class),
+        /**
+         * Bank Balance
+         */
         BANK("bank-balance", Double.class),
+        /**
+         * Island Level
+         */
         LEVEL("level", Long.class),
+        /**
+         * Permission
+         */
         PERMISSION("permission", String.class);
 
         private final String key;
@@ -39,7 +55,8 @@ public class Requirement {
     private final ReqType type;
 
     /**
-     * @param money - money required to
+     * @param type - requirement type {@link ReqType}
+     * @param requirement - requirement object
      */
     public Requirement(ReqType type, Object requirement) {
         this.type = type;
