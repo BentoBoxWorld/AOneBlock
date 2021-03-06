@@ -1,7 +1,6 @@
 package world.bentobox.aoneblock;
 
 import java.io.IOException;
-import java.util.TreeMap;
 
 import org.bukkit.World;
 import org.bukkit.World.Environment;
@@ -20,10 +19,12 @@ import world.bentobox.aoneblock.listeners.BlockProtect;
 import world.bentobox.aoneblock.listeners.JoinLeaveListener;
 import world.bentobox.aoneblock.listeners.NoBlockHandler;
 import world.bentobox.aoneblock.oneblocks.OneBlocksManager;
+import world.bentobox.aoneblock.requests.IslandStatsHandler;
+import world.bentobox.aoneblock.requests.LocationStatsHandler;
+import world.bentobox.aoneblock.requests.PlaceholdersManager;
 import world.bentobox.bentobox.api.addons.GameModeAddon;
 import world.bentobox.bentobox.api.configuration.Config;
 import world.bentobox.bentobox.api.configuration.WorldSettings;
-import world.bentobox.bentobox.api.user.User;
 import world.bentobox.bentobox.database.objects.Island;
 
 /**
@@ -34,19 +35,6 @@ public class AOneBlock extends GameModeAddon {
 
     private static final String NETHER = "_nether";
     private static final String THE_END = "_the_end";
-    private static final TreeMap<Double, String> SCALE;
-    static {
-        SCALE = new TreeMap<>();
-        SCALE.put(0D,     "&c╍╍╍╍╍╍╍╍");
-        SCALE.put(12.5,   "&a╍&c╍╍╍╍╍╍╍");
-        SCALE.put(25.0,   "&a╍╍&c╍╍╍╍╍╍");
-        SCALE.put(37.5, "&a╍╍╍&c╍╍╍╍╍");
-        SCALE.put(50D,    "&a╍╍╍╍&c╍╍╍╍");
-        SCALE.put(62.5,  "&a╍╍╍╍╍&c╍╍╍");
-        SCALE.put(75.0,   "&a╍╍╍╍╍&c╍╍╍");
-        SCALE.put(87.5, "&a╍╍╍╍╍╍╍&c╍");
-        SCALE.put(100D,  "&a╍╍╍╍╍╍╍╍");
-    }
 
     // Settings
     private Settings settings;
@@ -54,6 +42,7 @@ public class AOneBlock extends GameModeAddon {
     private final Config<Settings> configObject = new Config<>(this, Settings.class);
     private BlockListener blockListener;
     private OneBlocksManager oneBlockManager;
+    private PlaceholdersManager phManager;
 
     @Override
     public void onLoad() {
@@ -89,124 +78,38 @@ public class AOneBlock extends GameModeAddon {
             oneBlockManager = new OneBlocksManager(this);
             oneBlockManager.loadPhases();
             blockListener = new BlockListener(this);
-            registerListener(blockListener);
-            registerListener(new NoBlockHandler(this));
-            registerListener(new BlockProtect(this));
-            registerListener(new JoinLeaveListener(this));
-            // Register placeholders
-            getPlugin().getPlaceholdersManager().registerPlaceholder(this,"visited_island_phase", this::getPhaseByLocation);
-            getPlugin().getPlaceholdersManager().registerPlaceholder(this,"visited_island_count", this::getCountByLocation);
-            getPlugin().getPlaceholdersManager().registerPlaceholder(this,"my_island_phase", this::getPhaseByOwner);
-            getPlugin().getPlaceholdersManager().registerPlaceholder(this,"my_island_count", this::getCountByOwner);
-            getPlugin().getPlaceholdersManager().registerPlaceholder(this,"visited_island_next_phase", this::getNextPhaseByLocation);
-            getPlugin().getPlaceholdersManager().registerPlaceholder(this,"my_island_next_phase", this::getNextPhaseByOwner);
-            getPlugin().getPlaceholdersManager().registerPlaceholder(this,"my_island_blocks_to_next_phase", this::getNextPhaseBlocksByOwner);
-            getPlugin().getPlaceholdersManager().registerPlaceholder(this,"visited_island_blocks_to_next_phase", this::getNextPhaseBlocksByLocation);
-            getPlugin().getPlaceholdersManager().registerPlaceholder(this,"my_island_percent_done", this::getPercentDoneByOwner);
-            getPlugin().getPlaceholdersManager().registerPlaceholder(this,"visited_island_percent_done", this::getPercentDoneByLocation);
-            getPlugin().getPlaceholdersManager().registerPlaceholder(this,"my_island_done_scale", this::getDoneScaleByOwner);
-            getPlugin().getPlaceholdersManager().registerPlaceholder(this,"visited_island_done_scale", this::getDoneScaleByLocation);
-
         } catch (IOException e) {
             // Disable
             logError("AOneBlock settings could not load (oneblock.yml error)! Addon disabled.");
             logError(e.getMessage());
             setState(State.DISABLED);
+            return;
         }
+        
+        registerListener(blockListener);
+        registerListener(new NoBlockHandler(this));
+        registerListener(new BlockProtect(this));
+        registerListener(new JoinLeaveListener(this));
+        // Register placeholders
+        phManager = new PlaceholdersManager(this);
+        getPlugin().getPlaceholdersManager().registerPlaceholder(this,"visited_island_phase", phManager::getPhaseByLocation);
+        getPlugin().getPlaceholdersManager().registerPlaceholder(this,"visited_island_count", phManager::getCountByLocation);
+        getPlugin().getPlaceholdersManager().registerPlaceholder(this,"my_island_phase", phManager::getPhase);
+        getPlugin().getPlaceholdersManager().registerPlaceholder(this,"my_island_count", phManager::getCount);
+        getPlugin().getPlaceholdersManager().registerPlaceholder(this,"visited_island_next_phase", phManager::getNextPhaseByLocation);
+        getPlugin().getPlaceholdersManager().registerPlaceholder(this,"my_island_next_phase", phManager::getNextPhase);
+        getPlugin().getPlaceholdersManager().registerPlaceholder(this,"my_island_blocks_to_next_phase", phManager::getNextPhaseBlocks);
+        getPlugin().getPlaceholdersManager().registerPlaceholder(this,"visited_island_blocks_to_next_phase", phManager::getNextPhaseBlocksByLocation);
+        getPlugin().getPlaceholdersManager().registerPlaceholder(this,"my_island_percent_done", phManager::getPercentDone);
+        getPlugin().getPlaceholdersManager().registerPlaceholder(this,"visited_island_percent_done", phManager::getPercentDoneByLocation);
+        getPlugin().getPlaceholdersManager().registerPlaceholder(this,"my_island_done_scale", phManager::getDoneScale);
+        getPlugin().getPlaceholdersManager().registerPlaceholder(this,"visited_island_done_scale", phManager::getDoneScaleByLocation);
 
+        // Register request handlers
+        registerRequestHandler(new IslandStatsHandler(this));
+        registerRequestHandler(new LocationStatsHandler(this));
     }
 
-    // Placeholder methods
-    private String getPhaseByLocation(User user) {
-        if (user == null || user.getUniqueId() == null) return "";
-        return getIslands().getProtectedIslandAt(user.getLocation())
-                .map(this::getOneBlocksIsland)
-                .map(OneBlockIslands::getPhaseName)
-                .orElse("");
-    }
-
-    private String getCountByLocation(User user) {
-        if (user == null || user.getUniqueId() == null) return "";
-        return getIslands().getProtectedIslandAt(user.getLocation())
-                .map(this::getOneBlocksIsland)
-                .map(OneBlockIslands::getBlockNumber)
-                .map(String::valueOf)
-                .orElse("");
-    }
-
-    private String getPhaseByOwner(User user) {
-        if (user == null || user.getUniqueId() == null) return "";
-        Island i = getIslands().getIsland(getOverWorld(), user);
-        return i == null ? "" : getOneBlocksIsland(i).getPhaseName();
-    }
-
-    private String getCountByOwner(User user) {
-        if (user == null || user.getUniqueId() == null) return "";
-        Island i = getIslands().getIsland(getOverWorld(), user);
-        return i == null ? "" : String.valueOf(getOneBlocksIsland(i).getBlockNumber());
-    }
-
-    private String getNextPhaseByLocation(User user) {
-        if (user == null || user.getUniqueId() == null) return "";
-        return getIslands().getProtectedIslandAt(user.getLocation())
-                .map(this::getOneBlocksIsland)
-                .map(this.getOneBlockManager()::getNextPhase)
-                .orElse("");
-    }
-
-    private String getNextPhaseByOwner(User user) {
-        if (user == null || user.getUniqueId() == null) return "";
-        Island i = getIslands().getIsland(getOverWorld(), user);
-        return i == null ? "" : this.getOneBlockManager().getNextPhase(getOneBlocksIsland(i));
-    }
-
-    private String getNextPhaseBlocksByLocation(User user) {
-        if (user == null || user.getUniqueId() == null) return "";
-        return getIslands().getProtectedIslandAt(user.getLocation())
-                .map(this::getOneBlocksIsland)
-                .map(this.getOneBlockManager()::getNextPhaseBlocks)
-                .map(num -> num < 0 ? user.getTranslation("aoneblock.placeholders.infinite") : String.valueOf(num))
-                .orElse("");
-    }
-
-    private String getNextPhaseBlocksByOwner(User user) {
-        if (user == null || user.getUniqueId() == null) return "";
-        Island i = getIslands().getIsland(getOverWorld(), user);
-        int num = getOneBlockManager().getNextPhaseBlocks(getOneBlocksIsland(i));
-        return i == null ? "" : num < 0 ? user.getTranslation("aoneblock.placeholders.infinite") : String.valueOf(num);
-    }
-
-    private String getPercentDoneByLocation(User user) {
-        if (user == null || user.getUniqueId() == null) return "";
-        return getIslands().getProtectedIslandAt(user.getLocation())
-                .map(this::getOneBlocksIsland)
-                .map(this.getOneBlockManager()::getPercentageDone)
-                .map(num -> String.valueOf(Math.round(num) + "%"))
-                .orElse("");
-    }
-
-    private String getPercentDoneByOwner(User user) {
-        if (user == null || user.getUniqueId() == null) return "";
-        Island i = getIslands().getIsland(getOverWorld(), user);
-        double num = getOneBlockManager().getPercentageDone(getOneBlocksIsland(i));
-        return i == null ? "" : String.valueOf(Math.round(num) + "%");
-    }
-
-    private String getDoneScaleByLocation(User user) {
-        if (user == null || user.getUniqueId() == null) return "";
-        return getIslands().getProtectedIslandAt(user.getLocation())
-                .map(this::getOneBlocksIsland)
-                .map(this.getOneBlockManager()::getPercentageDone)
-                .map(num -> SCALE.floorEntry(num).getValue())
-                .orElse("");
-    }
-
-    private String getDoneScaleByOwner(User user) {
-        if (user == null || user.getUniqueId() == null) return "";
-        Island i = getIslands().getIsland(getOverWorld(), user);
-        double num = getOneBlockManager().getPercentageDone(getOneBlocksIsland(i));
-        return i == null ? "" : SCALE.floorEntry(num).getValue();
-    }
 
     @Override
     public void onDisable() {
@@ -338,6 +241,14 @@ public class AOneBlock extends GameModeAddon {
      */
     public BlockListener getBlockListener() {
         return blockListener;
+    }
+
+    /**
+     * Get the placeholder manager
+     * @return the phManager
+     */
+    public PlaceholdersManager getPlaceholdersManager() {
+        return phManager;
     }
 
 
