@@ -1,15 +1,19 @@
 package world.bentobox.aoneblock.listeners;
 
+import java.util.List;
+
 import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.block.Block;
 import org.bukkit.entity.EntityType;
+import org.bukkit.event.Cancellable;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockDamageEvent;
 import org.bukkit.event.block.BlockPistonExtendEvent;
+import org.bukkit.event.block.BlockPistonRetractEvent;
 import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.EntitySpawnEvent;
@@ -20,7 +24,7 @@ import world.bentobox.bentobox.database.objects.Island;
 
 public class BlockProtect implements Listener {
 
-    AOneBlock addon;
+    private AOneBlock addon;
 
     /**
      * @param addon
@@ -75,13 +79,24 @@ public class BlockProtect implements Listener {
      */
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onPistonExtend(BlockPistonExtendEvent e) {
-        if (!addon.inWorld(e.getBlock().getWorld())) {
+        checkPiston(e, e.getBlock(), e.getBlocks());
+    }
+    /**
+     * Prevent block from being pulled by a sticky piston
+     * @param e
+     */
+    @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
+    public void onPistonExtend(BlockPistonRetractEvent e) {
+        checkPiston(e, e.getBlock(), e.getBlocks());
+    }
+    private void checkPiston(Cancellable e, Block block, List<Block> blocks) {
+        if (!addon.inWorld(block.getWorld())) {
             return;
         }
-        Location l = e.getBlock().getLocation();
+        Location l = block.getLocation();
         addon.getIslands().getIslandAt(l).map(Island::getCenter).ifPresent(c -> e.setCancelled(
                 // Run through the location of all the relative blocks and see if they match the oneblock location
-                e.getBlocks().stream().map(Block::getLocation).anyMatch(loc -> loc.equals(c)))
+                blocks.stream().map(Block::getLocation).anyMatch(loc -> loc.equals(c)))
                 );
     }
 
