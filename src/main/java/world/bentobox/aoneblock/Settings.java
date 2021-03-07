@@ -12,6 +12,8 @@ import org.bukkit.GameMode;
 import org.bukkit.block.Biome;
 import org.bukkit.entity.EntityType;
 
+import com.google.common.base.Enums;
+
 import world.bentobox.aoneblock.listeners.BlockListener;
 import world.bentobox.bentobox.api.configuration.ConfigComment;
 import world.bentobox.bentobox.api.configuration.ConfigEntry;
@@ -147,6 +149,12 @@ public class Settings implements WorldSettings {
     @ConfigComment("The default biome for the overworld")
     @ConfigEntry(path = "world.default-biome")
     private Biome defaultBiome = Biome.PLAINS;
+    @ConfigComment("The default biome for the nether world (this may affect what mobs can spawn)")
+    @ConfigEntry(path = "world.default-nether-biome")
+    private Biome defaultNetherBiome = Enums.getIfPresent(Biome.class, "NETHER").or(Enums.getIfPresent(Biome.class, "NETHER_WASTES").or(Biome.BADLANDS));
+    @ConfigComment("The default biome for the end world (this may affect what mobs can spawn)")
+    @ConfigEntry(path = "world.default-end-biome")
+    private Biome defaultEndBiome = Biome.THE_END;
 
     @ConfigComment("The maximum number of players a player can ban at any one time in this game mode.")
     @ConfigComment("The permission acidisland.ban.maxlimit.X where X is a number can also be used per player")
@@ -1703,5 +1711,33 @@ public class Settings implements WorldSettings {
 
     public void setDropOnTop(boolean dropOnTop) {
         this.dropOnTop = dropOnTop;
+    }
+
+    /**
+     * @return the defaultNetherBiome
+     */
+    public Biome getDefaultNetherBiome() {
+        return defaultNetherBiome;
+    }
+
+    /**
+     * @param defaultNetherBiome the defaultNetherBiome to set
+     */
+    public void setDefaultNetherBiome(Biome defaultNetherBiome) {
+        this.defaultNetherBiome = defaultNetherBiome;
+    }
+
+    /**
+     * @return the defaultEndBiome
+     */
+    public Biome getDefaultEndBiome() {
+        return defaultEndBiome;
+    }
+
+    /**
+     * @param defaultEndBiome the defaultEndBiome to set
+     */
+    public void setDefaultEndBiome(Biome defaultEndBiome) {
+        this.defaultEndBiome = defaultEndBiome;
     }
 }
