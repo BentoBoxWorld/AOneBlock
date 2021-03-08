@@ -458,7 +458,7 @@ public class OneBlocksManager {
             return 0;
         }
         int phaseSize = nextPhase.getBlockNumberValue() - thisPhase.getBlockNumberValue();
-        return 100 * (double)(nextPhase.getBlockNumberValue() - obi.getBlockNumber()) / phaseSize;
+        return 100D - 100 * (double)(nextPhase.getBlockNumberValue() - obi.getBlockNumber()) / phaseSize;
     }
 
 
