@@ -1,6 +1,7 @@
 package world.bentobox.aoneblock;
 
 import java.io.IOException;
+import java.util.Objects;
 
 import org.bukkit.World;
 import org.bukkit.World.Environment;
@@ -232,8 +233,8 @@ public class AOneBlock extends GameModeAddon {
      * @return one block island data
      */
     @NonNull
-    public OneBlockIslands getOneBlocksIsland(Island i) {
-        return blockListener.getIsland(i);
+    public OneBlockIslands getOneBlocksIsland(@NonNull Island i) {
+        return blockListener.getIsland(Objects.requireNonNull(i));
     }
 
     public OneBlocksManager getOneBlockManager() {

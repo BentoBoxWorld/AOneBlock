@@ -124,10 +124,10 @@ public class PlaceholdersManager {
     public String getNextPhaseBlocks(User user) {
         if (user == null || user.getUniqueId() == null) return "";
         Island i = addon.getIslands().getIsland(addon.getOverWorld(), user);
-        int num = addon.getOneBlockManager().getNextPhaseBlocks(addon.getOneBlocksIsland(i));
         if (i == null) {
             return "";
         }
+        int num = addon.getOneBlockManager().getNextPhaseBlocks(addon.getOneBlocksIsland(i));
         return num < 0 ? user.getTranslation("aoneblock.placeholders.infinite") : String.valueOf(num);
     }
 
@@ -153,8 +153,11 @@ public class PlaceholdersManager {
     public String getPercentDone(User user) {
         if (user == null || user.getUniqueId() == null) return "";
         Island i = addon.getIslands().getIsland(addon.getOverWorld(), user);
+        if (i == null) {
+            return "";
+        }
         double num = addon.getOneBlockManager().getPercentageDone(addon.getOneBlocksIsland(i));
-        return i == null ? "" : String.valueOf(Math.round(num) + "%");
+        return String.valueOf(Math.round(num) + "%");
     }
 
     /**
