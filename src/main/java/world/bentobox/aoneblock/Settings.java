@@ -163,19 +163,40 @@ public class Settings implements WorldSettings {
     @ConfigEntry(path = "world.nether.generate")
     private boolean netherGenerate = true;
 
+    @ConfigComment("Islands in Nether. Change to false for standard vanilla nether.")
     private boolean netherIslands = false;
 
+    @ConfigComment("Make the nether roof, if false, there is nothing up there")
+    @ConfigComment("Change to false if lag is a problem from the generation")
+    @ConfigComment("Only applies to islands Nether")
     private boolean netherRoof = false;
 
     @ConfigComment("Nether spawn protection radius - this is the distance around the nether spawn")
     @ConfigComment("that will be protected from player interaction (breaking blocks, pouring lava etc.)")
     @ConfigComment("Minimum is 0 (not recommended), maximum is 100. Default is 25.")
+    @ConfigComment("Only applies to vanilla nether")
     @ConfigEntry(path = "world.nether.spawn-radius")
     private int netherSpawnRadius = 32;
 
+    @ConfigComment("This option indicates if nether portals should be linked via dimensions.")
+    @ConfigComment("Option will simulate vanilla portal mechanics that links portals together")
+    @ConfigComment("or creates a new portal, if there is not a portal in that dimension.")
+    @ConfigEntry(path = "world.nether.create-and-link-portals", since = "1.16")
+    private boolean makeNetherPortals = false;
+
     // End
+    @ConfigComment("End Nether - if this is false, the end world will not be made and access to")
+    @ConfigComment("the end will not occur. Other plugins may still enable portal usage.")
     private boolean endGenerate = false;
+
+    @ConfigComment("Islands in The End. Change to false for standard vanilla end.")
     private boolean endIslands = false;
+
+    @ConfigComment("This option indicates if obsidian platform in the end should be generated")
+    @ConfigComment("when player enters the end world.")
+    @ConfigEntry(path = "world.end.create-obsidian-platform", since = "1.16")
+    private boolean makeEndPortals = false;
+
     private boolean dragonSpawn = false;
 
     @ConfigComment("Mob white list - these mobs will NOT be removed when logging in or doing /island")
@@ -1703,4 +1724,42 @@ public class Settings implements WorldSettings {
 	public void setDropOnTop(boolean dropOnTop) {
 		this.dropOnTop = dropOnTop;
 	}
+
+    /**
+     * Is make nether portals boolean.
+     *
+     * @return the boolean
+     */
+    @Override
+    public boolean isMakeNetherPortals() {
+        return makeNetherPortals;
+    }
+
+    /**
+     * Sets make nether portals.
+     *
+     * @param makeNetherPortals the make nether portals
+     */
+    public void setMakeNetherPortals(boolean makeNetherPortals) {
+        this.makeNetherPortals = makeNetherPortals;
+    }
+
+    /**
+     * Is make end portals boolean.
+     *
+     * @return the boolean
+     */
+    @Override
+    public boolean isMakeEndPortals() {
+        return makeEndPortals;
+    }
+
+    /**
+     * Sets make end portals.
+     *
+     * @param makeEndPortals the make end portals
+     */
+    public void setMakeEndPortals(boolean makeEndPortals) {
+        this.makeEndPortals = makeEndPortals;
+    }
 }

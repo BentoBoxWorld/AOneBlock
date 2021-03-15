@@ -94,7 +94,16 @@ world:
     # Nether spawn protection radius - this is the distance around the nether spawn
     # that will be protected from player interaction (breaking blocks, pouring lava etc.)
     # Minimum is 0 (not recommended), maximum is 100. Default is 25.
+    # Only applies to vanilla nether
     spawn-radius: 25
+    # This option indicates if nether portals should be linked via dimensions.
+    # Option will simulate vanilla portal mechanics that links portals together or creates a new portal, if there is not a portal in other dimension.
+    # Added since 1.16
+    create-and-link-portals: false
+  end:
+    # This option indicates if obsidian platform in the end should be generated when player enters the end world.
+    # Added since 1.16
+    create-obsidian-platform: false
   # Mob white list - these mobs will NOT be removed when logging in or doing /island
   remove-mobs-whitelist:
   - ZOMBIE_VILLAGER
