@@ -18,16 +18,6 @@ public class MagicBlockPhaseEvent extends AbstractMagicBlockEvent {
     protected final String phase;
     protected final String oldPhase;
     protected final int blockNumber;
-    private static final HandlerList handlers = new HandlerList();
-
-    @Override
-    public HandlerList getHandlers() {
-        return getHandlerList();
-    }
-
-    public static HandlerList getHandlerList() {
-        return handlers;
-    }
 
     /**
      * @param island
