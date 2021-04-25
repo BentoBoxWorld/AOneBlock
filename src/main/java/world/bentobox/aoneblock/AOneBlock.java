@@ -85,7 +85,7 @@ public class AOneBlock extends GameModeAddon {
             setState(State.DISABLED);
             return;
         }
-        
+
         registerListener(blockListener);
         registerListener(new NoBlockHandler(this));
         registerListener(new BlockProtect(this));
@@ -223,8 +223,7 @@ public class AOneBlock extends GameModeAddon {
      */
     @Override
     public void allLoaded() {
-        // Reload settings and save them. This will occur after all addons have loaded
-        this.loadSettings();
+        // save settings. This will occur after all addons have loaded
         this.saveWorldSettings();
     }
 
