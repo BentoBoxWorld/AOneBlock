@@ -183,7 +183,7 @@ public class BlockListener implements Listener {
 
     private void setUp(@NonNull Island island) {
         // Set the bedrock to the initial block
-        Util.getChunkAtAsync(island.getCenter()).thenRun(() -> island.getCenter().getBlock().setType(Material.GRASS_BLOCK));
+        Util.getChunkAtAsync(Objects.requireNonNull(island.getCenter())).thenRun(() -> island.getCenter().getBlock().setType(Material.GRASS_BLOCK));
         // Create a database entry
         OneBlockIslands is = new OneBlockIslands(island.getUniqueId());
         cache.put(island.getUniqueId(), is);
@@ -272,7 +272,7 @@ public class BlockListener implements Listener {
         // Get the block number in this phase
         int blockNumber = is.getBlockNumber() - phase.getBlockNumberValue() + (int)is.getQueue().stream().filter(OneBlockObject::isMaterial).count();
         // Get the block that is being broken
-        Block block = i.getCenter().toVector().toLocation(world).getBlock();
+        Block block = Objects.requireNonNull(i.getCenter()).toVector().toLocation(world).getBlock();
         // Fill a 5 block queue
         if (is.getQueue().isEmpty() || newPhase) {
             // Add initial 5 blocks
@@ -285,7 +285,7 @@ public class BlockListener implements Listener {
             playWarning(is, block);
         }
         // Get the next block
-        OneBlockObject nextBlock = newPhase && phase.getFirstBlock() != null ? phase.getFirstBlock() : is.pollAndAdd(phase.getNextBlock(addon, blockNumber++));
+        OneBlockObject nextBlock = (newPhase && phase.getFirstBlock() != null) ? phase.getFirstBlock() : is.pollAndAdd(phase.getNextBlock(addon, blockNumber++));
         // Set the biome for the block and one block above it
         if (newPhase) {
             setBiome(block, phase.getPhaseBiome());

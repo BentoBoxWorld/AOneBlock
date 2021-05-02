@@ -26,7 +26,7 @@ public class LocationStatsHandler extends AddonRequestHandler {
 
     private final AOneBlock addon;
     private static final Object PLAYER = "player";
-    
+
     public LocationStatsHandler(AOneBlock addon) {
         super("location-stats");
         this.addon = addon;
@@ -40,11 +40,11 @@ public class LocationStatsHandler extends AddonRequestHandler {
         /*
         What we need in the map:
         "player" -> UUID
-        
+
         What we will return:
         - empty map if UUID is invalid or player is offline
         - a map of island stats:
-        
+
         "count" - block count of island
         "doneScale" - character scale of phase completion
         "nextPhaseBlocks" - number of blocks to next phase
@@ -52,15 +52,15 @@ public class LocationStatsHandler extends AddonRequestHandler {
         "percentDone" - percentage done of this phase
         "phase" - current phase name
 
-        
-     */
+
+         */
 
         if (map == null || map.isEmpty() || map.get(PLAYER) == null || !(map.get(PLAYER) instanceof UUID)) {
             return Collections.emptyMap();
         }
 
         User user = User.getInstance((UUID)map.get(PLAYER));
-        if (!user.isOnline()) {
+        if (user == null || !user.isOnline()) {
             return Collections.emptyMap();
         }
         // No null check required
@@ -71,7 +71,7 @@ public class LocationStatsHandler extends AddonRequestHandler {
         result.put("nextPhase", addon.getPlaceholdersManager().getNextPhaseByLocation(user));
         result.put("percentDone", addon.getPlaceholdersManager().getPercentDoneByLocation(user));
         result.put("phase", addon.getPlaceholdersManager().getPhaseByLocation(user));
-    return result;
+        return result;
     }
 
 }

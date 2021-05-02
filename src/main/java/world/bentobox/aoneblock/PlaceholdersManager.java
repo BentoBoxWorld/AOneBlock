@@ -1,5 +1,6 @@
 package world.bentobox.aoneblock;
 
+import java.util.Objects;
 import java.util.TreeMap;
 
 import world.bentobox.aoneblock.dataobjects.OneBlockIslands;
@@ -7,7 +8,7 @@ import world.bentobox.bentobox.api.user.User;
 import world.bentobox.bentobox.database.objects.Island;
 
 public class PlaceholdersManager {
-    
+
     private static final TreeMap<Double, String> SCALE;
     static {
         SCALE = new TreeMap<>();
@@ -27,7 +28,7 @@ public class PlaceholdersManager {
     public PlaceholdersManager(AOneBlock addon) {
         this.addon = addon;
     }
-    
+
 
     /**
      * Get phase by location of user
@@ -36,7 +37,7 @@ public class PlaceholdersManager {
      */
     public String getPhaseByLocation(User user) {
         if (user == null || user.getUniqueId() == null) return "";
-        return addon.getIslands().getProtectedIslandAt(user.getLocation())
+        return addon.getIslands().getProtectedIslandAt(Objects.requireNonNull(user.getLocation()))
                 .map(addon::getOneBlocksIsland)
                 .map(OneBlockIslands::getPhaseName)
                 .orElse("");
@@ -49,7 +50,7 @@ public class PlaceholdersManager {
      */
     public String getCountByLocation(User user) {
         if (user == null || user.getUniqueId() == null) return "";
-        return addon.getIslands().getProtectedIslandAt(user.getLocation())
+        return addon.getIslands().getProtectedIslandAt(Objects.requireNonNull(user.getLocation()))
                 .map(addon::getOneBlocksIsland)
                 .map(OneBlockIslands::getBlockNumber)
                 .map(String::valueOf)
@@ -85,7 +86,7 @@ public class PlaceholdersManager {
      */
     public String getNextPhaseByLocation(User user) {
         if (user == null || user.getUniqueId() == null) return "";
-        return addon.getIslands().getProtectedIslandAt(user.getLocation())
+        return addon.getIslands().getProtectedIslandAt(Objects.requireNonNull(user.getLocation()))
                 .map(addon::getOneBlocksIsland)
                 .map(addon.getOneBlockManager()::getNextPhase)
                 .orElse("");
@@ -109,7 +110,7 @@ public class PlaceholdersManager {
      */
     public String getNextPhaseBlocksByLocation(User user) {
         if (user == null || user.getUniqueId() == null) return "";
-        return addon.getIslands().getProtectedIslandAt(user.getLocation())
+        return addon.getIslands().getProtectedIslandAt(Objects.requireNonNull(user.getLocation()))
                 .map(addon::getOneBlocksIsland)
                 .map(addon.getOneBlockManager()::getNextPhaseBlocks)
                 .map(num -> num < 0 ? user.getTranslation("aoneblock.placeholders.infinite") : String.valueOf(num))
@@ -138,7 +139,7 @@ public class PlaceholdersManager {
      */
     public String getPercentDoneByLocation(User user) {
         if (user == null || user.getUniqueId() == null) return "";
-        return addon.getIslands().getProtectedIslandAt(user.getLocation())
+        return addon.getIslands().getProtectedIslandAt(Objects.requireNonNull(user.getLocation()))
                 .map(addon::getOneBlocksIsland)
                 .map(addon.getOneBlockManager()::getPercentageDone)
                 .map(num -> String.valueOf(Math.round(num) + "%"))
@@ -167,7 +168,7 @@ public class PlaceholdersManager {
      */
     public String getDoneScaleByLocation(User user) {
         if (user == null || user.getUniqueId() == null) return "";
-        return addon.getIslands().getProtectedIslandAt(user.getLocation())
+        return addon.getIslands().getProtectedIslandAt(Objects.requireNonNull(user.getLocation()))
                 .map(addon::getOneBlocksIsland)
                 .map(addon.getOneBlockManager()::getPercentageDone)
                 .map(num -> SCALE.floorEntry(num).getValue())
@@ -186,5 +187,5 @@ public class PlaceholdersManager {
         return i == null ? "" : SCALE.floorEntry(num).getValue();
     }
 
-    
+
 }

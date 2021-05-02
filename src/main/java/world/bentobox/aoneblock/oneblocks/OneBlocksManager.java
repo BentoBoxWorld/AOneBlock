@@ -432,7 +432,7 @@ public class OneBlocksManager {
         if (p.isGotoPhase()) {
             return p.getBlockNumber() + "_goto_" + p.getGotoBlock();
         }
-        return p.getBlockNumber() + "_" + p.getPhaseName().toLowerCase();
+        return p.getBlockNumber() + "_" + p.getPhaseName() == null ? "" : p.getPhaseName().toLowerCase();
     }
 
     private void saveChests(ConfigurationSection phSec, OneBlockPhase phase) {
@@ -489,6 +489,9 @@ public class OneBlocksManager {
     public double getPercentageDone(@NonNull OneBlockIslands obi) {
         int blockNum = obi.getBlockNumber();
         OneBlockPhase thisPhase = this.getPhase(blockNum);
+        if (thisPhase == null) {
+            return 0;
+        }
         Integer nextKey = blockProbs.ceilingKey(blockNum + 1);
         OneBlockPhase nextPhase = this.getPhase(nextKey);
         if (nextPhase == null) {
