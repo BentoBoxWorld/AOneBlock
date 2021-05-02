@@ -1,6 +1,12 @@
 '0':
   name: Plains
-  firstBlock: GRASS_BLOCK
+  fixedBlocks:
+  - GRASS_BLOCK
+  - GRASS_BLOCK
+  - GRASS_BLOCK
+  - OAK_LOG
+  - OAK_LOG
+  - OAK_LOG
   biome: PLAINS
   # Commands
   # A list of commands can be run at the start and end of a phase. Commands are run as the Console

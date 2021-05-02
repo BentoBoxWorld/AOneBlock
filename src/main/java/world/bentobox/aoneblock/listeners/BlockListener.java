@@ -266,14 +266,23 @@ public class BlockListener implements Listener {
             e.setCancelled(true);
             return;
         }
+        if (newPhase) {
+            is.clearQueue();
+        }
+        // Get the block number in this phase
+        int blockNumber = is.getBlockNumber() - phase.getBlockNumberValue() + is.getQueue().size();
+        if (blockNumber == 0) {
+            // Special handling for the very first phase because you are given the first block when you start.
+            // This does misses one block with gotos, but by then you should have all the blocks you need
+            blockNumber = 2;
+        }
         // Get the block that is being broken
         Block block = i.getCenter().toVector().toLocation(world).getBlock();
         // Fill a 5 block queue
         if (is.getQueue().isEmpty() || newPhase) {
-            is.clearQueue();
             // Add initial 5 blocks
             for (int j = 0; j < MAX_LOOK_AHEAD; j++) {
-                is.add(phase.getNextBlock(addon));
+                is.add(phase.getNextBlock(addon, blockNumber++));
             }
         }
         // Play warning sound for upcoming mobs
@@ -281,7 +290,7 @@ public class BlockListener implements Listener {
             playWarning(is, block);
         }
         // Get the next block
-        OneBlockObject nextBlock = newPhase && phase.getFirstBlock() != null ? phase.getFirstBlock() : is.pollAndAdd(phase.getNextBlock(addon));
+        OneBlockObject nextBlock = newPhase && phase.getFirstBlock() != null ? phase.getFirstBlock() : is.pollAndAdd(phase.getNextBlock(addon, blockNumber++));
         // Set the biome for the block and one block above it
         if (newPhase) {
             setBiome(block, phase.getPhaseBiome());

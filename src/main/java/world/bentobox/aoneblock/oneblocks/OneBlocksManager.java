@@ -42,6 +42,7 @@ public class OneBlocksManager {
     private static final String NAME = "name";
     private static final String BIOME = "biome";
     private static final String FIRST_BLOCK = "firstBlock";
+    private static final String FIXED_BLOCKS = "fixedBlocks";
     private static final String CHESTS = "chests";
     private static final String RARITY = "rarity";
     private static final String CONTENTS = "contents";
@@ -172,6 +173,29 @@ public class OneBlocksManager {
             }
             addFirstBlock(obPhase, phase.getString(FIRST_BLOCK));
         }
+        // First blocks
+        if (phase.contains(FIXED_BLOCKS)) {
+            if (!obPhase.getFixedBlocks().isEmpty()) {
+                throw new IOException("Block " + blockNumber + ": Fixed blocks trying to be set to " + phase.getString(FIXED_BLOCKS) + " but already set to " + obPhase.getFixedBlocks() + " Duplicate phase file?");
+            }
+            addFixedBlocks(obPhase, phase.getStringList(FIXED_BLOCKS));
+        }
+    }
+
+    private void addFixedBlocks(OneBlockPhase obPhase, List<String> stringList) {
+        List<OneBlockObject> fixedBlocks = stringList.stream()
+                .map(Material::matchMaterial)
+                .filter(Objects::nonNull)
+                .filter(Material::isBlock)
+                .map(m -> new OneBlockObject(m,0))
+                .collect(Collectors.toList());
+        // Set the first block to the first in the list
+        if (!fixedBlocks.isEmpty()) {
+            obPhase.setFirstBlock(fixedBlocks.get(0));
+        }
+        // Store the remainder
+        obPhase.setFixedBlocks(fixedBlocks);
+
     }
 
     private Biome getBiome(String string) {

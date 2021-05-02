@@ -50,6 +50,7 @@ public class OneBlockPhase {
     private List<String> startCommands;
     private List<String> endCommands;
     private List<Requirement> requirements;
+    private List<OneBlockObject> fixedBlocks;
 
 
     /**
@@ -62,6 +63,7 @@ public class OneBlockPhase {
         startCommands = new ArrayList<>();
         endCommands = new ArrayList<>();
         requirements = new ArrayList<>();
+        fixedBlocks = new ArrayList<>();
     }
 
     /**
@@ -137,16 +139,28 @@ public class OneBlockPhase {
 
     /**
      * This picks a random object
+     * @param addon AOneBlock
+     * @param blockNumber the block number in the phase requested
      * @return OneBlockObject selected
      */
 
-    public OneBlockObject getNextBlock(AOneBlock addon) {
+    public OneBlockObject getNextBlock(AOneBlock addon, int blockNumber) {
         if (total <1) {
             addon.logError("Phase " + this.getPhaseName() + " has zero probability of generating blocks. Check config file. Is the block section missing?");
             return this.getFirstBlock() != null ? getFirstBlock() : new OneBlockObject(Material.GRASS_BLOCK,1);
         }
+        if (blockNumber == 0 && this.getFirstBlock() != null) {
+            return getResult(this.getFirstBlock());
+        }
+        if (blockNumber < this.getFixedBlocks().size()) {
+            return getResult(this.getFixedBlocks().get(blockNumber));
+        }
         OneBlockObject block = getRandomBlock(probMap, total);
         if (block.isEntity()) return block;
+        return getResult(block);
+    }
+
+    private OneBlockObject getResult(OneBlockObject block) {
         return block.getMaterial().equals(Material.CHEST) && !chests.isEmpty() ? getRandomChest() : block;
     }
 
@@ -317,6 +331,20 @@ public class OneBlockPhase {
      */
     public void setEndCommands(List<String> endCommands) {
         this.endCommands = endCommands;
+    }
+
+    /**
+     * @return the fixedBlocks
+     */
+    public List<OneBlockObject> getFixedBlocks() {
+        return fixedBlocks;
+    }
+
+    /**
+     * @param fixedBlocks the fixedBlocks to set
+     */
+    public void setFixedBlocks(List<OneBlockObject> fixedBlocks) {
+        this.fixedBlocks = fixedBlocks;
     }
 
 
