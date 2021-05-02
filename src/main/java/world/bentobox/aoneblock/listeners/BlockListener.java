@@ -270,12 +270,7 @@ public class BlockListener implements Listener {
             is.clearQueue();
         }
         // Get the block number in this phase
-        int blockNumber = is.getBlockNumber() - phase.getBlockNumberValue() + is.getQueue().size();
-        if (blockNumber == 0) {
-            // Special handling for the very first phase because you are given the first block when you start.
-            // This does misses one block with gotos, but by then you should have all the blocks you need
-            blockNumber = 2;
-        }
+        int blockNumber = is.getBlockNumber() - phase.getBlockNumberValue() + (int)is.getQueue().stream().filter(OneBlockObject::isMaterial).count();
         // Get the block that is being broken
         Block block = i.getCenter().toVector().toLocation(world).getBlock();
         // Fill a 5 block queue

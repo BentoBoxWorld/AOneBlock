@@ -1,6 +1,12 @@
 '700':
   name: Underground
-  firstBlock: STONE
+  # List of blocks that will generate at these specific block counts.
+  # The numbers are relative to the phase and not the overall player's count.
+  # If you define 0 here, then firstBlock is not required and firstBlock will be replaced with this block.
+  fixedBlocks:
+    0: STONE
+    10: COAL_ORE
+    20: IRON_ORE
   biome: TAIGA
   blocks:
     COAL_ORE: 300

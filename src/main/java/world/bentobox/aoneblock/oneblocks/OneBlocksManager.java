@@ -18,6 +18,7 @@ import java.util.TreeMap;
 import java.util.jar.JarFile;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang.math.NumberUtils;
 import org.bukkit.Material;
 import org.bukkit.block.Biome;
 import org.bukkit.configuration.ConfigurationSection;
@@ -178,23 +179,35 @@ public class OneBlocksManager {
             if (!obPhase.getFixedBlocks().isEmpty()) {
                 throw new IOException("Block " + blockNumber + ": Fixed blocks trying to be set to " + phase.getString(FIXED_BLOCKS) + " but already set to " + obPhase.getFixedBlocks() + " Duplicate phase file?");
             }
-            addFixedBlocks(obPhase, phase.getStringList(FIXED_BLOCKS));
+            addFixedBlocks(obPhase, phase.getConfigurationSection(FIXED_BLOCKS));
         }
     }
 
-    private void addFixedBlocks(OneBlockPhase obPhase, List<String> stringList) {
-        List<OneBlockObject> fixedBlocks = stringList.stream()
-                .map(Material::matchMaterial)
-                .filter(Objects::nonNull)
-                .filter(Material::isBlock)
-                .map(m -> new OneBlockObject(m,0))
-                .collect(Collectors.toList());
-        // Set the first block to the first in the list
-        if (!fixedBlocks.isEmpty()) {
-            obPhase.setFirstBlock(fixedBlocks.get(0));
+    private void addFixedBlocks(OneBlockPhase obPhase, ConfigurationSection fb) {
+        if (fb == null) return;
+        Map<Integer, OneBlockObject> result = new HashMap<>();
+        for (String key : fb.getKeys(false)) {
+            if (!NumberUtils.isNumber(key)) {
+                addon.logError("Fixed block key must be an integer. " + key);
+                continue;
+            }
+            int k = Integer.parseInt(key);
+            String mat = fb.getString(key);
+            if (mat != null) {
+                Material m = Material.matchMaterial(mat);
+                if (m != null && m.isBlock()) {
+                    result.put(k, new OneBlockObject(m,0));
+                } else {
+                    addon.logError("Fixed block key " + key + " material is invalid or not a block. Ignoring.");
+                }
+            }
+        }
+        // Set the first block if it exists
+        if (result.containsKey(0)) {
+            obPhase.setFirstBlock(result.get(0));
         }
         // Store the remainder
-        obPhase.setFixedBlocks(fixedBlocks);
+        obPhase.setFixedBlocks(result);
 
     }
 

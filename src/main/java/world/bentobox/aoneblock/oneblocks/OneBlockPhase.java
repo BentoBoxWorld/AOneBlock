@@ -3,6 +3,7 @@ package world.bentobox.aoneblock.oneblocks;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -50,7 +51,7 @@ public class OneBlockPhase {
     private List<String> startCommands;
     private List<String> endCommands;
     private List<Requirement> requirements;
-    private List<OneBlockObject> fixedBlocks;
+    private Map<Integer, OneBlockObject> fixedBlocks;
 
 
     /**
@@ -63,7 +64,7 @@ public class OneBlockPhase {
         startCommands = new ArrayList<>();
         endCommands = new ArrayList<>();
         requirements = new ArrayList<>();
-        fixedBlocks = new ArrayList<>();
+        fixedBlocks = new HashMap<>();
     }
 
     /**
@@ -152,7 +153,8 @@ public class OneBlockPhase {
         if (blockNumber == 0 && this.getFirstBlock() != null) {
             return getResult(this.getFirstBlock());
         }
-        if (blockNumber < this.getFixedBlocks().size()) {
+        // Supply the fixed blocks
+        if (this.getFixedBlocks().containsKey(blockNumber)) {
             return getResult(this.getFixedBlocks().get(blockNumber));
         }
         OneBlockObject block = getRandomBlock(probMap, total);
@@ -336,17 +338,16 @@ public class OneBlockPhase {
     /**
      * @return the fixedBlocks
      */
-    public List<OneBlockObject> getFixedBlocks() {
+    public Map<Integer, OneBlockObject> getFixedBlocks() {
         return fixedBlocks;
     }
 
     /**
      * @param fixedBlocks the fixedBlocks to set
      */
-    public void setFixedBlocks(List<OneBlockObject> fixedBlocks) {
+    public void setFixedBlocks(Map<Integer, OneBlockObject> fixedBlocks) {
         this.fixedBlocks = fixedBlocks;
     }
-
 
 
 }

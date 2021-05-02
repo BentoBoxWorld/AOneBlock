@@ -1,12 +1,16 @@
 '0':
   name: Plains
+  # List of blocks that will generate at these specific block counts.
+  # The numbers are relative to the phase and not the overall player's count.
+  # If you define 0 here, then firstBlock is not required and firstBlock will be replaced with this block.
   fixedBlocks:
-  - GRASS_BLOCK
-  - GRASS_BLOCK
-  - GRASS_BLOCK
-  - OAK_LOG
-  - OAK_LOG
-  - OAK_LOG
+    0: GRASS_BLOCK
+    1: GRASS_BLOCK
+    2: GRASS_BLOCK
+    3: OAK_LOG
+    4: OAK_LOG
+    5: OAK_LOG
+    50: SPONGE
   biome: PLAINS
   # Commands
   # A list of commands can be run at the start and end of a phase. Commands are run as the Console
