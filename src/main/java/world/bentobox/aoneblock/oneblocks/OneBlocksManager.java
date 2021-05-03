@@ -432,7 +432,7 @@ public class OneBlocksManager {
         if (p.isGotoPhase()) {
             return p.getBlockNumber() + "_goto_" + p.getGotoBlock();
         }
-        return p.getBlockNumber() + "_" + p.getPhaseName() == null ? "" : p.getPhaseName().toLowerCase();
+        return p.getBlockNumber() + "_" + (p.getPhaseName() == null ? "" : p.getPhaseName().toLowerCase());
     }
 
     private void saveChests(ConfigurationSection phSec, OneBlockPhase phase) {

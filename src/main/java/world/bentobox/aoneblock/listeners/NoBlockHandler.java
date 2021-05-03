@@ -32,7 +32,7 @@ public class NoBlockHandler implements Listener {
         // Check if block is air
         Island island = addon.getIslands().getIsland(e.getRespawnLocation().getWorld(), e.getPlayer().getUniqueId());
         if (island != null && Objects.requireNonNull(island.getCenter()).getBlock().isEmpty()) {
-            Objects.requireNonNull(island).getCenter().getBlock().setType(Material.COBBLESTONE);
+            Objects.requireNonNull(island.getCenter()).getBlock().setType(Material.COBBLESTONE);
         }
     }
 
