@@ -18,7 +18,7 @@ import world.bentobox.bentobox.database.objects.Island;
  */
 public class NoBlockHandler implements Listener {
 
-    private AOneBlock addon;
+    private final AOneBlock addon;
 
     public NoBlockHandler(AOneBlock oneBlock) {
         this.addon = oneBlock;

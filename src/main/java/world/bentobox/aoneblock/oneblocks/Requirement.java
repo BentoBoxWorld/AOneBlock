@@ -51,7 +51,7 @@ public class Requirement {
         }
     }
 
-    private Object requirement;
+    private final Object requirement;
     private final ReqType type;
 
     /**

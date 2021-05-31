@@ -31,7 +31,7 @@ public class AdminSetCountCommand extends CompositeCommand {
         setDescription("aoneblock.commands.admin.setcount.description");
         // Permission
         setPermission("admin.setcount");
-        addon = (AOneBlock)getAddon();
+        addon = getAddon();
     }
 
     @Override

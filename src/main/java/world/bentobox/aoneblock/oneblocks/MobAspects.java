@@ -13,8 +13,8 @@ public class MobAspects {
     private final Sound sound;
     private final Color color;
     /**
-     * @param sound
-     * @param color
+     * @param sound - sound to play
+     * @param color - color of particles to show
      */
     public MobAspects(Sound sound, Color color) {
         this.sound = sound;

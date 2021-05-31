@@ -29,7 +29,7 @@ public class IslandPhasesCommand extends CompositeCommand {
         setOnlyPlayer(true);
         // Permission
         setPermission("phases");
-        addon = (AOneBlock)getAddon();
+        addon = getAddon();
     }
 
     @Override

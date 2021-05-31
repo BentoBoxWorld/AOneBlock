@@ -43,7 +43,7 @@ public class AdminSetChestCommand extends CompositeCommand {
         // Permission
         setPermission("admin.setchest");
         setOnlyPlayer(true);
-        addon = (AOneBlock)getAddon();
+        addon = getAddon();
     }
 
     @Override

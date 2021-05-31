@@ -83,6 +83,8 @@ public class OneBlockObject {
         this.chest = ob.getChest();
         this.entityType = ob.getEntityType();
         this.material = ob.getMaterial();
+        this.rarity = ob.getRarity();
+        this.prob = ob.getProb();
     }
 
     /**

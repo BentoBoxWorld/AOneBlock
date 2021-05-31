@@ -142,7 +142,7 @@ public class PlaceholdersManager {
         return addon.getIslands().getProtectedIslandAt(Objects.requireNonNull(user.getLocation()))
                 .map(addon::getOneBlocksIsland)
                 .map(addon.getOneBlockManager()::getPercentageDone)
-                .map(num -> String.valueOf(Math.round(num) + "%"))
+                .map(num -> Math.round(num) + "%")
                 .orElse("");
     }
 
@@ -158,7 +158,7 @@ public class PlaceholdersManager {
             return "";
         }
         double num = addon.getOneBlockManager().getPercentageDone(addon.getOneBlocksIsland(i));
-        return String.valueOf(Math.round(num) + "%");
+        return Math.round(num) + "%";
     }
 
     /**

@@ -1,6 +1,5 @@
 package world.bentobox.aoneblock.listeners;
 
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.EnumMap;
@@ -73,7 +72,7 @@ import world.bentobox.level.Level;
 public class BlockListener implements Listener {
 
     private final AOneBlock addon;
-    private OneBlocksManager oneBlocksManager;
+    private final OneBlocksManager oneBlocksManager;
     private final Database<OneBlockIslands> handler;
     private final Map<String, OneBlockIslands> cache;
     private final Random random = new Random();
@@ -150,7 +149,6 @@ public class BlockListener implements Listener {
 
     /**
      * @param addon - OneBlock
-     * @throws IOException - exception
      */
     public BlockListener(@NonNull AOneBlock addon) {
         this.addon = addon;
@@ -323,12 +321,11 @@ public class BlockListener implements Listener {
 
     /**
      * Checks whether the player can proceed to the next phase
-     * @param player
-     * @param i
-     * @param is
-     * @param phase
-     * @param world
-     * @return
+     * @param player - player
+     * @param i - island
+     * @param phase - one block phase
+     * @param world - world
+     * @return true if the player can proceed to the next phase, false if not or if there is no next phase.
      */
     private boolean phaseRequirementsFail(@Nullable Player player, @NonNull Island i, OneBlockPhase phase, @NonNull World world) {
         if (phase.getRequirements().isEmpty()) {

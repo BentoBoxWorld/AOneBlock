@@ -14,7 +14,7 @@ public class JoinLeaveListener implements Listener {
     AOneBlock addon;
 
     /**
-     * @param addon
+     * @param addon - AOneBlock
      */
     public JoinLeaveListener(AOneBlock addon) {
         this.addon = addon;

@@ -475,7 +475,7 @@ public class OneBlocksManager {
      * @return number of blocks to the next phase. If there is no phase after -1 is returned.
      */
     public int getNextPhaseBlocks(@NonNull OneBlockIslands obi) {
-        Integer blockNum = Integer.valueOf(obi.getBlockNumber());
+        Integer blockNum = obi.getBlockNumber();
         Integer nextKey = blockProbs.ceilingKey(blockNum + 1);
         OneBlockPhase nextPhase = this.getPhase(nextKey);
         return nextPhase == null ? -1 : (nextPhase.getBlockNumberValue() - obi.getBlockNumber());

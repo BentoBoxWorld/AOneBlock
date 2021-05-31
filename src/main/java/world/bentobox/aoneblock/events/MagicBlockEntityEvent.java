@@ -29,10 +29,10 @@ public class MagicBlockEntityEvent extends AbstractMagicBlockEvent {
     }
 
     /**
-     * @param island
-     * @param playerUUID
-     * @param block
-     * @param entityType
+     * @param island - island
+     * @param playerUUID - player UUID
+     * @param block - block
+     * @param entityType - entity type
      */
     public MagicBlockEntityEvent(Island island, UUID playerUUID, Block block, EntityType entityType) {
         super(island, playerUUID, block);

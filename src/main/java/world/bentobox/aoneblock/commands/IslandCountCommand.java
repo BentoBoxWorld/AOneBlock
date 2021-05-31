@@ -24,7 +24,7 @@ public class IslandCountCommand extends CompositeCommand {
         setOnlyPlayer(true);
         // Permission
         setPermission("count");
-        addon = (AOneBlock)getAddon();
+        addon = getAddon();
     }
 
     @Override
