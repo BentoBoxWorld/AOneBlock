@@ -236,8 +236,12 @@ public class OneBlocksManager {
     }
 
     void addCommands(OneBlockPhase obPhase, ConfigurationSection phase) {
-        obPhase.setStartCommands(phase.getStringList(START_COMMANDS));
-        obPhase.setEndCommands(phase.getStringList(END_COMMANDS));
+        if (phase.contains(START_COMMANDS)) {
+            obPhase.setStartCommands(phase.getStringList(START_COMMANDS));
+        }
+        if (phase.contains(END_COMMANDS)) {
+            obPhase.setEndCommands(phase.getStringList(END_COMMANDS));
+        }
     }
 
     void addRequirements(OneBlockPhase obPhase, ConfigurationSection phase) {

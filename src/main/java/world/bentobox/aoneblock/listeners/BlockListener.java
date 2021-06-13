@@ -433,14 +433,14 @@ public class BlockListener implements Listener {
      * @return list of commands with placeholders replaced
      */
     @NonNull
-    List<String> replacePlaceholders(@Nullable Player player, String phaseName, String phaseNumber, @NonNull Island i, List<String> commands) {
+    List<String> replacePlaceholders(@Nullable Player player, @NonNull String phaseName, @NonNull String phaseNumber, @NonNull Island i, List<String> commands) {
         return commands.stream()
                 .map(c -> {
                     long level = addon.getAddonByName("Level").map(l -> ((Level)l).getIslandLevel(addon.getOverWorld(), i.getOwner())).orElse(0L);
                     double balance = addon.getAddonByName("Bank").map(b -> ((Bank)b).getBankManager().getBalance(i).getValue()).orElse(0D);
                     double ecoBalance = addon.getPlugin().getVault().map(v -> v.getBalance(User.getInstance(player), addon.getOverWorld())).orElse(0D);
 
-                    return c.replace("[island]", i.getName())
+                    return c.replace("[island]", i.getName() == null ? "" : i.getName())
                             .replace("[owner]", addon.getPlayers().getName(i.getOwner()))
                             .replace("[phase]", phaseName)
                             .replace("[blocks]", phaseNumber)

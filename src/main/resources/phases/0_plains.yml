@@ -28,10 +28,10 @@
   #
   # Examples:
   # start-commands:
-  # - give [player] WOODEN_AXE
-  # - broadcast [player] just started OneBlock!
+  # - 'give [player] WOODEN_AXE 1'
+  # - 'broadcast [player] just started OneBlock!'
   # end-commands:
-  # - [SUDO]summon minecraft:wither
+  # - '[SUDO]summon minecraft:wither'
   #
   # Requirements
   # You can stipulate a set of requirements to start the phase:
