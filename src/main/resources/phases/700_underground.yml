@@ -9,8 +9,13 @@
     20: IRON_ORE
   biome: TAIGA
   blocks:
+    AMETHYST_BLOCK: 30
+    CALCITE: 30
+    SMOOTH_BASALT: 30
+    DEEPSLATE: 40
     COAL_ORE: 300
     GRAVEL: 200
+    COPPER_ORE: 200
     REDSTONE_ORE: 60
     DIAMOND_ORE: 30
     GOLD_ORE: 100
@@ -35,3 +40,5 @@
     CREEPER: 30
     ENDERMAN: 20
     BAT: 30
+    AXOLOTL: 1
+    GLOW_SQUID: 1
