@@ -21,17 +21,19 @@ import org.eclipse.jdt.annotation.Nullable;
 import world.bentobox.aoneblock.AOneBlock;
 import world.bentobox.aoneblock.oneblocks.OneBlockObject.Rarity;
 
-
 public class OneBlockPhase {
     protected static final SortedMap<Double, Rarity> CHEST_CHANCES = new TreeMap<>();
+
     static {
         CHEST_CHANCES.put(0.62D, Rarity.COMMON);
         CHEST_CHANCES.put(0.87D, Rarity.UNCOMMON);
         CHEST_CHANCES.put(0.96D, Rarity.RARE);
         CHEST_CHANCES.put(1D, Rarity.EPIC);
     }
+
     /**
-     * Tree map of all materials and their probabilities as a ratio to the sum of all probabilities
+     * Tree map of all materials and their probabilities as a ratio to the sum of
+     * all probabilities
      */
     private final TreeMap<Integer, OneBlockObject> probMap = new TreeMap<>();
     /**
@@ -42,6 +44,7 @@ public class OneBlockPhase {
     private Biome phaseBiome;
     private Environment environment;
     private OneBlockObject firstBlock;
+    private ItemStack iconBlock;
     private final Map<Rarity, List<OneBlockObject>> chests = new EnumMap<>(Rarity.class);
     private final Random random = new Random();
     private final String blockNumber;
@@ -53,10 +56,10 @@ public class OneBlockPhase {
     private List<Requirement> requirements;
     private Map<Integer, OneBlockObject> fixedBlocks;
 
-
     /**
      * Construct a phase that starts at blockNumber. Phase continues forever until
      * another phase starts.
+     *
      * @param blockNumber - starting block number
      */
     public OneBlockPhase(String blockNumber) {
@@ -76,6 +79,7 @@ public class OneBlockPhase {
 
     /**
      * Get the block number as an integer
+     *
      * @return the integer value of the blockNumber
      */
     public int getBlockNumberValue() {
@@ -114,8 +118,9 @@ public class OneBlockPhase {
 
     /**
      * Adds a material and associated probability
+     *
      * @param material - Material
-     * @param prob - probability
+     * @param prob     - probability
      */
     public void addBlock(Material material, int prob) {
         total += prob;
@@ -125,8 +130,9 @@ public class OneBlockPhase {
 
     /**
      * Adds an entity type and associated probability
+     *
      * @param entityType - entityType
-     * @param prob - probability
+     * @param prob       - probability
      */
     public void addMob(EntityType entityType, int prob) {
         total += prob;
@@ -140,15 +146,17 @@ public class OneBlockPhase {
 
     /**
      * This picks a random object
-     * @param addon AOneBlock
+     *
+     * @param addon       AOneBlock
      * @param blockNumber the block number in the phase requested
      * @return OneBlockObject selected
      */
 
     public OneBlockObject getNextBlock(AOneBlock addon, int blockNumber) {
-        if (total <1) {
-            addon.logError("Phase " + this.getPhaseName() + " has zero probability of generating blocks. Check config file. Is the block section missing?");
-            return this.getFirstBlock() != null ? getFirstBlock() : new OneBlockObject(Material.GRASS_BLOCK,1);
+        if (total < 1) {
+            addon.logError("Phase " + this.getPhaseName()
+                    + " has zero probability of generating blocks. Check config file. Is the block section missing?");
+            return this.getFirstBlock() != null ? getFirstBlock() : new OneBlockObject(Material.GRASS_BLOCK, 1);
         }
         if (blockNumber == 0 && this.getFirstBlock() != null) {
             return getResult(this.getFirstBlock());
@@ -158,7 +166,8 @@ public class OneBlockPhase {
             return getResult(this.getFixedBlocks().get(blockNumber));
         }
         OneBlockObject block = getRandomBlock(probMap, total);
-        if (block.isEntity()) return block;
+        if (block.isEntity())
+            return block;
         return getResult(block);
     }
 
@@ -168,20 +177,23 @@ public class OneBlockPhase {
 
     private OneBlockObject getRandomChest() {
         // Get the right type of chest
-        Rarity r = CHEST_CHANCES.getOrDefault(((TreeMap<Double, Rarity>) CHEST_CHANCES).ceilingKey(random.nextDouble()), Rarity.COMMON);
+        Rarity r = CHEST_CHANCES.getOrDefault(((TreeMap<Double, Rarity>) CHEST_CHANCES).ceilingKey(random.nextDouble()),
+                Rarity.COMMON);
         // If the chest lists have no common fallback, then return empty chest
-        if (!chests.containsKey(r) && !chests.containsKey(Rarity.COMMON)) return new OneBlockObject(Material.CHEST, 0);
+        if (!chests.containsKey(r) && !chests.containsKey(Rarity.COMMON))
+            return new OneBlockObject(Material.CHEST, 0);
         // Get the rare chest or worse case the common one
         List<OneBlockObject> list = chests.containsKey(r) ? chests.get(r) : chests.get(Rarity.COMMON);
-        // Pick one from the list or return an empty chest. Note list.get() can return nothing
+        // Pick one from the list or return an empty chest. Note list.get() can return
+        // nothing
         return list.isEmpty() ? new OneBlockObject(Material.CHEST, 0) : list.get(random.nextInt(list.size()));
     }
 
     private OneBlockObject getRandomBlock(TreeMap<Integer, OneBlockObject> probMap2, int total2) {
         // Use +1 on the bound because the random choice is exclusive
-        OneBlockObject temp = probMap2.get(random.nextInt(total2+1));
+        OneBlockObject temp = probMap2.get(random.nextInt(total2 + 1));
         if (temp == null) {
-            temp = probMap2.ceilingEntry(random.nextInt(total2+1)).getValue();
+            temp = probMap2.ceilingEntry(random.nextInt(total2 + 1)).getValue();
         }
         if (temp == null) {
             temp = probMap2.firstEntry().getValue();
@@ -212,6 +224,14 @@ public class OneBlockPhase {
     }
 
     /**
+     * @return the iconBlock
+     */
+    @Nullable
+    public ItemStack getIconBlock() {
+        return iconBlock;
+    }
+
+    /**
      * @param firstBlock the firstBlock to set
      */
     public void setFirstBlock(OneBlockObject firstBlock) {
@@ -219,13 +239,19 @@ public class OneBlockPhase {
     }
 
     /**
+     * @param iconBlock the iconBlock to set
+     */
+    public void setIconBlock(ItemStack iconBlock) {
+        this.iconBlock = iconBlock;
+    }
+
+    /**
      * Get all the chests in this phase
+     *
      * @return collection of all the chests
      */
     public Collection<OneBlockObject> getChests() {
-        return chests.values().stream()
-                .flatMap(List::stream)
-                .collect(Collectors.toList());
+        return chests.values().stream().flatMap(List::stream).collect(Collectors.toList());
     }
 
     /**
@@ -237,18 +263,22 @@ public class OneBlockPhase {
 
     /**
      * Get the mobs that are in this phase
+     *
      * @return map of mob type and its relative probability
      */
     public Map<EntityType, Integer> getMobs() {
-        return probMap.values().stream().filter(OneBlockObject::isEntity).collect(Collectors.toMap(OneBlockObject::getEntityType, OneBlockObject::getProb));
+        return probMap.values().stream().filter(OneBlockObject::isEntity)
+                .collect(Collectors.toMap(OneBlockObject::getEntityType, OneBlockObject::getProb));
     }
 
     /**
      * Get the block materials in this phase
+     *
      * @return map of materials and relative probabilities
      */
     public Map<Material, Integer> getBlocks() {
-        return probMap.values().stream().filter(OneBlockObject::isMaterial).collect(Collectors.toMap(OneBlockObject::getMaterial, OneBlockObject::getProb));
+        return probMap.values().stream().filter(OneBlockObject::isMaterial)
+                .collect(Collectors.toMap(OneBlockObject::getMaterial, OneBlockObject::getProb));
     }
 
     /**
@@ -348,6 +378,5 @@ public class OneBlockPhase {
     public void setFixedBlocks(Map<Integer, OneBlockObject> fixedBlocks) {
         this.fixedBlocks = fixedBlocks;
     }
-
 
 }
