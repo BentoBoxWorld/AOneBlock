@@ -404,3 +404,4 @@ public class OneBlockPhase {
     public void setHologramLines(Map<Integer, String> hologramLines) {
         this.holograms = hologramLines;
     }
+}
