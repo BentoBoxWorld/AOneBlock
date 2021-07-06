@@ -17,6 +17,16 @@ import world.bentobox.bentobox.database.objects.Island;
 public class MagicBlockEntityEvent extends AbstractMagicBlockEvent {
 
     protected final EntityType entityType;
+    private static final HandlerList handlers = new HandlerList();
+
+    @Override
+    public HandlerList getHandlers() {
+        return getHandlerList();
+    }
+
+    public static HandlerList getHandlerList() {
+        return handlers;
+    }
 
     /**
      * @param island - island
