@@ -166,8 +166,9 @@ public class OneBlockPhase {
             return getResult(this.getFixedBlocks().get(blockNumber));
         }
         OneBlockObject block = getRandomBlock(probMap, total);
-        if (block.isEntity())
+        if (block.isEntity()) {
             return block;
+        }
         return getResult(block);
     }
 
@@ -180,8 +181,9 @@ public class OneBlockPhase {
         Rarity r = CHEST_CHANCES.getOrDefault(((TreeMap<Double, Rarity>) CHEST_CHANCES).ceilingKey(random.nextDouble()),
                 Rarity.COMMON);
         // If the chest lists have no common fallback, then return empty chest
-        if (!chests.containsKey(r) && !chests.containsKey(Rarity.COMMON))
+        if (!chests.containsKey(r) && !chests.containsKey(Rarity.COMMON)) {
             return new OneBlockObject(Material.CHEST, 0);
+        }
         // Get the rare chest or worse case the common one
         List<OneBlockObject> list = chests.containsKey(r) ? chests.get(r) : chests.get(Rarity.COMMON);
         // Pick one from the list or return an empty chest. Note list.get() can return

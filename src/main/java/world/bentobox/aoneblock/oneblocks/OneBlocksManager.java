@@ -175,22 +175,11 @@ public class OneBlocksManager {
                 throw new IOException("Block " + blockNumber + ": Icon block trying to be set to " + phase.getString(FIRST_BLOCK) + " but already set to " + obPhase.getFirstBlock() + " Duplicate phase file?");
             }
             ItemStack item;
-            try {
-                item = new ItemStack(Material.valueOf(phase.getString(ICON)), 1);
-            } catch (IllegalArgumentException err) {
-                item = new ItemStack(Material.PLAYER_HEAD, 1);
-                SkullMeta meta = (SkullMeta) item.getItemMeta();
-                GameProfile profile = new GameProfile(UUID.randomUUID(), "");
-                profile.getProperties().put("textures", new Property("textures", phase.getString(ICON)));
-                Field profileField = null;
-                try {
-                    profileField = meta.getClass().getDeclaredField("profile");
-                    profileField.setAccessible(true);
-                    profileField.set(meta, profile);
-                } catch (IllegalArgumentException | IllegalAccessException | NoSuchFieldException | SecurityException e) {
-                    e.printStackTrace();
-                }
-                item.setItemMeta(meta);
+            Material m = Enums.getIfPresent(Material.class, phase.getString(ICON).toUpperCase(Locale.ENGLISH)).orNull();
+            if (m == null) {
+                item = generateHead(phase.getString(ICON));
+            } else {
+                item = new ItemStack(m); // note that the default quantity is 1, so you don't need to say 1
             }
             obPhase.setIconBlock(item);
         }
@@ -204,8 +193,9 @@ public class OneBlocksManager {
     }
 
     private void addFixedBlocks(OneBlockPhase obPhase, ConfigurationSection fb) {
-        if (fb == null)
+        if (fb == null) {
             return;
+        }
         Map<Integer, OneBlockObject> result = new HashMap<>();
         for (String key : fb.getKeys(false)) {
             if (!NumberUtils.isNumber(key)) {
@@ -233,8 +223,9 @@ public class OneBlocksManager {
     }
 
     private Biome getBiome(String string) {
-        if (string == null)
+        if (string == null) {
             return Biome.PLAINS;
+        }
         if (Enums.getIfPresent(Biome.class, string).isPresent()) {
             return Biome.valueOf(string);
         }
@@ -249,8 +240,9 @@ public class OneBlocksManager {
     }
 
     void addFirstBlock(OneBlockPhase obPhase, @Nullable String material) {
-        if (material == null)
+        if (material == null) {
             return;
+        }
         Material m = Material.matchMaterial(material);
         if (m == null || !m.isBlock()) {
             addon.logError("Bad firstBlock material: " + material);
@@ -307,8 +299,9 @@ public class OneBlocksManager {
                 for (String index : contents.getKeys(false)) {
                     int slot = Integer.parseInt(index);
                     ItemStack item = contents.getItemStack(index);
-                    if (item != null)
+                    if (item != null) {
                         items.put(slot, item);
+                    }
                 }
             }
             obPhase.addChest(items, rarity);
@@ -441,8 +434,9 @@ public class OneBlocksManager {
                 addon.logError("Could not save phase " + p.getPhaseName() + " " + e.getMessage());
             }
             // No chests in goto phases
-            if (p.isGotoPhase())
+            if (p.isGotoPhase()) {
                 return;
+            }
             // Save chests separately
             oneBlocks = new YamlConfiguration();
             phSec = oneBlocks.createSection(p.getBlockNumber());
@@ -620,5 +614,22 @@ public class OneBlocksManager {
     public String getNextPhase(@NonNull OneBlockIslands obi) {
         return getPhase(obi.getPhaseName()).map(this::getNextPhase) // Next phase or null
                 .filter(Objects::nonNull).map(OneBlockPhase::getPhaseName).orElse("");
+    }
+
+    private ItemStack generateHead(String texture) {
+        ItemStack item = new ItemStack(Material.PLAYER_HEAD, 1);
+        SkullMeta meta = (SkullMeta) item.getItemMeta();
+        GameProfile profile = new GameProfile(UUID.randomUUID(), "");
+        profile.getProperties().put("textures", new Property("textures", texture));
+        Field profileField = null;
+        try {
+            profileField = meta.getClass().getDeclaredField("profile");
+            profileField.setAccessible(true);
+            profileField.set(meta, profile);
+        } catch (IllegalArgumentException | IllegalAccessException | NoSuchFieldException | SecurityException e) {
+            e.printStackTrace();
+        }
+        item.setItemMeta(meta);
+        return item;
     }
 }
