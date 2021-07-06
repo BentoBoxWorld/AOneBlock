@@ -1,5 +1,9 @@
 '0':
   name: Plains
+  # Material (Eg. GRASS_BLOCK) or Base64 Head Texture for Icon in "phases" command. (Optional)
+  # If icon is not defined, then the first block of the phase will be used.
+  # See https://minecraft-heads.com/ for info on Base64 Head Textures
+  icon: eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYWY1ZjE1OTg4NmNjNTMxZmZlYTBkOGFhNWY5MmVkNGU1ZGE2NWY3MjRjMDU3MGFmODZhOTBiZjAwYzY3YzQyZSJ9fX0=
   # List of blocks that will generate at these specific block counts.
   # The numbers are relative to the phase and not the overall player's count.
   # If you define 0 here, then firstBlock is not required and firstBlock will be replaced with this block.
