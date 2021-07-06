@@ -183,8 +183,11 @@ public class PlaceholdersManager {
     public String getDoneScale(User user) {
         if (user == null || user.getUniqueId() == null) return "";
         Island i = addon.getIslands().getIsland(addon.getOverWorld(), user);
+        if (i == null) {
+            return "";
+        }
         double num = addon.getOneBlockManager().getPercentageDone(addon.getOneBlocksIsland(i));
-        return i == null ? "" : SCALE.floorEntry(num).getValue();
+        return SCALE.floorEntry(num).getValue();
     }
 
 

@@ -9,8 +9,8 @@ import org.bukkit.inventory.ItemStack;
 /**
  * Represents something that can be generated when a block is broken
  * Can be a block or entity
- * @author tastybento
  *
+ * @author tastybento
  */
 public class OneBlockObject {
 
@@ -39,14 +39,15 @@ public class OneBlockObject {
 
     private EntityType entityType;
     private Material material;
-    private Map<Integer,ItemStack> chest;
+    private Map<Integer, ItemStack> chest;
     private Rarity rarity;
     private int prob;
 
     /**
      * An entity
+     *
      * @param entityType - type
-     * @param prob - relative probability
+     * @param prob       - relative probability
      */
     public OneBlockObject(EntityType entityType, int prob) {
         this.entityType = entityType;
@@ -55,8 +56,9 @@ public class OneBlockObject {
 
     /**
      * A block
+     *
      * @param material - block type
-     * @param prob - relative probability
+     * @param prob     - relative probability
      */
     public OneBlockObject(Material material, int prob) {
         this.material = material;
@@ -64,11 +66,13 @@ public class OneBlockObject {
 
     }
 
+
     /**
      * A chest
+     *
      * @param chest - list of itemstacks in the chest
      */
-    public OneBlockObject(Map<Integer,ItemStack> chest, Rarity rarity) {
+    public OneBlockObject(Map<Integer, ItemStack> chest, Rarity rarity) {
         this.material = Material.CHEST;
         this.chest = chest;
         this.setRarity(rarity);
@@ -77,6 +81,7 @@ public class OneBlockObject {
 
     /**
      * Copy constructor
+     *
      * @param ob - OneBlockObject
      */
     public OneBlockObject(OneBlockObject ob) {

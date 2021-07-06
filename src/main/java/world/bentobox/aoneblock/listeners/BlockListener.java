@@ -434,13 +434,15 @@ public class BlockListener implements Listener {
      * @return true if this is a new phase, false if not
      */
     private boolean checkPhase(@Nullable Player player, @NonNull Island i, @NonNull OneBlockIslands is, @NonNull OneBlockPhase phase) {
-        String phaseName = phase.getPhaseName();
+        String phaseName = phase.getPhaseName() == null ? "" : phase.getPhaseName();
         if (!is.getPhaseName().equalsIgnoreCase(phaseName)) {
             // Run previous phase end commands
-            oneBlocksManager.getPhase(is.getPhaseName()).ifPresent(oldPhase ->
-                    Util.runCommands(User.getInstance(player),
-                            replacePlaceholders(player, oldPhase.getPhaseName(), phase.getBlockNumber(), i, oldPhase.getEndCommands()),
-                            "Commands run for end of " + oldPhase.getPhaseName()));
+            oneBlocksManager.getPhase(is.getPhaseName()).ifPresent(oldPhase -> {
+                String oldPhaseName = oldPhase.getPhaseName() == null ? "" : oldPhase.getPhaseName();
+                Util.runCommands(User.getInstance(player),
+                        replacePlaceholders(player, oldPhaseName, phase.getBlockNumber(), i, oldPhase.getEndCommands()),
+                        "Commands run for end of " + oldPhaseName);
+            });
             // Set the phase name
             is.setPhaseName(phaseName);
             if (player != null) {
@@ -448,7 +450,7 @@ public class BlockListener implements Listener {
             }
             // Run phase start commands
             Util.runCommands(User.getInstance(player),
-                    replacePlaceholders(player, phase.getPhaseName(), phase.getBlockNumber(), i, phase.getStartCommands()),
+                    replacePlaceholders(player, phaseName, phase.getBlockNumber(), i, phase.getStartCommands()),
                     "Commands run for start of " + phaseName);
             saveIsland(i);
             return true;
