@@ -3,11 +3,10 @@ package world.bentobox.aoneblock;
 import java.io.IOException;
 import java.util.Objects;
 
-import org.bukkit.Bukkit;
-import org.bukkit.World;
+import com.gmail.filoghost.holographicdisplays.api.Hologram;
+import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
+import org.bukkit.*;
 import org.bukkit.World.Environment;
-import org.bukkit.WorldCreator;
-import org.bukkit.WorldType;
 import org.bukkit.generator.ChunkGenerator;
 import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jdt.annotation.Nullable;
@@ -23,6 +22,7 @@ import world.bentobox.aoneblock.listeners.NoBlockHandler;
 import world.bentobox.aoneblock.oneblocks.OneBlocksManager;
 import world.bentobox.aoneblock.requests.IslandStatsHandler;
 import world.bentobox.aoneblock.requests.LocationStatsHandler;
+import world.bentobox.bentobox.BentoBox;
 import world.bentobox.bentobox.api.addons.GameModeAddon;
 import world.bentobox.bentobox.api.configuration.Config;
 import world.bentobox.bentobox.api.configuration.WorldSettings;
@@ -30,12 +30,14 @@ import world.bentobox.bentobox.database.objects.Island;
 
 /**
  * Main OneBlock class - provides an island minigame in the sky
+ *
  * @author tastybento
  */
 public class AOneBlock extends GameModeAddon {
 
     private static final String NETHER = "_nether";
     private static final String THE_END = "_the_end";
+    private static AOneBlock instance;
 
     // Settings
     private Settings settings;
@@ -48,6 +50,8 @@ public class AOneBlock extends GameModeAddon {
 
     @Override
     public void onLoad() {
+        // Set instance to this
+        instance = this;
         // Save the default config from config.yml
         saveDefaultConfig();
         // Load settings from config.yml. This will check if there are any issues with it too.
@@ -57,8 +61,6 @@ public class AOneBlock extends GameModeAddon {
         // Register commands
         playerCommand = new PlayerCommand(this);
         adminCommand = new AdminCommand(this);
-        // Decide if HolographicDisplays is Useable
-        useHolographicDisplays = Bukkit.getPluginManager().isPluginEnabled("HolographicDisplays");
     }
 
     private boolean loadSettings() {
@@ -77,7 +79,7 @@ public class AOneBlock extends GameModeAddon {
     }
 
     @Override
-    public void onEnable(){
+    public void onEnable() {
         try {
             oneBlockManager = new OneBlocksManager(this);
             oneBlockManager.loadPhases();
@@ -96,22 +98,44 @@ public class AOneBlock extends GameModeAddon {
         registerListener(new JoinLeaveListener(this));
         // Register placeholders
         phManager = new PlaceholdersManager(this);
-        getPlugin().getPlaceholdersManager().registerPlaceholder(this,"visited_island_phase", phManager::getPhaseByLocation);
-        getPlugin().getPlaceholdersManager().registerPlaceholder(this,"visited_island_count", phManager::getCountByLocation);
-        getPlugin().getPlaceholdersManager().registerPlaceholder(this,"my_island_phase", phManager::getPhase);
-        getPlugin().getPlaceholdersManager().registerPlaceholder(this,"my_island_count", phManager::getCount);
-        getPlugin().getPlaceholdersManager().registerPlaceholder(this,"visited_island_next_phase", phManager::getNextPhaseByLocation);
-        getPlugin().getPlaceholdersManager().registerPlaceholder(this,"my_island_next_phase", phManager::getNextPhase);
-        getPlugin().getPlaceholdersManager().registerPlaceholder(this,"my_island_blocks_to_next_phase", phManager::getNextPhaseBlocks);
-        getPlugin().getPlaceholdersManager().registerPlaceholder(this,"visited_island_blocks_to_next_phase", phManager::getNextPhaseBlocksByLocation);
-        getPlugin().getPlaceholdersManager().registerPlaceholder(this,"my_island_percent_done", phManager::getPercentDone);
-        getPlugin().getPlaceholdersManager().registerPlaceholder(this,"visited_island_percent_done", phManager::getPercentDoneByLocation);
-        getPlugin().getPlaceholdersManager().registerPlaceholder(this,"my_island_done_scale", phManager::getDoneScale);
-        getPlugin().getPlaceholdersManager().registerPlaceholder(this,"visited_island_done_scale", phManager::getDoneScaleByLocation);
+        getPlugin().getPlaceholdersManager().registerPlaceholder(this, "visited_island_phase", phManager::getPhaseByLocation);
+        getPlugin().getPlaceholdersManager().registerPlaceholder(this, "visited_island_count", phManager::getCountByLocation);
+        getPlugin().getPlaceholdersManager().registerPlaceholder(this, "my_island_phase", phManager::getPhase);
+        getPlugin().getPlaceholdersManager().registerPlaceholder(this, "my_island_count", phManager::getCount);
+        getPlugin().getPlaceholdersManager().registerPlaceholder(this, "visited_island_next_phase", phManager::getNextPhaseByLocation);
+        getPlugin().getPlaceholdersManager().registerPlaceholder(this, "my_island_next_phase", phManager::getNextPhase);
+        getPlugin().getPlaceholdersManager().registerPlaceholder(this, "my_island_blocks_to_next_phase", phManager::getNextPhaseBlocks);
+        getPlugin().getPlaceholdersManager().registerPlaceholder(this, "visited_island_blocks_to_next_phase", phManager::getNextPhaseBlocksByLocation);
+        getPlugin().getPlaceholdersManager().registerPlaceholder(this, "my_island_percent_done", phManager::getPercentDone);
+        getPlugin().getPlaceholdersManager().registerPlaceholder(this, "visited_island_percent_done", phManager::getPercentDoneByLocation);
+        getPlugin().getPlaceholdersManager().registerPlaceholder(this, "my_island_done_scale", phManager::getDoneScale);
+        getPlugin().getPlaceholdersManager().registerPlaceholder(this, "visited_island_done_scale", phManager::getDoneScaleByLocation);
 
         // Register request handlers
         registerRequestHandler(new IslandStatsHandler(this));
         registerRequestHandler(new LocationStatsHandler(this));
+
+        // Decide if HolographicDisplays is Useable
+        useHolographicDisplays = Bukkit.getPluginManager().isPluginEnabled("HolographicDisplays");
+
+        // Replace Missing Holograms
+        Bukkit.getScheduler().runTaskLater(BentoBox.getInstance(), new Runnable() {
+            @Override
+            public void run() {
+                if (useHolographicDisplays()) {
+                    for (Island island : getIslands().getIslands()) {
+                        OneBlockIslands oneBlockIsland = getOneBlocksIsland(island);
+                        String hololine = oneBlockIsland.getHologram();
+                        if (hololine != null) {
+                            final Hologram hologram = HologramsAPI.createHologram(BentoBox.getInstance(), island.getCenter().add(0.5, 2.6, 0.5));
+                            for (String line : hololine.split("\\n")) {
+                                hologram.appendTextLine(ChatColor.translateAlternateColorCodes('&', line));
+                            }
+                        }
+                    }
+                }
+            }
+        }, 400L); // Wait 20 Seconds so that all Islands are Loaded
     }
 
 
@@ -164,8 +188,9 @@ public class AOneBlock extends GameModeAddon {
 
     /**
      * Gets a world or generates a new world if it does not exist
-     * @param worldName2 - the overworld name
-     * @param env - the environment
+     *
+     * @param worldName2      - the overworld name
+     * @param env             - the environment
      * @param chunkGenerator2 - the chunk generator. If <tt>null</tt> then the generator will not be specified
      * @return world loaded or generated
      */
@@ -253,11 +278,25 @@ public class AOneBlock extends GameModeAddon {
 
     /**
      * Get the placeholder manager
+     *
      * @return the phManager
      */
     public PlaceholdersManager getPlaceholdersManager() {
         return phManager;
     }
 
+    /**
+     * @return AOneBlock instance
+     */
+    public static AOneBlock getInstance() {
+        return instance;
+    }
+
+    /**
+     * @return whether to use Holographic Displays or Not
+     */
+    public boolean useHolographicDisplays() {
+        return useHolographicDisplays;
+    }
 
 }

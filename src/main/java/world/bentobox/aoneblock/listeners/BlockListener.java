@@ -177,6 +177,12 @@ public class BlockListener implements Listener {
         if (addon.inWorld(e.getIsland().getWorld())) {
             cache.remove(e.getIsland().getUniqueId());
             handler.deleteID(e.getIsland().getUniqueId());
+            if (AOneBlock.getInstance().useHolographicDisplays()) {
+                for (Hologram hologram : HologramsAPI.getHolograms(BentoBox.getInstance())) {
+                    if (!addon.inWorld(hologram.getWorld())) continue;
+                    addon.getIslands().getIslandAt(hologram.getLocation()).filter(island -> island.getUniqueId().equals(e.getIsland().getUniqueId())).ifPresent(h -> hologram.delete());
+                }
+            }
         }
     }
 
@@ -186,6 +192,23 @@ public class BlockListener implements Listener {
         // Create a database entry
         OneBlockIslands is = new OneBlockIslands(island.getUniqueId());
         cache.put(island.getUniqueId(), is);
+        // Delete Lingering Holograms
+        if (AOneBlock.getInstance().useHolographicDisplays()) {
+            // Delete Old Holograms
+            for (Hologram hologram : HologramsAPI.getHolograms(BentoBox.getInstance())) {
+                if (!addon.inWorld(hologram.getWorld())) continue;
+                addon.getIslands().getIslandAt(hologram.getLocation()).filter(islands -> islands.getUniqueId().equals(island.getUniqueId())).ifPresent(h -> hologram.delete());
+            }
+            // Manage New Hologram
+            String hololine = User.getInstance(island.getOwner()).getTranslation("aoneblock.island.starting-hologram");
+            is.setHologram(hololine == null ? "" : hololine);
+            if (hololine != null) {
+                final Hologram hologram = HologramsAPI.createHologram(BentoBox.getInstance(), island.getCenter().add(0.5, 2.6, 0.5));
+                for (String line : hololine.split("\\n")) {
+                    hologram.appendTextLine(ChatColor.translateAlternateColorCodes('&', line));
+                }
+            }
+        }
         handler.saveObjectAsync(is);
     }
 
@@ -283,15 +306,18 @@ public class BlockListener implements Listener {
             }
         }
         // Manage Holograms
-        for (Hologram hologram : HologramsAPI.getHolograms(BentoBox.getInstance())) {
-            if (!addon.inWorld(hologram.getWorld())) continue;
-            addon.getIslands().getIslandAt(hologram.getLocation()).ifPresent(h -> hologram.delete());
-        }
-        String hololine = phase.getHologramLine(is.getBlockNumber());
-        if (hololine != null) {
-            final Hologram hologram = HologramsAPI.createHologram(BentoBox.getInstance(), i.getCenter().add(0.5, 2.1, 0.5));
-            for (String line : hololine.split("\\n")) {
-                hologram.appendTextLine(ChatColor.translateAlternateColorCodes('&', line));
+        if (AOneBlock.getInstance().useHolographicDisplays()) {
+            for (Hologram hologram : HologramsAPI.getHolograms(BentoBox.getInstance())) {
+                if (!addon.inWorld(hologram.getWorld())) continue;
+                addon.getIslands().getIslandAt(hologram.getLocation()).filter(island -> island.getUniqueId().equals(is.getUniqueId())).ifPresent(h -> hologram.delete());
+            }
+            String hololine = phase.getHologramLine(is.getBlockNumber());
+            is.setHologram(hololine == null ? "" : hololine);
+            if (hololine != null) {
+                final Hologram hologram = HologramsAPI.createHologram(BentoBox.getInstance(), i.getCenter().add(0.5, 2.6, 0.5));
+                for (String line : hololine.split("\\n")) {
+                    hologram.appendTextLine(ChatColor.translateAlternateColorCodes('&', line));
+                }
             }
         }
         // Play warning sound for upcoming mobs

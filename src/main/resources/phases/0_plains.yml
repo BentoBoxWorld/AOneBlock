@@ -11,9 +11,10 @@
     4: OAK_LOG
     5: OAK_LOG
     50: SPONGE
+  # Hologram Lines to Display
+  # The First (Before Phase 1) Hologram is Located in your Locale.
   holograms:
-    0: "&aWelcome To AOneBlock\n&eBreak This Block To Begin"
-    1: "&aGood Luck!"
+    0: "&aGood Luck!"
   biome: PLAINS
   # Commands
   # A list of commands can be run at the start and end of a phase. Commands are run as the Console
