@@ -20,16 +20,6 @@ public class MagicBlockEvent extends AbstractMagicBlockEvent {
 
     protected final ItemStack tool;
     protected final Material nextBlockMaterial;
-    private static final HandlerList handlers = new HandlerList();
-
-    @Override
-    public HandlerList getHandlers() {
-        return getHandlerList();
-    }
-
-    public static HandlerList getHandlerList() {
-        return handlers;
-    }
 
     /**
      * @param island - island where the magic block is located
