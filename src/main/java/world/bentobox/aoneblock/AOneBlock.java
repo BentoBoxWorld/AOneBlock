@@ -3,6 +3,7 @@ package world.bentobox.aoneblock;
 import java.io.IOException;
 import java.util.Objects;
 
+import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.World.Environment;
 import org.bukkit.WorldCreator;
@@ -43,6 +44,7 @@ public class AOneBlock extends GameModeAddon {
     private BlockListener blockListener;
     private OneBlocksManager oneBlockManager;
     private PlaceholdersManager phManager;
+    private Boolean useHolographicDisplays;
 
     @Override
     public void onLoad() {
@@ -55,6 +57,8 @@ public class AOneBlock extends GameModeAddon {
         // Register commands
         playerCommand = new PlayerCommand(this);
         adminCommand = new AdminCommand(this);
+        // Decide if HolographicDisplays is Useable
+        useHolographicDisplays = Bukkit.getPluginManager().isPluginEnabled("HolographicDisplays");
     }
 
     private boolean loadSettings() {

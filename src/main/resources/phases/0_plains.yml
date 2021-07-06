@@ -11,6 +11,9 @@
     4: OAK_LOG
     5: OAK_LOG
     50: SPONGE
+  holograms:
+    0: "&aWelcome To AOneBlock\n&eBreak This Block To Begin"
+    1: "&aGood Luck!"
   biome: PLAINS
   # Commands
   # A list of commands can be run at the start and end of a phase. Commands are run as the Console
