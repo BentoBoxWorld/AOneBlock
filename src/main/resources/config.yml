@@ -1,14 +1,24 @@
 # AOneBlock Configuration ${version}
 aoneblock:
   command:
-    # Island Command. What command users will run to access their island.
+    # Player command. What command users will run to access their island.
     # To define alias, just separate commands with white space.
     # Added since 1.3.0.
     island: ob oneblock
-    # The island admin command.
+    # The admin command.
     # To define alias, just separate commands with white space.
     # Added since 1.3.0.
     admin: obadmin oneblockadmin oba
+    # The default action for new player command call.
+    # Sub-command of main player command that will be run on first player command call.
+    # By default it is sub-command 'create'.
+    # Added since 1.2.0.
+    new-player-action: create
+    # The default action for player command.
+    # Sub-command of main player command that will be run on each player command call.
+    # By default it is sub-command 'go'.
+    # Added since 1.2.0.
+    default-action: go
 world:
   # Friendly name for this world. Used in admin commands. Must be a single word
   friendly-name: OneBlock
@@ -97,9 +107,9 @@ world:
     spawn-radius: 25
   # Mob white list - these mobs will NOT be removed when logging in or doing /island
   remove-mobs-whitelist:
-  - ZOMBIE_VILLAGER
-  - WITHER
   - ENDERMAN
+  - WITHER
+  - ZOMBIE_VILLAGER
   # World flags. These are boolean settings for various flags for this world
   flags:
     CREEPER_DAMAGE: true
@@ -143,8 +153,8 @@ world:
     ENDER_PEARL: 500
     DOOR: 500
     FURNACE: 500
-    MINECART: 500
     ANVIL: 500
+    MINECART: 500
     FISH_SCOOPING: 500
     END_PORTAL: 500
     BREEDING: 500
@@ -154,9 +164,9 @@ world:
     COLLECT_LAVA: 500
     LEVER: 500
     ELYTRA: 0
-    HURT_MONSTERS: 0
-    RIDING: 500
     CAKE: 500
+    RIDING: 500
+    HURT_MONSTERS: 0
     NAME_TAG: 500
     ARMOR_STAND: 500
     TRADING: 0
@@ -166,8 +176,8 @@ world:
     FLINT_AND_STEEL: 500
     NETHER_PORTAL: 500
     LECTERN: 500
-    CROP_TRAMPLE: 500
     ITEM_PICKUP: 0
+    CROP_TRAMPLE: 500
     DROPPER: 500
     BREWING: 500
     TNT_PRIMING: 500
@@ -180,14 +190,14 @@ world:
     PRESSURE_PLATE: 0
     EXPERIENCE_BOTTLE_THROWING: 500
     DYE: 500
-    PLACE_BLOCKS: 500
     ITEM_FRAME: 500
+    PLACE_BLOCKS: 500
     CRAFTING: 0
-    ENCHANTING: 0
     SHEARING: 500
+    ENCHANTING: 0
     BOAT: 500
-    BED: 500
     SPAWN_EGGS: 500
+    BED: 500
     MILKING: 0
     DISPENSER: 500
     GATE: 0
@@ -198,16 +208,14 @@ world:
     BREAK_BLOCKS: 500
     CHORUS_FRUIT: 500
     CONTAINER: 500
-    POTION_THROWING: 500
     JUKEBOX: 500
+    POTION_THROWING: 500
   # These are the default settings for new islands
   default-island-settings:
     PVP_END: false
-    ANIMAL_SPAWN: true
     PVP_NETHER: false
     LEAF_DECAY: true
     TNT_DAMAGE: true
-    MONSTER_SPAWN: true
     FIRE_IGNITE: true
     FIRE_SPREAD: true
     FIRE_BURNING: true
@@ -233,6 +241,8 @@ endIslands: false
 dragonSpawn: false
 island:
   # Drop broken blocks on top of magic block
+  # If you want Jobs or other plugins to recognize magic block breaking this must be false
+  # Added since 1.3.0.
   drop-on-top: true
   # Magic block mob warning
   # Players might be able to hear hostile mobs up to this many blocks away
@@ -408,6 +418,10 @@ protection:
   - GHAST
   - BAT
   - BLAZE
+  # AOneBlock blocked mobs.
+  # List of mobs that should not spawn in AOneBlock.
+  # Added since 1.2.0.
+  block-mobs: []
   # Invincible visitors. List of damages that will not affect visitors.
   # Make list blank if visitors should receive all damages
   invincible-visitors:

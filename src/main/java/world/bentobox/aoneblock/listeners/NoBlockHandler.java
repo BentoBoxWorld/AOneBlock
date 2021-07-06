@@ -1,5 +1,7 @@
 package world.bentobox.aoneblock.listeners;
 
+import java.util.Objects;
+
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -16,7 +18,7 @@ import world.bentobox.bentobox.database.objects.Island;
  */
 public class NoBlockHandler implements Listener {
 
-    private AOneBlock addon;
+    private final AOneBlock addon;
 
     public NoBlockHandler(AOneBlock oneBlock) {
         this.addon = oneBlock;
@@ -29,8 +31,8 @@ public class NoBlockHandler implements Listener {
         }
         // Check if block is air
         Island island = addon.getIslands().getIsland(e.getRespawnLocation().getWorld(), e.getPlayer().getUniqueId());
-        if (island != null && island.getCenter().getBlock().isEmpty()) {
-            island.getCenter().getBlock().setType(Material.COBBLESTONE);
+        if (island != null && Objects.requireNonNull(island.getCenter()).getBlock().isEmpty()) {
+            Objects.requireNonNull(island.getCenter()).getBlock().setType(Material.COBBLESTONE);
         }
     }
 

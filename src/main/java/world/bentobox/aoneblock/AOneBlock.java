@@ -1,12 +1,12 @@
 package world.bentobox.aoneblock;
 
 import java.io.IOException;
+import java.util.Objects;
 
 import org.bukkit.World;
 import org.bukkit.World.Environment;
 import org.bukkit.WorldCreator;
 import org.bukkit.WorldType;
-import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.generator.ChunkGenerator;
 import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jdt.annotation.Nullable;
@@ -17,12 +17,14 @@ import world.bentobox.aoneblock.dataobjects.OneBlockIslands;
 import world.bentobox.aoneblock.generators.ChunkGeneratorWorld;
 import world.bentobox.aoneblock.listeners.BlockListener;
 import world.bentobox.aoneblock.listeners.BlockProtect;
+import world.bentobox.aoneblock.listeners.JoinLeaveListener;
 import world.bentobox.aoneblock.listeners.NoBlockHandler;
 import world.bentobox.aoneblock.oneblocks.OneBlocksManager;
+import world.bentobox.aoneblock.requests.IslandStatsHandler;
+import world.bentobox.aoneblock.requests.LocationStatsHandler;
 import world.bentobox.bentobox.api.addons.GameModeAddon;
 import world.bentobox.bentobox.api.configuration.Config;
 import world.bentobox.bentobox.api.configuration.WorldSettings;
-import world.bentobox.bentobox.api.user.User;
 import world.bentobox.bentobox.database.objects.Island;
 
 /**
@@ -38,8 +40,9 @@ public class AOneBlock extends GameModeAddon {
     private Settings settings;
     private ChunkGeneratorWorld chunkGenerator;
     private final Config<Settings> configObject = new Config<>(this, Settings.class);
-    private BlockListener listener;
+    private BlockListener blockListener;
     private OneBlocksManager oneBlockManager;
+    private PlaceholdersManager phManager;
 
     @Override
     public void onLoad() {
@@ -62,6 +65,9 @@ public class AOneBlock extends GameModeAddon {
             logError("AOneBlock settings could not load! Addon disabled.");
             setState(State.DISABLED);
             return false;
+        } else {
+            // Save the settings
+            configObject.saveConfigObject(settings);
         }
         return true;
     }
@@ -71,72 +77,50 @@ public class AOneBlock extends GameModeAddon {
         try {
             oneBlockManager = new OneBlocksManager(this);
             oneBlockManager.loadPhases();
-            listener = new BlockListener(this);
-            registerListener(listener);
-            registerListener(new NoBlockHandler(this));
-            registerListener(new BlockProtect(this));
-            // Register placeholders
-            getPlugin().getPlaceholdersManager().registerPlaceholder(this,"visited_island_phase", this::getPhaseByLocation);
-            getPlugin().getPlaceholdersManager().registerPlaceholder(this,"visited_island_count", this::getCountByLocation);
-            getPlugin().getPlaceholdersManager().registerPlaceholder(this,"my_island_phase", this::getPhaseByOwner);
-            getPlugin().getPlaceholdersManager().registerPlaceholder(this,"my_island_count", this::getCountByOwner);
-            getPlugin().getPlaceholdersManager().registerPlaceholder(this,"visited_island_next_phase", this::getNextPhaseByLocation);
-            getPlugin().getPlaceholdersManager().registerPlaceholder(this,"my_island_next_phase", this::getNextPhaseByOwner);
-        } catch (IOException | InvalidConfigurationException e) {
+            blockListener = new BlockListener(this);
+        } catch (IOException e) {
             // Disable
             logError("AOneBlock settings could not load (oneblock.yml error)! Addon disabled.");
             logError(e.getMessage());
             setState(State.DISABLED);
+            return;
         }
 
+        registerListener(blockListener);
+        registerListener(new NoBlockHandler(this));
+        registerListener(new BlockProtect(this));
+        registerListener(new JoinLeaveListener(this));
+        // Register placeholders
+        phManager = new PlaceholdersManager(this);
+        getPlugin().getPlaceholdersManager().registerPlaceholder(this,"visited_island_phase", phManager::getPhaseByLocation);
+        getPlugin().getPlaceholdersManager().registerPlaceholder(this,"visited_island_count", phManager::getCountByLocation);
+        getPlugin().getPlaceholdersManager().registerPlaceholder(this,"my_island_phase", phManager::getPhase);
+        getPlugin().getPlaceholdersManager().registerPlaceholder(this,"my_island_count", phManager::getCount);
+        getPlugin().getPlaceholdersManager().registerPlaceholder(this,"visited_island_next_phase", phManager::getNextPhaseByLocation);
+        getPlugin().getPlaceholdersManager().registerPlaceholder(this,"my_island_next_phase", phManager::getNextPhase);
+        getPlugin().getPlaceholdersManager().registerPlaceholder(this,"my_island_blocks_to_next_phase", phManager::getNextPhaseBlocks);
+        getPlugin().getPlaceholdersManager().registerPlaceholder(this,"visited_island_blocks_to_next_phase", phManager::getNextPhaseBlocksByLocation);
+        getPlugin().getPlaceholdersManager().registerPlaceholder(this,"my_island_percent_done", phManager::getPercentDone);
+        getPlugin().getPlaceholdersManager().registerPlaceholder(this,"visited_island_percent_done", phManager::getPercentDoneByLocation);
+        getPlugin().getPlaceholdersManager().registerPlaceholder(this,"my_island_done_scale", phManager::getDoneScale);
+        getPlugin().getPlaceholdersManager().registerPlaceholder(this,"visited_island_done_scale", phManager::getDoneScaleByLocation);
+
+        // Register request handlers
+        registerRequestHandler(new IslandStatsHandler(this));
+        registerRequestHandler(new LocationStatsHandler(this));
     }
 
-    // Placeholder methods
-    private String getPhaseByLocation(User user) {
-        return getIslands().getProtectedIslandAt(user.getLocation())
-                .map(this::getOneBlocksIsland)
-                .map(OneBlockIslands::getPhaseName)
-                .orElse("");
-    }
-
-    private String getCountByLocation(User user) {
-        return getIslands().getProtectedIslandAt(user.getLocation())
-                .map(this::getOneBlocksIsland)
-                .map(OneBlockIslands::getBlockNumber)
-                .map(String::valueOf)
-                .orElse("");
-    }
-
-    private String getPhaseByOwner(User user) {
-        Island i = getIslands().getIsland(getOverWorld(), user);
-        return i == null ? "" : getOneBlocksIsland(i).getPhaseName();
-    }
-
-    private String getCountByOwner(User user) {
-        Island i = getIslands().getIsland(getOverWorld(), user);
-        return i == null ? "" : String.valueOf(getOneBlocksIsland(i).getBlockNumber());
-    }
-
-    private String getNextPhaseByLocation(User user) {
-        return getIslands().getProtectedIslandAt(user.getLocation())
-                .map(this::getOneBlocksIsland)
-                .map(obi -> this.getOneBlockManager().getNextPhase(obi))
-                .orElse("");
-    }
-
-    private String getNextPhaseByOwner(User user) {
-        Island i = getIslands().getIsland(getOverWorld(), user);
-        return i == null ? "" : this.getOneBlockManager().getNextPhase(getOneBlocksIsland(i));
-    }
 
     @Override
     public void onDisable() {
         // save cache
-        listener.saveCache();
+        blockListener.saveCache();
     }
 
     @Override
     public void onReload() {
+        // save cache
+        blockListener.saveCache();
         if (loadSettings()) {
             log("Reloaded AOneBlock settings");
         }
@@ -189,14 +173,31 @@ public class AOneBlock extends GameModeAddon {
         World w = settings.isUseOwnGenerator() ? wc.createWorld() : wc.generator(chunkGenerator2).createWorld();
         // Set spawn rates
         if (w != null) {
-            w.setMonsterSpawnLimit(getSettings().getSpawnLimitMonsters());
-            w.setAmbientSpawnLimit(getSettings().getSpawnLimitAmbient());
-            w.setAnimalSpawnLimit(getSettings().getSpawnLimitAnimals());
-            w.setWaterAnimalSpawnLimit(getSettings().getSpawnLimitWaterAnimals());
-            w.setTicksPerAnimalSpawns(getSettings().getTicksPerAnimalSpawns());
-            w.setTicksPerMonsterSpawns(getSettings().getTicksPerMonsterSpawns());
+            setSpawnRates(w);
         }
         return w;
+
+    }
+
+    private void setSpawnRates(World w) {
+        if (getSettings().getSpawnLimitMonsters() > 0) {
+            w.setMonsterSpawnLimit(getSettings().getSpawnLimitMonsters());
+        }
+        if (getSettings().getSpawnLimitAmbient() > 0) {
+            w.setAmbientSpawnLimit(getSettings().getSpawnLimitAmbient());
+        }
+        if (getSettings().getSpawnLimitAnimals() > 0) {
+            w.setAnimalSpawnLimit(getSettings().getSpawnLimitAnimals());
+        }
+        if (getSettings().getSpawnLimitWaterAnimals() > 0) {
+            w.setWaterAnimalSpawnLimit(getSettings().getSpawnLimitWaterAnimals());
+        }
+        if (getSettings().getTicksPerAnimalSpawns() > 0) {
+            w.setTicksPerAnimalSpawns(getSettings().getTicksPerAnimalSpawns());
+        }
+        if (getSettings().getTicksPerMonsterSpawns() > 0) {
+            w.setTicksPerMonsterSpawns(getSettings().getTicksPerMonsterSpawns());
+        }
 
     }
 
@@ -222,8 +223,7 @@ public class AOneBlock extends GameModeAddon {
      */
     @Override
     public void allLoaded() {
-        // Reload settings and save them. This will occur after all addons have loaded
-        this.loadSettings();
+        // save settings. This will occur after all addons have loaded
         this.saveWorldSettings();
     }
 
@@ -232,11 +232,28 @@ public class AOneBlock extends GameModeAddon {
      * @return one block island data
      */
     @NonNull
-    public OneBlockIslands getOneBlocksIsland(Island i) {
-        return listener.getIsland(i);
+    public OneBlockIslands getOneBlocksIsland(@NonNull Island i) {
+        return blockListener.getIsland(Objects.requireNonNull(i));
     }
 
     public OneBlocksManager getOneBlockManager() {
         return oneBlockManager;
     }
+
+    /**
+     * @return the blockListener
+     */
+    public BlockListener getBlockListener() {
+        return blockListener;
+    }
+
+    /**
+     * Get the placeholder manager
+     * @return the phManager
+     */
+    public PlaceholdersManager getPlaceholdersManager() {
+        return phManager;
+    }
+
+
 }

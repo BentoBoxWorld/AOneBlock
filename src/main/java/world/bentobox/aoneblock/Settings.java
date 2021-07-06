@@ -12,6 +12,8 @@ import org.bukkit.GameMode;
 import org.bukkit.block.Biome;
 import org.bukkit.entity.EntityType;
 
+import com.google.common.base.Enums;
+
 import world.bentobox.aoneblock.listeners.BlockListener;
 import world.bentobox.bentobox.api.configuration.ConfigComment;
 import world.bentobox.bentobox.api.configuration.ConfigEntry;
@@ -96,7 +98,7 @@ public class Settings implements WorldSettings {
     @ConfigComment("Default protection range radius in blocks. Cannot be larger than distance.")
     @ConfigComment("Admins can change protection sizes for players individually using /bsbadmin range set <player> <new range>")
     @ConfigComment("or set this permission: aoneblock.island.range.<number>")
-    @ConfigEntry(path = "world.protection-range", needsReset = true)
+    @ConfigEntry(path = "world.protection-range")
     private int islandProtectionRange = 50;
 
     @ConfigComment("Start islands at these coordinates. This is where new islands will start in the")
@@ -147,6 +149,12 @@ public class Settings implements WorldSettings {
     @ConfigComment("The default biome for the overworld")
     @ConfigEntry(path = "world.default-biome")
     private Biome defaultBiome = Biome.PLAINS;
+    @ConfigComment("The default biome for the nether world (this may affect what mobs can spawn)")
+    @ConfigEntry(path = "world.default-nether-biome")
+    private Biome defaultNetherBiome = Enums.getIfPresent(Biome.class, "NETHER").or(Enums.getIfPresent(Biome.class, "NETHER_WASTES").or(Biome.BADLANDS));
+    @ConfigComment("The default biome for the end world (this may affect what mobs can spawn)")
+    @ConfigEntry(path = "world.default-end-biome")
+    private Biome defaultEndBiome = Biome.THE_END;
 
     @ConfigComment("The maximum number of players a player can ban at any one time in this game mode.")
     @ConfigComment("The permission acidisland.ban.maxlimit.X where X is a number can also be used per player")
@@ -222,6 +230,7 @@ public class Settings implements WorldSettings {
 
     /*      ISLAND      */
     @ConfigComment("Drop broken blocks on top of magic block")
+    @ConfigComment("If you want Jobs or other plugins to recognize magic block breaking this must be false")
     @ConfigEntry(path = "island.drop-on-top", since = "1.3.0")
     private boolean dropOnTop = true;
 
@@ -1696,11 +1705,39 @@ public class Settings implements WorldSettings {
         this.mobLimitSettings = mobLimitSettings;
     }
 
-	public boolean isDropOnTop() {
-		return dropOnTop;
-	}
+    public boolean isDropOnTop() {
+        return dropOnTop;
+    }
 
-	public void setDropOnTop(boolean dropOnTop) {
-		this.dropOnTop = dropOnTop;
-	}
+    public void setDropOnTop(boolean dropOnTop) {
+        this.dropOnTop = dropOnTop;
+    }
+
+    /**
+     * @return the defaultNetherBiome
+     */
+    public Biome getDefaultNetherBiome() {
+        return defaultNetherBiome;
+    }
+
+    /**
+     * @param defaultNetherBiome the defaultNetherBiome to set
+     */
+    public void setDefaultNetherBiome(Biome defaultNetherBiome) {
+        this.defaultNetherBiome = defaultNetherBiome;
+    }
+
+    /**
+     * @return the defaultEndBiome
+     */
+    public Biome getDefaultEndBiome() {
+        return defaultEndBiome;
+    }
+
+    /**
+     * @param defaultEndBiome the defaultEndBiome to set
+     */
+    public void setDefaultEndBiome(Biome defaultEndBiome) {
+        this.defaultEndBiome = defaultEndBiome;
+    }
 }

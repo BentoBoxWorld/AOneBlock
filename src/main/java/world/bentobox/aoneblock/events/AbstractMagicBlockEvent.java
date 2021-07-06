@@ -23,11 +23,9 @@ public abstract class AbstractMagicBlockEvent extends BentoBoxEvent {
     /**
      * @param island - island where the magic block is located
      * @param playerUUID - the player involved
-     * @param tool
-     * @param block
-     * @param nextBlockMaterial
+     * @param block - block involved in the event
      */
-    public AbstractMagicBlockEvent(@NonNull Island island, @Nullable UUID playerUUID, @NonNull Block block) {
+    protected AbstractMagicBlockEvent(@NonNull Island island, @Nullable UUID playerUUID, @NonNull Block block) {
         super();
         this.island = island;
         this.playerUUID = playerUUID;

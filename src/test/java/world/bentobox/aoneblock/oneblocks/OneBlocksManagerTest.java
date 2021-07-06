@@ -226,7 +226,7 @@ public class OneBlocksManagerTest {
     public void testGetPhaseList() throws NumberFormatException, IOException, InvalidConfigurationException {
         testLoadPhases();
         List<String> l = obm.getPhaseList();
-        assertTrue(l.size() == 2);
+        assertEquals(2, l.size());
         assertEquals("Plains", l.get(0));
         assertEquals("Underground", l.get(1));
 

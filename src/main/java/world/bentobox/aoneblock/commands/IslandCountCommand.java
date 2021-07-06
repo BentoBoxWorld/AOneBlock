@@ -1,6 +1,7 @@
 package world.bentobox.aoneblock.commands;
 
 import java.util.List;
+import java.util.Objects;
 
 import world.bentobox.aoneblock.AOneBlock;
 import world.bentobox.aoneblock.dataobjects.OneBlockIslands;
@@ -23,12 +24,12 @@ public class IslandCountCommand extends CompositeCommand {
         setOnlyPlayer(true);
         // Permission
         setPermission("count");
-        addon = (AOneBlock)getAddon();
+        addon = getAddon();
     }
 
     @Override
     public boolean canExecute(User user, String label, List<String> args) {
-        if (!Util.getWorld(user.getWorld()).equals(getWorld())) {
+        if (!Util.sameWorld(getWorld(), user.getWorld())) {
             user.sendMessage("general.errors.wrong-world");
             return false;
         }
@@ -41,7 +42,7 @@ public class IslandCountCommand extends CompositeCommand {
 
     @Override
     public boolean execute(User user, String label, List<String> args) {
-        getIslands().getProtectedIslandAt(user.getLocation()).ifPresent(island -> {
+        getIslands().getProtectedIslandAt(Objects.requireNonNull(user.getLocation())).ifPresent(island -> {
             OneBlockIslands i = addon.getOneBlocksIsland(island);
             user.sendMessage("aoneblock.commands.count.info", TextVariables.NUMBER, String.valueOf(i.getBlockNumber()), TextVariables.NAME, i.getPhaseName());
         });

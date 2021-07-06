@@ -23,7 +23,7 @@ public class AdminSanityCheck extends CompositeCommand {
         setDescription("aoneblock.commands.admin.sanity.description");
         // Permission
         setPermission("admin.sanity");
-        addon = (AOneBlock)getAddon();
+        addon = getAddon();
     }
 
     @Override
