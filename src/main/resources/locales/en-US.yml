@@ -39,4 +39,5 @@ aoneblock:
     insufficient-permission: "&c You can proceed no futher until you obtain the [name] permission!"
   placeholders:
     infinite: Infinite
-    
+  island:
+    starting-hologram: "&aWelcome to AOneBlock\n&eBreak This Block to Begin"

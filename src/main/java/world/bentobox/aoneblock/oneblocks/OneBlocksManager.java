@@ -39,6 +39,7 @@ public class OneBlocksManager {
     private static final String FIRST_BLOCK = "firstBlock";
     private static final String ICON = "icon";
     private static final String FIXED_BLOCKS = "fixedBlocks";
+    private static final String HOLOGRAMS = "holograms";
     private static final String CHESTS = "chests";
     private static final String RARITY = "rarity";
     private static final String CONTENTS = "contents";
@@ -190,6 +191,13 @@ public class OneBlocksManager {
             }
             addFixedBlocks(obPhase, phase.getConfigurationSection(FIXED_BLOCKS));
         }
+
+        if (phase.contains(HOLOGRAMS)) {
+            if (!obPhase.getHologramLines().isEmpty()) {
+                throw new IOException("Block " + blockNumber + ": Hologram Lines trying to be set to " + phase.getString(HOLOGRAMS) + " but already set to " + obPhase.getHologramLines() + " Duplicate phase file?");
+            }
+            addHologramLines(obPhase, phase.getConfigurationSection(HOLOGRAMS));
+        }
     }
 
     private void addFixedBlocks(OneBlockPhase obPhase, ConfigurationSection fb) {
@@ -219,6 +227,25 @@ public class OneBlocksManager {
         }
         // Store the remainder
         obPhase.setFixedBlocks(result);
+
+    }
+
+    private void addHologramLines(OneBlockPhase obPhase, ConfigurationSection fb) {
+        if (fb == null) return;
+        Map<Integer, String> result = new HashMap<>();
+        for (String key : fb.getKeys(false)) {
+            if (!NumberUtils.isNumber(key)) {
+                addon.logError("Fixed block key must be an integer. " + key);
+                continue;
+            }
+            int k = Integer.parseInt(key);
+            String line = fb.getString(key);
+            if (line != null) {
+                    result.put(k, line);
+            }
+        }
+        // Set Hologram Lines
+        obPhase.setHologramLines(result);
 
     }
 

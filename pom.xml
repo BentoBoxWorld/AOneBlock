@@ -167,6 +167,13 @@
             <version>${spigot.version}</version>
             <scope>provided</scope>
         </dependency>
+        <!-- Holographic Displays API -->
+        <dependency>
+            <groupId>com.gmail.filoghost.holographicdisplays</groupId>
+            <artifactId>holographicdisplays-api</artifactId>
+            <version>2.4.0</version>
+            <scope>provided</scope>
+        </dependency>
         <!-- Mojang Auth-->
         <dependency>
             <groupId>com.mojang</groupId>

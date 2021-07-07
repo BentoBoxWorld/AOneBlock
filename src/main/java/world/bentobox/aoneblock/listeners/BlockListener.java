@@ -1,24 +1,8 @@
 package world.bentobox.aoneblock.listeners;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.EnumMap;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Random;
-import java.util.concurrent.CompletableFuture;
-import java.util.stream.Collectors;
-
-import org.bukkit.Bukkit;
-import org.bukkit.Color;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.Particle;
-import org.bukkit.Sound;
-import org.bukkit.Tag;
-import org.bukkit.World;
+import com.gmail.filoghost.holographicdisplays.api.Hologram;
+import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
+import org.bukkit.*;
 import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -43,18 +27,14 @@ import org.bukkit.util.BoundingBox;
 import org.bukkit.util.Vector;
 import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jdt.annotation.Nullable;
-
 import world.bentobox.aoneblock.AOneBlock;
 import world.bentobox.aoneblock.dataobjects.OneBlockIslands;
 import world.bentobox.aoneblock.events.MagicBlockEntityEvent;
 import world.bentobox.aoneblock.events.MagicBlockEvent;
 import world.bentobox.aoneblock.events.MagicBlockPhaseEvent;
-import world.bentobox.aoneblock.oneblocks.MobAspects;
-import world.bentobox.aoneblock.oneblocks.OneBlockObject;
-import world.bentobox.aoneblock.oneblocks.OneBlockPhase;
-import world.bentobox.aoneblock.oneblocks.OneBlocksManager;
-import world.bentobox.aoneblock.oneblocks.Requirement;
+import world.bentobox.aoneblock.oneblocks.*;
 import world.bentobox.bank.Bank;
+import world.bentobox.bentobox.BentoBox;
 import world.bentobox.bentobox.api.events.island.IslandCreatedEvent;
 import world.bentobox.bentobox.api.events.island.IslandDeleteEvent;
 import world.bentobox.bentobox.api.events.island.IslandResettedEvent;
@@ -65,9 +45,12 @@ import world.bentobox.bentobox.database.objects.Island;
 import world.bentobox.bentobox.util.Util;
 import world.bentobox.level.Level;
 
+import java.util.*;
+import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
+
 /**
  * @author tastybento
- *
  */
 public class BlockListener implements Listener {
 
@@ -81,6 +64,7 @@ public class BlockListener implements Listener {
      * Tools that take damage. See https://minecraft.gamepedia.com/Item_durability#Tool_durability
      */
     private static final Map<Material, Integer> TOOLS;
+
     static {
         Map<Material, Integer> t = new EnumMap<>(Material.class);
         t.put(Material.DIAMOND_AXE, 1);
@@ -107,6 +91,7 @@ public class BlockListener implements Listener {
         t.put(Material.TRIDENT, 2);
         TOOLS = Collections.unmodifiableMap(t);
     }
+
     /**
      * Water entities
      */
@@ -126,6 +111,7 @@ public class BlockListener implements Listener {
     private static final Map<EntityType, MobAspects> MOB_ASPECTS;
     public static final int MAX_LOOK_AHEAD = 5;
     public static final int SAVE_EVERY = 50;
+
     static {
         Map<EntityType, MobAspects> m = new EnumMap<>(EntityType.class);
         m.put(EntityType.BLAZE, new MobAspects(Sound.ENTITY_BLAZE_AMBIENT, Color.fromRGB(238, 211, 91)));
@@ -191,6 +177,12 @@ public class BlockListener implements Listener {
         if (addon.inWorld(e.getIsland().getWorld())) {
             cache.remove(e.getIsland().getUniqueId());
             handler.deleteID(e.getIsland().getUniqueId());
+            if (AOneBlock.getInstance().useHolographicDisplays()) {
+                for (Hologram hologram : HologramsAPI.getHolograms(BentoBox.getInstance())) {
+                    if (!addon.inWorld(hologram.getWorld())) continue;
+                    addon.getIslands().getIslandAt(hologram.getLocation()).filter(island -> island.getUniqueId().equals(e.getIsland().getUniqueId())).ifPresent(h -> hologram.delete());
+                }
+            }
         }
     }
 
@@ -200,6 +192,23 @@ public class BlockListener implements Listener {
         // Create a database entry
         OneBlockIslands is = new OneBlockIslands(island.getUniqueId());
         cache.put(island.getUniqueId(), is);
+        // Delete Lingering Holograms
+        if (AOneBlock.getInstance().useHolographicDisplays()) {
+            // Delete Old Holograms
+            for (Hologram hologram : HologramsAPI.getHolograms(BentoBox.getInstance())) {
+                if (!addon.inWorld(hologram.getWorld())) continue;
+                addon.getIslands().getIslandAt(hologram.getLocation()).filter(islands -> islands.getUniqueId().equals(island.getUniqueId())).ifPresent(h -> hologram.delete());
+            }
+            // Manage New Hologram
+            String hololine = User.getInstance(island.getOwner()).getTranslation("aoneblock.island.starting-hologram");
+            is.setHologram(hololine == null ? "" : hololine);
+            if (hololine != null) {
+                final Hologram hologram = HologramsAPI.createHologram(BentoBox.getInstance(), island.getCenter().add(0.5, 2.6, 0.5));
+                for (String line : hololine.split("\\n")) {
+                    hologram.appendTextLine(ChatColor.translateAlternateColorCodes('&', line));
+                }
+            }
+        }
         handler.saveObjectAsync(is);
     }
 
@@ -221,6 +230,7 @@ public class BlockListener implements Listener {
 
     /**
      * Handles JetsMinions. These are special armor stands. Requires Minions 6.9.3 or later
+     *
      * @param e - event
      */
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
@@ -234,6 +244,7 @@ public class BlockListener implements Listener {
 
     /**
      * Check for water grabbing
+     *
      * @param e - event (note that you cannot register PlayerBucketEvent)
      */
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
@@ -246,10 +257,11 @@ public class BlockListener implements Listener {
 
     /**
      * Main block processing method
-     * @param e - event causing the processing
-     * @param i - island where it's happening
+     *
+     * @param e      - event causing the processing
+     * @param i      - island where it's happening
      * @param player - player who broke the block or who is involved - may be null
-     * @param world - world where the block is being broken
+     * @param world  - world where the block is being broken
      */
     private void process(@NonNull Cancellable e, @NonNull Island i, @Nullable Player player, @NonNull World world) {
         // Get island from cache or load it
@@ -283,7 +295,7 @@ public class BlockListener implements Listener {
             is.clearQueue();
         }
         // Get the block number in this phase
-        int blockNumber = is.getBlockNumber() - phase.getBlockNumberValue() + (int)is.getQueue().stream().filter(OneBlockObject::isMaterial).count();
+        int blockNumber = is.getBlockNumber() - phase.getBlockNumberValue() + (int) is.getQueue().stream().filter(OneBlockObject::isMaterial).count();
         // Get the block that is being broken
         Block block = Objects.requireNonNull(i.getCenter()).toVector().toLocation(world).getBlock();
         // Fill a 5 block queue
@@ -291,6 +303,21 @@ public class BlockListener implements Listener {
             // Add initial 5 blocks
             for (int j = 0; j < MAX_LOOK_AHEAD; j++) {
                 is.add(phase.getNextBlock(addon, blockNumber++));
+            }
+        }
+        // Manage Holograms
+        if (AOneBlock.getInstance().useHolographicDisplays()) {
+            for (Hologram hologram : HologramsAPI.getHolograms(BentoBox.getInstance())) {
+                if (!addon.inWorld(hologram.getWorld())) continue;
+                addon.getIslands().getIslandAt(hologram.getLocation()).filter(island -> island.getUniqueId().equals(is.getUniqueId())).ifPresent(h -> hologram.delete());
+            }
+            String hololine = phase.getHologramLine(is.getBlockNumber());
+            is.setHologram(hololine == null ? "" : hololine);
+            if (hololine != null) {
+                final Hologram hologram = HologramsAPI.createHologram(BentoBox.getInstance(), i.getCenter().add(0.5, 2.6, 0.5));
+                for (String line : hololine.split("\\n")) {
+                    hologram.appendTextLine(ChatColor.translateAlternateColorCodes('&', line));
+                }
             }
         }
         // Play warning sound for upcoming mobs
@@ -318,12 +345,12 @@ public class BlockListener implements Listener {
         if (e instanceof BlockBreakEvent) {
             breakBlock(e, player, block, world, nextBlock, i);
         } else if (e instanceof PlayerBucketFillEvent) {
-            Bukkit.getScheduler().runTask(addon.getPlugin(), ()-> spawnBlock(nextBlock, block));
+            Bukkit.getScheduler().runTask(addon.getPlugin(), () -> spawnBlock(nextBlock, block));
             // Fire event
             ItemStack tool = Objects.requireNonNull(player).getInventory().getItemInMainHand();
             Bukkit.getPluginManager().callEvent(new MagicBlockEvent(i, player.getUniqueId(), tool, block, nextBlock.getMaterial()));
         } else if (e instanceof EntitySpawnEvent) {
-            Bukkit.getScheduler().runTask(addon.getPlugin(), ()-> spawnBlock(nextBlock, block));
+            Bukkit.getScheduler().runTask(addon.getPlugin(), () -> spawnBlock(nextBlock, block));
         } else if (e instanceof EntityInteractEvent) {
             // Minion breaking block
             Bukkit.getScheduler().runTask(addon.getPlugin(), () -> spawnBlock(nextBlock, block));
@@ -336,10 +363,11 @@ public class BlockListener implements Listener {
 
     /**
      * Checks whether the player can proceed to the next phase
+     *
      * @param player - player
-     * @param i - island
-     * @param phase - one block phase
-     * @param world - world
+     * @param i      - island
+     * @param phase  - one block phase
+     * @param world  - world
      * @return true if the player can proceed to the next phase, false if not or if there is no next phase.
      */
     private boolean phaseRequirementsFail(@Nullable Player player, @NonNull Island i, OneBlockPhase phase, @NonNull World world) {
@@ -349,38 +377,38 @@ public class BlockListener implements Listener {
         // Check requirements
         for (Requirement r : phase.getRequirements()) {
             switch (r.getType()) {
-            case LEVEL:
-                return addon.getAddonByName("Level").map(l -> {
-                    if (((Level)l).getIslandLevel(world, i.getOwner()) < r.getLevel()) {
-                        User.getInstance(player).sendMessage("aoneblock.phase.insufficient-level", TextVariables.NUMBER, String.valueOf(r.getLevel()));
+                case LEVEL:
+                    return addon.getAddonByName("Level").map(l -> {
+                        if (((Level) l).getIslandLevel(world, i.getOwner()) < r.getLevel()) {
+                            User.getInstance(player).sendMessage("aoneblock.phase.insufficient-level", TextVariables.NUMBER, String.valueOf(r.getLevel()));
+                            return true;
+                        }
+                        return false;
+                    }).orElse(false);
+                case BANK:
+                    return addon.getAddonByName("Bank").map(l -> {
+                        if (((Bank) l).getBankManager().getBalance(i).getValue() < r.getBank()) {
+                            User.getInstance(player).sendMessage("aoneblock.phase.insufficient-bank-balance", TextVariables.NUMBER, String.valueOf(r.getBank()));
+                            return true;
+                        }
+                        return false;
+                    }).orElse(false);
+                case ECO:
+                    return addon.getPlugin().getVault().map(l -> {
+                        if (l.getBalance(User.getInstance(player), world) < r.getEco()) {
+                            User.getInstance(player).sendMessage("aoneblock.phase.insufficient-funds", TextVariables.NUMBER, String.valueOf(r.getEco()));
+                            return true;
+                        }
+                        return false;
+                    }).orElse(false);
+                case PERMISSION:
+                    if (player != null && !player.hasPermission(r.getPermission())) {
+                        User.getInstance(player).sendMessage("aoneblock.phase.insufficient-permission", TextVariables.NAME, String.valueOf(r.getPermission()));
                         return true;
                     }
                     return false;
-                }).orElse(false);
-            case BANK:
-                return addon.getAddonByName("Bank").map(l -> {
-                    if (((Bank)l).getBankManager().getBalance(i).getValue() < r.getBank()) {
-                        User.getInstance(player).sendMessage("aoneblock.phase.insufficient-bank-balance", TextVariables.NUMBER, String.valueOf(r.getBank()));
-                        return true;
-                    }
-                    return false;
-                }).orElse(false);
-            case ECO:
-                return addon.getPlugin().getVault().map(l -> {
-                    if (l.getBalance(User.getInstance(player), world) < r.getEco()) {
-                        User.getInstance(player).sendMessage("aoneblock.phase.insufficient-funds", TextVariables.NUMBER, String.valueOf(r.getEco()));
-                        return true;
-                    }
-                    return false;
-                }).orElse(false);
-            case PERMISSION:
-                if (player != null && !player.hasPermission(r.getPermission())) {
-                    User.getInstance(player).sendMessage("aoneblock.phase.insufficient-permission", TextVariables.NAME, String.valueOf(r.getPermission()));
-                    return true;
-                }
-                return false;
-            default:
-                break;
+                default:
+                    break;
 
             }
         }
@@ -398,10 +426,11 @@ public class BlockListener implements Listener {
 
     /**
      * Check whether this phase is done or not.
+     *
      * @param player - player
-     * @param i - island
-     * @param is - OneBlockIslands object
-     * @param phase - current phase name
+     * @param i      - island
+     * @param is     - OneBlockIslands object
+     * @param phase  - current phase name
      * @return true if this is a new phase, false if not
      */
     private boolean checkPhase(@Nullable Player player, @NonNull Island i, @NonNull OneBlockIslands is, @NonNull OneBlockPhase phase) {
@@ -442,19 +471,19 @@ public class BlockListener implements Listener {
      * [eco-balance] - player's economy balance (Requires Vault and an economy plugin)
      * </pre>
      *
-     * @param player - player
-     * @param phaseName - phase name
+     * @param player      - player
+     * @param phaseName   - phase name
      * @param phaseNumber - phase's block number
-     * @param i - island
-     * @param commands - list of commands
+     * @param i           - island
+     * @param commands    - list of commands
      * @return list of commands with placeholders replaced
      */
     @NonNull
     List<String> replacePlaceholders(@Nullable Player player, @NonNull String phaseName, @NonNull String phaseNumber, @NonNull Island i, List<String> commands) {
         return commands.stream()
                 .map(c -> {
-                    long level = addon.getAddonByName("Level").map(l -> ((Level)l).getIslandLevel(addon.getOverWorld(), i.getOwner())).orElse(0L);
-                    double balance = addon.getAddonByName("Bank").map(b -> ((Bank)b).getBankManager().getBalance(i).getValue()).orElse(0D);
+                    long level = addon.getAddonByName("Level").map(l -> ((Level) l).getIslandLevel(addon.getOverWorld(), i.getOwner())).orElse(0L);
+                    double balance = addon.getAddonByName("Bank").map(b -> ((Bank) b).getBankManager().getBalance(i).getValue()).orElse(0D);
                     double ecoBalance = addon.getPlugin().getVault().map(v -> v.getBalance(User.getInstance(player), addon.getOverWorld())).orElse(0D);
 
                     return c.replace("[island]", i.getName() == null ? "" : i.getName())
@@ -507,18 +536,18 @@ public class BlockListener implements Listener {
         if (addon.getSettings().isDropOnTop()) {
             // Drop the drops
             block.getDrops(tool, player).stream()
-            .filter(Objects::nonNull)
-            .filter(item -> !item.getType().equals(Material.AIR))
-            .forEach(item -> world.dropItem(block.getRelative(BlockFace.UP).getLocation()
-                    .add(new Vector(0.5, 0, 0.5)), item)
-                    .setVelocity(new Vector(0,0,0)));
+                    .filter(Objects::nonNull)
+                    .filter(item -> !item.getType().equals(Material.AIR))
+                    .forEach(item -> world.dropItem(block.getRelative(BlockFace.UP).getLocation()
+                            .add(new Vector(0.5, 0, 0.5)), item)
+                            .setVelocity(new Vector(0, 0, 0)));
             // Set the air
             block.setType(Material.AIR);
         } else {
             block.breakNaturally(tool);
         }
         // Give exp
-        Objects.requireNonNull(player).giveExp(((BlockBreakEvent)e).getExpToDrop());
+        Objects.requireNonNull(player).giveExp(((BlockBreakEvent) e).getExpToDrop());
         // Damage tool
         damageTool(Objects.requireNonNull(player));
         spawnBlock(nextBlock, block);
@@ -535,7 +564,7 @@ public class BlockListener implements Listener {
             return;
         }
         if (Tag.LEAVES.isTagged(type)) {
-            Leaves leaves = (Leaves)block.getState().getBlockData();
+            Leaves leaves = (Leaves) block.getState().getBlockData();
             leaves.setPersistent(true);
             block.setBlockData(leaves);
         }
@@ -557,9 +586,9 @@ public class BlockListener implements Listener {
         for (double x = bb.getMinX(); x <= bb.getMaxX() + 1; x++) {
             for (double z = bb.getMinZ(); z <= bb.getMaxZ() + 1; z++) {
                 double y = bb.getMinY();
-                Block b = world.getBlockAt(new Location(world, x,y,z));
+                Block b = world.getBlockAt(new Location(world, x, y, z));
                 for (; y <= Math.min(bb.getMaxY() + 1, world.getMaxHeight()); y++) {
-                    b = world.getBlockAt(new Location(world, x,y,z));
+                    b = world.getBlockAt(new Location(world, x, y, z));
                     if (!b.getType().equals(Material.AIR) && !b.isLiquid()) b.breakNaturally();
                     b.setType(WATER_ENTITIES.contains(e.getType()) && addon.getSettings().isWaterMobProtection() ? Material.WATER : Material.AIR, false);
                 }
@@ -572,28 +601,29 @@ public class BlockListener implements Listener {
     }
 
     private void fillChest(@NonNull OneBlockObject nextBlock, @NonNull Block block) {
-        Chest chest = (Chest)block.getState();
+        Chest chest = (Chest) block.getState();
         nextBlock.getChest().forEach(chest.getBlockInventory()::setItem);
-        Color color = Color.fromBGR(0,255,255); // yellow
+        Color color = Color.fromBGR(0, 255, 255); // yellow
         switch (nextBlock.getRarity()) {
-        case EPIC:
-            color = Color.fromBGR(255,0,255); // magenta
-            break;
-        case RARE:
-            color = Color.fromBGR(255,255,255); // cyan
-            break;
-        case UNCOMMON:
-            // Yellow
-            break;
-        default:
-            // No sparkles for regular chests
-            return;
+            case EPIC:
+                color = Color.fromBGR(255, 0, 255); // magenta
+                break;
+            case RARE:
+                color = Color.fromBGR(255, 255, 255); // cyan
+                break;
+            case UNCOMMON:
+                // Yellow
+                break;
+            default:
+                // No sparkles for regular chests
+                return;
         }
         block.getWorld().spawnParticle(Particle.REDSTONE, block.getLocation().add(new Vector(0.5, 1.0, 0.5)), 50, 0.5, 0, 0.5, 1, new Particle.DustOptions(color, 1));
     }
 
     /**
      * Get the one block island data
+     *
      * @param i - island
      * @return one block island
      */
@@ -655,6 +685,7 @@ public class BlockListener implements Listener {
 
     /**
      * Saves the island progress to the database async
+     *
      * @param island - island
      * @return CompletableFuture - true if saved or not in cache, false if save failed
      */
