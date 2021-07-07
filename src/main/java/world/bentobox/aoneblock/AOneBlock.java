@@ -117,27 +117,7 @@ public class AOneBlock extends GameModeAddon {
 
         // Decide if HolographicDisplays is Useable
         useHolographicDisplays = Bukkit.getPluginManager().isPluginEnabled("HolographicDisplays");
-
-        // Replace Missing Holograms
-        Bukkit.getScheduler().runTaskLater(BentoBox.getInstance(), new Runnable() {
-            @Override
-            public void run() {
-                if (useHolographicDisplays()) {
-                    for (Island island : getIslands().getIslands()) {
-                        OneBlockIslands oneBlockIsland = getOneBlocksIsland(island);
-                        String hololine = oneBlockIsland.getHologram();
-                        if (hololine != null) {
-                            final Hologram hologram = HologramsAPI.createHologram(BentoBox.getInstance(), island.getCenter().add(0.5, 2.6, 0.5));
-                            for (String line : hololine.split("\\n")) {
-                                hologram.appendTextLine(ChatColor.translateAlternateColorCodes('&', line));
-                            }
-                        }
-                    }
-                }
-            }
-        }, 400L); // Wait 20 Seconds so that all Islands are Loaded
     }
-
 
     @Override
     public void onDisable() {
@@ -254,6 +234,20 @@ public class AOneBlock extends GameModeAddon {
     public void allLoaded() {
         // save settings. This will occur after all addons have loaded
         this.saveWorldSettings();
+
+        // Manage Old Holograms
+        if (useHolographicDisplays()) {
+            for (Island island : getIslands().getIslands()) {
+                OneBlockIslands oneBlockIsland = getOneBlocksIsland(island);
+                String hololine = oneBlockIsland.getHologram();
+                if (hololine != null) {
+                    final Hologram hologram = HologramsAPI.createHologram(BentoBox.getInstance(), island.getCenter().add(0.5, 2.6, 0.5));
+                    for (String line : hololine.split("\\n")) {
+                        hologram.appendTextLine(ChatColor.translateAlternateColorCodes('&', line));
+                    }
+                }
+            }
+        }
     }
 
     /**
