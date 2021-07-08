@@ -3,33 +3,44 @@ aoneblock:
   commands:
     admin:
       setcount:
-        parameters: "<Name> <Anzahl>"
-        description: Setze die Blockanzahl des Spielers
-        set: "&a [name] zählt auf [number]"
+        parameters: "<name> <count>"
+        description: set player's block count
+        set: "&a [name]'s count set to [number]"
       setchest:
-        parameters: "<Phase> <Rarität>"
-        description: Versetzen Sie die betrachtete Truhe in eine Phase mit der angegebenen
-          Seltenheit
-        chest-is-empty: "&c Diese Truhe ist leer und kann daher nicht hinzugefügt
-          werden"
-        unknown-phase: "&c Unbekannte Phase. Verwenden Sie tab-complete, um sie anzuzeigen"
-        unknown-rarity: "&c Unbekannte Seltenheit. Verwenden Sie COMMON, UNCOMMON,
-          RARE oder EPIC"
-        look-at-chest: "&c Sieh dir eine gefüllte Truhe an, um sie einzustellen"
-        only-single-chest: "&c Es können nur einzelne Truhen eingestellt werden"
-        success: "&a Eine Truhe erfolgreich zur Phase hinzugefügt"
-        failure: "&c Truhe konnte nicht zur Phase hinzugefügt werden! Siehe Konsole
-          für Fehler"
+        parameters: "<phase> <rarity>"
+        description: put the looked-at chest in a phase with the rarity specified
+        chest-is-empty: "&c That chest is empty so cannot be added"
+        unknown-phase: "&c Unknown phase. Use tab-complete to see them"
+        unknown-rarity: "&c Unknown rarity. Use COMMON, UNCOMMON, RARE or EPIC"
+        look-at-chest: "&c Look at a filled chest to set it"
+        only-single-chest: "&c Only single chests can be set"
+        success: "&a Chest successfully added to phase"
+        failure: "&c Chest could not be added to the phase! See console for errors"
       sanity:
-        parameters: "<Phase>"
-        description: Zeigen Sie eine Überprüfung der Phasenwahrscheinlichkeiten in
-          der Konsole an
-        see-console: "&a Den Bericht finden Sie in der Konsole"
+        parameters: "<phase>"
+        description: display a sanity check of the phase probabilities in the console
+        see-console: "&a See the console for the report"
     count:
-      description: Zeige die Blockanzahl und Phase
-      info: "&a Sie befinden sich in der Phase &a [name] in Block &b [number]"
+      description: show the block count and phase
+      info: "&a You are on block &b [number] in the &a [name] phase"
     phases:
-      description: Zeigen Sie eine Liste aller Phasen an
-      title: "&2 OneBlock-Phasen"
+      description: show a list of all the phases
+      title: "&2 OneBlock Phases"
       name-syntax: "&a [name]"
-      description-syntax: "&b [number] Blöcke"
+      description-syntax: "&b [number] blocks"
+  phase:
+    insufficient-level: "&c Ihr Insellevel ist zu niedrig, um fortzufahren! Es muss
+      [number] sein."
+    insufficient-funds: "&c Ihr Guthaben ist zu gering, um fortzufahren! Sie müssen
+      [number] sein."
+    insufficient-bank-balance: "&c Der Saldo der Inselbank ist zu niedrig, um fortzufahren!
+      Es muss [number] sein."
+    insufficient-permission: "&c Sie können nicht weitermachen, bis Sie die Berechtigung
+      [name] erhalten haben!"
+  placeholders:
+    infinite: Unendlich
+  island:
+    starting-hologram: |-
+      &aWillkommen bei AOneBlock
+      &eBrechen Sie diesen Block,
+      &eum zu beginnen
