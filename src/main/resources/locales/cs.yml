@@ -4,28 +4,39 @@ aoneblock:
     admin:
       setcount:
         parameters: "<name> <count>"
-        description: nastavit počet bloků hráče
-        set: "&a počet [name] je nastaven na [number]"
+        description: set player's block count
+        set: "&a [name]'s count set to [number]"
       setchest:
         parameters: "<phase> <rarity>"
-        description: dejte pohled na hrudník do fáze se specifikovanou vzácností
-        chest-is-empty: "&c Ten hrudník je prázdný, takže jej nelze přidat"
-        unknown-phase: "&c Neznámá fáze. Chcete-li si je prohlédnout, použijte tabulátor"
-        unknown-rarity: "&c Neznámá vzácnost. Používejte COMMON, UNCOMMON, RARE nebo
-          EPIC"
-        look-at-chest: "&c Podívejte se na naplněnou hruď a nastavte ji"
-        only-single-chest: "&c Lze nastavit pouze jednotlivé bedny"
-        success: "&a Hrudník byl úspěšně přidán do fáze"
-        failure: "&c Hrudník nelze přidat do fáze! Chyby najdete na konzole"
+        description: put the looked-at chest in a phase with the rarity specified
+        chest-is-empty: "&c That chest is empty so cannot be added"
+        unknown-phase: "&c Unknown phase. Use tab-complete to see them"
+        unknown-rarity: "&c Unknown rarity. Use COMMON, UNCOMMON, RARE or EPIC"
+        look-at-chest: "&c Look at a filled chest to set it"
+        only-single-chest: "&c Only single chests can be set"
+        success: "&a Chest successfully added to phase"
+        failure: "&c Chest could not be added to the phase! See console for errors"
       sanity:
-        parameters: "<fáze>"
-        description: zobrazí v konzoli kontrolu pravděpodobnosti fází
-        see-console: "&a Podívejte se do konzoly pro zprávu"
+        parameters: "<phase>"
+        description: display a sanity check of the phase probabilities in the console
+        see-console: "&a See the console for the report"
     count:
-      description: zobrazit počet bloků a fázi
-      info: "&a Jste na bloku &b [number] ve fázi &a [name]"
+      description: show the block count and phase
+      info: "&a You are on block &b [number] in the &a [name] phase"
     phases:
-      description: zobrazit seznam všech fází
-      title: "&2 Fáze OneBlock"
+      description: show a list of all the phases
+      title: "&2 OneBlock Phases"
       name-syntax: "&a [name]"
-      description-syntax: "&b [number] bloků"
+      description-syntax: "&b [number] blocks"
+  phase:
+    insufficient-level: Tvůj ostrov je na příliš nízké úrovni, musí být alespoň [number].
+    insufficient-funds: Nemáš dostatečné prostředky! Musíš mít alespoň [number].
+    insufficient-bank-balance: V Bance ostrova není dostatek financí! Je potřeba alespoň
+      [number].
+    insufficient-permission: Nemůžeš pokračovat, dokud nedostaneš oprávnění [name].
+  placeholders:
+    infinite: Infinite
+  island:
+    starting-hologram: |-
+      &aWelcome to AOneBlock
+      &eBreak This Block to Begin
