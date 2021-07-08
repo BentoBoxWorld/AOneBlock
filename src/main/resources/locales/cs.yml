@@ -35,8 +35,8 @@ aoneblock:
       [number].
     insufficient-permission: Nemůžeš pokračovat, dokud nedostaneš oprávnění [name].
   placeholders:
-    infinite: Infinite
+    infinite: Nekonečný
   island:
     starting-hologram: |-
-      &aWelcome to AOneBlock
-      &eBreak This Block to Begin
+      &a Vítejte v AOneBlock
+      &e Prolomte tento blok
