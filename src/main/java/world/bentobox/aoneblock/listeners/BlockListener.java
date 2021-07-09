@@ -200,12 +200,15 @@ public class BlockListener implements Listener {
                 addon.getIslands().getIslandAt(hologram.getLocation()).filter(islands -> islands.getUniqueId().equals(island.getUniqueId())).ifPresent(h -> hologram.delete());
             }
             // Manage New Hologram
-            String hololine = User.getInstance(island.getOwner()).getTranslation("aoneblock.island.starting-hologram");
-            is.setHologram(hololine == null ? "" : hololine);
-            if (hololine != null) {
-                final Hologram hologram = HologramsAPI.createHologram(BentoBox.getInstance(), island.getCenter().add(0.5, 2.6, 0.5));
-                for (String line : hololine.split("\\n")) {
-                    hologram.appendTextLine(ChatColor.translateAlternateColorCodes('&', line));
+            User owner = User.getInstance(island.getOwner());
+            if (owner != null) {
+                String hololine = owner.getTranslation("aoneblock.island.starting-hologram");
+                is.setHologram(hololine == null ? "" : hololine);
+                if (hololine != null && island.getCenter() != null) {
+                    final Hologram hologram = HologramsAPI.createHologram(BentoBox.getInstance(), island.getCenter().add(0.5, 2.6, 0.5));
+                    for (String line : hololine.split("\\n")) {
+                        hologram.appendTextLine(ChatColor.translateAlternateColorCodes('&', line));
+                    }
                 }
             }
         }
@@ -313,7 +316,7 @@ public class BlockListener implements Listener {
             }
             String hololine = phase.getHologramLine(is.getBlockNumber());
             is.setHologram(hololine == null ? "" : hololine);
-            if (hololine != null) {
+            if (hololine != null && i.getCenter() != null) {
                 final Hologram hologram = HologramsAPI.createHologram(BentoBox.getInstance(), i.getCenter().add(0.5, 2.6, 0.5));
                 for (String line : hololine.split("\\n")) {
                     hologram.appendTextLine(ChatColor.translateAlternateColorCodes('&', line));
@@ -377,38 +380,38 @@ public class BlockListener implements Listener {
         // Check requirements
         for (Requirement r : phase.getRequirements()) {
             switch (r.getType()) {
-                case LEVEL:
-                    return addon.getAddonByName("Level").map(l -> {
-                        if (((Level) l).getIslandLevel(world, i.getOwner()) < r.getLevel()) {
-                            User.getInstance(player).sendMessage("aoneblock.phase.insufficient-level", TextVariables.NUMBER, String.valueOf(r.getLevel()));
-                            return true;
-                        }
-                        return false;
-                    }).orElse(false);
-                case BANK:
-                    return addon.getAddonByName("Bank").map(l -> {
-                        if (((Bank) l).getBankManager().getBalance(i).getValue() < r.getBank()) {
-                            User.getInstance(player).sendMessage("aoneblock.phase.insufficient-bank-balance", TextVariables.NUMBER, String.valueOf(r.getBank()));
-                            return true;
-                        }
-                        return false;
-                    }).orElse(false);
-                case ECO:
-                    return addon.getPlugin().getVault().map(l -> {
-                        if (l.getBalance(User.getInstance(player), world) < r.getEco()) {
-                            User.getInstance(player).sendMessage("aoneblock.phase.insufficient-funds", TextVariables.NUMBER, String.valueOf(r.getEco()));
-                            return true;
-                        }
-                        return false;
-                    }).orElse(false);
-                case PERMISSION:
-                    if (player != null && !player.hasPermission(r.getPermission())) {
-                        User.getInstance(player).sendMessage("aoneblock.phase.insufficient-permission", TextVariables.NAME, String.valueOf(r.getPermission()));
+            case LEVEL:
+                return addon.getAddonByName("Level").map(l -> {
+                    if (((Level) l).getIslandLevel(world, i.getOwner()) < r.getLevel()) {
+                        User.getInstance(player).sendMessage("aoneblock.phase.insufficient-level", TextVariables.NUMBER, String.valueOf(r.getLevel()));
                         return true;
                     }
                     return false;
-                default:
-                    break;
+                }).orElse(false);
+            case BANK:
+                return addon.getAddonByName("Bank").map(l -> {
+                    if (((Bank) l).getBankManager().getBalance(i).getValue() < r.getBank()) {
+                        User.getInstance(player).sendMessage("aoneblock.phase.insufficient-bank-balance", TextVariables.NUMBER, String.valueOf(r.getBank()));
+                        return true;
+                    }
+                    return false;
+                }).orElse(false);
+            case ECO:
+                return addon.getPlugin().getVault().map(l -> {
+                    if (l.getBalance(User.getInstance(player), world) < r.getEco()) {
+                        User.getInstance(player).sendMessage("aoneblock.phase.insufficient-funds", TextVariables.NUMBER, String.valueOf(r.getEco()));
+                        return true;
+                    }
+                    return false;
+                }).orElse(false);
+            case PERMISSION:
+                if (player != null && !player.hasPermission(r.getPermission())) {
+                    User.getInstance(player).sendMessage("aoneblock.phase.insufficient-permission", TextVariables.NAME, String.valueOf(r.getPermission()));
+                    return true;
+                }
+                return false;
+            default:
+                break;
 
             }
         }
@@ -536,11 +539,11 @@ public class BlockListener implements Listener {
         if (addon.getSettings().isDropOnTop()) {
             // Drop the drops
             block.getDrops(tool, player).stream()
-                    .filter(Objects::nonNull)
-                    .filter(item -> !item.getType().equals(Material.AIR))
-                    .forEach(item -> world.dropItem(block.getRelative(BlockFace.UP).getLocation()
-                            .add(new Vector(0.5, 0, 0.5)), item)
-                            .setVelocity(new Vector(0, 0, 0)));
+            .filter(Objects::nonNull)
+            .filter(item -> !item.getType().equals(Material.AIR))
+            .forEach(item -> world.dropItem(block.getRelative(BlockFace.UP).getLocation()
+                    .add(new Vector(0.5, 0, 0.5)), item)
+                    .setVelocity(new Vector(0, 0, 0)));
             // Set the air
             block.setType(Material.AIR);
         } else {
@@ -605,18 +608,18 @@ public class BlockListener implements Listener {
         nextBlock.getChest().forEach(chest.getBlockInventory()::setItem);
         Color color = Color.fromBGR(0, 255, 255); // yellow
         switch (nextBlock.getRarity()) {
-            case EPIC:
-                color = Color.fromBGR(255, 0, 255); // magenta
-                break;
-            case RARE:
-                color = Color.fromBGR(255, 255, 255); // cyan
-                break;
-            case UNCOMMON:
-                // Yellow
-                break;
-            default:
-                // No sparkles for regular chests
-                return;
+        case EPIC:
+            color = Color.fromBGR(255, 0, 255); // magenta
+            break;
+        case RARE:
+            color = Color.fromBGR(255, 255, 255); // cyan
+            break;
+        case UNCOMMON:
+            // Yellow
+            break;
+        default:
+            // No sparkles for regular chests
+            return;
         }
         block.getWorld().spawnParticle(Particle.REDSTONE, block.getLocation().add(new Vector(0.5, 1.0, 0.5)), 50, 0.5, 0, 0.5, 1, new Particle.DustOptions(color, 1));
     }
