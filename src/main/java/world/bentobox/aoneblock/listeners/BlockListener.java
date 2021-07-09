@@ -204,8 +204,9 @@ public class BlockListener implements Listener {
             if (owner != null) {
                 String hololine = owner.getTranslation("aoneblock.island.starting-hologram");
                 is.setHologram(hololine == null ? "" : hololine);
-                if (hololine != null && island.getCenter() != null) {
-                    final Hologram hologram = HologramsAPI.createHologram(BentoBox.getInstance(), island.getCenter().add(0.5, 2.6, 0.5));
+                Location center = island.getCenter();
+                if (hololine != null && center != null) {
+                    final Hologram hologram = HologramsAPI.createHologram(BentoBox.getInstance(), center.add(0.5, 2.6, 0.5));
                     for (String line : hololine.split("\\n")) {
                         hologram.appendTextLine(ChatColor.translateAlternateColorCodes('&', line));
                     }
@@ -316,8 +317,9 @@ public class BlockListener implements Listener {
             }
             String hololine = phase.getHologramLine(is.getBlockNumber());
             is.setHologram(hololine == null ? "" : hololine);
-            if (hololine != null && i.getCenter() != null) {
-                final Hologram hologram = HologramsAPI.createHologram(BentoBox.getInstance(), i.getCenter().add(0.5, 2.6, 0.5));
+            Location center = i.getCenter();
+            if (hololine != null && center != null) {
+                final Hologram hologram = HologramsAPI.createHologram(BentoBox.getInstance(), center.add(0.5, 2.6, 0.5));
                 for (String line : hololine.split("\\n")) {
                     hologram.appendTextLine(ChatColor.translateAlternateColorCodes('&', line));
                 }
