@@ -3,30 +3,43 @@ aoneblock:
   commands:
     admin:
       setcount:
-        parameters: "<nom> <nombre>"
-        description: définir le nombre de blocs du joueur
-        set: "&a le nombre d'un [name] défini sur [number]"
+        parameters: "<name> <count>"
+        description: set player's block count
+        set: "&a [name]'s count set to [number]"
       setchest:
-        description: mettre la poitrine regardée dans une phase avec la rareté spécifiée
-        parameters: "<phase> <rareté>"
-        chest-is-empty: "&c Ce coffre est vide et ne peut donc pas être ajouté"
-        unknown-phase: "&c Phase inconnue. Utilisez tab-complete pour les voir"
-        unknown-rarity: "&c Rareté inconnue. Utilisez COMMON, UNCOMMON, RARE ou EPIC"
-        look-at-chest: "&c Regardez un coffre rempli pour le placer"
-        only-single-chest: "&c Seuls les coffres simples peuvent être définis"
-        success: "&a Un coffre ajouté avec succès à la phase"
-        failure: "&c Le coffre n'a pas pu être ajouté à la phase! Voir la console
-          pour les erreurs"
+        parameters: "<phase> <rarity>"
+        description: put the looked-at chest in a phase with the rarity specified
+        chest-is-empty: "&c That chest is empty so cannot be added"
+        unknown-phase: "&c Unknown phase. Use tab-complete to see them"
+        unknown-rarity: "&c Unknown rarity. Use COMMON, UNCOMMON, RARE or EPIC"
+        look-at-chest: "&c Look at a filled chest to set it"
+        only-single-chest: "&c Only single chests can be set"
+        success: "&a Chest successfully added to phase"
+        failure: "&c Chest could not be added to the phase! See console for errors"
       sanity:
         parameters: "<phase>"
-        description: afficher un contrôle d'intégrité des probabilités de phase dans
-          la console
-        see-console: "&a Voir la console pour le rapport"
+        description: display a sanity check of the phase probabilities in the console
+        see-console: "&a See the console for the report"
     count:
-      description: afficher le nombre de blocs et la phase
-      info: "&a Vous êtes sur le bloc &b [number] dans la phase &a [name]"
+      description: show the block count and phase
+      info: "&a You are on block &b [number] in the &a [name] phase"
     phases:
-      description: afficher une liste de toutes les phases
-      title: "&2 Phases OneBlock"
+      description: show a list of all the phases
+      title: "&2 OneBlock Phases"
       name-syntax: "&a [name]"
-      description-syntax: "&b [number] blocs"
+      description-syntax: "&b [number] blocks"
+  phase:
+    insufficient-level: Ton niveau d'île est trop bas ! Il doit être de [number] au
+      minimum.
+    insufficient-funds: Tu n'as pas les fonds nécessaire ! Tu dois au moins avoir
+      [number].
+    insufficient-bank-balance: Ta banque d'île n'a pas les fonds nécessaire ! Vous
+      devez au moins avoir [number].
+    insufficient-permission: 'Tu ne peux plus avancer, il te manque la permission
+      : [name] !'
+  placeholders:
+    infinite: Infinite
+  island:
+    starting-hologram: |-
+      &aWelcome to AOneBlock
+      &eBreak This Block to Begin
