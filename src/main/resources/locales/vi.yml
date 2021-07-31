@@ -32,3 +32,5 @@ aoneblock:
     insufficient-funds: Tài chính của bạn quá thấp để thực thi! Nó phải là [number].
     insufficient-bank-balance: Ngân hàng đảo của bạn quá thấp để thực thi! Nó phải là [number].
     insufficient-permission: Bạn không thể thực thi tiếp cho đến khi có quyền [name]!
+  island:
+    starting-hologram: "&aChào mừng đến với OneBlock\n&eĐập khối này để bắt đầu"
