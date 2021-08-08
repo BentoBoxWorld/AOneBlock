@@ -47,6 +47,7 @@ import world.bentobox.level.Level;
 
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 /**
@@ -154,7 +155,7 @@ public class BlockListener implements Listener {
     public BlockListener(@NonNull AOneBlock addon) {
         this.addon = addon;
         handler = new Database<>(addon, OneBlockIslands.class);
-        cache = new HashMap<>();
+        cache = new ConcurrentHashMap<>();
         oneBlocksManager = addon.getOneBlockManager();
     }
 
