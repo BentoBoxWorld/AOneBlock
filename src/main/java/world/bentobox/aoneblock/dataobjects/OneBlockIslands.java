@@ -81,7 +81,7 @@ public class OneBlockIslands implements DataObject {
     }
 
     /**
-     * @param hologramLine
+     * @param hologramLine Hologram line
      */
     public void setHologram(String hologramLine) {
         this.hologram = hologramLine;

@@ -3,13 +3,19 @@ package world.bentobox.aoneblock;
 import java.io.IOException;
 import java.util.Objects;
 
-import com.gmail.filoghost.holographicdisplays.api.Hologram;
-import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
-import org.bukkit.*;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.World.Environment;
+import org.bukkit.WorldCreator;
+import org.bukkit.WorldType;
 import org.bukkit.generator.ChunkGenerator;
 import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jdt.annotation.Nullable;
+
+import com.gmail.filoghost.holographicdisplays.api.Hologram;
+import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
 
 import world.bentobox.aoneblock.commands.AdminCommand;
 import world.bentobox.aoneblock.commands.PlayerCommand;
@@ -17,6 +23,7 @@ import world.bentobox.aoneblock.dataobjects.OneBlockIslands;
 import world.bentobox.aoneblock.generators.ChunkGeneratorWorld;
 import world.bentobox.aoneblock.listeners.BlockListener;
 import world.bentobox.aoneblock.listeners.BlockProtect;
+import world.bentobox.aoneblock.listeners.HoloListener;
 import world.bentobox.aoneblock.listeners.JoinLeaveListener;
 import world.bentobox.aoneblock.listeners.NoBlockHandler;
 import world.bentobox.aoneblock.oneblocks.OneBlocksManager;
@@ -37,7 +44,6 @@ public class AOneBlock extends GameModeAddon {
 
     private static final String NETHER = "_nether";
     private static final String THE_END = "_the_end";
-    private static AOneBlock instance;
 
     // Settings
     private Settings settings;
@@ -47,11 +53,10 @@ public class AOneBlock extends GameModeAddon {
     private OneBlocksManager oneBlockManager;
     private PlaceholdersManager phManager;
     private Boolean useHolographicDisplays;
+    private HoloListener holoListener;
 
     @Override
     public void onLoad() {
-        // Set instance to this
-        instance = this;
         // Save the default config from config.yml
         saveDefaultConfig();
         // Load settings from config.yml. This will check if there are any issues with it too.
@@ -115,8 +120,12 @@ public class AOneBlock extends GameModeAddon {
         registerRequestHandler(new IslandStatsHandler(this));
         registerRequestHandler(new LocationStatsHandler(this));
 
-        // Decide if HolographicDisplays is Useable
+        // Decide if HolographicDisplays is Usable
         useHolographicDisplays = Bukkit.getPluginManager().isPluginEnabled("HolographicDisplays");
+        if (this.useHolographicDisplays) {
+            holoListener = new HoloListener(this);
+            registerListener(holoListener);
+        }
     }
 
     @Override
@@ -281,10 +290,10 @@ public class AOneBlock extends GameModeAddon {
     }
 
     /**
-     * @return AOneBlock instance
+     * @return the holoListener
      */
-    public static AOneBlock getInstance() {
-        return instance;
+    public HoloListener getHoloListener() {
+        return holoListener;
     }
 
     /**

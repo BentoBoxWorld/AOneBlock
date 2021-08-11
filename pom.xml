@@ -279,7 +279,6 @@
                 <configuration>
                     <failOnError>false</failOnError>
                     <additionalJOption>-Xdoclint:none</additionalJOption>
-                    <source>8</source>
                 </configuration>
                 <executions>
                     <execution>

@@ -1,7 +1,6 @@
 package world.bentobox.aoneblock.commands;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,8 +14,8 @@ import org.bukkit.block.DoubleChest;
 import org.bukkit.inventory.ItemStack;
 
 import world.bentobox.aoneblock.AOneBlock;
-import world.bentobox.aoneblock.oneblocks.OneBlockPhase;
 import world.bentobox.aoneblock.oneblocks.OneBlockObject.Rarity;
+import world.bentobox.aoneblock.oneblocks.OneBlockPhase;
 import world.bentobox.bentobox.api.commands.CompositeCommand;
 import world.bentobox.bentobox.api.user.User;
 
@@ -24,8 +23,7 @@ public class AdminSetChestCommand extends CompositeCommand {
 
     private static final List<String> RARITY_LIST;
     static {
-        List<String> l = Arrays.stream(Rarity.values()).map(Enum::name).collect(Collectors.toList());
-        RARITY_LIST = Collections.unmodifiableList(l);
+        RARITY_LIST = Arrays.stream(Rarity.values()).map(Enum::name).collect(Collectors.toUnmodifiableList());
     }
     private AOneBlock addon;
     private OneBlockPhase phase;
@@ -93,9 +91,9 @@ public class AdminSetChestCommand extends CompositeCommand {
             if (chest.getInventory().getItem(slot) == null) {
                 continue;
             }
-            ItemStack item = chest.getInventory().getItem(slot).clone();
-            if (!item.getType().equals(Material.AIR)) {
-                items.put(slot, item);
+            ItemStack item = chest.getInventory().getItem(slot);
+            if (item != null && !item.getType().equals(Material.AIR)) {
+                items.put(slot, item.clone());
             }
         }
         if (items.isEmpty()) {

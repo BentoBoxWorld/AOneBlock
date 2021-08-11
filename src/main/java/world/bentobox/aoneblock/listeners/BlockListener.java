@@ -1,8 +1,24 @@
 package world.bentobox.aoneblock.listeners;
 
-import com.gmail.filoghost.holographicdisplays.api.Hologram;
-import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
-import org.bukkit.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.EnumMap;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Random;
+import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
+
+import org.bukkit.Bukkit;
+import org.bukkit.Color;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.Particle;
+import org.bukkit.Sound;
+import org.bukkit.Tag;
+import org.bukkit.World;
 import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -27,14 +43,18 @@ import org.bukkit.util.BoundingBox;
 import org.bukkit.util.Vector;
 import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jdt.annotation.Nullable;
+
 import world.bentobox.aoneblock.AOneBlock;
 import world.bentobox.aoneblock.dataobjects.OneBlockIslands;
 import world.bentobox.aoneblock.events.MagicBlockEntityEvent;
 import world.bentobox.aoneblock.events.MagicBlockEvent;
 import world.bentobox.aoneblock.events.MagicBlockPhaseEvent;
-import world.bentobox.aoneblock.oneblocks.*;
+import world.bentobox.aoneblock.oneblocks.MobAspects;
+import world.bentobox.aoneblock.oneblocks.OneBlockObject;
+import world.bentobox.aoneblock.oneblocks.OneBlockPhase;
+import world.bentobox.aoneblock.oneblocks.OneBlocksManager;
+import world.bentobox.aoneblock.oneblocks.Requirement;
 import world.bentobox.bank.Bank;
-import world.bentobox.bentobox.BentoBox;
 import world.bentobox.bentobox.api.events.island.IslandCreatedEvent;
 import world.bentobox.bentobox.api.events.island.IslandDeleteEvent;
 import world.bentobox.bentobox.api.events.island.IslandResettedEvent;
@@ -44,10 +64,6 @@ import world.bentobox.bentobox.database.Database;
 import world.bentobox.bentobox.database.objects.Island;
 import world.bentobox.bentobox.util.Util;
 import world.bentobox.level.Level;
-
-import java.util.*;
-import java.util.concurrent.CompletableFuture;
-import java.util.stream.Collectors;
 
 /**
  * @author tastybento
@@ -172,54 +188,30 @@ public class BlockListener implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
-    public void onDeletedIsland(IslandDeleteEvent e) {
-        if (addon.inWorld(e.getIsland().getWorld())) {
-            cache.remove(e.getIsland().getUniqueId());
-            handler.deleteID(e.getIsland().getUniqueId());
-            if (AOneBlock.getInstance().useHolographicDisplays()) {
-                for (Hologram hologram : HologramsAPI.getHolograms(BentoBox.getInstance())) {
-                    if (!addon.inWorld(hologram.getWorld())) continue;
-                    addon.getIslands().getIslandAt(hologram.getLocation()).filter(island -> island.getUniqueId().equals(e.getIsland().getUniqueId())).ifPresent(h -> hologram.delete());
-                }
-            }
-        }
-    }
-
     private void setUp(@NonNull Island island) {
         // Set the bedrock to the initial block
         Util.getChunkAtAsync(Objects.requireNonNull(island.getCenter())).thenRun(() -> island.getCenter().getBlock().setType(Material.GRASS_BLOCK));
         // Create a database entry
         OneBlockIslands is = new OneBlockIslands(island.getUniqueId());
         cache.put(island.getUniqueId(), is);
-        // Delete Lingering Holograms
-        if (AOneBlock.getInstance().useHolographicDisplays()) {
-            // Delete Old Holograms
-            for (Hologram hologram : HologramsAPI.getHolograms(BentoBox.getInstance())) {
-                if (!addon.inWorld(hologram.getWorld())) continue;
-                addon.getIslands().getIslandAt(hologram.getLocation()).filter(islands -> islands.getUniqueId().equals(island.getUniqueId())).ifPresent(h -> hologram.delete());
-            }
-            // Manage New Hologram
-            User owner = User.getInstance(island.getOwner());
-            if (owner != null) {
-                String hololine = owner.getTranslation("aoneblock.island.starting-hologram");
-                is.setHologram(hololine == null ? "" : hololine);
-                Location center = island.getCenter();
-                if (hololine != null && center != null) {
-                    final Hologram hologram = HologramsAPI.createHologram(BentoBox.getInstance(), center.add(0.5, 2.6, 0.5));
-                    for (String line : hololine.split("\\n")) {
-                        hologram.appendTextLine(ChatColor.translateAlternateColorCodes('&', line));
-                    }
-                }
-            }
-        }
         handler.saveObjectAsync(is);
+        if (addon.useHolographicDisplays()) {
+            addon.getHoloListener().setUp(island, is);
+        }
     }
 
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onNewIsland(IslandResettedEvent e) {
         if (addon.inWorld(e.getIsland().getWorld())) {
             setUp(e.getIsland());
+        }
+    }
+
+    @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
+    public void onDeletedIsland(IslandDeleteEvent e) {
+        if (addon.inWorld(e.getIsland().getWorld())) {
+            cache.remove(e.getIsland().getUniqueId());
+            handler.deleteID(e.getIsland().getUniqueId());
         }
     }
 
@@ -275,7 +267,7 @@ public class BlockListener implements Listener {
         // Store the original phase in case it changes.
         String originalPhase = is.getPhaseName();
         // Check for a goto
-        if (phase.getGotoBlock() != null) {
+        if (Objects.requireNonNull(phase).getGotoBlock() != null) {
             int gotoBlock = phase.getGotoBlock();
             phase = oneBlocksManager.getPhase(gotoBlock);
             // Store lifetime
@@ -285,7 +277,7 @@ public class BlockListener implements Listener {
 
         }
         // Check for new phase and run commands if required
-        boolean newPhase = checkPhase(player, i, is, phase);
+        boolean newPhase = checkPhase(player, i, is, Objects.requireNonNull(phase));
         if (!newPhase && is.getBlockNumber() % SAVE_EVERY == 0) {
             // Save island data every MAX_LOOK_AHEAD blocks.
             saveIsland(i);
@@ -310,20 +302,8 @@ public class BlockListener implements Listener {
             }
         }
         // Manage Holograms
-        if (AOneBlock.getInstance().useHolographicDisplays()) {
-            for (Hologram hologram : HologramsAPI.getHolograms(BentoBox.getInstance())) {
-                if (!addon.inWorld(hologram.getWorld())) continue;
-                addon.getIslands().getIslandAt(hologram.getLocation()).filter(island -> island.getUniqueId().equals(is.getUniqueId())).ifPresent(h -> hologram.delete());
-            }
-            String hololine = phase.getHologramLine(is.getBlockNumber());
-            is.setHologram(hololine == null ? "" : hololine);
-            Location center = i.getCenter();
-            if (hololine != null && center != null) {
-                final Hologram hologram = HologramsAPI.createHologram(BentoBox.getInstance(), center.add(0.5, 2.6, 0.5));
-                for (String line : hololine.split("\\n")) {
-                    hologram.appendTextLine(ChatColor.translateAlternateColorCodes('&', line));
-                }
-            }
+        if (addon.useHolographicDisplays()) {
+            addon.getHoloListener().process(i, is, phase);
         }
         // Play warning sound for upcoming mobs
         if (addon.getSettings().getMobWarning() > 0) {
@@ -423,8 +403,8 @@ public class BlockListener implements Listener {
     private void playWarning(@NonNull OneBlockIslands is, @NonNull Block block) {
         List<EntityType> opMob = is.getNearestMob(addon.getSettings().getMobWarning());
         opMob.stream().filter(MOB_ASPECTS::containsKey).map(MOB_ASPECTS::get).forEach(s -> {
-            block.getWorld().playSound(block.getLocation(), s.getSound(), 1F, 1F);
-            block.getWorld().spawnParticle(Particle.REDSTONE, block.getLocation().add(new Vector(0.5, 1.0, 0.5)), 10, 0.5, 0, 0.5, 1, new Particle.DustOptions(s.getColor(), 1));
+            block.getWorld().playSound(block.getLocation(), s.sound(), 1F, 1F);
+            block.getWorld().spawnParticle(Particle.REDSTONE, block.getLocation().add(new Vector(0.5, 1.0, 0.5)), 10, 0.5, 0, 0.5, 1, new Particle.DustOptions(s.color(), 1));
         });
 
     }
@@ -641,8 +621,7 @@ public class BlockListener implements Listener {
         ItemStack inHand = player.getInventory().getItemInMainHand();
         ItemMeta itemMeta = inHand.getItemMeta();
 
-        if (itemMeta instanceof Damageable && !itemMeta.isUnbreakable() && TOOLS.containsKey(inHand.getType())) {
-            Damageable meta = (Damageable) itemMeta;
+        if (itemMeta instanceof Damageable meta && !itemMeta.isUnbreakable() && TOOLS.containsKey(inHand.getType())) {
             // Get the item's current durability
             Integer durability = meta.getDamage();
             // Get the damage this will do

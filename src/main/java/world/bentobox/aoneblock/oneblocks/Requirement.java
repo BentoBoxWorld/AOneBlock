@@ -5,7 +5,7 @@ package world.bentobox.aoneblock.oneblocks;
  * @author tastybento
  *
  */
-public class Requirement {
+public record Requirement(ReqType type, Object requirement) {
     /**
      * Requirement type enum
      *
@@ -49,18 +49,6 @@ public class Requirement {
         public Class<?> getClazz() {
             return clazz;
         }
-    }
-
-    private final Object requirement;
-    private final ReqType type;
-
-    /**
-     * @param type - requirement type {@link ReqType}
-     * @param requirement - requirement object
-     */
-    public Requirement(ReqType type, Object requirement) {
-        this.type = type;
-        this.requirement = requirement;
     }
 
     /**
