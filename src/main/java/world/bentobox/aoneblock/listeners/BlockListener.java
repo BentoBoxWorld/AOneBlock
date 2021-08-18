@@ -1,6 +1,7 @@
 package world.bentobox.aoneblock.listeners;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.EnumMap;
 import java.util.HashMap;
@@ -36,6 +37,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.EntityInteractEvent;
 import org.bukkit.event.entity.EntitySpawnEvent;
 import org.bukkit.event.player.PlayerBucketFillEvent;
+import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -520,12 +522,11 @@ public class BlockListener implements Listener {
         ItemStack tool = Objects.requireNonNull(player).getInventory().getItemInMainHand();
         if (addon.getSettings().isDropOnTop()) {
             // Drop the drops
-            block.getDrops(tool, player).stream()
-            .filter(Objects::nonNull)
-            .filter(item -> !item.getType().equals(Material.AIR))
-            .forEach(item -> world.dropItem(block.getRelative(BlockFace.UP).getLocation()
-                    .add(new Vector(0.5, 0, 0.5)), item)
-                    .setVelocity(new Vector(0, 0, 0)));
+            dropItemStacks(block.getDrops(tool, player), block, world);
+            // Drop the contents of inventory
+            if (block.getState() instanceof InventoryHolder ih) {
+                dropItemStacks(Arrays.asList(ih.getInventory().getContents()), block, world);
+            }
             // Set the air
             block.setType(Material.AIR);
         } else {
@@ -536,6 +537,16 @@ public class BlockListener implements Listener {
         // Damage tool
         damageTool(Objects.requireNonNull(player));
         spawnBlock(nextBlock, block);
+    }
+
+    private void dropItemStacks(Collection<ItemStack> drops, @NonNull Block block, @NonNull World world) {
+        drops.stream()
+        .filter(Objects::nonNull)
+        .filter(item -> !item.getType().equals(Material.AIR))
+        .forEach(item -> world.dropItem(block.getRelative(BlockFace.UP).getLocation()
+                .add(new Vector(0.5, 0, 0.5)), item)
+                .setVelocity(new Vector(0, 0, 0)));
+
     }
 
     private void spawnBlock(@NonNull OneBlockObject nextBlock, @NonNull Block block) {
