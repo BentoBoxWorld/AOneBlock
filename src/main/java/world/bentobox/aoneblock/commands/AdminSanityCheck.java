@@ -36,7 +36,7 @@ public class AdminSanityCheck extends CompositeCommand {
         if (args.isEmpty()) return true;
         // Check phase
         Optional<OneBlockPhase> opPhase = addon.getOneBlockManager().getPhase(args.get(0).toUpperCase());
-        if (!opPhase.isPresent()) {
+        if (opPhase.isEmpty()) {
             user.sendMessage("aoneblock.commands.admin.setchest.unknown-phase");
             return false;
         } else {

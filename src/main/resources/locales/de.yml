@@ -33,3 +33,19 @@ aoneblock:
       title: "&2 OneBlock-Phasen"
       name-syntax: "&a [name]"
       description-syntax: "&b [number] Blöcke"
+  phase:
+    insufficient-level: "&c Ihr Insellevel ist zu niedrig, um fortzufahren! Es muss
+      [number] sein."
+    insufficient-funds: "&c Ihr Guthaben ist zu gering, um fortzufahren! Sie müssen
+      [number] sein."
+    insufficient-bank-balance: "&c Der Saldo der Inselbank ist zu niedrig, um fortzufahren!
+      Es muss [number] sein."
+    insufficient-permission: "&c Sie können nicht weitermachen, bis Sie die Berechtigung
+      [name] erhalten haben!"
+  placeholders:
+    infinite: Unendlich
+  island:
+    starting-hologram: |-
+      &aWillkommen bei AOneBlock
+      &eBrechen Sie diesen Block,
+      &eum zu beginnen
