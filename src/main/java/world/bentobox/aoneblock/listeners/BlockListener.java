@@ -34,6 +34,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockFromToEvent;
 import org.bukkit.event.entity.EntityInteractEvent;
 import org.bukkit.event.entity.EntitySpawnEvent;
 import org.bukkit.event.player.PlayerBucketFillEvent;
@@ -215,6 +216,20 @@ public class BlockListener implements Listener {
             cache.remove(e.getIsland().getUniqueId());
             handler.deleteID(e.getIsland().getUniqueId());
         }
+    }
+
+    /**
+     * Prevents liquids flowing into magic block
+     * @param e BlockFromToEvent
+     */
+    @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
+    public void onBlockFromTo(final BlockFromToEvent e) {
+        if (!addon.inWorld(e.getBlock().getWorld())) {
+            return;
+        }
+        Location l = e.getToBlock().getLocation();
+        // Cannot flow to center block
+        e.setCancelled(addon.getIslands().getIslandAt(l).filter(i -> l.equals(i.getCenter())).isPresent());
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)

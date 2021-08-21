@@ -1,6 +1,8 @@
 package world.bentobox.aoneblock.listeners;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
@@ -23,8 +25,12 @@ import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
+import org.bukkit.event.block.BlockFromToEvent;
 import org.eclipse.jdt.annotation.Nullable;
 import org.junit.After;
 import org.junit.Before;
@@ -50,6 +56,7 @@ import world.bentobox.bentobox.database.AbstractDatabaseHandler;
 import world.bentobox.bentobox.database.DatabaseSetup;
 import world.bentobox.bentobox.database.DatabaseSetup.DatabaseType;
 import world.bentobox.bentobox.database.objects.Island;
+import world.bentobox.bentobox.managers.IslandsManager;
 import world.bentobox.bentobox.managers.PlaceholdersManager;
 import world.bentobox.bentobox.managers.PlayersManager;
 import world.bentobox.bentobox.util.Util;
@@ -93,6 +100,10 @@ public class BlockListenerTest {
     private Level level;
     @Mock
     private PlaceholdersManager phm;
+    @Mock
+    private Location location;
+    @Mock
+    private IslandsManager im;
 
     @SuppressWarnings("unchecked")
     @BeforeClass
@@ -130,6 +141,7 @@ public class BlockListenerTest {
         when(addon.getOneBlockManager()).thenReturn(obm);
         when(addon.getPlayers()).thenReturn(pm);
         when(addon.getOverWorld()).thenReturn(world);
+        when(addon.getIslands()).thenReturn(im);
 
         // Player
         when(player.getUniqueId()).thenReturn(UUID.randomUUID());
@@ -154,6 +166,10 @@ public class BlockListenerTest {
         // Level
         when(level.getIslandLevel(eq(world), any())).thenReturn(1000L);
         when(addon.getAddonByName("Level")).thenReturn(Optional.of(level));
+
+        // Location
+        when(location.getWorld()).thenReturn(world);
+        when(location.clone()).thenReturn(location);
 
         bl = new BlockListener(addon);
     }
@@ -205,4 +221,52 @@ public class BlockListenerTest {
         verify(phm, times(2)).replacePlaceholders(eq(player), any());
     }
 
+    /**
+     * Test method for {@link world.bentobox.aoneblock.listeners.BlockListener#onBlockFromTo(org.bukkit.event.block.BlockFromToEvent)}
+     */
+    @Test
+    public void testOnBlockFromToNotInWorld() {
+        Block from = mock(Block.class);
+        BlockFace to = BlockFace.NORTH;
+        when(from.getLocation()).thenReturn(location);
+        when(from.getRelative(any())).thenReturn(from);
+        BlockFromToEvent e = new BlockFromToEvent(from, to);
+        bl.onBlockFromTo(e);
+        assertFalse(e.isCancelled());
+    }
+
+    /**
+     * Test method for {@link world.bentobox.aoneblock.listeners.BlockListener#onBlockFromTo(org.bukkit.event.block.BlockFromToEvent)}
+     */
+    @Test
+    public void testOnBlockFromToNotIslandCenter() {
+        when(addon.inWorld(any(World.class))).thenReturn(true);
+        Block from = mock(Block.class);
+        BlockFace to = BlockFace.NORTH;
+        when(from.getLocation()).thenReturn(location);
+        when(from.getRelative(any())).thenReturn(from);
+        when(from.getWorld()).thenReturn(world);
+        BlockFromToEvent e = new BlockFromToEvent(from, to);
+        bl.onBlockFromTo(e);
+        assertFalse(e.isCancelled());
+    }
+
+    /**
+     * Test method for {@link world.bentobox.aoneblock.listeners.BlockListener#onBlockFromTo(org.bukkit.event.block.BlockFromToEvent)}
+     */
+    @Test
+    public void testOnBlockFromToCenterBlock() {
+        when(addon.inWorld(any(World.class))).thenReturn(true);
+        island.setCenter(location);
+        when(im.getIslandAt(location)).thenReturn(Optional.of(island));
+
+        Block from = mock(Block.class);
+        BlockFace to = BlockFace.NORTH;
+        when(from.getLocation()).thenReturn(location);
+        when(from.getRelative(any())).thenReturn(from);
+        when(from.getWorld()).thenReturn(world);
+        BlockFromToEvent e = new BlockFromToEvent(from, to);
+        bl.onBlockFromTo(e);
+        assertTrue(e.isCancelled());
+    }
 }
