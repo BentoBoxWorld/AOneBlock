@@ -34,9 +34,9 @@ public class MagicBlockEvent extends AbstractMagicBlockEvent {
     /**
      * @param island - island where the magic block is located
      * @param playerUUID - the player involved
-     * @param tool
-     * @param block
-     * @param nextBlockMaterial
+     * @param tool - item stack for tool used
+     * @param block - block broken
+     * @param nextBlockMaterial - next block material
      */
     public MagicBlockEvent(@NonNull Island island, @Nullable UUID playerUUID, @Nullable ItemStack tool, @NonNull Block block, @Nullable Material nextBlockMaterial) {
         super(island, playerUUID, block);

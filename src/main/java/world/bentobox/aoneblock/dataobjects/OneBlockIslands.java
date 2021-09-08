@@ -28,8 +28,10 @@ public class OneBlockIslands implements DataObject {
     private long lifetime;
     @Expose
     private String phaseName = "";
+    @Expose
+    private String hologram = "";
 
-    private List<OneBlockObject> queue;
+    private List<OneBlockObject> queue = new ArrayList<>();
 
     /**
      * @return the phaseName
@@ -71,6 +73,20 @@ public class OneBlockIslands implements DataObject {
         this.blockNumber++;
     }
 
+    /**
+     * @return the hologram Line
+     */
+    public String getHologram() {
+        return hologram;
+    }
+
+    /**
+     * @param hologramLine Hologram line
+     */
+    public void setHologram(String hologramLine) {
+        this.hologram = hologramLine;
+    }
+
     /* (non-Javadoc)
      * @see world.bentobox.bentobox.database.objects.DataObject#getUniqueId()
      */
@@ -101,17 +117,15 @@ public class OneBlockIslands implements DataObject {
      * @return list of upcoming mobs
      */
     public List<EntityType> getNearestMob(int i) {
-        if (queue == null) queue = new ArrayList<>();
-        return queue.stream().limit(i).filter(OneBlockObject::isEntity).map(OneBlockObject::getEntityType).collect(Collectors.toList());
+        return getQueue().stream().limit(i).filter(OneBlockObject::isEntity).map(OneBlockObject::getEntityType).collect(Collectors.toList());
     }
 
     public void add(OneBlockObject nextBlock) {
-        if (queue == null) queue = new ArrayList<>();
-        queue.add(nextBlock);
+        getQueue().add(nextBlock);
     }
 
     public OneBlockObject pollAndAdd(OneBlockObject toAdd) {
-        if (queue == null) queue = new ArrayList<>();
+        getQueue();
         OneBlockObject b = queue.get(0);
         queue.remove(0);
         queue.add(toAdd);
@@ -122,7 +136,7 @@ public class OneBlockIslands implements DataObject {
      * Clear the look ahead queue
      */
     public void clearQueue() {
-        queue.clear();
+        getQueue().clear();
     }
 
     /**

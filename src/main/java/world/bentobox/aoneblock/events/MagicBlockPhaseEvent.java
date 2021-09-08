@@ -30,11 +30,11 @@ public class MagicBlockPhaseEvent extends AbstractMagicBlockEvent {
     }
 
     /**
-     * @param island
-     * @param playerUUID
-     * @param block
-     * @param phase
-     * @param blockNumber
+     * @param island - island
+     * @param playerUUID - player UUID
+     * @param block - block involved
+     * @param phase - phase involved
+     * @param blockNumber - block number
      */
     public MagicBlockPhaseEvent(Island island, UUID playerUUID, Block block, String phase, String oldPhase, int blockNumber) {
         super(island, playerUUID, block);

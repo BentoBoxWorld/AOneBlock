@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 
 import org.bukkit.Material;
 
+import org.bukkit.inventory.ItemStack;
 import world.bentobox.aoneblock.AOneBlock;
 import world.bentobox.bentobox.api.commands.CompositeCommand;
 import world.bentobox.bentobox.api.localization.TextVariables;
@@ -29,7 +30,7 @@ public class IslandPhasesCommand extends CompositeCommand {
         setOnlyPlayer(true);
         // Permission
         setPermission("phases");
-        addon = (AOneBlock)getAddon();
+        addon = getAddon();
     }
 
     @Override
@@ -45,8 +46,8 @@ public class IslandPhasesCommand extends CompositeCommand {
                     item.name(user.getTranslation("aoneblock.commands.phases.name-syntax",
                             TextVariables.NAME, en.getValue().getPhaseName(),
                             TextVariables.NUMBER, String.valueOf(en.getKey())));
-                    Material material = en.getValue().getFirstBlock() == null ? Material.STONE : en.getValue().getFirstBlock().getMaterial();
-                    item.icon(material);
+                    ItemStack icon = en.getValue().getIconBlock() == null ? en.getValue().getFirstBlock() == null ? new ItemStack(Material.STONE, 1) : new ItemStack(en.getValue().getFirstBlock().getMaterial(), 1) : en.getValue().getIconBlock();
+                    item.icon(icon);
                     item.description(user.getTranslation("aoneblock.commands.phases.description-syntax",
                             TextVariables.NAME, en.getValue().getPhaseName(),
                             TextVariables.NUMBER, String.valueOf(en.getKey())));

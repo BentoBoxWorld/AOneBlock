@@ -24,10 +24,10 @@ import world.bentobox.bentobox.database.objects.Island;
 
 public class BlockProtect implements Listener {
 
-    private AOneBlock addon;
+    private final AOneBlock addon;
 
     /**
-     * @param addon
+     * @param addon - AOneBlock addon
      */
     public BlockProtect(AOneBlock addon) {
         this.addon = addon;
@@ -75,7 +75,7 @@ public class BlockProtect implements Listener {
 
     /**
      * Prevent block from being pushed by a piston
-     * @param e
+     * @param e - BlockPistonExtendEvent
      */
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onPistonExtend(BlockPistonExtendEvent e) {
@@ -83,7 +83,7 @@ public class BlockProtect implements Listener {
     }
     /**
      * Prevent block from being pulled by a sticky piston
-     * @param e
+     * @param e - BlockPistonRetractEvent
      */
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onPistonExtend(BlockPistonRetractEvent e) {

@@ -1,6 +1,7 @@
 package world.bentobox.aoneblock.commands;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -31,7 +32,7 @@ public class AdminSetCountCommand extends CompositeCommand {
         setDescription("aoneblock.commands.admin.setcount.description");
         // Permission
         setPermission("admin.setcount");
-        addon = (AOneBlock)getAddon();
+        addon = getAddon();
     }
 
     @Override
@@ -60,8 +61,9 @@ public class AdminSetCountCommand extends CompositeCommand {
 
     @Override
     public boolean execute(User user, String label, List<String> args) {
-        OneBlockIslands i = addon.getOneBlocksIsland(island);
+        OneBlockIslands i = addon.getOneBlocksIsland(Objects.requireNonNull(island));
         i.setBlockNumber(count);
+        i.clearQueue();
         user.sendMessage("aoneblock.commands.admin.setcount.set", TextVariables.NUMBER, String.valueOf(i.getBlockNumber()), TextVariables.NAME, getPlayers().getName(targetUUID));
         return true;
     }

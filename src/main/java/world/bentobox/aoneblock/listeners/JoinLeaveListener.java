@@ -11,10 +11,10 @@ import world.bentobox.bentobox.util.Util;
 
 public class JoinLeaveListener implements Listener {
 
-    AOneBlock addon;
+    final AOneBlock addon;
 
     /**
-     * @param addon
+     * @param addon - AOneBlock
      */
     public JoinLeaveListener(AOneBlock addon) {
         this.addon = addon;

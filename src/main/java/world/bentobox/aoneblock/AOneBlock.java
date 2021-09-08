@@ -3,6 +3,9 @@ package world.bentobox.aoneblock;
 import java.io.IOException;
 import java.util.Objects;
 
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.World.Environment;
 import org.bukkit.WorldCreator;
@@ -11,17 +14,22 @@ import org.bukkit.generator.ChunkGenerator;
 import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jdt.annotation.Nullable;
 
+import com.gmail.filoghost.holographicdisplays.api.Hologram;
+import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
+
 import world.bentobox.aoneblock.commands.AdminCommand;
 import world.bentobox.aoneblock.commands.PlayerCommand;
 import world.bentobox.aoneblock.dataobjects.OneBlockIslands;
 import world.bentobox.aoneblock.generators.ChunkGeneratorWorld;
 import world.bentobox.aoneblock.listeners.BlockListener;
 import world.bentobox.aoneblock.listeners.BlockProtect;
+import world.bentobox.aoneblock.listeners.HoloListener;
 import world.bentobox.aoneblock.listeners.JoinLeaveListener;
 import world.bentobox.aoneblock.listeners.NoBlockHandler;
 import world.bentobox.aoneblock.oneblocks.OneBlocksManager;
 import world.bentobox.aoneblock.requests.IslandStatsHandler;
 import world.bentobox.aoneblock.requests.LocationStatsHandler;
+import world.bentobox.bentobox.BentoBox;
 import world.bentobox.bentobox.api.addons.GameModeAddon;
 import world.bentobox.bentobox.api.configuration.Config;
 import world.bentobox.bentobox.api.configuration.WorldSettings;
@@ -29,6 +37,7 @@ import world.bentobox.bentobox.database.objects.Island;
 
 /**
  * Main OneBlock class - provides an island minigame in the sky
+ *
  * @author tastybento
  */
 public class AOneBlock extends GameModeAddon {
@@ -43,6 +52,8 @@ public class AOneBlock extends GameModeAddon {
     private BlockListener blockListener;
     private OneBlocksManager oneBlockManager;
     private PlaceholdersManager phManager;
+    private Boolean useHolographicDisplays;
+    private HoloListener holoListener;
 
     @Override
     public void onLoad() {
@@ -73,7 +84,7 @@ public class AOneBlock extends GameModeAddon {
     }
 
     @Override
-    public void onEnable(){
+    public void onEnable() {
         try {
             oneBlockManager = new OneBlocksManager(this);
             oneBlockManager.loadPhases();
@@ -85,31 +96,37 @@ public class AOneBlock extends GameModeAddon {
             setState(State.DISABLED);
             return;
         }
-        
+
         registerListener(blockListener);
         registerListener(new NoBlockHandler(this));
         registerListener(new BlockProtect(this));
         registerListener(new JoinLeaveListener(this));
         // Register placeholders
         phManager = new PlaceholdersManager(this);
-        getPlugin().getPlaceholdersManager().registerPlaceholder(this,"visited_island_phase", phManager::getPhaseByLocation);
-        getPlugin().getPlaceholdersManager().registerPlaceholder(this,"visited_island_count", phManager::getCountByLocation);
-        getPlugin().getPlaceholdersManager().registerPlaceholder(this,"my_island_phase", phManager::getPhase);
-        getPlugin().getPlaceholdersManager().registerPlaceholder(this,"my_island_count", phManager::getCount);
-        getPlugin().getPlaceholdersManager().registerPlaceholder(this,"visited_island_next_phase", phManager::getNextPhaseByLocation);
-        getPlugin().getPlaceholdersManager().registerPlaceholder(this,"my_island_next_phase", phManager::getNextPhase);
-        getPlugin().getPlaceholdersManager().registerPlaceholder(this,"my_island_blocks_to_next_phase", phManager::getNextPhaseBlocks);
-        getPlugin().getPlaceholdersManager().registerPlaceholder(this,"visited_island_blocks_to_next_phase", phManager::getNextPhaseBlocksByLocation);
-        getPlugin().getPlaceholdersManager().registerPlaceholder(this,"my_island_percent_done", phManager::getPercentDone);
-        getPlugin().getPlaceholdersManager().registerPlaceholder(this,"visited_island_percent_done", phManager::getPercentDoneByLocation);
-        getPlugin().getPlaceholdersManager().registerPlaceholder(this,"my_island_done_scale", phManager::getDoneScale);
-        getPlugin().getPlaceholdersManager().registerPlaceholder(this,"visited_island_done_scale", phManager::getDoneScaleByLocation);
+        getPlugin().getPlaceholdersManager().registerPlaceholder(this, "visited_island_phase", phManager::getPhaseByLocation);
+        getPlugin().getPlaceholdersManager().registerPlaceholder(this, "visited_island_count", phManager::getCountByLocation);
+        getPlugin().getPlaceholdersManager().registerPlaceholder(this, "my_island_phase", phManager::getPhase);
+        getPlugin().getPlaceholdersManager().registerPlaceholder(this, "my_island_count", phManager::getCount);
+        getPlugin().getPlaceholdersManager().registerPlaceholder(this, "visited_island_next_phase", phManager::getNextPhaseByLocation);
+        getPlugin().getPlaceholdersManager().registerPlaceholder(this, "my_island_next_phase", phManager::getNextPhase);
+        getPlugin().getPlaceholdersManager().registerPlaceholder(this, "my_island_blocks_to_next_phase", phManager::getNextPhaseBlocks);
+        getPlugin().getPlaceholdersManager().registerPlaceholder(this, "visited_island_blocks_to_next_phase", phManager::getNextPhaseBlocksByLocation);
+        getPlugin().getPlaceholdersManager().registerPlaceholder(this, "my_island_percent_done", phManager::getPercentDone);
+        getPlugin().getPlaceholdersManager().registerPlaceholder(this, "visited_island_percent_done", phManager::getPercentDoneByLocation);
+        getPlugin().getPlaceholdersManager().registerPlaceholder(this, "my_island_done_scale", phManager::getDoneScale);
+        getPlugin().getPlaceholdersManager().registerPlaceholder(this, "visited_island_done_scale", phManager::getDoneScaleByLocation);
 
         // Register request handlers
         registerRequestHandler(new IslandStatsHandler(this));
         registerRequestHandler(new LocationStatsHandler(this));
-    }
 
+        // Decide if HolographicDisplays is Usable
+        useHolographicDisplays = Bukkit.getPluginManager().isPluginEnabled("HolographicDisplays");
+        if (this.useHolographicDisplays) {
+            holoListener = new HoloListener(this);
+            registerListener(holoListener);
+        }
+    }
 
     @Override
     public void onDisable() {
@@ -160,8 +177,9 @@ public class AOneBlock extends GameModeAddon {
 
     /**
      * Gets a world or generates a new world if it does not exist
-     * @param worldName2 - the overworld name
-     * @param env - the environment
+     *
+     * @param worldName2      - the overworld name
+     * @param env             - the environment
      * @param chunkGenerator2 - the chunk generator. If <tt>null</tt> then the generator will not be specified
      * @return world loaded or generated
      */
@@ -223,9 +241,23 @@ public class AOneBlock extends GameModeAddon {
      */
     @Override
     public void allLoaded() {
-        // Reload settings and save them. This will occur after all addons have loaded
-        this.loadSettings();
+        // save settings. This will occur after all addons have loaded
         this.saveWorldSettings();
+
+        // Manage Old Holograms
+        if (useHolographicDisplays()) {
+            for (Island island : getIslands().getIslands()) {
+                OneBlockIslands oneBlockIsland = getOneBlocksIsland(island);
+                String hololine = oneBlockIsland.getHologram();
+                Location center = island.getCenter();
+                if (hololine != null && center != null) {
+                    final Hologram hologram = HologramsAPI.createHologram(BentoBox.getInstance(), center.add(0.5, 2.6, 0.5));
+                    for (String line : hololine.split("\\n")) {
+                        hologram.appendTextLine(ChatColor.translateAlternateColorCodes('&', line));
+                    }
+                }
+            }
+        }
     }
 
     /**
@@ -250,11 +282,25 @@ public class AOneBlock extends GameModeAddon {
 
     /**
      * Get the placeholder manager
+     *
      * @return the phManager
      */
     public PlaceholdersManager getPlaceholdersManager() {
         return phManager;
     }
 
+    /**
+     * @return the holoListener
+     */
+    public HoloListener getHoloListener() {
+        return holoListener;
+    }
+
+    /**
+     * @return whether to use Holographic Displays or Not
+     */
+    public boolean useHolographicDisplays() {
+        return useHolographicDisplays;
+    }
 
 }
