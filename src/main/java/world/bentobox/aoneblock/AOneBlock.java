@@ -52,7 +52,7 @@ public class AOneBlock extends GameModeAddon {
     private BlockListener blockListener;
     private OneBlocksManager oneBlockManager;
     private PlaceholdersManager phManager;
-    private Boolean useHolographicDisplays;
+    private boolean useHolographicDisplays;
     private HoloListener holoListener;
 
     @Override
