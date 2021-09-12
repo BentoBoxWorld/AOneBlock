@@ -241,7 +241,7 @@ public class OneBlocksManager {
             int k = Integer.parseInt(key);
             String line = fb.getString(key);
             if (line != null) {
-                    result.put(k, line);
+                result.put(k, line);
             }
         }
         // Set Hologram Lines
@@ -424,10 +424,11 @@ public class OneBlocksManager {
      */
     public Optional<OneBlockPhase> getPhase(String name) {
         return blockProbs.values().stream()
-                .filter(p -> p.getPhaseName() != null && p.getPhaseName().replace(" ", "_").equalsIgnoreCase(name))
+                .filter(p -> p.getPhaseName() != null
+                && (p.getPhaseName().equalsIgnoreCase(name)
+                        || p.getPhaseName().replace(" ", "_").equalsIgnoreCase(name)))
                 .findFirst();
     }
-
     /**
      * Save the oneblock.yml file in memory to disk. Makes a backup.
      *
