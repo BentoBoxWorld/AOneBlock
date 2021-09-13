@@ -3,29 +3,37 @@ aoneblock:
   commands:
     admin:
       setcount:
-        parameters: "<nombre> <cuenta>"
-        description: establecer el recuento de bloqueos del jugador
-        set: "&a el recuento de [name] establecido en [number]"
+        parameters: "<nombre> <número>"
+        description: "Establece un número de bloques minados al jugador"
+        set: "&aEl número de bloques minados de [name] se ha establecido en [number]"
       setchest:
-        parameters: "<phase> <rarity>"
-        description: poner el cofre mirado en una fase con la rareza especificada
-        chest-is-empty: "&c Ese cofre está vacío, así que no se puede agregar"
-        unknown-phase: "&c Fase desconocida. Use tab-complete para verlos"
-        unknown-rarity: "&c Rareza desconocida. Use COMMON, UNCOMMON, RARE o EPIC"
-        look-at-chest: "&c Mira un cofre lleno para configurarlo"
-        only-single-chest: "&c Solo se pueden configurar cofres individuales"
-        success: "&a Un Cofre agregado con éxito a la fase"
-        failure: "&c ¡No se pudo agregar el cofre a la fase! Ver consola para errores"
+        parameters: "<fase> <rareza>"
+        description: "Coloca un cofre al que apuntes en una fase con la rareza especificada"
+        chest-is-empty: "&cEse cofre está vacío, así que no se puede agregar"
+        unknown-phase: "&cFase desconocida. Presione TAB para verlas"
+        unknown-rarity: "&cRareza desconocida. Use COMMON, UNCOMMON, RARE o EPIC"
+        look-at-chest: "&cApunta hacia un cofre lleno para configurarlo"
+        only-single-chest: "&cSolo se pueden configurar cofres individuales"
+        success: "&aEl cofre ha sido agregado con éxito a la fase"
+        failure: "&c¡No se pudo agregar el cofre a la fase! Revisa la consola para más detalles"
       sanity:
         parameters: "<fase>"
-        description: muestra una comprobación de cordura de las probabilidades de
-          fase en la consola
-        see-console: "&a Ver la consola para el informe"
+        description: "Muestra la proporción detallada de las probabilidades durante las fases en la consola"
+        see-console: "&aRevisa la consola para ver el informe"
     count:
-      description: mostrar el recuento de bloques y la fase
-      info: "&a Estás en el bloque &b [number] en la fase &a [name]"
+      description: Muestra el número de bloques minados y la fase correspondiente
+      info: "&aTienes &b[number] bloques minados en la fase &a[name]"
     phases:
-      description: muestra una lista de todas las fases
-      title: "&2 Fases de OneBlock"
-      name-syntax: "&a [name]"
-      description-syntax: "&b [number] bloques"
+      description: Muestra una lista de todas las fases
+      title: "&2Fases de OneBlock"
+      name-syntax: "&a[name]"
+      description-syntax: "&b[number] bloques"
+  phase:
+    insufficient-level: "&c¡Tu nivel de isla es demasiado bajo para seguir! Este debe ser de [number]."
+    insufficient-funds: "&c¡Tus fondos son insuficientes! Debes tener [number]."
+    insufficient-bank-balance: "&c¡El dinero del banco en la isla es demasiado bajo para seguir! Debes tener [number]."
+    insufficient-permission: "&cNo puedes seguir hasta conseguir el permiso [name]"
+  placeholders:
+    infinite: Infinito
+  island:
+    starting-hologram: "&aBienvenido a AOneBlock\n&eRompe este bloque para empezar"
