@@ -387,7 +387,7 @@ island:
     # 
     # Here are some examples of valid commands to execute:
     #    * "[SUDO] bbox version"
-    #    * "bsbadmin deaths set [player] 0"
+    #    * "obadmin deaths set [player] 0"
     # Added since 1.8.0.
     on-join: []
     # List of commands to run when a player leaves an island, resets his island or gets kicked from it.
@@ -399,7 +399,7 @@ island:
     # 
     # Here are some examples of valid commands to execute:
     #    * '[SUDO] bbox version'
-    #    * 'bsbadmin deaths set [player] 0'
+    #    * 'obadmin deaths set [player] 0'
     # 
     # Note that player-executed commands might not work, as these commands can be run with said player being offline.
     # Added since 1.8.0.
@@ -413,7 +413,7 @@ island:
     #
     # Here are some examples of valid commands to execute:
     #    * '[SUDO] bbox version'
-    #    * 'bsbadmin deaths set [player] 0'
+    #    * 'obadmin deaths set [player] 0'
     #
     # Note that player-executed commands might not work, as these commands can be run with said player being offline.
     # Added since 1.14.0.
