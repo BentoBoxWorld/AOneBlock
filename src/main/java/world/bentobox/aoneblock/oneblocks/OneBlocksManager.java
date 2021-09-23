@@ -535,6 +535,9 @@ public class OneBlocksManager {
     public int getNextPhaseBlocks(@NonNull OneBlockIslands obi) {
         Integer blockNum = obi.getBlockNumber();
         Integer nextKey = blockProbs.ceilingKey(blockNum + 1);
+        if (nextKey == null) {
+            return -1;
+        }
         OneBlockPhase nextPhase = this.getPhase(nextKey);
         return nextPhase == null ? -1 : (nextPhase.getBlockNumberValue() - obi.getBlockNumber());
     }
@@ -552,6 +555,9 @@ public class OneBlocksManager {
             return 0;
         }
         Integer nextKey = blockProbs.ceilingKey(blockNum + 1);
+        if (nextKey == null) {
+            return 0;
+        }
         OneBlockPhase nextPhase = this.getPhase(nextKey);
         if (nextPhase == null) {
             return 0;
