@@ -13,6 +13,8 @@ import world.bentobox.aoneblock.oneblocks.OneBlockObject;
 import world.bentobox.bentobox.database.objects.DataObject;
 import world.bentobox.bentobox.database.objects.Table;
 
+import org.apache.commons.lang3.StringEscapeUtils;
+
 /**
  * @author tastybento
  *
@@ -77,14 +79,14 @@ public class OneBlockIslands implements DataObject {
      * @return the hologram Line
      */
     public String getHologram() {
-        return hologram;
+        return hologram == null ? "" : StringEscapeUtils.unescapeJava(hologram);
     }
 
     /**
      * @param hologramLine Hologram line
      */
     public void setHologram(String hologramLine) {
-        this.hologram = hologramLine;
+        this.hologram = StringEscapeUtils.escapeJava(hologramLine);
     }
 
     /* (non-Javadoc)
