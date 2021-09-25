@@ -3,11 +3,10 @@ package world.bentobox.aoneblock.commands;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import org.bukkit.Material;
-
 import org.bukkit.inventory.ItemStack;
+
 import world.bentobox.aoneblock.AOneBlock;
 import world.bentobox.bentobox.api.commands.CompositeCommand;
 import world.bentobox.bentobox.api.localization.TextVariables;
@@ -46,13 +45,14 @@ public class IslandPhasesCommand extends CompositeCommand {
                     item.name(user.getTranslation("aoneblock.commands.phases.name-syntax",
                             TextVariables.NAME, en.getValue().getPhaseName(),
                             TextVariables.NUMBER, String.valueOf(en.getKey())));
-                    ItemStack icon = en.getValue().getIconBlock() == null ? en.getValue().getFirstBlock() == null ? new ItemStack(Material.STONE, 1) : new ItemStack(en.getValue().getFirstBlock().getMaterial(), 1) : en.getValue().getIconBlock();
+                    ItemStack firstBlock = en.getValue().getFirstBlock() == null ? new ItemStack(Material.STONE, 1) : new ItemStack(en.getValue().getFirstBlock().getMaterial(), 1);
+                    ItemStack icon = en.getValue().getIconBlock() == null ? firstBlock : en.getValue().getIconBlock();
                     item.icon(icon);
                     item.description(user.getTranslation("aoneblock.commands.phases.description-syntax",
                             TextVariables.NAME, en.getValue().getPhaseName(),
                             TextVariables.NUMBER, String.valueOf(en.getKey())));
                     return item.build();
-                }).collect(Collectors.toList());
+                }).toList();
         items.forEach(pb::item);
         pb.build();
         return true;

@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -21,10 +20,7 @@ import world.bentobox.bentobox.api.user.User;
 
 public class AdminSetChestCommand extends CompositeCommand {
 
-    private static final List<String> RARITY_LIST;
-    static {
-        RARITY_LIST = Arrays.stream(Rarity.values()).map(Enum::name).collect(Collectors.toUnmodifiableList());
-    }
+    private static final List<String> RARITY_LIST= Arrays.stream(Rarity.values()).map(Enum::name).toList();
     private AOneBlock addon;
     private OneBlockPhase phase;
     private Rarity rarity;
