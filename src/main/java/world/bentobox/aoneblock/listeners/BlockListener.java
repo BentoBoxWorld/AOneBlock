@@ -48,6 +48,8 @@ import org.bukkit.util.Vector;
 import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jdt.annotation.Nullable;
 
+import com.google.common.base.Enums;
+
 import world.bentobox.aoneblock.AOneBlock;
 import world.bentobox.aoneblock.dataobjects.OneBlockIslands;
 import world.bentobox.aoneblock.events.BlockClearEvent;
@@ -116,18 +118,21 @@ public class BlockListener implements Listener {
     /**
      * Water entities
      */
-    private static final List<EntityType> WATER_ENTITIES = Arrays.asList(
-            EntityType.GUARDIAN,
-            EntityType.ELDER_GUARDIAN,
-            EntityType.COD,
-            EntityType.SALMON,
-            EntityType.PUFFERFISH,
-            EntityType.TROPICAL_FISH,
-            EntityType.DROWNED,
-            EntityType.DOLPHIN,
-            EntityType.AXOLOTL,
-            EntityType.SQUID,
-            EntityType.GLOW_SQUID);
+    private static final List<EntityType> WATER_ENTITIES = new ArrayList<>();
+    static {
+        WATER_ENTITIES.add(EntityType.GUARDIAN);
+        WATER_ENTITIES.add(EntityType.ELDER_GUARDIAN);
+        WATER_ENTITIES.add(EntityType.COD);
+        WATER_ENTITIES.add(EntityType.SALMON);
+        WATER_ENTITIES.add(EntityType.PUFFERFISH);
+        WATER_ENTITIES.add(EntityType.TROPICAL_FISH);
+        WATER_ENTITIES.add(EntityType.DROWNED);
+        WATER_ENTITIES.add(EntityType.DOLPHIN);
+        WATER_ENTITIES.add(EntityType.SQUID);
+        // 1.16.5 compatibility
+        Enums.getIfPresent(EntityType.class, "AXOLOTL").toJavaUtil().ifPresent(WATER_ENTITIES::add);
+        Enums.getIfPresent(EntityType.class, "GLOW_SQUID").toJavaUtil().ifPresent(WATER_ENTITIES::add);
+    }
 
     private static final Map<EntityType, MobAspects> MOB_ASPECTS;
     public static final int MAX_LOOK_AHEAD = 5;

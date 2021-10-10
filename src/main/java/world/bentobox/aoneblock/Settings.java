@@ -96,7 +96,7 @@ public class Settings implements WorldSettings {
     private int islandDistance = 400;
 
     @ConfigComment("Default protection range radius in blocks. Cannot be larger than distance.")
-    @ConfigComment("Admins can change protection sizes for players individually using /bsbadmin range set <player> <new range>")
+    @ConfigComment("Admins can change protection sizes for players individually using /obadmin range set <player> <new range>")
     @ConfigComment("or set this permission: aoneblock.island.range.<number>")
     @ConfigEntry(path = "world.protection-range")
     private int islandProtectionRange = 50;
@@ -288,7 +288,7 @@ public class Settings implements WorldSettings {
     private int maxHomes = 5;
 
     // Reset
-    @ConfigComment("How many resets a player is allowed (manage with /bsbadmin reset add/remove/reset/set command)")
+    @ConfigComment("How many resets a player is allowed (manage with /obadmin reset add/remove/reset/set command)")
     @ConfigComment("Value of -1 means unlimited, 0 means hardcore - no resets.")
     @ConfigComment("Example, 2 resets means they get 2 resets or 3 islands lifetime")
     @ConfigEntry(path = "island.reset.reset-limit")
@@ -425,7 +425,7 @@ public class Settings implements WorldSettings {
     @ConfigComment("")
     @ConfigComment("Here are some examples of valid commands to execute:")
     @ConfigComment("   * \"[SUDO] bbox version\"")
-    @ConfigComment("   * \"bsbadmin deaths set [player] 0\"")
+    @ConfigComment("   * \"obadmin deaths set [player] 0\"")
     @ConfigEntry(path = "island.commands.on-join", since = "1.8.0")
     private List<String> onJoinCommands = new ArrayList<>();
 
@@ -438,7 +438,7 @@ public class Settings implements WorldSettings {
     @ConfigComment("")
     @ConfigComment("Here are some examples of valid commands to execute:")
     @ConfigComment("   * '[SUDO] bbox version'")
-    @ConfigComment("   * 'bsbadmin deaths set [player] 0'")
+    @ConfigComment("   * 'obadmin deaths set [player] 0'")
     @ConfigComment("")
     @ConfigComment("Note that player-executed commands might not work, as these commands can be run with said player being offline.")
     @ConfigEntry(path = "island.commands.on-leave", since = "1.8.0")
@@ -453,7 +453,7 @@ public class Settings implements WorldSettings {
     @ConfigComment("")
     @ConfigComment("Here are some examples of valid commands to execute:")
     @ConfigComment("   * '[SUDO] bbox version'")
-    @ConfigComment("   * 'bsbadmin deaths set [player] 0'")
+    @ConfigComment("   * 'obadmin deaths set [player] 0'")
     @ConfigComment("")
     @ConfigComment("Note that player-executed commands might not work, as these commands can be run with said player being offline.")
     @ConfigEntry(path = "island.commands.on-respawn", since = "1.14.0")

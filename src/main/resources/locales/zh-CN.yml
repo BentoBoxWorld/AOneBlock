@@ -1,30 +1,38 @@
----
 aoneblock:
   commands:
     admin:
       setcount:
-        parameters: "<名称> <计数>"
-        description: 设置玩家的盖帽数
-        set: a [name]的计数设置为[number]
+        parameters: "<玩家名称> <数量>"
+        description: "设置玩家挖掘的方块数"
+        set: "&a [name] 挖掘的方块数已设置为 [number]"
       setchest:
-        parameters: "<阶段> <稀有>"
-        description: 将所看的胸部放在指定稀有度的阶段
-        unknown-phase: "＆c未知阶段。使用制表符完成功能来查看它们"
-        unknown-rarity: "＆c未知稀有。使用COMMON，UNCOMMON，RARE或EPIC"
-        look-at-chest: "＆c看看装满的箱子"
-        only-single-chest: "＆c只能设置单个箱子"
-        success: "＆a Chest成功添加到阶段"
-        failure: "＆c Chest无法添加到该阶段！请参阅控制台以获取错误"
-        chest-is-empty: "&c该箱子为空，因此无法添加"
+        parameters: "<阶段> <稀有度>"
+        description: "将您光标指向的箱子添加到一个阶段中, 并选择稀有度"
+        chest-is-empty: "&c 该箱子无法添加, 因为它是空的"
+        unknown-phase: "&c 未知阶段. 用 Tab 补全来查看所有阶段"
+        unknown-rarity: "&c 未知稀有度. 可使用的有 COMMON, UNCOMMON, RARE 或 EPIC"
+        look-at-chest: "&c 将光标指向一个包含物品的箱子来设置它"
+        only-single-chest: "&c 只能设置单个箱子"
+        success: "&a 成功将箱子添加到该阶段"
+        failure: "&c 无法添加箱子到该阶段! 报错已在后台生成"
       sanity:
         parameters: "<阶段>"
-        description: 在控制台中显示相概率的健全性检查
-        see-console: "＆a请参阅控制台以获取报告"
+        description: "在后台生成一份关于各阶段所占百分比的完整报告"
+        see-console: "&a 报告已在后台生成"
     count:
-      description: 显示块数和相位
-      info: "＆a您正在＆a [name]阶段中阻止＆b [number]"
+      description: 显示方块数量和阶段
+      info: "&a 您当前挖掘的方块数量是 &b [number], 为 &a [name] 阶段"
     phases:
       description: 显示所有阶段的列表
-      title: "＆2 OneBlock阶段"
+      title: "&2 OneBlock 阶段"
       name-syntax: "&a [name]"
-      description-syntax: "&b [number]块"
+      description-syntax: "&b 挖掘了 [number] 个方块"
+  phase:
+    insufficient-level: "&c 岛屿等级过低, 无法执行此操作! 等级必须达到 [number]."
+    insufficient-funds: "&c 余额不足, 无法执行此操作! 余额应多于 [number]."
+    insufficient-bank-balance: "&c 岛屿银行余额不足, 无法执行此操作! 余额应多于 [number]."
+    insufficient-permission: "&c 您不能继续执行操作了, 因为没有 [name] 权限!"
+  placeholders:
+    infinite: 无限
+  island:
+    starting-hologram: "&a欢迎来到 AOneBlock\n&e破坏此方块以开始"

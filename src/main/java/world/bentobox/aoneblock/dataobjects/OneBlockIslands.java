@@ -2,8 +2,12 @@ package world.bentobox.aoneblock.dataobjects;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
+import org.apache.commons.text.StringEscapeUtils;
+/**
+ * @author tastybento
+ *
+ */
 import org.bukkit.entity.EntityType;
 import org.eclipse.jdt.annotation.NonNull;
 
@@ -13,10 +17,6 @@ import world.bentobox.aoneblock.oneblocks.OneBlockObject;
 import world.bentobox.bentobox.database.objects.DataObject;
 import world.bentobox.bentobox.database.objects.Table;
 
-/**
- * @author tastybento
- *
- */
 @Table(name = "OneBlockIslands")
 public class OneBlockIslands implements DataObject {
 
@@ -77,14 +77,14 @@ public class OneBlockIslands implements DataObject {
      * @return the hologram Line
      */
     public String getHologram() {
-        return hologram;
+        return hologram == null ? "" : StringEscapeUtils.unescapeJava(hologram);
     }
 
     /**
      * @param hologramLine Hologram line
      */
     public void setHologram(String hologramLine) {
-        this.hologram = hologramLine;
+        this.hologram = StringEscapeUtils.escapeJava(hologramLine);
     }
 
     /* (non-Javadoc)
@@ -117,7 +117,7 @@ public class OneBlockIslands implements DataObject {
      * @return list of upcoming mobs
      */
     public List<EntityType> getNearestMob(int i) {
-        return getQueue().stream().limit(i).filter(OneBlockObject::isEntity).map(OneBlockObject::getEntityType).collect(Collectors.toList());
+        return getQueue().stream().limit(i).filter(OneBlockObject::isEntity).map(OneBlockObject::getEntityType).toList();
     }
 
     public void add(OneBlockObject nextBlock) {
