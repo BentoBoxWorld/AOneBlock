@@ -19,6 +19,10 @@ aoneblock:
     # By default it is sub-command 'go'.
     # Added since 1.2.0.
     default-action: go
+    # Placeholder customization
+    # SSymbol for the percentage completed scale bar
+    placeholders:
+      scale-symbol: "■"
 world:
   # Friendly name for this world. Used in admin commands. Must be a single word
   friendly-name: OneBlock

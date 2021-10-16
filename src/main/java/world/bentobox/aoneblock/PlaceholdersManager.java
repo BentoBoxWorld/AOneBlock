@@ -172,6 +172,7 @@ public class PlaceholdersManager {
                 .map(addon::getOneBlocksIsland)
                 .map(addon.getOneBlockManager()::getPercentageDone)
                 .map(num -> SCALE.floorEntry(num).getValue())
+                .map(s -> s.replace("╍", addon.getSettings().getPercentCompleteSymbol()))
                 .orElse("");
     }
 
@@ -187,7 +188,7 @@ public class PlaceholdersManager {
             return "";
         }
         double num = addon.getOneBlockManager().getPercentageDone(addon.getOneBlocksIsland(i));
-        return SCALE.floorEntry(num).getValue();
+        return SCALE.floorEntry(num).getValue().replace("╍", addon.getSettings().getPercentCompleteSymbol());
     }
 
 
