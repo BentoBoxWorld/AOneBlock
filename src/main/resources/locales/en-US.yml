@@ -7,9 +7,10 @@ aoneblock:
   commands:
     admin:
       setcount:
-        parameters: "<name> <count>"
+        parameters: "<name> <count> [lifetime]"
         description: "set player's block count"
         set: "&a [name]'s count set to [number]"
+        set-lifetime: "&a [name]'s lifetime count set to [number]"
       setchest:
         parameters: "<phase> <rarity>"
         description: "put the looked-at chest in a phase with the rarity specified"
@@ -32,6 +33,12 @@ aoneblock:
       title: "&2 OneBlock Phases"
       name-syntax: "&a [name]"
       description-syntax: "&b [number] blocks"
+    island:
+      setcount:
+        parameters: "<count>"
+        description: "set block count to previously completed value"
+        set: "&a Count set to [number]."
+        too-high: "&c The maximum you can set is [number]!"
   phase:
     insufficient-level: "&c Your island level is too low to proceed! It must be [number]."
     insufficient-funds: "&c Your funds are too low to proceed! They must be [number]."
