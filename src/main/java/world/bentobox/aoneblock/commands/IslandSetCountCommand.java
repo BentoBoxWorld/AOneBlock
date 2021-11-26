@@ -28,6 +28,7 @@ public class IslandSetCountCommand extends CompositeCommand {
 
     @Override
     public void setup() {
+        setOnlyPlayer(true);
         setParametersHelp("aoneblock.commands.island.setcount.parameters");
         setDescription("aoneblock.commands.island.setcount.description");
         // Permission
