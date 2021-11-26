@@ -59,15 +59,15 @@
         <powermock.version>2.0.9</powermock.version>
         <!-- More visible way how to change dependency versions -->
         <spigot.version>1.17-R0.1-SNAPSHOT</spigot.version>
-        <bentobox.version>1.17.0</bentobox.version>
-        <level.version>2.7.0-SNAPSHOT</level.version>
+        <bentobox.version>1.18.0-SNAPSHOT</bentobox.version>
+        <level.version>2.6.2</level.version>
         <bank.version>1.3.0</bank.version>
         <!-- Revision variable removes warning about dynamic version -->
         <revision>${build.version}-SNAPSHOT</revision>
         <!-- Do not change unless you want different name for local builds. -->
         <build.number>-LOCAL</build.number>
         <!-- This allows to change between versions. -->
-        <build.version>1.8.1</build.version>
+        <build.version>1.9.0</build.version>
         <!-- SonarCloud -->
         <sonar.projectKey>BentoBoxWorld_AOneBlock</sonar.projectKey>
         <sonar.organization>bentobox-world</sonar.organization>
@@ -116,6 +116,14 @@
         </profile>
     </profiles>
 
+    <pluginRepositories>
+        <pluginRepository>
+            <id>apache.snapshots</id>
+            <url>https://repository.apache.org/snapshots/</url>
+        </pluginRepository>
+    </pluginRepositories>
+
+
     <repositories>
         <repository>
             <id>spigot-repo</id>
@@ -150,7 +158,13 @@
             <version>2.4.0</version>
             <scope>provided</scope>
         </dependency>
-        <!-- Mojang Auth-->
+        <!-- Apache Commons Text -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-text</artifactId>
+            <version>1.9</version>
+        </dependency>
+        <!-- Mojang Auth -->
         <dependency>
             <groupId>com.mojang</groupId>
             <artifactId>authlib</artifactId>
@@ -263,7 +277,33 @@
                 <version>3.0.0-M5</version>
                 <configuration>
                     <argLine>
-                        --illegal-access=permit
+                        --add-opens java.base/java.lang=ALL-UNNAMED
+                        --add-opens java.base/java.math=ALL-UNNAMED
+                        --add-opens java.base/java.io=ALL-UNNAMED
+                        --add-opens java.base/java.util=ALL-UNNAMED
+                        --add-opens
+                        java.base/java.util.stream=ALL-UNNAMED
+                        --add-opens java.base/java.text=ALL-UNNAMED
+                        --add-opens
+                        java.base/java.util.regex=ALL-UNNAMED
+                        --add-opens
+                        java.base/java.nio.channels.spi=ALL-UNNAMED
+                        --add-opens java.base/sun.nio.ch=ALL-UNNAMED
+                        --add-opens java.base/java.net=ALL-UNNAMED
+                        --add-opens
+                        java.base/java.util.concurrent=ALL-UNNAMED
+                        --add-opens java.base/sun.nio.fs=ALL-UNNAMED
+                        --add-opens java.base/sun.nio.cs=ALL-UNNAMED
+                        --add-opens java.base/java.nio.file=ALL-UNNAMED
+                        --add-opens
+                        java.base/java.nio.charset=ALL-UNNAMED
+                        --add-opens
+                        java.base/java.lang.reflect=ALL-UNNAMED
+                        --add-opens
+                        java.logging/java.util.logging=ALL-UNNAMED
+                        --add-opens java.base/java.lang.ref=ALL-UNNAMED
+                        --add-opens java.base/java.util.jar=ALL-UNNAMED
+                        --add-opens java.base/java.util.zip=ALL-UNNAMED
                     </argLine>
                 </configuration>
             </plugin>
@@ -311,6 +351,30 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-deploy-plugin</artifactId>
                 <version>3.0.0-M1</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.3.1-SNAPSHOT</version>
+                <configuration>
+                    <minimizeJar>true</minimizeJar>
+                    <filters>
+                        <filter>
+                            <artifact>org.apache.commons.text:*</artifact>
+                            <includes>
+                                <include>**</include>
+                            </includes>
+                        </filter>
+                     </filters>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
             <plugin>
                 <groupId>org.jacoco</groupId>

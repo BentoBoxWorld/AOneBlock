@@ -1,5 +1,6 @@
 package world.bentobox.aoneblock.listeners;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -34,6 +35,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockFromToEvent;
 import org.bukkit.event.entity.EntityInteractEvent;
 import org.bukkit.event.entity.EntitySpawnEvent;
 import org.bukkit.event.player.PlayerBucketFillEvent;
@@ -46,8 +48,11 @@ import org.bukkit.util.Vector;
 import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jdt.annotation.Nullable;
 
+import com.google.common.base.Enums;
+
 import world.bentobox.aoneblock.AOneBlock;
 import world.bentobox.aoneblock.dataobjects.OneBlockIslands;
+import world.bentobox.aoneblock.events.BlockClearEvent;
 import world.bentobox.aoneblock.events.MagicBlockEntityEvent;
 import world.bentobox.aoneblock.events.MagicBlockEvent;
 import world.bentobox.aoneblock.events.MagicBlockPhaseEvent;
@@ -113,18 +118,21 @@ public class BlockListener implements Listener {
     /**
      * Water entities
      */
-    private static final List<EntityType> WATER_ENTITIES = Arrays.asList(
-            EntityType.GUARDIAN,
-            EntityType.ELDER_GUARDIAN,
-            EntityType.COD,
-            EntityType.SALMON,
-            EntityType.PUFFERFISH,
-            EntityType.TROPICAL_FISH,
-            EntityType.DROWNED,
-            EntityType.DOLPHIN,
-            EntityType.AXOLOTL,
-            EntityType.SQUID,
-            EntityType.GLOW_SQUID);
+    private static final List<EntityType> WATER_ENTITIES = new ArrayList<>();
+    static {
+        WATER_ENTITIES.add(EntityType.GUARDIAN);
+        WATER_ENTITIES.add(EntityType.ELDER_GUARDIAN);
+        WATER_ENTITIES.add(EntityType.COD);
+        WATER_ENTITIES.add(EntityType.SALMON);
+        WATER_ENTITIES.add(EntityType.PUFFERFISH);
+        WATER_ENTITIES.add(EntityType.TROPICAL_FISH);
+        WATER_ENTITIES.add(EntityType.DROWNED);
+        WATER_ENTITIES.add(EntityType.DOLPHIN);
+        WATER_ENTITIES.add(EntityType.SQUID);
+        // 1.16.5 compatibility
+        Enums.getIfPresent(EntityType.class, "AXOLOTL").toJavaUtil().ifPresent(WATER_ENTITIES::add);
+        Enums.getIfPresent(EntityType.class, "GLOW_SQUID").toJavaUtil().ifPresent(WATER_ENTITIES::add);
+    }
 
     private static final Map<EntityType, MobAspects> MOB_ASPECTS;
     public static final int MAX_LOOK_AHEAD = 5;
@@ -215,6 +223,20 @@ public class BlockListener implements Listener {
             cache.remove(e.getIsland().getUniqueId());
             handler.deleteID(e.getIsland().getUniqueId());
         }
+    }
+
+    /**
+     * Prevents liquids flowing into magic block
+     * @param e BlockFromToEvent
+     */
+    @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
+    public void onBlockFromTo(final BlockFromToEvent e) {
+        if (!addon.inWorld(e.getBlock().getWorld())) {
+            return;
+        }
+        Location l = e.getToBlock().getLocation();
+        // Cannot flow to center block
+        e.setCancelled(addon.getIslands().getIslandAt(l).filter(i -> l.equals(i.getCenter())).isPresent());
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
@@ -434,11 +456,11 @@ public class BlockListener implements Listener {
             is.setPhaseName(phaseName);
             if (player != null) {
                 player.sendTitle(phaseName, null, -1, -1, -1);
+                // Run phase start commands
+                Util.runCommands(User.getInstance(player),
+                        replacePlaceholders(player, phaseName, phase.getBlockNumber(), i, phase.getStartCommands()),
+                        "Commands run for start of " + phaseName);
             }
-            // Run phase start commands
-            Util.runCommands(User.getInstance(player),
-                    replacePlaceholders(player, phaseName, phase.getBlockNumber(), i, phase.getStartCommands()),
-                    "Commands run for start of " + phaseName);
             saveIsland(i);
             return true;
         }
@@ -577,6 +599,8 @@ public class BlockListener implements Listener {
 
     private void makeSpace(@NonNull Entity e) {
         World world = e.getWorld();
+        List<Block> airBlocks = new ArrayList<>();
+        List<Block> waterBlocks = new ArrayList<>();
         // Make space for entity based on the entity's size
         BoundingBox bb = e.getBoundingBox();
         for (double x = bb.getMinX(); x <= bb.getMaxX() + 1; x++) {
@@ -585,15 +609,29 @@ public class BlockListener implements Listener {
                 Block b = world.getBlockAt(new Location(world, x, y, z));
                 for (; y <= Math.min(bb.getMaxY() + 1, world.getMaxHeight()); y++) {
                     b = world.getBlockAt(new Location(world, x, y, z));
-                    if (!b.getType().equals(Material.AIR) && !b.isLiquid()) b.breakNaturally();
-                    b.setType(WATER_ENTITIES.contains(e.getType()) && addon.getSettings().isWaterMobProtection() ? Material.WATER : Material.AIR, false);
+                    if (!b.getType().equals(Material.AIR) && !b.isLiquid()) {
+                        airBlocks.add(b);
+                    }
+                    if (WATER_ENTITIES.contains(e.getType()) && addon.getSettings().isWaterMobProtection()) {
+                        waterBlocks.add(b);
+                    }
                 }
                 // Add air block on top for all water entities (required for dolphin, okay for others)
                 if (WATER_ENTITIES.contains(e.getType())) {
-                    b.getRelative(BlockFace.UP).setType(Material.AIR);
+                    airBlocks.add(b.getRelative(BlockFace.UP));
                 }
             }
         }
+        // Fire event
+        BlockClearEvent event = new BlockClearEvent(e, airBlocks, waterBlocks);
+        Bukkit.getPluginManager().callEvent(event);
+        if (event.isCancelled()) {
+            return;
+        }
+        // Clear blocks
+        airBlocks.forEach(Block::breakNaturally);
+        airBlocks.forEach(b -> b.setType(Material.AIR));
+        waterBlocks.forEach(b -> b.setType(Material.WATER));
     }
 
     private void fillChest(@NonNull OneBlockObject nextBlock, @NonNull Block block) {

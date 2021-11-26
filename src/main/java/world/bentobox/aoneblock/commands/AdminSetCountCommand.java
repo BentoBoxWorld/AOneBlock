@@ -1,11 +1,8 @@
 package world.bentobox.aoneblock.commands;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
-
-import org.eclipse.jdt.annotation.Nullable;
 
 import world.bentobox.aoneblock.AOneBlock;
 import world.bentobox.aoneblock.dataobjects.OneBlockIslands;
@@ -18,9 +15,6 @@ import world.bentobox.bentobox.util.Util;
 public class AdminSetCountCommand extends CompositeCommand {
 
     private AOneBlock addon;
-    private @Nullable UUID targetUUID;
-    private @Nullable Island island;
-    private Integer count;
 
     public AdminSetCountCommand(CompositeCommand islandCommand) {
         super(islandCommand, "setcount");
@@ -36,8 +30,8 @@ public class AdminSetCountCommand extends CompositeCommand {
     }
 
     @Override
-    public boolean canExecute(User user, String label, List<String> args) {
-        if (args.size() != 2) {
+    public boolean execute(User user, String label, List<String> args) {
+        if (args.size() < 2 || args.size() > 3 || (args.size() == 3 && !args.get(2).equalsIgnoreCase("lifetime"))) {
             showHelp(this, user);
             return false;
         }
@@ -47,24 +41,28 @@ public class AdminSetCountCommand extends CompositeCommand {
             user.sendMessage("general.errors.must-be-positive-number", TextVariables.NUMBER, args.get(1));
             return false;
         }
-        count = Integer.parseInt(args.get(1));
+        int count = Integer.parseInt(args.get(1));
         // Get target player
-        targetUUID = getPlayers().getUUID(args.get(0));
+        UUID targetUUID = getPlayers().getUUID(args.get(0));
         if (targetUUID == null) {
             user.sendMessage("general.errors.unknown-player", TextVariables.NAME, args.get(0));
             return false;
         }
         // Get their island
-        island = getIslands().getIsland(getWorld(), targetUUID);
-        return island != null;
-    }
-
-    @Override
-    public boolean execute(User user, String label, List<String> args) {
-        OneBlockIslands i = addon.getOneBlocksIsland(Objects.requireNonNull(island));
-        i.setBlockNumber(count);
-        i.clearQueue();
-        user.sendMessage("aoneblock.commands.admin.setcount.set", TextVariables.NUMBER, String.valueOf(i.getBlockNumber()), TextVariables.NAME, getPlayers().getName(targetUUID));
+        Island island = getIslands().getIsland(getWorld(), targetUUID);
+        if (island == null) {
+            user.sendMessage("general.errors.no-island");
+            return false;
+        }
+        OneBlockIslands i = addon.getOneBlocksIsland(island);
+        if (args.size() == 3 && args.get(2).equalsIgnoreCase("lifetime")) {
+            i.setLifetime(count);
+            user.sendMessage("aoneblock.commands.admin.setcount.set-lifetime", TextVariables.NUMBER, String.valueOf(count), TextVariables.NAME, getPlayers().getName(targetUUID));
+        } else {
+            i.setBlockNumber(count);
+            i.clearQueue();
+            user.sendMessage("aoneblock.commands.admin.setcount.set", TextVariables.NUMBER, String.valueOf(count), TextVariables.NAME, getPlayers().getName(targetUUID));
+        }
         return true;
     }
 
