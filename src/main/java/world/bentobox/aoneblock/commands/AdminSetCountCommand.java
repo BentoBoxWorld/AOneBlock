@@ -1,7 +1,6 @@
 package world.bentobox.aoneblock.commands;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -36,17 +35,6 @@ public class AdminSetCountCommand extends CompositeCommand {
             showHelp(this, user);
             return false;
         }
-        // Get their island
-        Island island = getIslands().getIsland(getWorld(), user);
-        if (island == null) {
-            user.sendMessage("general.errors.no-island");
-            return false;
-        }
-        // Check ownership
-        if (!getIslands().hasIsland(getWorld(), user)) {
-            user.sendMessage("general.errors.not-owner");
-            return false;
-        }
         // Get value
         // Get new range
         if (!Util.isInteger(args.get(1), true) || Integer.parseInt(args.get(1)) < 0) {
@@ -60,7 +48,13 @@ public class AdminSetCountCommand extends CompositeCommand {
             user.sendMessage("general.errors.unknown-player", TextVariables.NAME, args.get(0));
             return false;
         }
-        OneBlockIslands i = addon.getOneBlocksIsland(Objects.requireNonNull(island));
+        // Get their island
+        Island island = getIslands().getIsland(getWorld(), targetUUID);
+        if (island == null) {
+            user.sendMessage("general.errors.no-island");
+            return false;
+        }
+        OneBlockIslands i = addon.getOneBlocksIsland(island);
         if (args.size() == 3 && args.get(2).equalsIgnoreCase("lifetime")) {
             i.setLifetime(count);
             user.sendMessage("aoneblock.commands.admin.setcount.set-lifetime", TextVariables.NUMBER, String.valueOf(count), TextVariables.NAME, getPlayers().getName(targetUUID));
