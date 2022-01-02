@@ -3,18 +3,19 @@ aoneblock:
   commands:
     admin:
       setcount:
-        parameters: "<nom> <nombre>"
-        description: définir le nombre de blocs du joueur
-        set: "&a le nombre d'un [name] défini sur [number]"
+        parameters: "<nom> <nombre> [DuréeDeVie]"
+        description: Définir le nombre de blocks du joueur
+        set: "&a Le compte de [nom] est défini sur [nombre]."
+        set-lifetime: "&a La durée de vie de [name] est de [number]"
       setchest:
-        description: mettre la poitrine regardée dans une phase avec la rareté spécifiée
         parameters: "<phase> <rareté>"
-        chest-is-empty: "&c Ce coffre est vide et ne peut donc pas être ajouté"
+        description: mettre le coffre regardé dans une phase avec la rareté spécifiée
+        chest-is-empty: "&c Ce coffre est vide donc il ne peut pas être ajouté"
         unknown-phase: "&c Phase inconnue. Utilisez tab-complete pour les voir"
         unknown-rarity: "&c Rareté inconnue. Utilisez COMMON, UNCOMMON, RARE ou EPIC"
         look-at-chest: "&c Regardez un coffre rempli pour le placer"
         only-single-chest: "&c Seuls les coffres simples peuvent être définis"
-        success: "&a Un coffre ajouté avec succès à la phase"
+        success: "&a Le coffre a été ajouté avec succès à la phase"
         failure: "&c Le coffre n'a pas pu être ajouté à la phase! Voir la console
           pour les erreurs"
       sanity:
@@ -30,3 +31,24 @@ aoneblock:
       title: "&2 Phases OneBlock"
       name-syntax: "&a [name]"
       description-syntax: "&b [number] blocs"
+    island:
+      setcount:
+        parameters: "<compte>"
+        description: définir le nombre de blocs à la valeur précédemment terminée
+        set: "&a Nombre défini sur [number]."
+        too-high: "&c Le maximum que vous pouvez définir est [number] !"
+  phase:
+    insufficient-level: Ton niveau d'île est trop bas ! Il doit être de [number] au
+      minimum.
+    insufficient-funds: Tu n'as pas les fonds nécessaire ! Tu dois au moins avoir
+      [number].
+    insufficient-bank-balance: Ta banque d'île n'a pas les fonds nécessaire ! Vous
+      devez au moins avoir [number].
+    insufficient-permission: 'Tu ne peux plus avancer, il te manque la permission
+      : [name] !'
+  placeholders:
+    infinite: Infini
+  island:
+    starting-hologram: |-
+      &aBienvenue sur AOneBlock
+      &eBrise ce bloc pour commencer
