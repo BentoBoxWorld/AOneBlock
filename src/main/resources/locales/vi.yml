@@ -1,36 +1,51 @@
+---
 aoneblock:
   commands:
     admin:
       setcount:
-        parameters: <tên> <số>
+        parameters: "<tên> <số>"
         description: chỉnh số đếm khối của người chơi
-        set: '&a Số đếm khối của [name] được đặt thành [number]'
+        set: "&a Số đếm khối của [name] được đặt thành [number]"
+        set-lifetime: "& bộ đếm thời gian tồn tại của [name] được đặt thành [number]"
       setchest:
-        parameters: <giai đoạn> <độ hiếm>
+        parameters: "<giai đoạn> <độ hiếm>"
         description: thêm rương đang nhìn vào một giai đoạn với độ hiếm được chỉ định
-        chest-is-empty: '&c Rương đó trống nên không thể thêm vào'
-        unknown-phase: '&c Giai đoạn chưa biết. Dùng TAB để xem chúng'
-        unknown-rarity: '&c Độ hiếm chưa biết. Sử dụng COMMON, UNCOMMON, RARE hoặc EPIC'
-        look-at-chest: '&c Nhìn vào một cái rương đầy để đặt nó'
-        only-single-chest: '&c Chỉ có thể đặt các rương đơn'
-        success: '&a Rương được thêm thành công vào giai đoạn'
-        failure: '&c Rương không thể được thêm vào giai đoạn! Xem bảng điều khiển để biết lỗi'
+        chest-is-empty: "&c Rương đó trống nên không thể thêm vào"
+        unknown-phase: "&c Giai đoạn chưa biết. Dùng TAB để xem chúng"
+        unknown-rarity: "&c Độ hiếm chưa biết. Sử dụng COMMON, UNCOMMON, RARE hoặc
+          EPIC"
+        look-at-chest: "&c Nhìn vào một cái rương đầy để đặt nó"
+        only-single-chest: "&c Chỉ có thể đặt các rương đơn"
+        success: "&a Rương được thêm thành công vào giai đoạn"
+        failure: "&c Rương không thể được thêm vào giai đoạn! Xem bảng điều khiển
+          để biết lỗi"
       sanity:
-        parameters: <giao đoạn>
-        description: hiển thị kiểm tra sự đúng đắn của xác suất giao đoạn lên bảng điều khiển
-        see-console: '&a Xem bảng điều khiển cho báo cáo'
+        parameters: "<giao đoạn>"
+        description: hiển thị kiểm tra sự đúng đắn của xác suất giao đoạn lên bảng
+          điều khiển
+        see-console: "&a Xem bảng điều khiển cho báo cáo"
     count:
       description: hiển thị số khối và giai đoạn
-      info: '&a Bạn đang ở trên khối &b [number] trong giai đoạn &a [name]'
+      info: "&a Bạn đang ở trên khối &b [number] trong giai đoạn &a [name]"
     phases:
       description: hiển thị một danh sách tất cả các giai đoạn
-      title: '&2 Giai đoạn OneBlock'
-      name-syntax: '&a [name]'
-      description-syntax: '&b [number] khối'
+      title: "&2 Giai đoạn OneBlock"
+      name-syntax: "&a [name]"
+      description-syntax: "&b [number] khối"
+    island:
+      setcount:
+        parameters: "<số lượng>"
+        description: đặt số khối thành giá trị đã hoàn thành trước đó
+        set: "& Bộ đếm được đặt thành [number]."
   phase:
     insufficient-level: Cấp đảo của bạn quá thấp để thực thi! Nó phải là [number].
     insufficient-funds: Tài chính của bạn quá thấp để thực thi! Nó phải là [number].
-    insufficient-bank-balance: Ngân hàng đảo của bạn quá thấp để thực thi! Nó phải là [number].
+    insufficient-bank-balance: Ngân hàng đảo của bạn quá thấp để thực thi! Nó phải
+      là [number].
     insufficient-permission: Bạn không thể thực thi tiếp cho đến khi có quyền [name]!
+  placeholders:
+    infinite: Vô hạn
   island:
-    starting-hologram: "&aChào mừng đến với OneBlock\n&eĐập khối này để bắt đầu"
+    starting-hologram: |-
+      &aChào mừng đến với OneBlock
+      &eĐập khối này để bắt đầu
