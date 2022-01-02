@@ -1,0 +1,35 @@
+---
+aoneblock:
+  commands:
+    admin:
+      setcount:
+        parameters: "<name> <count>"
+        description: ustaw liczbę bloków gracza
+        set: "&a Liczba [name] została ustawiona na [number]"
+      setchest:
+        parameters: "<phase> <rarity>"
+        description: umieść oglądaną skrzynię w fazie o określonej rzadkości
+        chest-is-empty: "&cTa skrzynia jest pusta, więc nie można jej dodać"
+        unknown-phase: "&cNieznana faza. Aby uzupełnić, użyj tabulacji"
+        unknown-rarity: "&cNieznana rzadkość. Użyj COMMON, UNCOMMON, RARE lub EPIC"
+        look-at-chest: "&cSpójrz na wypełnioną skrzynię, aby ją ustawić"
+        only-single-chest: "&cMożna ustawić tylko pojedyncze skrzynie"
+        success: "&aSkrzynia pomyślnie dodana do fazy"
+        failure: "&cSkrzynia nie mogła zostać dodana do fazy! Zobacz konsolę dla błędów"
+      sanity:
+        parameters: "<phase>"
+        description: wyświetlać kontrolę poprawności prawdopodobieństwa fazy w konsoli
+        see-console: "&a Zobacz konsolę dla raportu"
+    count:
+      description: pokaż liczbę bloków i fazę
+      info: "&a Jesteś na bloku &b [number] w fazie &a [name]"
+    phases:
+      description: pokaż listę wszystkich faz
+      title: "&2 Fazy OneBlock"
+      name-syntax: "&a [name]"
+      description-syntax: "&b [number] bloków"
+    island:
+      setcount: {}
+  phase: {}
+  placeholders: {}
+  island: {}
