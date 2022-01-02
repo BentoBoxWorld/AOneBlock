@@ -6,6 +6,7 @@ aoneblock:
         parameters: "<name> <count>"
         description: ustaw liczbę bloków gracza
         set: "&a Liczba [name] została ustawiona na [number]"
+        set-lifetime: "&a [name] licznik życia ustawiony na [number]"
       setchest:
         parameters: "<phase> <rarity>"
         description: umieść oglądaną skrzynię w fazie o określonej rzadkości
@@ -29,7 +30,11 @@ aoneblock:
       name-syntax: "&a [name]"
       description-syntax: "&b [number] bloków"
     island:
-      setcount: {}
+      setcount:
+        parameters: "<liczba>"
+        description: ustaw liczbę bloków na poprzednio uzupełnioną wartość
+        set: "&a Liczba ustawiona na [number]."
+        too-high: "&c Maksymalna wartość, jaką możesz ustawić, to [number]!"
   phase:
     insufficient-level: Poziom Twojej wyspy jest za niski, aby kontynuować! Musi to
       być [liczba].
