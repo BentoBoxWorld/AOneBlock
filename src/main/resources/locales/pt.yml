@@ -1,0 +1,36 @@
+---
+aoneblock:
+  commands:
+    admin:
+      setcount:
+        parameters: "<name> <count>"
+        description: definir contagem de blocos do jogador
+        set: "&a [name] contagem definida para [number]"
+      setchest:
+        parameters: "<phase> <rarity>"
+        description: colocar o baú olhado em uma fase com a raridade especificada
+        chest-is-empty: "&c Esse baú está vazio, então não pode ser adicionado"
+        unknown-phase: "&c Fase desconhecida. Use tab-complete para vê-los"
+        unknown-rarity: "&c Raridade desconhecida. Use COMMON, UNCOMMON, RARE ou EPIC"
+        look-at-chest: "&c Olhe para um baú cheio para configurá-lo"
+        only-single-chest: "&c Apenas baús individuais podem ser ajustados"
+        success: "&a Baú adicionado com sucesso à fase"
+        failure: "&c O Bau não pôde ser adicionado à fase! Veja o console para erros"
+      sanity:
+        parameters: "<phase>"
+        description: exibir uma verificação de sanidade das probabilidades de fase
+          no console
+        see-console: "&a Veja o console para o relatório"
+    count:
+      description: mostra a contagem de blocos e a fase
+      info: "&a Você está no bloco &b [number] no &a [name] fase"
+    phases:
+      description: mostra uma lista de todas as fases
+      title: "&2 OneBlock Fases"
+      name-syntax: "&a [name]"
+      description-syntax: "&b [number] blocos"
+    island:
+      setcount: {}
+  phase: {}
+  placeholders: {}
+  island: {}
