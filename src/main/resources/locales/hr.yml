@@ -14,6 +14,8 @@ aoneblock:
         unknown-rarity: "&c Nepoznata rijetkost. Koristite COMMON, UNCOMMON, RARE
           ili EPIC"
         look-at-chest: "&c Pogledajte napunjen škrinju da ga postavite"
+        only-single-chest: "&c Mogu se postaviti samo pojedinačne škrinje"
+        success: "&a Komoda uspješno dodana u fazu"
         failure: "&c Grudište se nije moglo dodati u fazu! Pogledajte konzolu za pogreške"
       sanity:
         parameters: "<Faza>"
@@ -21,8 +23,12 @@ aoneblock:
         see-console: "&a Pogledajte konzolu za izvješće"
     count:
       description: prikazuju broj i fazu bloka
+      info: "&a Nalazite se na bloku &b [number] u fazi &a [name]"
     phases:
       description: prikažite popis svih faza
+      title: "&2 OneBlock Faze"
+      name-syntax: "&a [name]"
+      description-syntax: "&b [number] blokova"
     island:
       setcount: {}
   phase: {}
