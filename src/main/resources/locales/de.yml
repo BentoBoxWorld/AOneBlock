@@ -5,21 +5,14 @@ aoneblock:
       setcount:
         parameters: "<Name> <Anzahl>"
         description: Setze die Blockanzahl des Spielers
-        set: "&a [name] zählt auf [number]"
       setchest:
         parameters: "<Phase> <Rarität>"
         description: Versetzen Sie die betrachtete Truhe in eine Phase mit der angegebenen
           Seltenheit
-        chest-is-empty: "&c Diese Truhe ist leer und kann daher nicht hinzugefügt
-          werden"
         unknown-phase: "&c Unbekannte Phase. Verwenden Sie tab-complete, um sie anzuzeigen"
-        unknown-rarity: "&c Unbekannte Seltenheit. Verwenden Sie COMMON, UNCOMMON,
-          RARE oder EPIC"
         look-at-chest: "&c Sieh dir eine gefüllte Truhe an, um sie einzustellen"
         only-single-chest: "&c Es können nur einzelne Truhen eingestellt werden"
         success: "&a Eine Truhe erfolgreich zur Phase hinzugefügt"
-        failure: "&c Truhe konnte nicht zur Phase hinzugefügt werden! Siehe Konsole
-          für Fehler"
       sanity:
         parameters: "<Phase>"
         description: Zeigen Sie eine Überprüfung der Phasenwahrscheinlichkeiten in
@@ -30,22 +23,8 @@ aoneblock:
       info: "&a Sie befinden sich in der Phase &a [name] in Block &b [number]"
     phases:
       description: Zeigen Sie eine Liste aller Phasen an
-      title: "&2 OneBlock-Phasen"
-      name-syntax: "&a [name]"
-      description-syntax: "&b [number] Blöcke"
-  phase:
-    insufficient-level: "&c Ihr Insellevel ist zu niedrig, um fortzufahren! Es muss
-      [number] sein."
-    insufficient-funds: "&c Ihr Guthaben ist zu gering, um fortzufahren! Sie müssen
-      [number] sein."
-    insufficient-bank-balance: "&c Der Saldo der Inselbank ist zu niedrig, um fortzufahren!
-      Es muss [number] sein."
-    insufficient-permission: "&c Sie können nicht weitermachen, bis Sie die Berechtigung
-      [name] erhalten haben!"
-  placeholders:
-    infinite: Unendlich
-  island:
-    starting-hologram: |-
-      &aWillkommen bei AOneBlock
-      &eBrechen Sie diesen Block,
-      &eum zu beginnen
+    island:
+      setcount: {}
+  phase: {}
+  placeholders: {}
+  island: {}
