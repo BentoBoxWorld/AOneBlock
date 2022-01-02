@@ -1,0 +1,37 @@
+---
+aoneblock:
+  commands:
+    admin:
+      setcount:
+        parameters: "<имя> <кол-во>"
+        description: установить количество блоков игрока
+        set: "&a [name] кол-во блоков установлено на [number]"
+      setchest:
+        parameters: "<phase> <rarity>"
+        description: положить проверенный сундук в фазу с указанной редкостью
+        chest-is-empty: "&c Этот сундук пуст, поэтому не может быть добавлен"
+        unknown-phase: "&c Неизвестная фаза. Используйте Tab-Complete, чтобы увидеть
+          их"
+        unknown-rarity: "&c Неизвестная редкость. Используйте COMMON, UNCOMMON, RARE
+          или EPIC"
+        look-at-chest: "&c Посмотрите на заполненный сундук, чтобы установить его"
+        only-single-chest: "&c Можно установить только один сундук"
+        success: "&a Сундук успешно добавлен в фазу"
+        failure: "&c Сундук не может быть добавлен в фазу! Смотрите консоль для ошибок"
+      sanity:
+        parameters: "<phase>"
+        description: отобразить проверку исправности фазовых вероятностей в консоли
+        see-console: "&a Смотрите консоль для отчета"
+    count:
+      description: показать количество блоков и фаз
+      info: "&a Вы находитесь в блоке &b [number] в &a [name] фазе"
+    phases:
+      description: показать список всех фаз
+      title: "&2 Фазы OneBlock"
+      name-syntax: "&a [name]"
+      description-syntax: "&b [number] блоков"
+    island:
+      setcount: {}
+  phase: {}
+  placeholders: {}
+  island: {}
