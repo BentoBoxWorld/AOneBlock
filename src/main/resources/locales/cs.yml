@@ -37,5 +37,9 @@ aoneblock:
     insufficient-bank-balance: V Bance ostrova není dostatek financí! Je potřeba alespoň
       [number].
     insufficient-permission: Nemůžeš pokračovat, dokud nedostaneš oprávnění [name].
-  placeholders: {}
-  island: {}
+  placeholders:
+    infinite: Nekonečný
+  island:
+    starting-hologram: |-
+      &a Vítejte v AOneBlock
+      &e Prolomte tento blok
