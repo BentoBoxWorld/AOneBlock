@@ -32,6 +32,7 @@ aoneblock:
     island:
       setcount:
         parameters: "<count>"
+        description: 将块计数设置为先前完成的值
         set: "&a 数量设置为 [number]."
         too-high: "&c 你最大只能设置 [number]!"
   phase:
