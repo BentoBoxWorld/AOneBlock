@@ -30,7 +30,10 @@ aoneblock:
       name-syntax: "&a [name]"
       description-syntax: "&b [number] bloků"
     island:
-      setcount: {}
+      setcount:
+        parameters: "<count>"
+        set: "&a Počet nastaven na [number]."
+        too-high: "&c Maximálně můžeš nastavit [number]!"
   phase:
     insufficient-level: Tvůj ostrov je na příliš nízké úrovni, musí být alespoň [number].
     insufficient-funds: Nemáš dostatečné prostředky! Musíš mít alespoň [number].
