@@ -32,7 +32,11 @@ aoneblock:
       name-syntax: "&a [name]"
       description-syntax: "&b [number] blocs"
     island:
-      setcount: {}
+      setcount:
+        parameters: "<compte>"
+        description: définir le nombre de blocs à la valeur précédemment terminée
+        set: "&a Nombre défini sur [number]."
+        too-high: "&c Le maximum que vous pouvez définir est [number] !"
   phase:
     insufficient-level: Ton niveau d'île est trop bas ! Il doit être de [number] au
       minimum.
@@ -42,5 +46,9 @@ aoneblock:
       devez au moins avoir [number].
     insufficient-permission: 'Tu ne peux plus avancer, il te manque la permission
       : [name] !'
-  placeholders: {}
-  island: {}
+  placeholders:
+    infinite: Infini
+  island:
+    starting-hologram: |-
+      &aBienvenue sur AOneBlock
+      &eBrise ce bloc pour commencer
