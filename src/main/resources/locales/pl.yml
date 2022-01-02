@@ -30,6 +30,18 @@ aoneblock:
       description-syntax: "&b [number] bloków"
     island:
       setcount: {}
-  phase: {}
-  placeholders: {}
-  island: {}
+  phase:
+    insufficient-level: Poziom Twojej wyspy jest za niski, aby kontynuować! Musi to
+      być [liczba].
+    insufficient-funds: Twoje fundusze są zbyt niskie, aby kontynuować! Muszą być
+      [liczba].
+    insufficient-bank-balance: Saldo na rachunku bankowym wyspy jest zbyt niskie,
+      aby kontynuować! Musi to być [liczba].
+    insufficient-permission: Nie możesz kontynuować, dopóki nie uzyskasz pozwolenia
+      [imię i nazwisko]!
+  placeholders:
+    infinite: Nieskończony
+  island:
+    starting-hologram: |-
+      &aWitamy w AOneBlock
+      &ePrzerwij ten blok, aby rozpocząć
