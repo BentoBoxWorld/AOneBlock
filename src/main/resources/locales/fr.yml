@@ -33,6 +33,14 @@ aoneblock:
       description-syntax: "&b [number] blocs"
     island:
       setcount: {}
-  phase: {}
+  phase:
+    insufficient-level: Ton niveau d'île est trop bas ! Il doit être de [number] au
+      minimum.
+    insufficient-funds: Tu n'as pas les fonds nécessaire ! Tu dois au moins avoir
+      [number].
+    insufficient-bank-balance: Ta banque d'île n'a pas les fonds nécessaire ! Vous
+      devez au moins avoir [number].
+    insufficient-permission: 'Tu ne peux plus avancer, il te manque la permission
+      : [name] !'
   placeholders: {}
   island: {}
