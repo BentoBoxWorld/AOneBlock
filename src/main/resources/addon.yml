@@ -12,6 +12,9 @@ permissions:
   aoneblock.count:
     description: Allow use of the aoneblock count command
     default: true   
+  aoneblock.setcount:
+    descrition: Allow player to set their block count to a value already completed.
+    default: false
   aoneblock.phases:
     description: Allow the use of the phases command
     default: false

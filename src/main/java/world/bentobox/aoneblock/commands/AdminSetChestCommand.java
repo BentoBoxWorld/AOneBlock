@@ -97,7 +97,7 @@ public class AdminSetChestCommand extends CompositeCommand {
             return false;
         }
         phase.addChest(items, rarity);
-        if (addon.getOneBlockManager().saveOneBlockConfig()) {
+        if (addon.getOneBlockManager().savePhase(phase)) {
             user.sendMessage("aoneblock.commands.admin.setchest.success");
         } else {
             user.sendMessage("aoneblock.commands.admin.setchest.failure");

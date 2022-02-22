@@ -456,11 +456,11 @@ public class BlockListener implements Listener {
             is.setPhaseName(phaseName);
             if (player != null) {
                 player.sendTitle(phaseName, null, -1, -1, -1);
+                // Run phase start commands
+                Util.runCommands(User.getInstance(player),
+                        replacePlaceholders(player, phaseName, phase.getBlockNumber(), i, phase.getStartCommands()),
+                        "Commands run for start of " + phaseName);
             }
-            // Run phase start commands
-            Util.runCommands(User.getInstance(player),
-                    replacePlaceholders(player, phaseName, phase.getBlockNumber(), i, phase.getStartCommands()),
-                    "Commands run for start of " + phaseName);
             saveIsland(i);
             return true;
         }

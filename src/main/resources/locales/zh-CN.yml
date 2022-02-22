@@ -1,13 +1,15 @@
+---
 aoneblock:
   commands:
     admin:
       setcount:
         parameters: "<玩家名称> <数量>"
-        description: "设置玩家挖掘的方块数"
+        description: 设置玩家挖掘的方块数
         set: "&a [name] 挖掘的方块数已设置为 [number]"
+        set-lifetime: "&a [name] 的重置次数已设置为 [number]"
       setchest:
         parameters: "<阶段> <稀有度>"
-        description: "将您光标指向的箱子添加到一个阶段中, 并选择稀有度"
+        description: 将您光标指向的箱子添加到一个阶段中, 并选择稀有度
         chest-is-empty: "&c 该箱子无法添加, 因为它是空的"
         unknown-phase: "&c 未知阶段. 用 Tab 补全来查看所有阶段"
         unknown-rarity: "&c 未知稀有度. 可使用的有 COMMON, UNCOMMON, RARE 或 EPIC"
@@ -17,7 +19,7 @@ aoneblock:
         failure: "&c 无法添加箱子到该阶段! 报错已在后台生成"
       sanity:
         parameters: "<阶段>"
-        description: "在后台生成一份关于各阶段所占百分比的完整报告"
+        description: 在后台生成一份关于各阶段所占百分比的完整报告
         see-console: "&a 报告已在后台生成"
     count:
       description: 显示方块数量和阶段
@@ -27,6 +29,12 @@ aoneblock:
       title: "&2 OneBlock 阶段"
       name-syntax: "&a [name]"
       description-syntax: "&b 挖掘了 [number] 个方块"
+    island:
+      setcount:
+        parameters: "<count>"
+        description: 将块计数设置为先前完成的值
+        set: "&a 数量设置为 [number]."
+        too-high: "&c 你最大只能设置 [number]!"
   phase:
     insufficient-level: "&c 岛屿等级过低, 无法执行此操作! 等级必须达到 [number]."
     insufficient-funds: "&c 余额不足, 无法执行此操作! 余额应多于 [number]."
@@ -35,4 +43,6 @@ aoneblock:
   placeholders:
     infinite: 无限
   island:
-    starting-hologram: "&a欢迎来到 AOneBlock\n&e破坏此方块以开始"
+    starting-hologram: |-
+      &a欢迎来到 AOneBlock
+      &e破坏此方块以开始

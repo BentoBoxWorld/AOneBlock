@@ -22,12 +22,25 @@ public class OneBlockIslands implements DataObject {
 
     @Expose
     private String uniqueId;
+    /**
+     * The number of blocks broken in the current loop
+     */
     @Expose
     private int blockNumber;
+    /**
+     * The lifetime number of blocks broken not including the current blockNumber.
+     * This is unfortunately for backwards compatibility reasons.
+     */
     @Expose
     private long lifetime;
+    /**
+     * Current phase number
+     */
     @Expose
     private String phaseName = "";
+    /**
+     * Hologram text to show
+     */
     @Expose
     private String hologram = "";
 
@@ -70,7 +83,12 @@ public class OneBlockIslands implements DataObject {
      * Increments the block number
      */
     public void incrementBlockNumber() {
+        // Ensure that lifetime is always at least blockNumber
+        if (this.lifetime < this.blockNumber) {
+            this.lifetime = this.blockNumber;
+        }
         this.blockNumber++;
+        this.lifetime++;
     }
 
     /**
@@ -140,17 +158,21 @@ public class OneBlockIslands implements DataObject {
     }
 
     /**
-     * @return the loops
+     * @return the lifetime number of blocks broken not including the current block count
      */
     public long getLifetime() {
+        // Ensure that lifetime is always at least blockNumber
+        if (this.lifetime < this.blockNumber) {
+            this.lifetime = this.blockNumber;
+        }
         return lifetime;
     }
 
     /**
-     * @param loops the loops to set
+     * @param the lifetime number of blocks broken to set
      */
-    public void setLifetime(long loops) {
-        this.lifetime = loops;
+    public void setLifetime(long lifetime) {
+        this.lifetime = lifetime;
     }
 
 

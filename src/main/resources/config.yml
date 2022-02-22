@@ -19,6 +19,10 @@ aoneblock:
     # By default it is sub-command 'go'.
     # Added since 1.2.0.
     default-action: go
+    # Placeholder customization
+    # SSymbol for the percentage completed scale bar
+    placeholders:
+      scale-symbol: "■"
 world:
   # Friendly name for this world. Used in admin commands. Must be a single word
   friendly-name: OneBlock
@@ -299,13 +303,13 @@ island:
       # Reset inventory - if true, the player's inventory will be cleared.
       # Note: if you have MultiInv running or a similar inventory control plugin, that
       # plugin may still reset the inventory when the world changes.
-      inventory: true
+      inventory: false
       # Reset health - if true, the player's health will be reset.
       # Added since 1.8.0.
-      health: true
+      health: false
       # Reset hunger - if true, the player's hunger will be reset.
       # Added since 1.8.0.
-      hunger: true
+      hunger: false
       # Reset experience points - if true, the player's experience will be reset.
       # Added since 1.8.0.
       exp: false

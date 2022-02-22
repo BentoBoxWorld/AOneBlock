@@ -60,7 +60,7 @@
         <!-- More visible way how to change dependency versions -->
         <spigot.version>1.17-R0.1-SNAPSHOT</spigot.version>
         <bentobox.version>1.18.0-SNAPSHOT</bentobox.version>
-        <level.version>2.7.0-SNAPSHOT</level.version>
+        <level.version>2.6.2</level.version>
         <bank.version>1.3.0</bank.version>
         <!-- Revision variable removes warning about dynamic version -->
         <revision>${build.version}-SNAPSHOT</revision>

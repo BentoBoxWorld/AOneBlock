@@ -53,8 +53,8 @@ public class HoloListener implements Listener {
         // Delete Old Holograms
         deleteOldHolograms(island.getUniqueId());
         // Manage New Hologram
-        User owner = User.getInstance(island.getOwner());
-        if (owner != null) {
+        if (island.getOwner() != null) {
+            User owner = User.getInstance(island.getOwner());
             String hololine = owner.getTranslation("aoneblock.island.starting-hologram");
             is.setHologram(hololine == null ? "" : hololine);
             Location center = island.getCenter();

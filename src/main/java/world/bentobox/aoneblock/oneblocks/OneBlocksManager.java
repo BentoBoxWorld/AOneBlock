@@ -31,6 +31,11 @@ import world.bentobox.aoneblock.oneblocks.OneBlockObject.Rarity;
 import world.bentobox.aoneblock.oneblocks.Requirement.ReqType;
 import world.bentobox.bentobox.util.Util;
 
+/**
+ * Provides a manager for all phases
+ * @author tastybento
+ *
+ */
 public class OneBlocksManager {
 
     private static final String ONE_BLOCKS_YML = "oneblocks.yml";
@@ -429,57 +434,99 @@ public class OneBlocksManager {
                         || p.getPhaseName().replace(" ", "_").equalsIgnoreCase(name)))
                 .findFirst();
     }
+
     /**
-     * Save the oneblock.yml file in memory to disk. Makes a backup.
+     * Save all the phases in memory to disk.
      *
      * @return true if saved
      */
+
     public boolean saveOneBlockConfig() {
         // Go through each phase
-        blockProbs.values().forEach(p -> {
-            YamlConfiguration oneBlocks = new YamlConfiguration();
-            ConfigurationSection phSec = oneBlocks.createSection(p.getBlockNumber());
-            // Check for a goto block
-            if (p.isGotoPhase()) {
-                phSec.set(GOTO_BLOCK, p.getGotoBlock());
-            } else {
-                phSec.set(NAME, p.getPhaseName());
-                if (p.getFirstBlock() != null) {
-                    phSec.set(FIRST_BLOCK, p.getFirstBlock().getMaterial().name());
-                }
-                if (p.getPhaseBiome() != null) {
-                    phSec.set(BIOME, p.getPhaseBiome().name());
-                }
-                saveBlocks(phSec, p);
-                saveEntities(phSec, p);
-            }
-            try {
-                // Save
-                File phaseFile = new File(addon.getDataFolder() + File.separator + PHASES,
-                        getPhaseFileName(p) + ".yml");
-                oneBlocks.save(phaseFile);
-            } catch (IOException e) {
-                addon.logError("Could not save phase " + p.getPhaseName() + " " + e.getMessage());
-            }
-            // No chests in goto phases
-            if (p.isGotoPhase()) {
-                return;
-            }
-            // Save chests separately
-            oneBlocks = new YamlConfiguration();
-            phSec = oneBlocks.createSection(p.getBlockNumber());
-            saveChests(phSec, p);
-            try {
-                // Save
-                File phaseFile = new File(addon.getDataFolder() + File.separator + PHASES,
-                        getPhaseFileName(p) + "_chests.yml");
-                oneBlocks.save(phaseFile);
-            } catch (IOException e) {
-                addon.logError("Could not save phase " + p.getPhaseName() + " " + e.getMessage());
-            }
+        boolean success = true;
+        for (OneBlockPhase p : blockProbs.values()) {
+            success = savePhase(p);
+        }
+        return success;
+    }
 
-        });
+    /**
+     * Save a phase
+     * @param p OneBlockPhase
+     * @return true if successfully saved
+     */
+    public boolean savePhase(OneBlockPhase p) {
+        if (!saveMainPhase(p)) {
+            // Failure
+            return false;
+        }
+        // No chests in goto phases
+        if (p.isGotoPhase()) {
+            // Done
+            return true;
+        }
+        return saveChestPhase(p);
+    }
 
+    private boolean saveMainPhase(OneBlockPhase p) {
+        YamlConfiguration oneBlocks = new YamlConfiguration();
+        ConfigurationSection phSec = oneBlocks.createSection(p.getBlockNumber());
+        // Check for a goto block
+        if (p.isGotoPhase()) {
+            phSec.set(GOTO_BLOCK, p.getGotoBlock());
+        } else {
+            phSec.set(NAME, p.getPhaseName());
+            if (p.getIconBlock() != null) {
+                phSec.set(ICON, p.getIconBlock().getType().name());
+            }
+            if (p.getFirstBlock() != null) {
+                phSec.set(FIRST_BLOCK, p.getFirstBlock().getMaterial().name());
+            }
+            if (p.getPhaseBiome() != null) {
+                phSec.set(BIOME, p.getPhaseBiome().name());
+            }
+            saveBlocks(phSec, p);
+            saveEntities(phSec, p);
+            saveHolos(phSec, p);
+            saveCommands(phSec, p);
+        }
+        try {
+            // Save
+            File phaseFile = new File(addon.getDataFolder() + File.separator + PHASES,
+                    getPhaseFileName(p) + ".yml");
+            oneBlocks.save(phaseFile);
+        } catch (IOException e) {
+            addon.logError("Could not save phase " + p.getPhaseName() + " " + e.getMessage());
+            return false;
+        }
+        return true;
+    }
+
+    private void saveCommands(ConfigurationSection phSec, OneBlockPhase p) {
+        phSec.set(START_COMMANDS, p.getStartCommands());
+        phSec.set(END_COMMANDS, p.getEndCommands());
+
+    }
+
+    private void saveHolos(ConfigurationSection phSec, OneBlockPhase p) {
+        if (p.getHologramLines() == null) return;
+        ConfigurationSection holos = phSec.createSection(HOLOGRAMS);
+        p.getHologramLines().forEach((k, v) -> holos.set(String.valueOf(k), v));
+    }
+
+    private boolean saveChestPhase(OneBlockPhase p) {
+        YamlConfiguration oneBlocks = new YamlConfiguration();
+        ConfigurationSection phSec = oneBlocks.createSection(p.getBlockNumber());
+        saveChests(phSec, p);
+        try {
+            // Save
+            File phaseFile = new File(addon.getDataFolder() + File.separator + PHASES,
+                    getPhaseFileName(p) + "_chests.yml");
+            oneBlocks.save(phaseFile);
+        } catch (IOException e) {
+            addon.logError("Could not save chest phase " + p.getPhaseName() + " " + e.getMessage());
+            return false;
+        }
         return true;
     }
 
@@ -507,6 +554,8 @@ public class OneBlocksManager {
     }
 
     private void saveBlocks(ConfigurationSection phSec, OneBlockPhase phase) {
+        ConfigurationSection fixedBlocks = phSec.createSection(FIXED_BLOCKS);
+        phase.getFixedBlocks().forEach((k, v) -> fixedBlocks.set(String.valueOf(k), v.getMaterial().name()));
         ConfigurationSection blocks = phSec.createSection(BLOCKS);
         phase.getBlocks().forEach((k, v) -> blocks.set(k.name(), v));
 

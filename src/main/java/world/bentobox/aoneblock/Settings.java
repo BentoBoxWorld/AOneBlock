@@ -55,6 +55,11 @@ public class Settings implements WorldSettings {
     @ConfigEntry(path = "aoneblock.command.default-action", since = "1.2.0")
     private String defaultPlayerAction = "go";
 
+    @ConfigComment("Placeholder customization")
+    @ConfigComment("Symbol for the percentage completed scale bar")
+    @ConfigEntry(path = "aoneblock.placeholders.scale-symbol", since = "1.9.0")
+    private String percentCompleteSymbol = "■";
+
     /*      WORLD       */
     @ConfigComment("Friendly name for this world. Used in admin commands. Must be a single word")
     @ConfigEntry(path = "world.friendly-name")
@@ -1824,5 +1829,19 @@ public class Settings implements WorldSettings {
      */
     public void setMakeEndPortals(boolean makeEndPortals) {
         this.makeEndPortals = makeEndPortals;
+    }
+
+    /**
+     * @return the percentCompleteSymbol
+     */
+    public String getPercentCompleteSymbol() {
+        return percentCompleteSymbol;
+    }
+
+    /**
+     * @param percentCompleteSymbol the percentCompleteSymbol to set
+     */
+    public void setPercentCompleteSymbol(String percentCompleteSymbol) {
+        this.percentCompleteSymbol = percentCompleteSymbol;
     }
 }

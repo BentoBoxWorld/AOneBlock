@@ -33,9 +33,9 @@ public class PlaceholdersManagerTest {
     private AOneBlock addon;
     @Mock
     private User user;
-    
+
     private UUID uuid = UUID.randomUUID();
-    
+
     private PlaceholdersManager pm;
     @Mock
     private IslandsManager im;
@@ -48,7 +48,8 @@ public class PlaceholdersManagerTest {
     private World world;
     @Mock
     private OneBlocksManager obm;
-    
+    private Settings settings;
+
     /**
      * @throws java.lang.Exception
      */
@@ -65,13 +66,16 @@ public class PlaceholdersManagerTest {
         when(im.getIsland(world, user)).thenReturn(island);
         obi = new OneBlockIslands("uniqueId");
         obi.setPhaseName("first");
-        obi.setBlockNumber(1000);        
+        obi.setBlockNumber(1000);
         when(addon.getOneBlocksIsland(any())).thenReturn(obi);
         // OneBlockManager
         when(obm.getNextPhase(any(OneBlockIslands.class))).thenReturn("next_phase");
         when(obm.getPercentageDone(any(OneBlockIslands.class))).thenReturn(70D);
         when(obm.getNextPhaseBlocks(any(OneBlockIslands.class))).thenReturn(123);
-        
+        // Settings
+        settings = new Settings();
+        when(addon.getSettings()).thenReturn(settings);
+
         pm = new PlaceholdersManager(addon);
     }
 
@@ -217,7 +221,7 @@ public class PlaceholdersManagerTest {
         assertEquals("", pm.getDoneScaleByLocation(user));
         assertEquals("", pm.getDoneScaleByLocation(null));
         when(user.getUniqueId()).thenReturn(uuid);
-        assertEquals("&a╍╍╍╍╍&c╍╍╍", pm.getDoneScaleByLocation(user));
+        assertEquals("&a■■■■■&c■■■", pm.getDoneScaleByLocation(user));
         when(im.getProtectedIslandAt(location)).thenReturn(Optional.empty());
         assertEquals("", pm.getDoneScaleByLocation(user));
     }
@@ -230,7 +234,7 @@ public class PlaceholdersManagerTest {
         assertEquals("", pm.getDoneScale(user));
         assertEquals("", pm.getDoneScale(null));
         when(user.getUniqueId()).thenReturn(uuid);
-        assertEquals("&a╍╍╍╍╍&c╍╍╍", pm.getDoneScale(user));
+        assertEquals("&a■■■■■&c■■■", pm.getDoneScale(user));
         when(im.getIsland(world, user)).thenReturn(null);
         assertEquals("", pm.getDoneScale(user));
     }
