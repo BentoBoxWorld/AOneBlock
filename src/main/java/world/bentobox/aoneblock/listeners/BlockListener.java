@@ -90,6 +90,9 @@ public class BlockListener implements Listener {
 
     static {
         Map<Material, Integer> t = new EnumMap<>(Material.class);
+        t.put(Material.NETHERITE_AXE, 1);
+        t.put(Material.NETHERITE_SHOVEL, 1);
+        t.put(Material.NETHERITE_PICKAXE, 1);
         t.put(Material.DIAMOND_AXE, 1);
         t.put(Material.DIAMOND_SHOVEL, 1);
         t.put(Material.DIAMOND_PICKAXE, 1);
@@ -106,6 +109,7 @@ public class BlockListener implements Listener {
         t.put(Material.STONE_SHOVEL, 1);
         t.put(Material.STONE_PICKAXE, 1);
         t.put(Material.SHEARS, 1);
+        t.put(Material.NETHERITE_SWORD, 2);
         t.put(Material.DIAMOND_SWORD, 2);
         t.put(Material.GOLDEN_SWORD, 2);
         t.put(Material.STONE_SWORD, 2);
