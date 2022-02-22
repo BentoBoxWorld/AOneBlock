@@ -582,7 +582,7 @@ public class BlockListener implements Listener {
 
         if (player.getLocation().getBlock().equals(block))
         {
-            double delta = 1 - player.getLocation().getY() - block.getY();
+            double delta = 1 - (player.getLocation().getY() - block.getY());
             player.teleport(player.getLocation().add(new Vector(0, delta, 0)));
             player.setVelocity(new Vector(0, 0, 0));
         }
