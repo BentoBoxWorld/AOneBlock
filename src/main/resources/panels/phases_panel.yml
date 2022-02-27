@@ -1,0 +1,68 @@
+phases_panel:
+  title: aoneblock.gui.titles.phases
+  type: INVENTORY
+  background:
+    icon: BLACK_STAINED_GLASS_PANE
+    title: "&b&r" # Empty text
+  border:
+    icon: BLACK_STAINED_GLASS_PANE
+    title: "&b&r"  # Empty text
+  force-shown: []
+  content:
+    2:
+      2: phase_button
+      3: phase_button
+      4: phase_button
+      5: phase_button
+      6: phase_button
+      7: phase_button
+      8: phase_button
+    3:
+      1:
+        icon: TIPPED_ARROW:INSTANT_HEAL::::1
+        title: aoneblock.gui.buttons.previous.name
+        description: aoneblock.gui.buttons.previous.description
+        data:
+          type: PREVIOUS
+          indexing: true
+        actions:
+          previous:
+            click-type: LEFT
+            tooltip: aoneblock.gui.tips.click-to-previous
+      2: phase_button
+      3: phase_button
+      4: phase_button
+      5: phase_button
+      6: phase_button
+      7: phase_button
+      8: phase_button
+      9:
+        icon: TIPPED_ARROW:JUMP::::1
+        title: aoneblock.gui.buttons.next.name
+        description: aoneblock.gui.buttons.next.description
+        data:
+          type: NEXT
+          indexing: true
+        actions:
+          next:
+            click-type: LEFT
+            tooltip: aoneblock.gui.tips.click-to-next
+    4:
+      2: phase_button
+      3: phase_button
+      4: phase_button
+      5: phase_button
+      6: phase_button
+      7: phase_button
+      8: phase_button
+  reusable:
+    phase_button:
+      # icon: PLAYER_HEAD
+      # title: aoneblock.gui.buttons.phase.name
+      # description: aoneblock.gui.buttons.phase.description
+      data:
+        type: PHASE
+      actions:
+        select:
+          click-type: LEFT
+          tooltip: aoneblock.gui.tips.click-to-change

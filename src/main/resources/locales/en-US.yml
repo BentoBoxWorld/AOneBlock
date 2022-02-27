@@ -46,5 +46,46 @@ aoneblock:
     insufficient-permission: "&c You can proceed no futher until you obtain the [name] permission!"
   placeholders:
     infinite: Infinite
+  gui:
+    titles:
+      phases: '&0&l OneBlock Phases'
+    # This section contains all button names and lore (description)
+    buttons:
+      # List of buttons in GUI's
+      # Button that is used in multi-page GUIs which allows to return to previous page.
+      previous:
+        name: "&f&l Previous Page"
+        description: |-
+          &7 Switch to [number] page
+      # Button that is used in multi-page GUIs which allows to go to next page.
+      next:
+        name: "&f&l Next Page"
+        description: |-
+          &7 Switch to [number] page
+      phase:
+        name: "&f&l [phase]"
+        description: |-
+          [starting-block]
+          [biome]
+          [bank]
+          [economy]
+          [level]
+          [permission]
+        # Replaces text with [starting-block]
+        starting-block: "&7 Starts after breaking &e [number] blocks."
+        # Replaces text with [biome]
+        biome: "&7 Biome: &e [biome]"
+        # Replaces text with [bank]
+        bank: "&7 Requires &e $[number] &7 in bank account."
+        # Replaces text with [economy]
+        economy: "&7 Requires &e $[number] &7 in player account."
+        # Replaces text with [level]
+        level: "&7 Requires &e [number] &7 island level."
+        # Replaces text with [permission]
+        permission: "&7 Requires `&e[permission]&7` permission."
+    tips:
+      click-to-previous: "&e Click &7 to view previous page."
+      click-to-next: "&e Click &7 to view next page."
+      click-to-change: "&e Click &7 to change."
   island:
     starting-hologram: "&aWelcome to AOneBlock\n&eBreak This Block to Begin"
