@@ -236,6 +236,16 @@ public class AOneBlock extends GameModeAddon {
         }
     }
 
+
+    @Override
+    public void saveDefaultConfig()
+    {
+        super.saveDefaultConfig();
+        // Save default phases panel
+        this.saveResource("panels/phases_panel.yml", false);
+    }
+
+
     /* (non-Javadoc)
      * @see world.bentobox.bentobox.api.addons.Addon#allLoaded()
      */

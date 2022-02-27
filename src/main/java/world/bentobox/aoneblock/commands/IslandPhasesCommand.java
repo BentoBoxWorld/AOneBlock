@@ -8,6 +8,7 @@ import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
 import world.bentobox.aoneblock.AOneBlock;
+import world.bentobox.aoneblock.panels.PhasesPanel;
 import world.bentobox.bentobox.api.commands.CompositeCommand;
 import world.bentobox.bentobox.api.localization.TextVariables;
 import world.bentobox.bentobox.api.panels.PanelItem;
@@ -34,27 +35,7 @@ public class IslandPhasesCommand extends CompositeCommand {
 
     @Override
     public boolean execute(User user, String label, List<String> args) {
-        PanelBuilder pb = new PanelBuilder()
-                .user(user)
-                .name(user.getTranslation("aoneblock.commands.phases.title"));
-        List<PanelItem> items = addon.getOneBlockManager().getBlockProbs().entrySet().stream()
-                .filter(en -> !en.getValue().isGotoPhase())
-                .sorted(Comparator.comparingInt(Map.Entry::getKey))
-                .map(en -> {
-                    PanelItemBuilder item = new PanelItemBuilder();
-                    item.name(user.getTranslation("aoneblock.commands.phases.name-syntax",
-                            TextVariables.NAME, en.getValue().getPhaseName(),
-                            TextVariables.NUMBER, String.valueOf(en.getKey())));
-                    ItemStack firstBlock = en.getValue().getFirstBlock() == null ? new ItemStack(Material.STONE, 1) : new ItemStack(en.getValue().getFirstBlock().getMaterial(), 1);
-                    ItemStack icon = en.getValue().getIconBlock() == null ? firstBlock : en.getValue().getIconBlock();
-                    item.icon(icon);
-                    item.description(user.getTranslation("aoneblock.commands.phases.description-syntax",
-                            TextVariables.NAME, en.getValue().getPhaseName(),
-                            TextVariables.NUMBER, String.valueOf(en.getKey())));
-                    return item.build();
-                }).toList();
-        items.forEach(pb::item);
-        pb.build();
+        PhasesPanel.openPanel(this.addon, this.getWorld(), user);
         return true;
     }
 }
