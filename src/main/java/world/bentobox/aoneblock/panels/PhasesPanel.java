@@ -504,11 +504,12 @@ public class PhasesPanel
         {
             return false;
         }
-
+        boolean result = false;
         // Check requirements
         for (Requirement requirement : phase.getRequirements())
         {
-            return switch (requirement.getType())
+            // Check all the requirements and if one fails, then exit
+            result = switch (requirement.getType())
             {
                 case LEVEL ->
                     this.addon.getAddonByName("Level").map(addon ->
@@ -525,9 +526,12 @@ public class PhasesPanel
                 case PERMISSION ->
                      this.user != null && !this.user.hasPermission(requirement.getPermission());
             };
+            if (result) {
+                break;
+            }
         }
 
-        return false;
+        return result;
     }
 
 
