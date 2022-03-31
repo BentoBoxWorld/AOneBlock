@@ -35,23 +35,23 @@ public class HoloListener implements Listener {
 
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onDeletedIsland(IslandDeleteEvent e) {
-        deleteOldHolograms(e.getIsland().getUniqueId());
+        deleteOldHolograms(e.getIsland());
     }
 
     /**
      * Delete old holograms
-     * @param islandId unique island id
+     * @param island island
      */
-    private void deleteOldHolograms(String islandId) {
+    private void deleteOldHolograms(@NonNull Island island) {
         for (Hologram hologram : HologramsAPI.getHolograms(BentoBox.getInstance())) {
             if (!addon.inWorld(hologram.getWorld())) continue;
-            addon.getIslands().getIslandAt(hologram.getLocation()).filter(island -> island.getUniqueId().equals(islandId)).ifPresent(h -> hologram.delete());
+            if (island.getBoundingBox().contains(hologram.getLocation().toVector())) hologram.delete();
         }
     }
 
     protected void setUp(@NonNull Island island, @NonNull OneBlockIslands is) {
         // Delete Old Holograms
-        deleteOldHolograms(island.getUniqueId());
+        deleteOldHolograms(island);
         // Manage New Hologram
         if (island.getOwner() != null) {
             User owner = User.getInstance(island.getOwner());
@@ -72,7 +72,7 @@ public class HoloListener implements Listener {
         // Manage Holograms
         for (Hologram hologram : HologramsAPI.getHolograms(BentoBox.getInstance())) {
             if (!addon.inWorld(hologram.getWorld())) continue;
-            addon.getIslands().getIslandAt(hologram.getLocation()).filter(island -> island.getUniqueId().equals(is.getUniqueId())).ifPresent(h -> hologram.delete());
+            if (i.getBoundingBox().contains(hologram.getLocation().toVector())) hologram.delete();
         }
         String hololine = phase.getHologramLine(is.getBlockNumber());
         is.setHologram(hololine == null ? "" : hololine);
@@ -84,7 +84,4 @@ public class HoloListener implements Listener {
             }
         }
     }
-
-
-
 }
