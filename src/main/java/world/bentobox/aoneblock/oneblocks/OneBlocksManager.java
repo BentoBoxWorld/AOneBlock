@@ -369,6 +369,8 @@ public class OneBlocksManager {
             if (et.isSpawnable() && et.isAlive()) {
                 if (mobs.getInt(entity) > 0) {
                     obPhase.addMob(et, mobs.getInt(entity));
+                } else {
+                    addon.logWarning("Bad entity weight for " + obPhase.getPhaseName() + ": " + entity + ". Must be positive number above 1.");
                 }
             } else {
                 addon.logError("Entity type is not spawnable " + obPhase.getPhaseName() + ": " + entity);
@@ -383,10 +385,14 @@ public class OneBlocksManager {
         ConfigurationSection blocks = phase.getConfigurationSection(BLOCKS);
         for (String material : blocks.getKeys(false)) {
             Material m = Material.matchMaterial(material);
+            int probability = blocks.getInt(material);
+
             if (m == null || !m.isBlock()) {
                 addon.logError("Bad block material in " + obPhase.getPhaseName() + ": " + material);
+            } else if (probability < 1) {
+                addon.logWarning("Bad item weight for " + obPhase.getPhaseName() + ": " + material + ". Must be positive number above 1.");
             } else {
-                obPhase.addBlock(m, blocks.getInt(material));
+                obPhase.addBlock(m, probability);
             }
 
         }
