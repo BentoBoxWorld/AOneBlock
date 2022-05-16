@@ -17,8 +17,8 @@ import org.eclipse.jdt.annotation.Nullable;
 import com.gmail.filoghost.holographicdisplays.api.Hologram;
 import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
 
-import world.bentobox.aoneblock.commands.AdminCommand;
-import world.bentobox.aoneblock.commands.PlayerCommand;
+import world.bentobox.aoneblock.commands.admin.AdminCommand;
+import world.bentobox.aoneblock.commands.island.PlayerCommand;
 import world.bentobox.aoneblock.dataobjects.OneBlockIslands;
 import world.bentobox.aoneblock.generators.ChunkGeneratorWorld;
 import world.bentobox.aoneblock.listeners.BlockListener;

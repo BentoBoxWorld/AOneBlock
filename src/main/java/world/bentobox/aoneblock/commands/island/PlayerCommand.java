@@ -1,4 +1,4 @@
-package world.bentobox.aoneblock.commands;
+package world.bentobox.aoneblock.commands.island;
 
 import world.bentobox.aoneblock.AOneBlock;
 import world.bentobox.bentobox.api.commands.island.DefaultPlayerCommand;
