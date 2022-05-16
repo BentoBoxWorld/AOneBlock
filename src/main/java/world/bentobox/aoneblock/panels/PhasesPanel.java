@@ -465,7 +465,7 @@ public class PhasesPanel
                 {
                     if ("SELECT".equalsIgnoreCase(action.actionType()))
                     {
-                        this.runCommandCall("setcount", phase);
+                        this.runCommandCall(this.addon.getSettings().getSetCountCommand().split(" ")[0], phase);
                     }
                     else
                     {
@@ -548,7 +548,9 @@ public class PhasesPanel
         // Get first player command label.
         this.addon.getPlayerCommand().ifPresent(mainCommand -> 
             mainCommand.getSubCommand(command).ifPresent(subCommand -> {
-                if (subCommand.getLabel().equalsIgnoreCase("setcount"))
+                // Check if subcommand is setCount command.
+                if (Arrays.stream(this.addon.getSettings().getSetCountCommand().split(" ")).
+                    anyMatch(text -> text.equalsIgnoreCase(subCommand.getLabel())))
                 {
                     this.addon.log(this.user.getName() + " called: `" + mainCommand.getTopLabel() + " " + subCommand.getLabel() + " " + phase.getBlockNumber());
                     // Confirmation is done via GUI. Bypass.

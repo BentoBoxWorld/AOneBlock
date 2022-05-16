@@ -22,8 +22,9 @@ public class IslandSetCountCommand extends CompositeCommand {
 
     private AOneBlock addon;
 
-    public IslandSetCountCommand(CompositeCommand islandCommand) {
-        super(islandCommand, "setcount");
+    public IslandSetCountCommand(CompositeCommand islandCommand, String label, String[] aliases)
+    {
+        super(islandCommand, label, aliases);
     }
 
     @Override

@@ -20,8 +20,9 @@ public class IslandPhasesCommand extends CompositeCommand {
 
     private AOneBlock addon;
 
-    public IslandPhasesCommand(CompositeCommand islandCommand) {
-        super(islandCommand, "phases");
+    public IslandPhasesCommand(CompositeCommand islandCommand, String label, String[] aliases)
+    {
+        super(islandCommand, label, aliases);
     }
 
     @Override
