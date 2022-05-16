@@ -25,9 +25,9 @@ public class IslandRespawnBlockCommand extends CompositeCommand
      *
      * @param islandCommand the island command
      */
-    public IslandRespawnBlockCommand(CompositeCommand islandCommand)
+    public IslandRespawnBlockCommand(CompositeCommand islandCommand, String label, String[] aliases)
     {
-        super(islandCommand, "respawnblock");
+        super(islandCommand, label, aliases);
     }
 
 

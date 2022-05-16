@@ -24,8 +24,10 @@ import world.bentobox.bentobox.database.objects.adapters.Adapter;
 import world.bentobox.bentobox.database.objects.adapters.FlagSerializer;
 import world.bentobox.bentobox.database.objects.adapters.FlagSerializer2;
 
+
 /**
  * All the plugin settings are here
+ *
  * @author Tastybento
  */
 @StoreAt(filename="config.yml", path="addons/AOneBlock") // Explicitly call out what name this should have.
@@ -54,6 +56,26 @@ public class Settings implements WorldSettings {
     @ConfigComment("By default it is sub-command 'go'.")
     @ConfigEntry(path = "aoneblock.command.default-action", since = "1.2.0")
     private String defaultPlayerAction = "go";
+
+    @ConfigComment("The command label that shows current phase progress.")
+    @ConfigComment("By default it is 'count'.")
+    @ConfigEntry(path = "aoneblock.command.count-command", since = "1.10.0")
+    private String countCommand = "count";
+
+    @ConfigComment("The command label that opens phases GUI.")
+    @ConfigComment("By default it is 'phases'.")
+    @ConfigEntry(path = "aoneblock.command.phases-command", since = "1.10.0")
+    private String phasesCommand = "phases";
+
+    @ConfigComment("The command label that allows to change island phase.")
+    @ConfigComment("By default it is 'setCount'.")
+    @ConfigEntry(path = "aoneblock.command.set-count-command", since = "1.10.0")
+    private String setCountCommand = "setCount";
+
+    @ConfigComment("The command label that allows to check if magic block is present and respawns it if not.")
+    @ConfigComment("By default it is 'respawnBlock check'.")
+    @ConfigEntry(path = "aoneblock.command.respawn-block-command", since = "1.10.0")
+    private String respawnBlockCommand = "respawnBlock check";
 
     @ConfigComment("Placeholder customization")
     @ConfigComment("Symbol for the percentage completed scale bar")
@@ -1840,5 +1862,93 @@ public class Settings implements WorldSettings {
      */
     public void setPercentCompleteSymbol(String percentCompleteSymbol) {
         this.percentCompleteSymbol = percentCompleteSymbol;
+    }
+
+
+    /**
+     * Gets count command.
+     *
+     * @return the count command
+     */
+    public String getCountCommand()
+    {
+        return countCommand;
+    }
+
+
+    /**
+     * Sets count command.
+     *
+     * @param countCommand the count command
+     */
+    public void setCountCommand(String countCommand)
+    {
+        this.countCommand = countCommand;
+    }
+
+
+    /**
+     * Gets phases command.
+     *
+     * @return the phases command
+     */
+    public String getPhasesCommand()
+    {
+        return phasesCommand;
+    }
+
+
+    /**
+     * Sets phases command.
+     *
+     * @param phasesCommand the phases command
+     */
+    public void setPhasesCommand(String phasesCommand)
+    {
+        this.phasesCommand = phasesCommand;
+    }
+
+
+    /**
+     * Gets set count command.
+     *
+     * @return the set count command
+     */
+    public String getSetCountCommand()
+    {
+        return setCountCommand;
+    }
+
+
+    /**
+     * Sets set count command.
+     *
+     * @param setCountCommand the set count command
+     */
+    public void setSetCountCommand(String setCountCommand)
+    {
+        this.setCountCommand = setCountCommand;
+    }
+
+
+    /**
+     * Gets respawn block command.
+     *
+     * @return the respawn block command
+     */
+    public String getRespawnBlockCommand()
+    {
+        return respawnBlockCommand;
+    }
+
+
+    /**
+     * Sets respawn block command.
+     *
+     * @param respawnBlockCommand the respawn block command
+     */
+    public void setRespawnBlockCommand(String respawnBlockCommand)
+    {
+        this.respawnBlockCommand = respawnBlockCommand;
     }
 }
