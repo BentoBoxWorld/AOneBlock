@@ -280,10 +280,6 @@ world:
   falling-banned-commands:
   - warp
   - spawn
-netherIslands: false
-netherRoof: false
-endGenerate: false
-endIslands: false
 island:
   # Drop broken blocks on top of magic block
   # If you want Jobs or other plugins to recognize magic block breaking this must be false
