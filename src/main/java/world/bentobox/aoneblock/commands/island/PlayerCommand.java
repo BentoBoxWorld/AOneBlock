@@ -21,6 +21,8 @@ public class PlayerCommand extends DefaultPlayerCommand {
         new IslandPhasesCommand(this);
         // Set Count
         new IslandSetCountCommand(this);
+        // Force block respawn
+        new IslandRespawnBlockCommand(this);
     }
 
 }
