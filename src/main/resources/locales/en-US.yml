@@ -39,6 +39,10 @@ aoneblock:
         description: "set block count to previously completed value"
         set: "&a Count set to [number]."
         too-high: "&c The maximum you can set is [number]!"
+    respawn-block:
+      description: "respawns magic block in situations when they disappear"
+      block-exist: "&a Block exist, do not require respawning. I marked it for you."
+      block-respawned: "&a Block respawned, please, do not void it again."
   phase:
     insufficient-level: "&c Your island level is too low to proceed! It must be [number]."
     insufficient-funds: "&c Your funds are too low to proceed! They must be [number]."

@@ -18,6 +18,9 @@ permissions:
   aoneblock.phases:
     description: Allow the use of the phases command
     default: false
+  aoneblock.respawn-block:
+    description: Allow the use of use block respawn command.
+    default: true
   aoneblock.island:
    description: Allow island command usage
    default: true

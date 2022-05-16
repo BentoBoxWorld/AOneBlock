@@ -1,4 +1,4 @@
-package world.bentobox.aoneblock.commands;
+package world.bentobox.aoneblock.commands.admin;
 
 import java.util.Arrays;
 import java.util.HashMap;

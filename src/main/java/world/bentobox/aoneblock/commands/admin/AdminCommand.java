@@ -1,4 +1,4 @@
-package world.bentobox.aoneblock.commands;
+package world.bentobox.aoneblock.commands.admin;
 
 import world.bentobox.bentobox.api.addons.GameModeAddon;
 import world.bentobox.bentobox.api.commands.admin.DefaultAdminCommand;

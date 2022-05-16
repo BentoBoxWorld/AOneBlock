@@ -1,4 +1,4 @@
-package world.bentobox.aoneblock.commands;
+package world.bentobox.aoneblock.commands.island;
 
 import world.bentobox.aoneblock.AOneBlock;
 import world.bentobox.bentobox.api.commands.island.DefaultPlayerCommand;
@@ -21,6 +21,8 @@ public class PlayerCommand extends DefaultPlayerCommand {
         new IslandPhasesCommand(this);
         // Set Count
         new IslandSetCountCommand(this);
+        // Force block respawn
+        new IslandRespawnBlockCommand(this);
     }
 
 }
