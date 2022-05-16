@@ -1,4 +1,4 @@
-package world.bentobox.aoneblock.commands;
+package world.bentobox.aoneblock.commands.island;
 
 import java.util.List;
 import java.util.Objects;
@@ -14,8 +14,9 @@ public class IslandCountCommand extends CompositeCommand {
 
     private AOneBlock addon;
 
-    public IslandCountCommand(CompositeCommand islandCommand) {
-        super(islandCommand, "count");
+    public IslandCountCommand(CompositeCommand islandCommand, String label, String[] aliases)
+    {
+        super(islandCommand, label, aliases);
     }
 
     @Override

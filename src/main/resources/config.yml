@@ -19,10 +19,26 @@ aoneblock:
     # By default it is sub-command 'go'.
     # Added since 1.2.0.
     default-action: go
-    # Placeholder customization
-    # SSymbol for the percentage completed scale bar
-    placeholders:
-      scale-symbol: "■"
+    # The command label that shows current phase progress.
+    # By default, it is 'count'.
+    # Added since 1.10.0.
+    count-command: count
+    # The command label that opens phases GUI.
+    # By default, it is 'phases'.
+    # Added since 1.10.0.
+    phases-command: phases
+    # The command label that allows to change island phase.
+    # By default, it is 'setCount'.
+    # Added since 1.10.0.
+    set-count-command: setCount
+    # The command label that allows to check if magic block is present and respawns it if not.
+    # By default, it is 'respawnBlock check'.
+    # Added since 1.10.0.
+    respawn-block-command: respawnBlock check
+  # Placeholder customization
+  # SSymbol for the percentage completed scale bar
+  placeholders:
+    scale-symbol: "■"
 world:
   # Friendly name for this world. Used in admin commands. Must be a single word
   friendly-name: OneBlock
@@ -105,20 +121,36 @@ world:
     # Note that with a standard nether all players arrive at the same portal and entering a
     # portal will return them back to their islands.
     generate: true
+    # Islands in Nether. Change to false for standard vanilla nether.
+    # /!\ BentoBox currently does not support changing this value mid-game. If you do need to change it, do a full reset of your databases and worlds.
+    islands: true
+    # Make the nether roof, if false, there is nothing up there
+    # Change to false if lag is a problem from the generation
+    # Only applies to islands Nether
+    roof: true
     # Nether spawn protection radius - this is the distance around the nether spawn
     # that will be protected from player interaction (breaking blocks, pouring lava etc.)
     # Minimum is 0 (not recommended), maximum is 100. Default is 25.
     # Only applies to vanilla nether
     spawn-radius: 25
     # This option indicates if nether portals should be linked via dimensions.
-    # Option will simulate vanilla portal mechanics that links portals together or creates a new portal, if there is not a portal in other dimension.
-    # Added since 1.16
+    # Option will simulate vanilla portal mechanics that links portals together
+    # or creates a new portal, if there is not a portal in that dimension.
+    # This option requires `allow-nether=true` in server.properties.
+    # Added since 1.16.
     create-and-link-portals: false
   end:
-    # This option indicates if obsidian platform in the end should be generated when player enters the end world.
-    # Added since 1.16
+    # End Nether - if this is false, the end world will not be made and access to
+    # the end will not occur. Other plugins may still enable portal usage.
+    generate: true
+    # Islands in The End. Change to false for standard vanilla end.
+    # /!\ BentoBox currently does not support changing this value mid-game. If you do need to change it, do a full reset of your databases and worlds.
+    islands: true
+    # This option indicates if obsidian platform in the end should be generated
+    # when player enters the end world.
+    # This option requires `allow-end=true` in bukkit.yml.
+    # Added since 1.16.
     create-obsidian-platform: false
-    # /!\ This feature is experimental and might not work as expected or might not work at all.
   # Mob white list - these mobs will NOT be removed when logging in or doing /island
   remove-mobs-whitelist:
   - ENDERMAN
@@ -248,11 +280,6 @@ world:
   falling-banned-commands:
   - warp
   - spawn
-netherIslands: false
-netherRoof: false
-endGenerate: false
-endIslands: false
-dragonSpawn: false
 island:
   # Drop broken blocks on top of magic block
   # If you want Jobs or other plugins to recognize magic block breaking this must be false

@@ -3,14 +3,11 @@ package world.bentobox.aoneblock.oneblocks;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
-import java.lang.reflect.Field;
 import java.util.*;
 import java.util.Map.Entry;
 import java.util.jar.JarFile;
 import java.util.stream.Collectors;
 
-import com.mojang.authlib.GameProfile;
-import com.mojang.authlib.properties.Property;
 import org.apache.commons.lang.math.NumberUtils;
 import org.bukkit.Material;
 import org.bukkit.block.Biome;
@@ -18,7 +15,6 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.SkullMeta;
 import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jdt.annotation.Nullable;
 
@@ -29,6 +25,7 @@ import world.bentobox.aoneblock.AOneBlock;
 import world.bentobox.aoneblock.dataobjects.OneBlockIslands;
 import world.bentobox.aoneblock.oneblocks.OneBlockObject.Rarity;
 import world.bentobox.aoneblock.oneblocks.Requirement.ReqType;
+import world.bentobox.bentobox.util.ItemParser;
 import world.bentobox.bentobox.util.Util;
 
 /**
@@ -177,17 +174,13 @@ public class OneBlocksManager {
         }
         // Icon block
         if (phase.contains(ICON)) {
-            if (obPhase.getIconBlock() != null) {
-                throw new IOException("Block " + blockNumber + ": Icon block trying to be set to " + phase.getString(FIRST_BLOCK) + " but already set to " + obPhase.getFirstBlock() + " Duplicate phase file?");
+            ItemStack icon = ItemParser.parse(phase.getString(ICON));
+
+            if (icon == null) {
+                throw new IOException("ItemParser failed to parse icon: '" + phase.getString(ICON) + "' for phase " + obPhase.getFirstBlock() + ". Can you check if it is correct?");
             }
-            ItemStack item;
-            Material m = Enums.getIfPresent(Material.class, phase.getString(ICON).toUpperCase(Locale.ENGLISH)).orNull();
-            if (m == null) {
-                item = generateHead(phase.getString(ICON));
-            } else {
-                item = new ItemStack(m); // note that the default quantity is 1, so you don't need to say 1
-            }
-            obPhase.setIconBlock(item);
+
+            obPhase.setIconBlock(icon);
         }
         // First blocks
         if (phase.contains(FIXED_BLOCKS)) {
@@ -369,6 +362,8 @@ public class OneBlocksManager {
             if (et.isSpawnable() && et.isAlive()) {
                 if (mobs.getInt(entity) > 0) {
                     obPhase.addMob(et, mobs.getInt(entity));
+                } else {
+                    addon.logWarning("Bad entity weight for " + obPhase.getPhaseName() + ": " + entity + ". Must be positive number above 1.");
                 }
             } else {
                 addon.logError("Entity type is not spawnable " + obPhase.getPhaseName() + ": " + entity);
@@ -383,10 +378,14 @@ public class OneBlocksManager {
         ConfigurationSection blocks = phase.getConfigurationSection(BLOCKS);
         for (String material : blocks.getKeys(false)) {
             Material m = Material.matchMaterial(material);
+            int probability = blocks.getInt(material);
+
             if (m == null || !m.isBlock()) {
                 addon.logError("Bad block material in " + obPhase.getPhaseName() + ": " + material);
+            } else if (probability < 1) {
+                addon.logWarning("Bad item weight for " + obPhase.getPhaseName() + ": " + material + ". Must be positive number above 1.");
             } else {
-                obPhase.addBlock(m, blocks.getInt(material));
+                obPhase.addBlock(m, probability);
             }
 
         }
@@ -697,22 +696,5 @@ public class OneBlocksManager {
     public String getNextPhase(@NonNull OneBlockIslands obi) {
         return getPhase(obi.getPhaseName()).map(this::getNextPhase) // Next phase or null
                 .filter(Objects::nonNull).map(OneBlockPhase::getPhaseName).orElse("");
-    }
-
-    private ItemStack generateHead(String texture) {
-        ItemStack item = new ItemStack(Material.PLAYER_HEAD, 1);
-        SkullMeta meta = (SkullMeta) item.getItemMeta();
-        GameProfile profile = new GameProfile(UUID.randomUUID(), "");
-        profile.getProperties().put("textures", new Property("textures", texture));
-        Field profileField = null;
-        try {
-            profileField = meta.getClass().getDeclaredField("profile");
-            profileField.setAccessible(true);
-            profileField.set(meta, profile);
-        } catch (IllegalArgumentException | IllegalAccessException | NoSuchFieldException | SecurityException e) {
-            e.printStackTrace();
-        }
-        item.setItemMeta(meta);
-        return item;
     }
 }

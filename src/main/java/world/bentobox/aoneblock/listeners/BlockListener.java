@@ -1,15 +1,13 @@
 package world.bentobox.aoneblock.listeners;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Random;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
@@ -25,8 +23,8 @@ import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Chest;
+import org.bukkit.block.data.Waterlogged;
 import org.bukkit.block.data.type.Leaves;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -39,10 +37,7 @@ import org.bukkit.event.block.BlockFromToEvent;
 import org.bukkit.event.entity.EntityInteractEvent;
 import org.bukkit.event.entity.EntitySpawnEvent;
 import org.bukkit.event.player.PlayerBucketFillEvent;
-import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.Damageable;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.util.BoundingBox;
 import org.bukkit.util.Vector;
 import org.eclipse.jdt.annotation.NonNull;
@@ -77,48 +72,46 @@ import world.bentobox.level.Level;
  */
 public class BlockListener implements Listener {
 
+    /**
+     * Main addon class.
+     */
     private final AOneBlock addon;
-    private final OneBlocksManager oneBlocksManager;
-    private final Database<OneBlockIslands> handler;
-    private final Map<String, OneBlockIslands> cache;
-    private final Random random = new Random();
 
     /**
-     * Tools that take damage. See https://minecraft.gamepedia.com/Item_durability#Tool_durability
+     * Oneblock manager
      */
-    private static final Map<Material, Integer> TOOLS;
+    private final OneBlocksManager oneBlocksManager;
 
-    static {
-        Map<Material, Integer> t = new EnumMap<>(Material.class);
-        t.put(Material.DIAMOND_AXE, 1);
-        t.put(Material.DIAMOND_SHOVEL, 1);
-        t.put(Material.DIAMOND_PICKAXE, 1);
-        t.put(Material.IRON_AXE, 1);
-        t.put(Material.IRON_SHOVEL, 1);
-        t.put(Material.IRON_PICKAXE, 1);
-        t.put(Material.WOODEN_AXE, 1);
-        t.put(Material.WOODEN_SHOVEL, 1);
-        t.put(Material.WOODEN_PICKAXE, 1);
-        t.put(Material.GOLDEN_AXE, 1);
-        t.put(Material.GOLDEN_SHOVEL, 1);
-        t.put(Material.GOLDEN_PICKAXE, 1);
-        t.put(Material.STONE_AXE, 1);
-        t.put(Material.STONE_SHOVEL, 1);
-        t.put(Material.STONE_PICKAXE, 1);
-        t.put(Material.SHEARS, 1);
-        t.put(Material.DIAMOND_SWORD, 2);
-        t.put(Material.GOLDEN_SWORD, 2);
-        t.put(Material.STONE_SWORD, 2);
-        t.put(Material.IRON_SWORD, 2);
-        t.put(Material.WOODEN_SWORD, 2);
-        t.put(Material.TRIDENT, 2);
-        TOOLS = Collections.unmodifiableMap(t);
-    }
+    /**
+     * Oneblock data database
+     */
+    private final Database<OneBlockIslands> handler;
+
+    /**
+     * Oneblock cache.
+     */
+    private final Map<String, OneBlockIslands> cache;
 
     /**
      * Water entities
      */
     private static final List<EntityType> WATER_ENTITIES = new ArrayList<>();
+
+    /**
+     * Mob aspects.
+     */
+    private static final Map<EntityType, MobAspects> MOB_ASPECTS;
+
+    /**
+     * How many blocks ahead it should look.
+     */
+    public static final int MAX_LOOK_AHEAD = 5;
+
+    /**
+     * How often data is saved.
+     */
+    public static final int SAVE_EVERY = 50;
+
     static {
         WATER_ENTITIES.add(EntityType.GUARDIAN);
         WATER_ENTITIES.add(EntityType.ELDER_GUARDIAN);
@@ -133,10 +126,6 @@ public class BlockListener implements Listener {
         Enums.getIfPresent(EntityType.class, "AXOLOTL").toJavaUtil().ifPresent(WATER_ENTITIES::add);
         Enums.getIfPresent(EntityType.class, "GLOW_SQUID").toJavaUtil().ifPresent(WATER_ENTITIES::add);
     }
-
-    private static final Map<EntityType, MobAspects> MOB_ASPECTS;
-    public static final int MAX_LOOK_AHEAD = 5;
-    public static final int SAVE_EVERY = 50;
 
     static {
         Map<EntityType, MobAspects> m = new EnumMap<>(EntityType.class);
@@ -191,6 +180,12 @@ public class BlockListener implements Listener {
         cache.values().forEach(handler::saveObjectAsync);
     }
 
+
+// ---------------------------------------------------------------------
+// Section: Listeners
+// ---------------------------------------------------------------------
+
+
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onNewIsland(IslandCreatedEvent e) {
         if (addon.inWorld(e.getIsland().getWorld())) {
@@ -198,17 +193,6 @@ public class BlockListener implements Listener {
         }
     }
 
-    private void setUp(@NonNull Island island) {
-        // Set the bedrock to the initial block
-        Util.getChunkAtAsync(Objects.requireNonNull(island.getCenter())).thenRun(() -> island.getCenter().getBlock().setType(Material.GRASS_BLOCK));
-        // Create a database entry
-        OneBlockIslands is = new OneBlockIslands(island.getUniqueId());
-        cache.put(island.getUniqueId(), is);
-        handler.saveObjectAsync(is);
-        if (addon.useHolographicDisplays()) {
-            addon.getHoloListener().setUp(island, is);
-        }
-    }
 
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onNewIsland(IslandResettedEvent e) {
@@ -274,6 +258,66 @@ public class BlockListener implements Listener {
             addon.getIslands().getIslandAt(l).filter(i -> l.equals(i.getCenter())).ifPresent(i -> process(e, i, e.getPlayer(), e.getPlayer().getWorld()));
         }
     }
+
+
+    /**
+     * Drop items at the top of the block.
+     * @param event EntitySpawnEvent object.
+     */
+    @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
+    public void onItemStackSpawn(EntitySpawnEvent event)
+    {
+        if (!this.addon.getSettings().isDropOnTop())
+        {
+            // Do nothing as item spawning is not interested in this case.
+            return;
+        }
+
+        if (!EntityType.DROPPED_ITEM.equals(event.getEntityType()))
+        {
+            // We are interested only in dropped item entities.
+            return;
+        }
+
+        if (!this.addon.inWorld(event.getLocation().getWorld()))
+        {
+            // Not correct world
+            return;
+        }
+
+        Entity entity = event.getEntity();
+        Location location = event.getLocation();
+
+        Optional<Island> optionalIsland = this.addon.getIslands().
+            getIslandAt(location).
+            filter(island -> location.getBlock().getLocation().equals(island.getCenter()));
+
+        if (optionalIsland.isPresent())
+        {
+            // Teleport entity to the top of magic block.
+            entity.teleport(optionalIsland.get().getCenter().add(0.5, 1, 0.5));
+            entity.setVelocity(new Vector(0, 0, 0));
+        }
+    }
+
+
+// ---------------------------------------------------------------------
+// Section: Processing methods
+// ---------------------------------------------------------------------
+
+
+    private void setUp(@NonNull Island island) {
+        // Set the bedrock to the initial block
+        Util.getChunkAtAsync(Objects.requireNonNull(island.getCenter())).thenRun(() -> island.getCenter().getBlock().setType(Material.GRASS_BLOCK));
+        // Create a database entry
+        OneBlockIslands is = new OneBlockIslands(island.getUniqueId());
+        cache.put(island.getUniqueId(), is);
+        handler.saveObjectAsync(is);
+        if (addon.useHolographicDisplays()) {
+            addon.getHoloListener().setUp(island, is);
+        }
+    }
+
 
     /**
      * Main block processing method
@@ -352,7 +396,7 @@ public class BlockListener implements Listener {
         }
         // Break the block
         if (e instanceof BlockBreakEvent) {
-            breakBlock(e, player, block, world, nextBlock, i);
+            this.breakBlock(player, block, nextBlock, i);
         } else if (e instanceof PlayerBucketFillEvent) {
             Bukkit.getScheduler().runTask(addon.getPlugin(), () -> spawnBlock(nextBlock, block));
             // Fire event
@@ -521,55 +565,38 @@ public class BlockListener implements Listener {
         }
     }
 
-    private void breakBlock(@NonNull Cancellable e, @Nullable Player player, Block block, @NonNull World world, @NonNull OneBlockObject nextBlock, @NonNull Island i) {
+
+    /**
+     * This method is called when block is removed, and next must be spawned.
+     * It also teleports player above the magic block, to avoid falling in void.
+     * @param player Player who breaks the block.
+     * @param block Block that was broken.
+     * @param nextBlock Next Block that will be summoned.
+     * @param island Island where player is located.
+     */
+    private void breakBlock(@Nullable Player player, Block block, @NonNull OneBlockObject nextBlock, @NonNull Island island)
+    {
         ItemStack tool = Objects.requireNonNull(player).getInventory().getItemInMainHand();
-        if (addon.getSettings().isDropOnTop()) {
-            breakBlockOnTop(e, player, block, world, nextBlock);
-        } else {
-            // Break normally and lift the player up so they don't fall
-            Bukkit.getScheduler().runTask(addon.getPlugin(), () -> spawnBlock(nextBlock, block));
-            if (player.getLocation().getBlock().equals(block)) {
-                double delta = 1 - player.getLocation().getY() - block.getY();
-                player.teleport(player.getLocation().add(new Vector(0, delta, 0)));
-            } else if (player.getLocation().getBlock().equals(block.getRelative(BlockFace.UP))) {
-                player.teleport(player.getLocation());
-            }
+
+        // Break normally and lift the player up so they don't fall
+        Bukkit.getScheduler().runTask(addon.getPlugin(), () -> this.spawnBlock(nextBlock, block));
+
+        if (player.getLocation().getBlock().equals(block))
+        {
+            double delta = 1 - (player.getLocation().getY() - block.getY());
+            player.teleport(player.getLocation().add(new Vector(0, delta, 0)));
+            player.setVelocity(new Vector(0, 0, 0));
         }
+        else if (player.getLocation().getBlock().equals(block.getRelative(BlockFace.UP)))
+        {
+            player.teleport(player.getLocation());
+            player.setVelocity(new Vector(0, 0, 0));
+        }
+
         // Fire event
-        Bukkit.getPluginManager().callEvent(new MagicBlockEvent(i, player.getUniqueId(), tool, block, nextBlock.getMaterial()));
+        Bukkit.getPluginManager().callEvent(new MagicBlockEvent(island, player.getUniqueId(), tool, block, nextBlock.getMaterial()));
     }
 
-    private void breakBlockOnTop(@NonNull Cancellable e, @Nullable Player player, @NonNull Block block, @NonNull World world, @NonNull OneBlockObject nextBlock) {
-        e.setCancelled(true);
-        ItemStack tool = Objects.requireNonNull(player).getInventory().getItemInMainHand();
-        if (addon.getSettings().isDropOnTop()) {
-            // Drop the drops
-            dropItemStacks(block.getDrops(tool, player), block, world);
-            // Drop the contents of inventory
-            if (block.getState() instanceof InventoryHolder ih) {
-                dropItemStacks(Arrays.asList(ih.getInventory().getContents()), block, world);
-            }
-            // Set the air
-            block.setType(Material.AIR);
-        } else {
-            block.breakNaturally(tool);
-        }
-        // Give exp
-        Objects.requireNonNull(player).giveExp(((BlockBreakEvent) e).getExpToDrop());
-        // Damage tool
-        damageTool(Objects.requireNonNull(player));
-        spawnBlock(nextBlock, block);
-    }
-
-    private void dropItemStacks(Collection<ItemStack> drops, @NonNull Block block, @NonNull World world) {
-        drops.stream()
-        .filter(Objects::nonNull)
-        .filter(item -> !item.getType().equals(Material.AIR))
-        .forEach(item -> world.dropItem(block.getRelative(BlockFace.UP).getLocation()
-                .add(new Vector(0.5, 0, 0.5)), item)
-                .setVelocity(new Vector(0, 0, 0)));
-
-    }
 
     private void spawnBlock(@NonNull OneBlockObject nextBlock, @NonNull Block block) {
         @NonNull
@@ -593,46 +620,162 @@ public class BlockListener implements Listener {
         Location spawnLoc = block.getLocation().add(new Vector(0.5D, 1D, 0.5D));
         Entity entity = block.getWorld().spawnEntity(spawnLoc, nextBlock.getEntityType());
         // Make space for entity - this will blot out blocks
-        makeSpace(entity);
+        makeSpace(entity, spawnLoc);
         block.getWorld().playSound(block.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 1F, 2F);
     }
 
-    private void makeSpace(@NonNull Entity e) {
-        World world = e.getWorld();
+
+    /**
+     * This method creates a space for entities to spawn. Avoids block damage.
+     * @param entity Entity that is spawned.
+     * @param spawnLocation Location where entity is spawned.
+     */
+    private void makeSpace(@NonNull Entity entity, @NonNull Location spawnLocation)
+    {
+        World world = entity.getWorld();
         List<Block> airBlocks = new ArrayList<>();
         List<Block> waterBlocks = new ArrayList<>();
         // Make space for entity based on the entity's size
-        BoundingBox bb = e.getBoundingBox();
-        for (double x = bb.getMinX(); x <= bb.getMaxX() + 1; x++) {
-            for (double z = bb.getMinZ(); z <= bb.getMaxZ() + 1; z++) {
-                double y = bb.getMinY();
-                Block b = world.getBlockAt(new Location(world, x, y, z));
-                for (; y <= Math.min(bb.getMaxY() + 1, world.getMaxHeight()); y++) {
-                    b = world.getBlockAt(new Location(world, x, y, z));
-                    if (!b.getType().equals(Material.AIR) && !b.isLiquid()) {
-                        airBlocks.add(b);
-                    }
-                    if (WATER_ENTITIES.contains(e.getType()) && addon.getSettings().isWaterMobProtection()) {
-                        waterBlocks.add(b);
+        final BoundingBox boundingBox = entity.getBoundingBox();
+        final boolean isWaterProtected = this.addon.getSettings().isWaterMobProtection() &&
+            WATER_ENTITIES.contains(entity.getType());
+
+        for (double y = boundingBox.getMinY(); y <= Math.min(boundingBox.getMaxY(), world.getMaxHeight()); y++)
+        {
+            // Start with middle block.
+            Block block = world.getBlockAt(new Location(world, spawnLocation.getBlockX(), y, spawnLocation.getBlockZ()));
+
+            // Check if block must be replaced with air or water.
+            this.checkBlock(block, boundingBox, isWaterProtected, airBlocks, waterBlocks);
+
+            // If entity requires water protection, then add air block above it. Dolphin protection.
+            if (isWaterProtected)
+            {
+                // Look up only if possible
+                if (y + 1 < world.getMaxHeight())
+                {
+                    airBlocks.add(block.getRelative(BlockFace.UP));
+                }
+            }
+
+            // Process entity width and depth.
+            if (boundingBox.getWidthX() > 1 && boundingBox.getWidthZ() > 1)
+            {
+                // Entities are spawned in the middle of block. So add extra half block to both dimensions.
+                for (double x = boundingBox.getMinX() - 0.5; x < boundingBox.getMaxX() + 0.5; x++)
+                {
+                    for (double z = boundingBox.getMinZ() - 0.5; z < boundingBox.getMaxZ() + 0.5; z++)
+                    {
+                        block = world.getBlockAt(new Location(world,
+                            x,
+                            y,
+                            z));
+
+                        // Check if block should be marked.
+                        this.checkBlock(block, boundingBox, isWaterProtected, airBlocks, waterBlocks);
                     }
                 }
-                // Add air block on top for all water entities (required for dolphin, okay for others)
-                if (WATER_ENTITIES.contains(e.getType())) {
-                    airBlocks.add(b.getRelative(BlockFace.UP));
+            }
+            else if (boundingBox.getWidthX() > 1)
+            {
+                // If entity is just wider, then check the one dimension.
+                for (double x = boundingBox.getMinX() - 0.5; x < boundingBox.getMaxX() + 0.5; x++)
+                {
+                    block = world.getBlockAt(new Location(world,
+                        x,
+                        y,
+                        spawnLocation.getZ()));
+
+                    // Check if block should be marked.
+                    this.checkBlock(block, boundingBox, isWaterProtected, airBlocks, waterBlocks);
+                }
+            }
+            else if (boundingBox.getWidthZ() > 1)
+            {
+                // If entity is just wider, then check the one dimension.
+                for (double z = boundingBox.getMinZ() - 0.5; z < boundingBox.getMaxZ() + 0.5; z++)
+                {
+                    block = world.getBlockAt(new Location(world,
+                        spawnLocation.getX(),
+                        y,
+                        z));
+
+                    // Check if block should be marked.
+                    this.checkBlock(block, boundingBox, isWaterProtected, airBlocks, waterBlocks);
                 }
             }
         }
+
         // Fire event
-        BlockClearEvent event = new BlockClearEvent(e, airBlocks, waterBlocks);
+        BlockClearEvent event = new BlockClearEvent(entity, airBlocks, waterBlocks);
         Bukkit.getPluginManager().callEvent(event);
-        if (event.isCancelled()) {
+
+        if (event.isCancelled())
+        {
+            // Event is cancelled. Blocks cannot be removed.
             return;
         }
-        // Clear blocks
+
+        // Break blocks.
         airBlocks.forEach(Block::breakNaturally);
         airBlocks.forEach(b -> b.setType(Material.AIR));
-        waterBlocks.forEach(b -> b.setType(Material.WATER));
+        waterBlocks.forEach(block -> {
+            if (block.getBlockData() instanceof Waterlogged waterlogged)
+            {
+                // If block was not removed and is waterlogged, then it means it can be just waterlogged.
+                waterlogged.setWaterlogged(true);
+            }
+            else
+            {
+                // Replace block with water.
+                block.setType(Material.WATER);
+            }
+        });
     }
+
+
+    /**
+     * This method checks if block bounding box overlaps with entity bounding box and populates lists accordingly.
+     * @param block Block that need to be checked.
+     * @param boundingBox The bounding box of entity.
+     * @param isWaterEntity Boolean that indicate that entity must be water-protected.
+     * @param airBlocks List of air blocks.
+     * @param waterBlocks List of water blocks.
+     */
+    private void checkBlock(Block block,
+        BoundingBox boundingBox,
+        boolean isWaterEntity,
+        List<Block> airBlocks,
+        List<Block> waterBlocks)
+    {
+        // Check if block should be marked for destroying.
+        if (block.getBoundingBox().overlaps(boundingBox))
+        {
+            // Only if entity collides with the block.
+            airBlocks.add(block);
+        }
+
+        // Check if block should be marked for replacing with water.
+        if (isWaterEntity)
+        {
+            if (block.getBlockData() instanceof Waterlogged waterlogged)
+            {
+                // Check if waterlogged block collides.
+                if (block.getBoundingBox().overlaps(boundingBox) || !waterlogged.isWaterlogged())
+                {
+                    // if block overlaps with entity, it will be replaced with air.
+                    // if block is not waterlogged, put water in it.
+                    waterBlocks.add(block);
+                }
+            }
+            else
+            {
+                // Well, unfortunately block must go.
+                waterBlocks.add(block);
+            }
+        }
+    }
+
 
     private void fillChest(@NonNull OneBlockObject nextBlock, @NonNull Block block) {
         Chest chest = (Chest) block.getState();
@@ -666,35 +809,6 @@ public class BlockListener implements Listener {
         return cache.containsKey(i.getUniqueId()) ? cache.get(i.getUniqueId()) : loadIsland(i.getUniqueId());
     }
 
-    private void damageTool(@NonNull Player player) {
-        ItemStack inHand = player.getInventory().getItemInMainHand();
-        ItemMeta itemMeta = inHand.getItemMeta();
-
-        if (itemMeta instanceof Damageable meta && !itemMeta.isUnbreakable() && TOOLS.containsKey(inHand.getType())) {
-            // Get the item's current durability
-            Integer durability = meta.getDamage();
-            // Get the damage this will do
-            int damage = TOOLS.get(inHand.getType());
-            if (durability != null) {
-                // Check for DURABILITY
-                if (itemMeta.hasEnchant(Enchantment.DURABILITY)) {
-                    int level = itemMeta.getEnchantLevel(Enchantment.DURABILITY);
-                    if (random.nextInt(level + 1) == 0) {
-                        meta.setDamage(durability + damage);
-                    }
-                } else {
-                    meta.setDamage(durability + damage);
-                }
-                if (meta.getDamage() > inHand.getType().getMaxDurability()) {
-                    player.getWorld().playSound(player.getLocation(), Sound.ENTITY_ITEM_BREAK, 1F, 1F);
-                    player.getInventory().setItemInMainHand(null);
-                } else {
-                    inHand.setItemMeta(itemMeta);
-                }
-            }
-        }
-
-    }
 
     @NonNull
     private OneBlockIslands loadIsland(@NonNull String uniqueId) {
@@ -728,5 +842,4 @@ public class BlockListener implements Listener {
         }
         return CompletableFuture.completedFuture(true);
     }
-
 }

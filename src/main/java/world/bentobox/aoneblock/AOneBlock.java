@@ -17,8 +17,8 @@ import org.eclipse.jdt.annotation.Nullable;
 import com.gmail.filoghost.holographicdisplays.api.Hologram;
 import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
 
-import world.bentobox.aoneblock.commands.AdminCommand;
-import world.bentobox.aoneblock.commands.PlayerCommand;
+import world.bentobox.aoneblock.commands.admin.AdminCommand;
+import world.bentobox.aoneblock.commands.island.PlayerCommand;
 import world.bentobox.aoneblock.dataobjects.OneBlockIslands;
 import world.bentobox.aoneblock.generators.ChunkGeneratorWorld;
 import world.bentobox.aoneblock.listeners.BlockListener;
@@ -115,6 +115,10 @@ public class AOneBlock extends GameModeAddon {
         getPlugin().getPlaceholdersManager().registerPlaceholder(this, "visited_island_percent_done", phManager::getPercentDoneByLocation);
         getPlugin().getPlaceholdersManager().registerPlaceholder(this, "my_island_done_scale", phManager::getDoneScale);
         getPlugin().getPlaceholdersManager().registerPlaceholder(this, "visited_island_done_scale", phManager::getDoneScaleByLocation);
+
+        // Since 1.10
+        getPlugin().getPlaceholdersManager().registerPlaceholder(this, "visited_island_lifetime_count", phManager::getLifetimeByLocation);
+        getPlugin().getPlaceholdersManager().registerPlaceholder(this, "my_island_lifetime_count", phManager::getLifetime);
 
         // Register request handlers
         registerRequestHandler(new IslandStatsHandler(this));
@@ -235,6 +239,16 @@ public class AOneBlock extends GameModeAddon {
             configObject.saveConfigObject(settings);
         }
     }
+
+
+    @Override
+    public void saveDefaultConfig()
+    {
+        super.saveDefaultConfig();
+        // Save default phases panel
+        this.saveResource("panels/phases_panel.yml", false);
+    }
+
 
     /* (non-Javadoc)
      * @see world.bentobox.bentobox.api.addons.Addon#allLoaded()

@@ -10,7 +10,7 @@
 
     <name>AOneBlock</name>
     <description>AOneBlock is an add-on for BentoBox, an expandable Minecraft Bukkit plugin for island-type games like SkyBlock or AcidIsland.</description>
-    <url>https://github.com/BentoBoxWorld/AOneBlock</url>
+    <url>https://github.com/BentoBoxWorlgit checkout masterd/AOneBlock</url>
     <inceptionYear>2020</inceptionYear>
 
     <developers>
@@ -58,8 +58,8 @@
         <!-- Non-minecraft related dependencies -->
         <powermock.version>2.0.9</powermock.version>
         <!-- More visible way how to change dependency versions -->
-        <spigot.version>1.17-R0.1-SNAPSHOT</spigot.version>
-        <bentobox.version>1.18.0-SNAPSHOT</bentobox.version>
+        <spigot.version>1.18-R0.1-SNAPSHOT</spigot.version>
+        <bentobox.version>1.20.0</bentobox.version>
         <level.version>2.6.2</level.version>
         <bank.version>1.3.0</bank.version>
         <!-- Revision variable removes warning about dynamic version -->
@@ -67,7 +67,7 @@
         <!-- Do not change unless you want different name for local builds. -->
         <build.number>-LOCAL</build.number>
         <!-- This allows to change between versions. -->
-        <build.version>1.9.0</build.version>
+        <build.version>1.10.0</build.version>
         <!-- SonarCloud -->
         <sonar.projectKey>BentoBoxWorld_AOneBlock</sonar.projectKey>
         <sonar.organization>bentobox-world</sonar.organization>
@@ -150,6 +150,12 @@
             <artifactId>spigot-api</artifactId>
             <version>${spigot.version}</version>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.spigotmc</groupId>
+            <artifactId>plugin-annotations</artifactId>
+            <version>1.2.3-SNAPSHOT</version>
+            <scope>compile</scope>
         </dependency>
         <!-- Holographic Displays API -->
         <dependency>

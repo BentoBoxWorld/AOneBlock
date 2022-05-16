@@ -3,9 +3,10 @@ aoneblock:
   commands:
     admin:
       setcount:
-        parameters: "<nombre> <número>"
+        parameters: "<nombre> <número> [lifetime]"
         description: "Establece un número de bloques minados al jugador"
         set: "&aEl número de bloques minados de [name] se ha establecido en [number]"
+        set-lifetime: "&aEl numero de bloques en forma permanente de [name] se ha establecido en [number]"
       setchest:
         parameters: "<fase> <rareza>"
         description: "Coloca un cofre al que apuntes en una fase con la rareza especificada"
@@ -28,6 +29,12 @@ aoneblock:
       title: "&2Fases de OneBlock"
       name-syntax: "&a[name]"
       description-syntax: "&b[number] bloques"
+    island:
+      setcount:
+        parameters: "<cantidad>"
+        description: "Establece la cantidad de bloques a un valor previamente completado"
+        set: "&aCantidad establecida en [number]."
+        too-high: "&c¡Lo máximo que puedes establecer es [number]!"
   phase:
     insufficient-level: "&c¡Tu nivel de isla es demasiado bajo para seguir! Este debe ser de [number]."
     insufficient-funds: "&c¡Tus fondos son insuficientes! Debes tener [number]."

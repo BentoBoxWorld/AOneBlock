@@ -24,8 +24,10 @@ import world.bentobox.bentobox.database.objects.adapters.Adapter;
 import world.bentobox.bentobox.database.objects.adapters.FlagSerializer;
 import world.bentobox.bentobox.database.objects.adapters.FlagSerializer2;
 
+
 /**
  * All the plugin settings are here
+ *
  * @author Tastybento
  */
 @StoreAt(filename="config.yml", path="addons/AOneBlock") // Explicitly call out what name this should have.
@@ -54,6 +56,26 @@ public class Settings implements WorldSettings {
     @ConfigComment("By default it is sub-command 'go'.")
     @ConfigEntry(path = "aoneblock.command.default-action", since = "1.2.0")
     private String defaultPlayerAction = "go";
+
+    @ConfigComment("The command label that shows current phase progress.")
+    @ConfigComment("By default it is 'count'.")
+    @ConfigEntry(path = "aoneblock.command.count-command", since = "1.10.0")
+    private String countCommand = "count";
+
+    @ConfigComment("The command label that opens phases GUI.")
+    @ConfigComment("By default it is 'phases'.")
+    @ConfigEntry(path = "aoneblock.command.phases-command", since = "1.10.0")
+    private String phasesCommand = "phases";
+
+    @ConfigComment("The command label that allows to change island phase.")
+    @ConfigComment("By default it is 'setCount'.")
+    @ConfigEntry(path = "aoneblock.command.set-count-command", since = "1.10.0")
+    private String setCountCommand = "setCount";
+
+    @ConfigComment("The command label that allows to check if magic block is present and respawns it if not.")
+    @ConfigComment("By default it is 'respawnBlock check'.")
+    @ConfigEntry(path = "aoneblock.command.respawn-block-command", since = "1.10.0")
+    private String respawnBlockCommand = "respawnBlock check";
 
     @ConfigComment("Placeholder customization")
     @ConfigComment("Symbol for the percentage completed scale bar")
@@ -177,11 +199,13 @@ public class Settings implements WorldSettings {
     private boolean netherGenerate = true;
 
     @ConfigComment("Islands in Nether. Change to false for standard vanilla nether.")
+    @ConfigEntry(path = "world.nether.islands", needsReset = true)
     private boolean netherIslands = false;
 
     @ConfigComment("Make the nether roof, if false, there is nothing up there")
     @ConfigComment("Change to false if lag is a problem from the generation")
     @ConfigComment("Only applies to islands Nether")
+    @ConfigEntry(path = "world.nether.roof")
     private boolean netherRoof = false;
 
     @ConfigComment("Nether spawn protection radius - this is the distance around the nether spawn")
@@ -194,23 +218,25 @@ public class Settings implements WorldSettings {
     @ConfigComment("This option indicates if nether portals should be linked via dimensions.")
     @ConfigComment("Option will simulate vanilla portal mechanics that links portals together")
     @ConfigComment("or creates a new portal, if there is not a portal in that dimension.")
+    @ConfigComment("This option requires `allow-nether=true` in server.properties.")
     @ConfigEntry(path = "world.nether.create-and-link-portals", since = "1.16")
     private boolean makeNetherPortals = false;
 
     // End
     @ConfigComment("End Nether - if this is false, the end world will not be made and access to")
     @ConfigComment("the end will not occur. Other plugins may still enable portal usage.")
+    @ConfigEntry(path = "world.end.generate")
     private boolean endGenerate = false;
 
     @ConfigComment("Islands in The End. Change to false for standard vanilla end.")
+    @ConfigEntry(path = "world.end.islands", needsReset = true)
     private boolean endIslands = false;
 
     @ConfigComment("This option indicates if obsidian platform in the end should be generated")
     @ConfigComment("when player enters the end world.")
+    @ConfigComment("This option requires `allow-end=true` in bukkit.yml.")
     @ConfigEntry(path = "world.end.create-obsidian-platform", since = "1.16")
     private boolean makeEndPortals = false;
-
-    private boolean dragonSpawn = false;
 
     @ConfigComment("Mob white list - these mobs will NOT be removed when logging in or doing /island")
     @ConfigEntry(path = "world.remove-mobs-whitelist")
@@ -683,7 +709,7 @@ public class Settings implements WorldSettings {
      */
     @Override
     public boolean isDragonSpawn() {
-        return dragonSpawn;
+        return false;
     }
 
     /**
@@ -1086,13 +1112,6 @@ public class Settings implements WorldSettings {
      */
     public void setEndIslands(boolean endIslands) {
         this.endIslands = endIslands;
-    }
-
-    /**
-     * @param dragonSpawn the dragonSpawn to set
-     */
-    public void setDragonSpawn(boolean dragonSpawn) {
-        this.dragonSpawn = dragonSpawn;
     }
 
     /**
@@ -1843,5 +1862,93 @@ public class Settings implements WorldSettings {
      */
     public void setPercentCompleteSymbol(String percentCompleteSymbol) {
         this.percentCompleteSymbol = percentCompleteSymbol;
+    }
+
+
+    /**
+     * Gets count command.
+     *
+     * @return the count command
+     */
+    public String getCountCommand()
+    {
+        return countCommand;
+    }
+
+
+    /**
+     * Sets count command.
+     *
+     * @param countCommand the count command
+     */
+    public void setCountCommand(String countCommand)
+    {
+        this.countCommand = countCommand;
+    }
+
+
+    /**
+     * Gets phases command.
+     *
+     * @return the phases command
+     */
+    public String getPhasesCommand()
+    {
+        return phasesCommand;
+    }
+
+
+    /**
+     * Sets phases command.
+     *
+     * @param phasesCommand the phases command
+     */
+    public void setPhasesCommand(String phasesCommand)
+    {
+        this.phasesCommand = phasesCommand;
+    }
+
+
+    /**
+     * Gets set count command.
+     *
+     * @return the set count command
+     */
+    public String getSetCountCommand()
+    {
+        return setCountCommand;
+    }
+
+
+    /**
+     * Sets set count command.
+     *
+     * @param setCountCommand the set count command
+     */
+    public void setSetCountCommand(String setCountCommand)
+    {
+        this.setCountCommand = setCountCommand;
+    }
+
+
+    /**
+     * Gets respawn block command.
+     *
+     * @return the respawn block command
+     */
+    public String getRespawnBlockCommand()
+    {
+        return respawnBlockCommand;
+    }
+
+
+    /**
+     * Sets respawn block command.
+     *
+     * @param respawnBlockCommand the respawn block command
+     */
+    public void setRespawnBlockCommand(String respawnBlockCommand)
+    {
+        this.respawnBlockCommand = respawnBlockCommand;
     }
 }

@@ -29,3 +29,20 @@ aoneblock:
       title: "&2 Fáze OneBlock"
       name-syntax: "&a [name]"
       description-syntax: "&b [number] bloků"
+    island:
+      setcount:
+        parameters: "<count>"
+        set: "&a Počet nastaven na [number]."
+        too-high: "&c Maximálně můžeš nastavit [number]!"
+  phase:
+    insufficient-level: Tvůj ostrov je na příliš nízké úrovni, musí být alespoň [number].
+    insufficient-funds: Nemáš dostatečné prostředky! Musíš mít alespoň [number].
+    insufficient-bank-balance: V Bance ostrova není dostatek financí! Je potřeba alespoň
+      [number].
+    insufficient-permission: Nemůžeš pokračovat, dokud nedostaneš oprávnění [name].
+  placeholders:
+    infinite: Nekonečný
+  island:
+    starting-hologram: |-
+      &a Vítejte v AOneBlock
+      &e Prolomte tento blok

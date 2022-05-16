@@ -1,8 +1,7 @@
 '0':
   name: Plains
-  # Material (Eg. GRASS_BLOCK) or Base64 Head Texture for Icon in "phases" command. (Optional)
-  # If icon is not defined, then the first block of the phase will be used.
-  # See https://minecraft-heads.com/ for info on Base64 Head Textures
+  # Icon in Phase GUI's. Icon uses BentoBox ItemParser: https://docs.bentobox.world/en/latest/BentoBox/ItemParser/
+  # It supports Custom Player heads and any displayable item.
   icon: GRASS_BLOCK
   # List of blocks that will generate at these specific block counts.
   # The numbers are relative to the phase and not the overall player's count.

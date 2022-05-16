@@ -1,4 +1,4 @@
-package world.bentobox.aoneblock.commands;
+package world.bentobox.aoneblock.commands.admin;
 
 import java.util.List;
 import java.util.Optional;
