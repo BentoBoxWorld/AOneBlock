@@ -169,6 +169,7 @@
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-text</artifactId>
             <version>1.9</version>
+            <scope>compile</scope>
         </dependency>
         <!-- Mojang Auth -->
         <dependency>
@@ -364,14 +365,22 @@
                 <version>3.3.1-SNAPSHOT</version>
                 <configuration>
                     <minimizeJar>true</minimizeJar>
-                    <filters>
-                        <filter>
-                            <artifact>org.apache.commons.text:*</artifact>
-                            <includes>
-                                <include>**</include>
-                            </includes>
-                        </filter>
-                     </filters>
+                    <artifactSet>
+                        <includes>
+                            <include>org.apache.commons:commons-text</include>
+                        </includes>
+                    </artifactSet>
+                    <transformers>
+                        <!-- Add a transformer to exclude any other manifest files (possibly from dependencies). -->
+                        <transformer implementation="org.apache.maven.plugins.shade.resource.DontIncludeResourceTransformer">
+                            <resource>MANIFEST.MF</resource>
+                        </transformer>
+                        <!-- Add a transformer to include your custom manifest file. -->
+                        <transformer implementation="org.apache.maven.plugins.shade.resource.IncludeResourceTransformer">
+                            <resource>META-INF/MANIFEST.MF</resource>
+                            <file>src/main/resources/META-INF/MANIFEST.MF</file>
+                        </transformer>
+                    </transformers>
                 </configuration>
                 <executions>
                     <execution>
