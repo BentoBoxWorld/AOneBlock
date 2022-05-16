@@ -191,5 +191,34 @@ public class PlaceholdersManager {
         return SCALE.floorEntry(num).getValue().replace("╍", addon.getSettings().getPercentCompleteSymbol());
     }
 
+    /**
+     * Get island Lifetime count
+     * @param user island owner or team member
+     * @return string of Lifetime count
+     */
+    public String getLifetime(User user)
+    {
+        if (user == null || user.getUniqueId() == null) return "";
 
+        Island island = this.addon.getIslands().getIsland(this.addon.getOverWorld(), user);
+
+        return island == null ? "" : String.valueOf(this.addon.getOneBlocksIsland(island).getLifetime());
+    }
+
+
+    /**
+     * Get Lifetime count by user location
+     * @param user - user
+     * @return String of Lifetime
+     */
+    public String getLifetimeByLocation(User user)
+    {
+        if (user == null || user.getUniqueId() == null) return "";
+
+        return this.addon.getIslands().getProtectedIslandAt(Objects.requireNonNull(user.getLocation())).
+            map(this.addon::getOneBlocksIsland).
+            map(OneBlockIslands::getLifetime).
+            map(String::valueOf).
+            orElse("");
+    }
 }
