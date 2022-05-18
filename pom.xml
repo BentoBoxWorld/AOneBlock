@@ -360,38 +360,6 @@
                 <version>3.0.0-M1</version>
             </plugin>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-shade-plugin</artifactId>
-                <version>3.3.1-SNAPSHOT</version>
-                <configuration>
-                    <minimizeJar>true</minimizeJar>
-                    <artifactSet>
-                        <includes>
-                            <include>org.apache.commons:commons-text</include>
-                        </includes>
-                    </artifactSet>
-                    <transformers>
-                        <!-- Add a transformer to exclude any other manifest files (possibly from dependencies). -->
-                        <transformer implementation="org.apache.maven.plugins.shade.resource.DontIncludeResourceTransformer">
-                            <resource>MANIFEST.MF</resource>
-                        </transformer>
-                        <!-- Add a transformer to include your custom manifest file. -->
-                        <transformer implementation="org.apache.maven.plugins.shade.resource.IncludeResourceTransformer">
-                            <resource>META-INF/MANIFEST.MF</resource>
-                            <file>src/main/resources/META-INF/MANIFEST.MF</file>
-                        </transformer>
-                    </transformers>
-                </configuration>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>shade</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <version>0.8.7</version>

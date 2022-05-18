@@ -2,12 +2,6 @@ package world.bentobox.aoneblock.dataobjects;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import org.apache.commons.text.StringEscapeUtils;
-/**
- * @author tastybento
- *
- */
 import org.bukkit.entity.EntityType;
 import org.eclipse.jdt.annotation.NonNull;
 
@@ -17,6 +11,9 @@ import world.bentobox.aoneblock.oneblocks.OneBlockObject;
 import world.bentobox.bentobox.database.objects.DataObject;
 import world.bentobox.bentobox.database.objects.Table;
 
+/**
+ * @author tastybento
+ */
 @Table(name = "OneBlockIslands")
 public class OneBlockIslands implements DataObject {
 
@@ -95,14 +92,14 @@ public class OneBlockIslands implements DataObject {
      * @return the hologram Line
      */
     public String getHologram() {
-        return hologram == null ? "" : StringEscapeUtils.unescapeJava(hologram);
+        return hologram == null ? "" : hologram;
     }
 
     /**
      * @param hologramLine Hologram line
      */
     public void setHologram(String hologramLine) {
-        this.hologram = StringEscapeUtils.escapeJava(hologramLine);
+        this.hologram = hologramLine;
     }
 
     /* (non-Javadoc)
@@ -169,7 +166,7 @@ public class OneBlockIslands implements DataObject {
     }
 
     /**
-     * @param the lifetime number of blocks broken to set
+     * @param lifetime lifetime number of blocks broken to set
      */
     public void setLifetime(long lifetime) {
         this.lifetime = lifetime;
