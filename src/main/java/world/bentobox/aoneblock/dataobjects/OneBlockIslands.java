@@ -1,7 +1,8 @@
 package world.bentobox.aoneblock.dataobjects;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 import org.bukkit.entity.EntityType;
 import org.eclipse.jdt.annotation.NonNull;
 
@@ -41,7 +42,7 @@ public class OneBlockIslands implements DataObject {
     @Expose
     private String hologram = "";
 
-    private List<OneBlockObject> queue = new ArrayList<>();
+    private Queue<OneBlockObject> queue = new LinkedList<>();
 
     /**
      * @return the phaseName
@@ -121,8 +122,8 @@ public class OneBlockIslands implements DataObject {
     /**
      * @return the queue
      */
-    public List<OneBlockObject> getQueue() {
-        if (queue == null) queue = new ArrayList<>();
+    public Queue<OneBlockObject> getQueue() {
+        if (queue == null) queue = new LinkedList<>();
         return queue;
     }
 
@@ -141,8 +142,7 @@ public class OneBlockIslands implements DataObject {
 
     public OneBlockObject pollAndAdd(OneBlockObject toAdd) {
         getQueue();
-        OneBlockObject b = queue.get(0);
-        queue.remove(0);
+        OneBlockObject b = queue.poll();
         queue.add(toAdd);
         return b;
     }
