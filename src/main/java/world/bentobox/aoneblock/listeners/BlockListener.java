@@ -768,7 +768,7 @@ public class BlockListener implements Listener {
                     waterBlocks.add(block);
                 }
             }
-            else
+            else if (block.getType() != Material.WATER)
             {
                 // Well, unfortunately block must go.
                 waterBlocks.add(block);
