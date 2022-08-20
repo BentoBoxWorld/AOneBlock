@@ -12,14 +12,14 @@ public class PlaceholdersManager {
     private static final TreeMap<Double, String> SCALE;
     static {
         SCALE = new TreeMap<>();
-        SCALE.put(0D,     "&c╍╍╍╍╍╍╍╍");
-        SCALE.put(12.5,   "&a╍&c╍╍╍╍╍╍╍");
-        SCALE.put(25.0,   "&a╍╍&c╍╍╍╍╍╍");
-        SCALE.put(37.5, "&a╍╍╍&c╍╍╍╍╍");
-        SCALE.put(50D,    "&a╍╍╍╍&c╍╍╍╍");
+        SCALE.put(0D,    "&c╍╍╍╍╍╍╍╍");
+        SCALE.put(12.5,  "&a╍&c╍╍╍╍╍╍╍");
+        SCALE.put(25.0,  "&a╍╍&c╍╍╍╍╍╍");
+        SCALE.put(37.5,  "&a╍╍╍&c╍╍╍╍╍");
+        SCALE.put(50D,   "&a╍╍╍╍&c╍╍╍╍");
         SCALE.put(62.5,  "&a╍╍╍╍╍&c╍╍╍");
-        SCALE.put(75.0,   "&a╍╍╍╍╍&c╍╍╍");
-        SCALE.put(87.5, "&a╍╍╍╍╍╍╍&c╍");
+        SCALE.put(75.0,  "&a╍╍╍╍╍╍&c╍╍");
+        SCALE.put(87.5,  "&a╍╍╍╍╍╍╍&c╍");
         SCALE.put(100D,  "&a╍╍╍╍╍╍╍╍");
     }
 
