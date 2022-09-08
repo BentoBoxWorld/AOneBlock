@@ -155,6 +155,7 @@ public class BlockListener implements Listener {
         m.put(EntityType.VINDICATOR, new MobAspects(Sound.ENTITY_VINDICATOR_AMBIENT, Color.fromRGB(137, 156, 166)));
         m.put(EntityType.WITCH, new MobAspects(Sound.ENTITY_WITCH_AMBIENT, Color.fromRGB(56, 39, 67)));
         m.put(EntityType.WITHER, new MobAspects(Sound.ENTITY_WITHER_AMBIENT, Color.fromRGB(80, 80, 80)));
+        m.put(EntityType.WARDEN, new MobAspects(Sound.ENTITY_WARDEN_AMBIENT, Color.fromRGB(6, 72, 86))); //ADDED WARDEN SOUND
         m.put(EntityType.WITHER_SKELETON, new MobAspects(Sound.ENTITY_WITHER_SKELETON_AMBIENT, Color.fromRGB(100, 100, 100)));
         m.put(EntityType.ZOGLIN, new MobAspects(Sound.ENTITY_ZOGLIN_AMBIENT, Color.fromRGB(255, 192, 203)));
         m.put(EntityType.ZOMBIE, new MobAspects(Sound.ENTITY_ZOMBIE_AMBIENT, Color.fromRGB(74, 99, 53)));
