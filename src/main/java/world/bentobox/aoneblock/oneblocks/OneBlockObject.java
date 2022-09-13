@@ -41,6 +41,7 @@ public class OneBlockObject {
     private Material material;
     private Map<Integer, ItemStack> chest;
     private Rarity rarity;
+    private OneBlockCustomBlock customBlock;
     private int prob;
 
     /**
@@ -63,7 +64,17 @@ public class OneBlockObject {
     public OneBlockObject(Material material, int prob) {
         this.material = material;
         this.prob = prob;
+    }
 
+    /**
+     * A custom block
+     *
+     * @param customBlock - custom block
+     * @param prob        - relative probability
+     */
+    public OneBlockObject(OneBlockCustomBlock customBlock, int prob) {
+        this.customBlock = customBlock;
+        this.prob = prob;
     }
 
 
@@ -76,7 +87,6 @@ public class OneBlockObject {
         this.material = Material.CHEST;
         this.chest = chest;
         this.setRarity(rarity);
-
     }
 
     /**
@@ -90,6 +100,7 @@ public class OneBlockObject {
         this.material = ob.getMaterial();
         this.rarity = ob.getRarity();
         this.prob = ob.getProb();
+        this.customBlock = ob.getCustomBlock();
     }
 
     /**
@@ -117,6 +128,14 @@ public class OneBlockObject {
 
 
     /**
+     * @return the customBlock
+     */
+    public OneBlockCustomBlock getCustomBlock() {
+        return customBlock;
+    }
+
+
+    /**
      * @return the isMaterial
      */
     public boolean isMaterial() {
@@ -129,6 +148,14 @@ public class OneBlockObject {
      */
     public boolean isEntity() {
         return entityType != null;
+    }
+
+
+    /**
+     * @return the isCustomBlock
+     */
+    public boolean isCustomBlock() {
+        return customBlock != null;
     }
 
     /**
@@ -167,6 +194,7 @@ public class OneBlockObject {
         return "OneBlockObject [" + (entityType != null ? "entityType=" + entityType + ", " : "")
                 + (material != null ? "material=" + material + ", " : "")
                 + (chest != null ? "chest=" + chest + ", " : "") + (rarity != null ? "rarity=" + rarity + ", " : "")
+                + (customBlock != null ? "customBlock=" + customBlock + ", " : "")
                 + "prob=" + prob + "]";
     }
 
