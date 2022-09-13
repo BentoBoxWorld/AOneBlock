@@ -48,7 +48,7 @@ public class OneBlocksManager {
     private static final String MOBS = "mobs";
     private static final String BLOCKS = "blocks";
     private static final String PHASES = "phases";
-    private static final String CUSTOM_BLOCKS = "customBlocks";
+    private static final String CUSTOM_BLOCKS = "custom-blocks";
     private static final String GOTO_BLOCK = "gotoBlock";
     private static final String START_COMMANDS = "start-commands";
     private static final String END_COMMANDS = "end-commands";
