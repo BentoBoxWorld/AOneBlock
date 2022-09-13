@@ -138,6 +138,8 @@ public class OneBlocksManager {
             initBlock(blockNumber, obPhase, phase);
             // Blocks
             addBlocks(obPhase, phase);
+            // Custom blocks
+            addCustomBlocks(obPhase, phase);
             // Mobs
             addMobs(obPhase, phase);
             // Chests
@@ -210,13 +212,23 @@ public class OneBlocksManager {
                 continue;
             }
             int k = Integer.parseInt(key);
-            String mat = fb.getString(key);
-            if (mat != null) {
-                Material m = Material.matchMaterial(mat);
-                if (m != null && m.isBlock()) {
-                    result.put(k, new OneBlockObject(m, 0));
+            if (fb.isConfigurationSection(key)) {
+                Map<String, Object> map = fb.getConfigurationSection(key).getValues(false);
+                Optional<OneBlockCustomBlock> customBlock = OneBlockCustomBlockCreator.create(map);
+                if (customBlock.isPresent()) {
+                    result.put(k, new OneBlockObject(customBlock.get(), 0));
                 } else {
-                    addon.logError("Fixed block key " + key + " material is invalid or not a block. Ignoring.");
+                    addon.logError("Fixed block key " + key + " material is not a valid custom block. Ignoring.");
+                }
+            } else {
+                String mat = fb.getString(key);
+                if (mat != null) {
+                    Material m = Material.matchMaterial(mat);
+                    if (m != null && m.isBlock()) {
+                        result.put(k, new OneBlockObject(m, 0));
+                    } else {
+                        addon.logError("Fixed block key " + key + " material is invalid or not a block. Ignoring.");
+                    }
                 }
             }
         }
@@ -392,12 +404,20 @@ public class OneBlocksManager {
         }
     }
 
-    void addCustom(OneBlockPhase obPhase, ConfigurationSection phase) {
+    void addCustomBlocks(OneBlockPhase obPhase, ConfigurationSection phase) {
         if (!phase.isConfigurationSection(CUSTOM_BLOCKS)) {
             return;
         }
-        ConfigurationSection customs = phase.getConfigurationSection(CUSTOM_BLOCKS);
-        // TODO
+        List<Map<?, ?>> mapList = phase.getMapList(CUSTOM_BLOCKS);
+        for (Map<?, ?> map : mapList) {
+            int probability = Integer.parseInt(Objects.toString(map.get("probability"), "0"));
+            Optional<OneBlockCustomBlock> customBlock = OneBlockCustomBlockCreator.create(map);
+            if (customBlock.isPresent()) {
+                obPhase.addCustomBlock(customBlock.get(), probability);
+            } else {
+                addon.logError("Bad custom block in " + obPhase.getPhaseName() + ": " + map);
+            }
+        }
     }
 
     /**

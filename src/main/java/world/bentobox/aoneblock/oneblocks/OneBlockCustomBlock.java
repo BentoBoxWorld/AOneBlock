@@ -2,10 +2,16 @@ package world.bentobox.aoneblock.oneblocks;
 
 import org.bukkit.block.Block;
 
-import java.util.Map;
-
+/**
+ * Represents a custom block
+ *
+ * @author HSGamer
+ */
 public interface OneBlockCustomBlock {
-    boolean isValid(Map<String, Object> map);
-
+    /**
+     * Set the block
+     *
+     * @param block the block
+     */
     void setBlock(Block block);
 }
