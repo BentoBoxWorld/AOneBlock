@@ -1,16 +1,25 @@
 package world.bentobox.aoneblock.oneblocks;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.EnumMap;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
+import java.util.SortedMap;
+import java.util.TreeMap;
+import java.util.stream.Collectors;
+
 import org.bukkit.Material;
 import org.bukkit.World.Environment;
 import org.bukkit.block.Biome;
 import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemStack;
 import org.eclipse.jdt.annotation.Nullable;
+
 import world.bentobox.aoneblock.AOneBlock;
 import world.bentobox.aoneblock.oneblocks.OneBlockObject.Rarity;
-
-import java.util.*;
-import java.util.stream.Collectors;
 
 public class OneBlockPhase {
     protected static final SortedMap<Double, Rarity> CHEST_CHANCES = new TreeMap<>();
@@ -27,10 +36,6 @@ public class OneBlockPhase {
      * all probabilities
      */
     private final TreeMap<Integer, OneBlockObject> probMap = new TreeMap<>();
-    private final Map<Rarity, List<OneBlockObject>> chests = new EnumMap<>(Rarity.class);
-    private final Random blockRandom;
-    private final Random chestRandom;
-    private final String blockNumber;
     /**
      * Sum of all probabilities
      */
@@ -40,6 +45,10 @@ public class OneBlockPhase {
     private Environment environment;
     private OneBlockObject firstBlock;
     private ItemStack iconBlock;
+    private final Map<Rarity, List<OneBlockObject>> chests = new EnumMap<>(Rarity.class);
+    private final Random blockRandom;
+    private final Random chestRandom;
+    private final String blockNumber;
     private Integer gotoBlock;
     private int blockTotal = 0;
     private int entityTotal = 0;
@@ -98,13 +107,6 @@ public class OneBlockPhase {
      */
     public Map<Integer, String> getHologramLines() {
         return holograms;
-    }
-
-    /**
-     * @param hologramLines the hologramLines to set
-     */
-    public void setHologramLines(Map<Integer, String> hologramLines) {
-        this.holograms = hologramLines;
     }
 
     /**
@@ -262,18 +264,18 @@ public class OneBlockPhase {
     }
 
     /**
-     * @param firstBlock the firstBlock to set
-     */
-    public void setFirstBlock(OneBlockObject firstBlock) {
-        this.firstBlock = firstBlock;
-    }
-
-    /**
      * @return the iconBlock
      */
     @Nullable
     public ItemStack getIconBlock() {
         return iconBlock;
+    }
+
+    /**
+     * @param firstBlock the firstBlock to set
+     */
+    public void setFirstBlock(OneBlockObject firstBlock) {
+        this.firstBlock = firstBlock;
     }
 
     /**
@@ -415,5 +417,12 @@ public class OneBlockPhase {
      */
     public void setFixedBlocks(Map<Integer, OneBlockObject> fixedBlocks) {
         this.fixedBlocks = fixedBlocks;
+    }
+
+    /**
+     * @param hologramLines the hologramLines to set
+     */
+    public void setHologramLines(Map<Integer, String> hologramLines) {
+        this.holograms = hologramLines;
     }
 }
