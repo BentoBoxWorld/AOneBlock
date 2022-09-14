@@ -417,7 +417,7 @@ public class OneBlocksManager {
         try {
             prob = Integer.parseInt(probability);
         } catch (Exception e) {
-            prob = 0;
+            return false;
         }
 
         if (m == null || !m.isBlock()) {
