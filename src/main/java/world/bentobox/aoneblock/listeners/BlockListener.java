@@ -600,6 +600,11 @@ public class BlockListener implements Listener {
 
 
     private void spawnBlock(@NonNull OneBlockObject nextBlock, @NonNull Block block) {
+        if (nextBlock.isCustomBlock()) {
+            nextBlock.getCustomBlock().setBlock(block);
+            return;
+        }
+
         @NonNull
         Material type = nextBlock.getMaterial();
         // Place new block with no physics

@@ -152,6 +152,18 @@ public class OneBlockPhase {
     }
 
     /**
+     * Adds a custom block and associated probability
+     *
+     * @param customBlock - custom block
+     * @param prob        - probability
+     */
+    public void addCustomBlock(OneBlockCustomBlock customBlock, int prob) {
+        total += prob;
+        blockTotal += prob;
+        probMap.put(total, new OneBlockObject(customBlock, prob));
+    }
+
+    /**
      * Adds an entity type and associated probability
      *
      * @param entityType - entityType

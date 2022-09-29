@@ -209,13 +209,23 @@ public class OneBlocksManager {
                 continue;
             }
             int k = Integer.parseInt(key);
-            String mat = fb.getString(key);
-            if (mat != null) {
-                Material m = Material.matchMaterial(mat);
-                if (m != null && m.isBlock()) {
-                    result.put(k, new OneBlockObject(m, 0));
+            if (fb.isConfigurationSection(key)) {
+                Map<String, Object> map = fb.getConfigurationSection(key).getValues(false);
+                Optional<OneBlockCustomBlock> customBlock = OneBlockCustomBlockCreator.create(map);
+                if (customBlock.isPresent()) {
+                    result.put(k, new OneBlockObject(customBlock.get(), 0));
                 } else {
-                    addon.logError("Fixed block key " + key + " material is invalid or not a block. Ignoring.");
+                    addon.logError("Fixed block key " + key + " material is not a valid custom block. Ignoring.");
+                }
+            } else {
+                String mat = fb.getString(key);
+                if (mat != null) {
+                    Material m = Material.matchMaterial(mat);
+                    if (m != null && m.isBlock()) {
+                        result.put(k, new OneBlockObject(m, 0));
+                    } else {
+                        addon.logError("Fixed block key " + key + " material is invalid or not a block. Ignoring.");
+                    }
                 }
             }
         }
@@ -375,19 +385,50 @@ public class OneBlocksManager {
         if (!phase.isConfigurationSection(BLOCKS)) {
             return;
         }
-        ConfigurationSection blocks = phase.getConfigurationSection(BLOCKS);
-        for (String material : blocks.getKeys(false)) {
-            Material m = Material.matchMaterial(material);
-            int probability = blocks.getInt(material);
-
-            if (m == null || !m.isBlock()) {
-                addon.logError("Bad block material in " + obPhase.getPhaseName() + ": " + material);
-            } else if (probability < 1) {
-                addon.logWarning("Bad item weight for " + obPhase.getPhaseName() + ": " + material + ". Must be positive number above 1.");
-            } else {
-                obPhase.addBlock(m, probability);
+        if (phase.isConfigurationSection(BLOCKS)) {
+            ConfigurationSection blocks = phase.getConfigurationSection(BLOCKS);
+            for (String material : blocks.getKeys(false)) {
+                addMaterial(obPhase, material, Objects.toString(blocks.get(material)));
             }
+        } else if (phase.isList(BLOCKS)) {
+            List<Map<?, ?>> blocks = phase.getMapList(BLOCKS);
+            for (Map<?, ?> map : blocks) {
+                if (map.size() == 1) {
+                    Map.Entry<?, ?> entry = map.entrySet().iterator().next();
+                    if (addMaterial(obPhase, Objects.toString(entry.getKey()), Objects.toString(entry.getValue()))) {
+                        continue;
+                    }
+                }
 
+                int probability = Integer.parseInt(Objects.toString(map.get("probability"), "0"));
+                Optional<OneBlockCustomBlock> customBlock = OneBlockCustomBlockCreator.create(map);
+                if (customBlock.isPresent()) {
+                    obPhase.addCustomBlock(customBlock.get(), probability);
+                } else {
+                    addon.logError("Bad custom block in " + obPhase.getPhaseName() + ": " + map);
+                }
+            }
+        }
+    }
+
+    private boolean addMaterial(OneBlockPhase obPhase, String material, String probability) {
+        Material m = Material.matchMaterial(material);
+        int prob;
+        try {
+            prob = Integer.parseInt(probability);
+        } catch (Exception e) {
+            return false;
+        }
+
+        if (m == null || !m.isBlock()) {
+            addon.logError("Bad block material in " + obPhase.getPhaseName() + ": " + material);
+            return false;
+        } else if (prob < 1) {
+            addon.logWarning("Bad item weight for " + obPhase.getPhaseName() + ": " + material + ". Must be positive number above 1.");
+            return false;
+        } else {
+            obPhase.addBlock(m, prob);
+            return true;
         }
     }
 
