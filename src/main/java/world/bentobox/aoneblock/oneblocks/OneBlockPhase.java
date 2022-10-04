@@ -46,7 +46,8 @@ public class OneBlockPhase {
     private OneBlockObject firstBlock;
     private ItemStack iconBlock;
     private final Map<Rarity, List<OneBlockObject>> chests = new EnumMap<>(Rarity.class);
-    private final Random random = new Random();
+    private final Random blockRandom;
+    private final Random chestRandom;
     private final String blockNumber;
     private Integer gotoBlock;
     private int blockTotal = 0;
@@ -70,6 +71,11 @@ public class OneBlockPhase {
         requirements = new ArrayList<>();
         fixedBlocks = new HashMap<>();
         holograms = new HashMap<>();
+
+        // Separate chest and block random.
+        // May be expose random to users?
+        blockRandom = new Random();
+        chestRandom = new Random();
     }
 
     /**
@@ -146,6 +152,18 @@ public class OneBlockPhase {
     }
 
     /**
+     * Adds a custom block and associated probability
+     *
+     * @param customBlock - custom block
+     * @param prob        - probability
+     */
+    public void addCustomBlock(OneBlockCustomBlock customBlock, int prob) {
+        total += prob;
+        blockTotal += prob;
+        probMap.put(total, new OneBlockObject(customBlock, prob));
+    }
+
+    /**
      * Adds an entity type and associated probability
      *
      * @param entityType - entityType
@@ -195,28 +213,31 @@ public class OneBlockPhase {
 
     private OneBlockObject getRandomChest() {
         // Get the right type of chest
-        Rarity r = CHEST_CHANCES.getOrDefault(((TreeMap<Double, Rarity>) CHEST_CHANCES).ceilingKey(random.nextDouble()),
+        Rarity r = CHEST_CHANCES.getOrDefault(((TreeMap<Double, Rarity>) CHEST_CHANCES).ceilingKey(this.chestRandom.nextDouble()),
                 Rarity.COMMON);
         // If the chest lists have no common fallback, then return empty chest
-        if (!chests.containsKey(r) && !chests.containsKey(Rarity.COMMON)) {
+        if (!this.chests.containsKey(r) && !this.chests.containsKey(Rarity.COMMON)) {
             return new OneBlockObject(Material.CHEST, 0);
         }
         // Get the rare chest or worse case the common one
-        List<OneBlockObject> list = chests.containsKey(r) ? chests.get(r) : chests.get(Rarity.COMMON);
+        List<OneBlockObject> list = this.chests.containsKey(r) ? this.chests.get(r) : this.chests.get(Rarity.COMMON);
         // Pick one from the list or return an empty chest. Note list.get() can return
         // nothing
-        return list.isEmpty() ? new OneBlockObject(Material.CHEST, 0) : list.get(random.nextInt(list.size()));
+        return list.isEmpty() ? new OneBlockObject(Material.CHEST, 0) : list.get(this.chestRandom.nextInt(list.size()));
     }
 
     private OneBlockObject getRandomBlock(TreeMap<Integer, OneBlockObject> probMap2, int total2) {
         // Use +1 on the bound because the random choice is exclusive
-        OneBlockObject temp = probMap2.get(random.nextInt(total2 + 1));
+        int randomValue = this.blockRandom.nextInt(total2 + 1);
+
+        OneBlockObject temp = probMap2.get(randomValue);
         if (temp == null) {
-            temp = probMap2.ceilingEntry(random.nextInt(total2 + 1)).getValue();
+            temp = probMap2.ceilingEntry(randomValue).getValue();
         }
         if (temp == null) {
             temp = probMap2.firstEntry().getValue();
         }
+
         return new OneBlockObject(temp);
     }
 

@@ -125,7 +125,10 @@ permissions:
     default: op
   aoneblock.mod.bypassban:
     description: Bypasses island ban
-    default: op  
+    default: op
+  aoneblock.mod.resetname:
+    description: Allows to reset island name
+    default: op
   aoneblock.mod.team:
     description: Enables modification of teams via kick and add commands
     default: false

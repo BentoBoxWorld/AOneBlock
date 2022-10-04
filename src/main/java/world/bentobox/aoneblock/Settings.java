@@ -1,11 +1,6 @@
 package world.bentobox.aoneblock;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import org.bukkit.Difficulty;
 import org.bukkit.GameMode;
@@ -13,6 +8,7 @@ import org.bukkit.block.Biome;
 import org.bukkit.entity.EntityType;
 
 import com.google.common.base.Enums;
+import com.google.gson.annotations.JsonAdapter;
 
 import world.bentobox.aoneblock.listeners.BlockListener;
 import world.bentobox.bentobox.api.configuration.ConfigComment;
@@ -21,8 +17,7 @@ import world.bentobox.bentobox.api.configuration.StoreAt;
 import world.bentobox.bentobox.api.configuration.WorldSettings;
 import world.bentobox.bentobox.api.flags.Flag;
 import world.bentobox.bentobox.database.objects.adapters.Adapter;
-import world.bentobox.bentobox.database.objects.adapters.FlagSerializer;
-import world.bentobox.bentobox.database.objects.adapters.FlagSerializer2;
+import world.bentobox.bentobox.database.objects.adapters.FlagBooleanSerializer;
 
 
 /**
@@ -256,13 +251,12 @@ public class Settings implements WorldSettings {
     @ConfigComment("  SUB-OWNER = 900")
     @ConfigComment("  OWNER     = 1000")
     @ConfigEntry(path = "world.default-island-flags")
-    @Adapter(FlagSerializer.class)
-    private Map<Flag, Integer> defaultIslandFlags = new HashMap<>();
+    private Map<String, Integer> defaultIslandFlagNames = new HashMap<>();
 
     @ConfigComment("These are the default settings for new islands")
     @ConfigEntry(path = "world.default-island-settings")
-    @Adapter(FlagSerializer2.class)
-    private Map<Flag, Integer> defaultIslandSettings = new HashMap<>();
+    @Adapter(FlagBooleanSerializer.class)
+    private Map<String, Integer> defaultIslandSettingNames = new HashMap<>();
 
     @ConfigComment("These settings/flags are hidden from users")
     @ConfigComment("Ops can toggle hiding in-game using SHIFT-LEFT-CLICK on flags in settings")
@@ -728,20 +722,47 @@ public class Settings implements WorldSettings {
         return worldFlags;
     }
 
+
     /**
      * @return the defaultIslandFlags
+     * @since 1.21.0
      */
     @Override
+    public Map<String, Integer> getDefaultIslandFlagNames()
+    {
+        return defaultIslandFlagNames;
+    }
+
+
+    /**
+     * @return the defaultIslandSettings
+     * @since 1.21.0
+     */
+    @Override
+    public Map<String, Integer> getDefaultIslandSettingNames()
+    {
+        return defaultIslandSettingNames;
+    }
+
+
+    /**
+     * @return the defaultIslandFlags
+     * @deprecated since 1.21 Replaced with #getDefaultIslandFlagNames
+     */
+    @Override
+    @Deprecated
     public Map<Flag, Integer> getDefaultIslandFlags() {
-        return defaultIslandFlags;
+        return Collections.emptyMap();
     }
 
     /**
      * @return the defaultIslandSettings
+     * @deprecated since 1.21 Replaced with #getDefaultIslandSettingNames
      */
     @Override
+    @Deprecated
     public Map<Flag, Integer> getDefaultIslandSettings() {
-        return defaultIslandSettings;
+        return Collections.emptyMap();
     }
 
     /**
@@ -1128,19 +1149,42 @@ public class Settings implements WorldSettings {
         this.worldFlags = worldFlags;
     }
 
+
+    /**
+     * Sets default island flag names.
+     *
+     * @param defaultIslandFlagNames the default island flag names
+     */
+    public void setDefaultIslandFlagNames(Map<String, Integer> defaultIslandFlagNames)
+    {
+        this.defaultIslandFlagNames = defaultIslandFlagNames;
+    }
+
+
+    /**
+     * Sets default island setting names.
+     *
+     * @param defaultIslandSettingNames the default island setting names
+     */
+    public void setDefaultIslandSettingNames(Map<String, Integer> defaultIslandSettingNames)
+    {
+        this.defaultIslandSettingNames = defaultIslandSettingNames;
+    }
+
+
     /**
      * @param defaultIslandFlags the defaultIslandFlags to set
+     * @deprecated since 1.21
      */
-    public void setDefaultIslandFlags(Map<Flag, Integer> defaultIslandFlags) {
-        this.defaultIslandFlags = defaultIslandFlags;
-    }
+    public void setDefaultIslandFlags(Map<String, Integer> defaultIslandFlags) {}
+
 
     /**
      * @param defaultIslandSettings the defaultIslandSettings to set
+     * @deprecated since 1.21
      */
-    public void setDefaultIslandSettings(Map<Flag, Integer> defaultIslandSettings) {
-        this.defaultIslandSettings = defaultIslandSettings;
-    }
+    public void setDefaultIslandSettings(Map<String, Integer> defaultIslandSettings) {}
+
 
     /**
      * @param hiddenFlags the hidden flags to set
