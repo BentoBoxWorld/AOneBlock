@@ -340,7 +340,7 @@ public class BlockListener implements Listener {
             int gotoBlock = phase.getGotoBlock();
             phase = oneBlocksManager.getPhase(gotoBlock);
             // Store lifetime
-            is.setLifetime(is.getLifetime() + is.getBlockNumber());
+            is.setLifetime(is.getLifetime() + gotoBlock);
             // Set current block
             is.setBlockNumber(gotoBlock);
 
