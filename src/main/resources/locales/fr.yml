@@ -64,7 +64,16 @@ aoneblock:
         name: "&f&l Page Suivante"
         description: "&7 Aller à la page [number]"
       phase:
+        name: "&f&l [phase]"
+        description: |-
+          [Bloc de départ]
+          [biome]
+          [banque]
+          [économie]
+          [niveau]
+          [autorisation]
         starting-block: "&7 Commence après avoir détruit &e [number] blocs."
+        biome: "&7 Biome : &e [biome]"
         bank: "&7 Requiert &e $[number] &7 dans ta banque."
         economy: "&7 Requiert &e $[number] &7 dans ton solde."
         level: "&7 Requiert &e [number] &7 niveaux d'île."
