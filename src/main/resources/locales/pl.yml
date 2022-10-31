@@ -16,11 +16,11 @@ aoneblock:
         look-at-chest: "&cSpójrz na wypełnioną skrzynię, aby ją ustawić"
         only-single-chest: "&cMożna ustawić tylko pojedyncze skrzynie"
         success: "&aSkrzynia pomyślnie dodana do fazy"
-        failure: "&cSkrzynia nie mogła zostać dodana do fazy! Zobacz konsolę dla błędów"
+        failure: "&cSkrzynia nie mogła zostać dodana do fazy! Zobacz błąd w konsoli"
       sanity:
-        parameters: "<phase>"
+        parameters: "<faza>"
         description: wyświetlać kontrolę poprawności prawdopodobieństwa fazy w konsoli
-        see-console: "&a Zobacz konsolę dla raportu"
+        see-console: "&a Zobacz raport w konsoli"
     count:
       description: pokaż liczbę bloków i fazę
       info: "&a Jesteś na bloku &b [number] w fazie &a [name]"
@@ -35,18 +35,51 @@ aoneblock:
         description: ustaw liczbę bloków na poprzednio uzupełnioną wartość
         set: "&a Liczba ustawiona na [number]."
         too-high: "&c Maksymalna wartość, jaką możesz ustawić, to [number]!"
+    respawn-block:
+      description: odnawia magiczny blok, w przypadku zniknięcia
+      block-exist: "&a Blok nie potrzebował odnowienia. Został chwilowo zaznaczony"
+      block-respawned: "&a Odnowiono blok, proszę nie usuwaj go ponownie"
   phase:
     insufficient-level: Poziom Twojej wyspy jest za niski, aby kontynuować! Musi to
-      być [liczba].
-    insufficient-funds: Twoje fundusze są zbyt niskie, aby kontynuować! Muszą być
-      [liczba].
+      być [number].
+    insufficient-funds: Twoje fundusze są zbyt niskie, aby kontynuować! Musisz posiadać
+      [number].
     insufficient-bank-balance: Saldo na rachunku bankowym wyspy jest zbyt niskie,
-      aby kontynuować! Musi to być [liczba].
+      aby kontynuować! Musi to być [number].
     insufficient-permission: Nie możesz kontynuować, dopóki nie uzyskasz pozwolenia
-      [imię i nazwisko]!
+      [name]!
   placeholders:
     infinite: Nieskończony
+  gui:
+    titles:
+      phases: "&0&l Fazy OneBlock"
+    buttons:
+      previous:
+        name: "&f&lNastępna strona"
+        description: "&7 Przeskocz do [number] strony"
+      next:
+        name: "&f&l Następna strona"
+        description: "&7 Przeskocz do [number] strony"
+      phase:
+        name: "&f&l [phase]"
+        description: |-
+          [starting-block]
+          [biome]
+          [bank]
+          [economy]
+          [level]
+          [permission]
+        starting-block: "&7 Rozpoczyna sie po&e [number] &7zniszczonych blokach."
+        biome: "&7 Biom: &e [biome]"
+        bank: "&7 Potrzebujesz&e $[number] &7 na twoim koncie."
+        economy: "&7 Potrzebujesz&e $[number] &7 na twoim koncie."
+        level: "&7 Potrzebujesz &e [number] &7 poziom wyspy."
+        permission: "&7 Wymaga uprawnienia `&e[permission]&7`."
+    tips:
+      click-to-previous: "&e Kliknij &7, aby wyświetlić poprzednią stronę."
+      click-to-next: "&e Kliknij &7, aby wyświetlić następną stronę."
+      click-to-change: "&e Kliknij &7, aby zmienić."
   island:
     starting-hologram: |-
-      &aWitamy w AOneBlock
-      &ePrzerwij ten blok, aby rozpocząć
+      &aWitamy w OneBlock
+      &eZniszcz ten blok, aby rozpocząć
