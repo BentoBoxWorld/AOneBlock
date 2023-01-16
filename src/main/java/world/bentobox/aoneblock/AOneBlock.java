@@ -8,6 +8,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.World.Environment;
+import org.bukkit.entity.SpawnCategory;
 import org.bukkit.WorldCreator;
 import org.bukkit.WorldType;
 import org.bukkit.generator.ChunkGenerator;
@@ -203,22 +204,22 @@ public class AOneBlock extends GameModeAddon {
 
     private void setSpawnRates(World w) {
         if (getSettings().getSpawnLimitMonsters() > 0) {
-            w.setMonsterSpawnLimit(getSettings().getSpawnLimitMonsters());
+            w.setSpawnLimit(SpawnCategory.MONSTER, getSettings().getSpawnLimitMonsters());
         }
         if (getSettings().getSpawnLimitAmbient() > 0) {
-            w.setAmbientSpawnLimit(getSettings().getSpawnLimitAmbient());
+            w.setSpawnLimit(SpawnCategory.AMBIENT, getSettings().getSpawnLimitAmbient());
         }
         if (getSettings().getSpawnLimitAnimals() > 0) {
-            w.setAnimalSpawnLimit(getSettings().getSpawnLimitAnimals());
+            w.setSpawnLimit(SpawnCategory.ANIMAL, getSettings().getSpawnLimitAnimals());
         }
         if (getSettings().getSpawnLimitWaterAnimals() > 0) {
-            w.setWaterAnimalSpawnLimit(getSettings().getSpawnLimitWaterAnimals());
+            w.setSpawnLimit(SpawnCategory.WATER_ANIMAL, getSettings().getSpawnLimitWaterAnimals());
         }
         if (getSettings().getTicksPerAnimalSpawns() > 0) {
-            w.setTicksPerAnimalSpawns(getSettings().getTicksPerAnimalSpawns());
+            w.setTicksPerSpawns(SpawnCategory.ANIMAL, getSettings().getTicksPerAnimalSpawns());
         }
         if (getSettings().getTicksPerMonsterSpawns() > 0) {
-            w.setTicksPerMonsterSpawns(getSettings().getTicksPerMonsterSpawns());
+            w.setTicksPerSpawns(SpawnCategory.MONSTER, getSettings().getTicksPerMonsterSpawns());
         }
 
     }
