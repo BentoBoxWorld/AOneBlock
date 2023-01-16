@@ -1,6 +1,12 @@
 package world.bentobox.aoneblock;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.bukkit.Difficulty;
 import org.bukkit.GameMode;
@@ -8,7 +14,6 @@ import org.bukkit.block.Biome;
 import org.bukkit.entity.EntityType;
 
 import com.google.common.base.Enums;
-import com.google.gson.annotations.JsonAdapter;
 
 import world.bentobox.aoneblock.listeners.BlockListener;
 import world.bentobox.bentobox.api.configuration.ConfigComment;
@@ -1170,21 +1175,6 @@ public class Settings implements WorldSettings {
     {
         this.defaultIslandSettingNames = defaultIslandSettingNames;
     }
-
-
-    /**
-     * @param defaultIslandFlags the defaultIslandFlags to set
-     * @deprecated since 1.21
-     */
-    public void setDefaultIslandFlags(Map<String, Integer> defaultIslandFlags) {}
-
-
-    /**
-     * @param defaultIslandSettings the defaultIslandSettings to set
-     * @deprecated since 1.21
-     */
-    public void setDefaultIslandSettings(Map<String, Integer> defaultIslandSettings) {}
-
 
     /**
      * @param hiddenFlags the hidden flags to set
