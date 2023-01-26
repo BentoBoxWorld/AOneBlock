@@ -44,7 +44,7 @@ import world.bentobox.bentobox.database.objects.Island;
 import world.bentobox.bentobox.managers.IslandsManager;
 
 /**
- * @author bengibbs
+ * @author tastybento
  *
  */
 @RunWith(PowerMockRunner.class)
