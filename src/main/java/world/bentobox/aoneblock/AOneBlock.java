@@ -267,7 +267,7 @@ public class AOneBlock extends GameModeAddon {
                 OneBlockIslands oneBlockIsland = getOneBlocksIsland(island);
                 String hololine = oneBlockIsland.getHologram();
                 Location center = island.getCenter();
-                if (hololine != null && center != null) {
+                if (hololine != null) {
                     final Hologram hologram = HologramsAPI.createHologram(BentoBox.getInstance(), center.add(0.5, 2.6, 0.5));
                     for (String line : hololine.split("\\n")) {
                         hologram.appendTextLine(ChatColor.translateAlternateColorCodes('&', line));
