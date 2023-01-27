@@ -13,8 +13,6 @@ import org.bukkit.GameMode;
 import org.bukkit.block.Biome;
 import org.bukkit.entity.EntityType;
 
-import com.google.common.base.Enums;
-
 import world.bentobox.aoneblock.listeners.BlockListener;
 import world.bentobox.bentobox.api.configuration.ConfigComment;
 import world.bentobox.bentobox.api.configuration.ConfigEntry;
@@ -156,13 +154,6 @@ public class Settings implements WorldSettings {
     @ConfigEntry(path = "world.use-own-generator")
     private boolean useOwnGenerator;
 
-    @ConfigComment("Sea height (don't changes this mid-game unless you delete the world)")
-    @ConfigComment("Minimum is 0")
-    @ConfigComment("If sea height is less than about 10, then players will drop right through it")
-    @ConfigComment("if it exists.")
-    @ConfigEntry(path = "world.sea-height", needsReset = true)
-    private int seaHeight = 0;
-
     @ConfigComment("Maximum number of islands in the world. Set to -1 or 0 for unlimited.")
     @ConfigComment("If the number of islands is greater than this number, it will stop players from creating islands.")
     @ConfigEntry(path = "world.max-islands")
@@ -176,12 +167,6 @@ public class Settings implements WorldSettings {
     @ConfigComment("The default biome for the overworld")
     @ConfigEntry(path = "world.default-biome")
     private Biome defaultBiome = Biome.PLAINS;
-    @ConfigComment("The default biome for the nether world (this may affect what mobs can spawn)")
-    @ConfigEntry(path = "world.default-nether-biome")
-    private Biome defaultNetherBiome = Enums.getIfPresent(Biome.class, "NETHER").or(Enums.getIfPresent(Biome.class, "NETHER_WASTES").or(Biome.BADLANDS));
-    @ConfigComment("The default biome for the end world (this may affect what mobs can spawn)")
-    @ConfigEntry(path = "world.default-end-biome")
-    private Biome defaultEndBiome = Biome.THE_END;
 
     @ConfigComment("The maximum number of players a player can ban at any one time in this game mode.")
     @ConfigComment("The permission acidisland.ban.maxlimit.X where X is a number can also be used per player")
@@ -198,16 +183,6 @@ public class Settings implements WorldSettings {
     @ConfigEntry(path = "world.nether.generate")
     private boolean netherGenerate = true;
 
-    @ConfigComment("Islands in Nether. Change to false for standard vanilla nether.")
-    @ConfigEntry(path = "world.nether.islands", needsReset = true)
-    private boolean netherIslands = false;
-
-    @ConfigComment("Make the nether roof, if false, there is nothing up there")
-    @ConfigComment("Change to false if lag is a problem from the generation")
-    @ConfigComment("Only applies to islands Nether")
-    @ConfigEntry(path = "world.nether.roof")
-    private boolean netherRoof = false;
-
     @ConfigComment("Nether spawn protection radius - this is the distance around the nether spawn")
     @ConfigComment("that will be protected from player interaction (breaking blocks, pouring lava etc.)")
     @ConfigComment("Minimum is 0 (not recommended), maximum is 100. Default is 25.")
@@ -223,14 +198,10 @@ public class Settings implements WorldSettings {
     private boolean makeNetherPortals = false;
 
     // End
-    @ConfigComment("End Nether - if this is false, the end world will not be made and access to")
+    @ConfigComment("End world - if this is false, the end world will not be made and access to")
     @ConfigComment("the end will not occur. Other plugins may still enable portal usage.")
     @ConfigEntry(path = "world.end.generate")
     private boolean endGenerate = false;
-
-    @ConfigComment("Islands in The End. Change to false for standard vanilla end.")
-    @ConfigEntry(path = "world.end.islands", needsReset = true)
-    private boolean endIslands = false;
 
     @ConfigComment("This option indicates if obsidian platform in the end should be generated")
     @ConfigComment("when player enters the end world.")
@@ -637,7 +608,7 @@ public class Settings implements WorldSettings {
      */
     @Override
     public int getSeaHeight() {
-        return seaHeight;
+        return 0;
     }
 
     /**
@@ -669,14 +640,7 @@ public class Settings implements WorldSettings {
      */
     @Override
     public boolean isNetherIslands() {
-        return netherIslands;
-    }
-
-    /**
-     * @return the netherRoof
-     */
-    public boolean isNetherRoof() {
-        return netherRoof;
+        return false;
     }
 
     /**
@@ -700,7 +664,7 @@ public class Settings implements WorldSettings {
      */
     @Override
     public boolean isEndIslands() {
-        return endIslands;
+        return false;
     }
 
     /**
@@ -1080,13 +1044,6 @@ public class Settings implements WorldSettings {
     }
 
     /**
-     * @param seaHeight the seaHeight to set
-     */
-    public void setSeaHeight(int seaHeight) {
-        this.seaHeight = seaHeight;
-    }
-
-    /**
      * @param maxIslands the maxIslands to set
      */
     public void setMaxIslands(int maxIslands) {
@@ -1108,20 +1065,6 @@ public class Settings implements WorldSettings {
     }
 
     /**
-     * @param netherIslands the netherIslands to set
-     */
-    public void setNetherIslands(boolean netherIslands) {
-        this.netherIslands = netherIslands;
-    }
-
-    /**
-     * @param netherRoof the netherRoof to set
-     */
-    public void setNetherRoof(boolean netherRoof) {
-        this.netherRoof = netherRoof;
-    }
-
-    /**
      * @param netherSpawnRadius the netherSpawnRadius to set
      */
     public void setNetherSpawnRadius(int netherSpawnRadius) {
@@ -1133,13 +1076,6 @@ public class Settings implements WorldSettings {
      */
     public void setEndGenerate(boolean endGenerate) {
         this.endGenerate = endGenerate;
-    }
-
-    /**
-     * @param endIslands the endIslands to set
-     */
-    public void setEndIslands(boolean endIslands) {
-        this.endIslands = endIslands;
     }
 
     /**
@@ -1824,34 +1760,6 @@ public class Settings implements WorldSettings {
 
     public void setDropOnTop(boolean dropOnTop) {
         this.dropOnTop = dropOnTop;
-    }
-
-    /**
-     * @return the defaultNetherBiome
-     */
-    public Biome getDefaultNetherBiome() {
-        return defaultNetherBiome;
-    }
-
-    /**
-     * @param defaultNetherBiome the defaultNetherBiome to set
-     */
-    public void setDefaultNetherBiome(Biome defaultNetherBiome) {
-        this.defaultNetherBiome = defaultNetherBiome;
-    }
-
-    /**
-     * @return the defaultEndBiome
-     */
-    public Biome getDefaultEndBiome() {
-        return defaultEndBiome;
-    }
-
-    /**
-     * @param defaultEndBiome the defaultEndBiome to set
-     */
-    public void setDefaultEndBiome(Biome defaultEndBiome) {
-        this.defaultEndBiome = defaultEndBiome;
     }
 
     /**
