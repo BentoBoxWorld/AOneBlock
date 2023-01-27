@@ -97,12 +97,26 @@ public class AOneBlock extends GameModeAddon {
             setState(State.DISABLED);
             return;
         }
-
         registerListener(blockListener);
         registerListener(new NoBlockHandler(this));
         registerListener(new BlockProtect(this));
         registerListener(new JoinLeaveListener(this));
         // Register placeholders
+        registerPlaceholders();
+        
+        // Register request handlers
+        registerRequestHandler(new IslandStatsHandler(this));
+        registerRequestHandler(new LocationStatsHandler(this));
+
+        // Decide if HolographicDisplays is Usable
+        useHolographicDisplays = Bukkit.getPluginManager().isPluginEnabled("HolographicDisplays");
+        if (this.useHolographicDisplays) {
+            holoListener = new HoloListener(this);
+            registerListener(holoListener);
+        }
+    }
+
+    private void registerPlaceholders() {
         phManager = new PlaceholdersManager(this);
         getPlugin().getPlaceholdersManager().registerPlaceholder(this, "visited_island_phase", phManager::getPhaseByLocation);
         getPlugin().getPlaceholdersManager().registerPlaceholder(this, "visited_island_count", phManager::getCountByLocation);
@@ -116,21 +130,9 @@ public class AOneBlock extends GameModeAddon {
         getPlugin().getPlaceholdersManager().registerPlaceholder(this, "visited_island_percent_done", phManager::getPercentDoneByLocation);
         getPlugin().getPlaceholdersManager().registerPlaceholder(this, "my_island_done_scale", phManager::getDoneScale);
         getPlugin().getPlaceholdersManager().registerPlaceholder(this, "visited_island_done_scale", phManager::getDoneScaleByLocation);
-
         // Since 1.10
         getPlugin().getPlaceholdersManager().registerPlaceholder(this, "visited_island_lifetime_count", phManager::getLifetimeByLocation);
-        getPlugin().getPlaceholdersManager().registerPlaceholder(this, "my_island_lifetime_count", phManager::getLifetime);
-
-        // Register request handlers
-        registerRequestHandler(new IslandStatsHandler(this));
-        registerRequestHandler(new LocationStatsHandler(this));
-
-        // Decide if HolographicDisplays is Usable
-        useHolographicDisplays = Bukkit.getPluginManager().isPluginEnabled("HolographicDisplays");
-        if (this.useHolographicDisplays) {
-            holoListener = new HoloListener(this);
-            registerListener(holoListener);
-        }
+        getPlugin().getPlaceholdersManager().registerPlaceholder(this, "my_island_lifetime_count", phManager::getLifetime);        
     }
 
     @Override
