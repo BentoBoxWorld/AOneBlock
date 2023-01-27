@@ -63,7 +63,7 @@ public class OneBlockIslandsTest {
      */
     @Test
     public void testOneBlockIslands() {
-        assertFalse(obi == null);
+        assertNotNull(obi);
     }
 
     /**

@@ -2,10 +2,10 @@ package world.bentobox.aoneblock;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
@@ -223,9 +223,9 @@ public class AOneBlockTest {
         addon.setState(State.ENABLED);
         addon.onEnable();
         verify(plugin, never()).logError(anyString());
-        assertFalse(addon.getState().equals(State.DISABLED));
-        assertTrue(addon.getBlockListener() != null);
-        assertTrue(addon.getOneBlockManager() != null);
+        assertNotEquals(State.DISABLED, addon.getState());
+        assertNotNull(addon.getBlockListener());
+        assertNotNull(addon.getOneBlockManager());
 
         
 

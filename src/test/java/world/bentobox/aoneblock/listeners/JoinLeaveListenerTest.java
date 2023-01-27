@@ -1,6 +1,7 @@
 package world.bentobox.aoneblock.listeners;
 
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
@@ -90,7 +91,7 @@ public class JoinLeaveListenerTest {
      */
     @Test
     public void testJoinLeaveListener() {
-        assertFalse(jll == null);
+        assertNotNull(jll);
     }
 
     /**
@@ -126,7 +127,7 @@ public class JoinLeaveListenerTest {
         jll.onPlayerQuit(event);
         verify(aob).logError(anyString());
         verify(bl).saveIsland(island);
-        verify(aob).logError(eq("Could not save AOneBlock island at 123,120,456 to database null"));
+        verify(aob).logError("Could not save AOneBlock island at 123,120,456 to database null");
     }
 
 }

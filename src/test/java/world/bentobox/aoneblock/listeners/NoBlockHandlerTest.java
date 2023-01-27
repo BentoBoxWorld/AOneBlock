@@ -1,6 +1,7 @@
 package world.bentobox.aoneblock.listeners;
 
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -96,7 +97,7 @@ public class NoBlockHandlerTest {
      */
     @Test
     public void testNoBlockHandler() {
-        assertFalse(nbh == null);
+        assertNotNull(nbh);
     }
 
     /**

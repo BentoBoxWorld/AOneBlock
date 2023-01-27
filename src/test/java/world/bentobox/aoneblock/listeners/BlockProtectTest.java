@@ -1,6 +1,7 @@
 package world.bentobox.aoneblock.listeners;
 
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyDouble;
@@ -72,7 +73,7 @@ public class BlockProtectTest {
     @Before
     public void setUp() throws Exception {
         // In World
-        when(addon.inWorld(eq(world))).thenReturn(true);
+        when(addon.inWorld(world)).thenReturn(true);
         
         // Location
         when(location.getWorld()).thenReturn(world);
@@ -102,7 +103,7 @@ public class BlockProtectTest {
      */
     @Test
     public void testBlockProtect() {
-        assertFalse(bp == null);
+        assertNotNull(bp);
     }
 
     /**
