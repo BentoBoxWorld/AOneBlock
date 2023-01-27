@@ -752,7 +752,8 @@ public class Settings implements WorldSettings {
 
     /**
      * @return the defaultIslandFlags
-     * @deprecated since 1.21 Replaced with #getDefaultIslandFlagNames
+     * @deprecated Replaced with #getDefaultIslandFlagNames
+     * @since 1.21
      */
     @Override
     @Deprecated
@@ -762,7 +763,8 @@ public class Settings implements WorldSettings {
 
     /**
      * @return the defaultIslandSettings
-     * @deprecated since 1.21 Replaced with #getDefaultIslandSettingNames
+     * @deprecated Replaced with #getDefaultIslandSettingNames
+     * @since 1.21
      */
     @Override
     @Deprecated
