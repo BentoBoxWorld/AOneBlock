@@ -61,12 +61,13 @@ public class AOneBlock extends GameModeAddon {
         // Save the default config from config.yml
         saveDefaultConfig();
         // Load settings from config.yml. This will check if there are any issues with it too.
-        loadSettings();
-        // Chunk generator
-        chunkGenerator = settings.isUseOwnGenerator() ? null : new ChunkGeneratorWorld(this);
-        // Register commands
-        playerCommand = new PlayerCommand(this);
-        adminCommand = new AdminCommand(this);
+        if (loadSettings()) {
+            // Chunk generator
+            chunkGenerator = settings.isUseOwnGenerator() ? null : new ChunkGeneratorWorld(this);
+            // Register commands
+            playerCommand = new PlayerCommand(this);
+            adminCommand = new AdminCommand(this);
+        }
     }
 
     private boolean loadSettings() {
@@ -103,7 +104,7 @@ public class AOneBlock extends GameModeAddon {
         registerListener(new JoinLeaveListener(this));
         // Register placeholders
         registerPlaceholders();
-        
+
         // Register request handlers
         registerRequestHandler(new IslandStatsHandler(this));
         registerRequestHandler(new LocationStatsHandler(this));

@@ -1,0 +1,876 @@
+'10500':
+  chests:
+    '1':
+      contents:
+        16:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: BOOK
+          amount: 6
+        10:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: BONE
+          amount: 5
+        12:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: COAL
+          amount: 5
+        14:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: SOUL_TORCH
+          amount: 5
+      rarity: COMMON
+    '2':
+      contents:
+        10:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: POLISHED_BASALT
+        12:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: COBBLED_DEEPSLATE
+          amount: 2
+        13:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: COBBLED_DEEPSLATE
+          amount: 2
+        14:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: COBBLED_DEEPSLATE
+          amount: 2
+        15:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: COBBLED_DEEPSLATE
+          amount: 2
+      rarity: COMMON
+    '3':
+      contents:
+        12:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: NAME_TAG
+        15:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: POLISHED_BASALT
+      rarity: COMMON
+    '4':
+      contents:
+        0:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: GLOW_LICHEN
+        18:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: GLOW_LICHEN
+        8:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: GLOW_LICHEN
+        26:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: GLOW_LICHEN
+        13:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: GLOW_LICHEN
+      rarity: COMMON
+    '5':
+      contents:
+        0:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: GLOW_LICHEN
+        18:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: GLOW_LICHEN
+        8:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: GLOW_LICHEN
+        26:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: GLOW_LICHEN
+        11:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: DISC_FRAGMENT_5
+        13:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: GLOW_LICHEN
+        15:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: DISC_FRAGMENT_5
+      rarity: COMMON
+    '6':
+      contents:
+        12:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: EXPERIENCE_BOTTLE
+          amount: 5
+      rarity: UNCOMMON
+    '7':
+      contents:
+        19:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: BOW
+        7:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: EMERALD
+        12:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: CHAINMAIL_CHESTPLATE
+        14:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: CHEST_MINECART
+      rarity: UNCOMMON
+    '8':
+      contents:
+        11:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: EMERALD
+          amount: 2
+        12:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: EMERALD
+          amount: 2
+        13:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: EMERALD
+          amount: 2
+        14:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: EMERALD
+          amount: 2
+      rarity: UNCOMMON
+    '9':
+      contents:
+        3:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: EMERALD
+        21:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: EMERALD
+        13:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: LANTERN
+      rarity: UNCOMMON
+    '10':
+      contents:
+        4:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: DISC_FRAGMENT_5
+        8:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: DISC_FRAGMENT_5
+        10:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: POTION
+          meta:
+            ==: ItemMeta
+            meta-type: POTION
+            potion-type: minecraft:long_regeneration
+        15:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: DISC_FRAGMENT_5
+      rarity: UNCOMMON
+    '11':
+      contents:
+        0:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: GLOW_LICHEN
+        18:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: GLOW_LICHEN
+        4:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: EXPERIENCE_BOTTLE
+        22:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: EXPERIENCE_BOTTLE
+        8:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: GLOW_LICHEN
+        26:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: GLOW_LICHEN
+        11:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: EXPERIENCE_BOTTLE
+        13:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: GLOW_LICHEN
+        15:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: EXPERIENCE_BOTTLE
+      rarity: UNCOMMON
+    '12':
+      contents:
+        11:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: ENCHANTED_BOOK
+          meta:
+            ==: ItemMeta
+            meta-type: ENCHANTED
+            stored-enchants:
+              PROTECTION_PROJECTILE: 2
+        13:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: EXPERIENCE_BOTTLE
+          amount: 4
+      rarity: RARE
+    '13':
+      contents:
+        10:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: IRON_TRAPDOOR
+        12:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: ENCHANTED_BOOK
+          meta:
+            ==: ItemMeta
+            meta-type: ENCHANTED
+            stored-enchants:
+              DAMAGE_ALL: 1
+        14:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: EXPERIENCE_BOTTLE
+          amount: 4
+      rarity: RARE
+    '14':
+      contents:
+        12:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: ENCHANTED_BOOK
+          meta:
+            ==: ItemMeta
+            meta-type: ENCHANTED
+            stored-enchants:
+              DAMAGE_UNDEAD: 2
+        14:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: EXPERIENCE_BOTTLE
+          amount: 5
+      rarity: RARE
+    '15':
+      contents:
+        1:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: GLOW_BERRIES
+          amount: 8
+        2:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: GLOW_BERRIES
+          amount: 8
+        3:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: GLOW_BERRIES
+          amount: 8
+        19:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: GLOW_BERRIES
+          amount: 8
+        20:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: GLOW_BERRIES
+          amount: 8
+        21:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: GLOW_BERRIES
+          amount: 8
+        10:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: GLOW_BERRIES
+          amount: 8
+        11:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: ENCHANTED_BOOK
+          meta:
+            ==: ItemMeta
+            meta-type: ENCHANTED
+            stored-enchants:
+              DAMAGE_UNDEAD: 2
+        12:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: GLOW_BERRIES
+          amount: 8
+      rarity: RARE
+    '16':
+      contents:
+        11:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: COMPASS
+        13:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: RAW_COPPER
+          amount: 2
+        15:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: MUSIC_DISC_OTHERSIDE
+      rarity: RARE
+    '17':
+      contents:
+        0:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: GLOW_LICHEN
+        1:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: GLOW_LICHEN
+        2:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: ECHO_SHARD
+        3:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: ECHO_SHARD
+        4:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: ECHO_SHARD
+        5:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: GLOW_LICHEN
+        6:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: GLOW_LICHEN
+        7:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: GLOW_LICHEN
+        8:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: GLOW_LICHEN
+        9:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: GLOW_LICHEN
+        10:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: GLOW_LICHEN
+        11:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: ECHO_SHARD
+        12:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: COMPASS
+        13:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: ECHO_SHARD
+        14:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: GLOW_LICHEN
+        15:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: GLOW_LICHEN
+        16:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: GLOW_LICHEN
+        17:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: GLOW_LICHEN
+        18:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: GLOW_LICHEN
+        20:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: ECHO_SHARD
+        21:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: ECHO_SHARD
+        22:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: ECHO_SHARD
+        23:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: GLOW_LICHEN
+        24:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: GLOW_LICHEN
+        25:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: GLOW_LICHEN
+        26:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: GLOW_LICHEN
+      rarity: RARE
+    '18':
+      contents:
+        0:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: CANDLE
+        16:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: SCULK
+        18:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: CANDLE
+        8:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: CANDLE
+        10:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: SCULK
+        26:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: CANDLE
+        11:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: SCULK
+        12:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: SCULK
+        13:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: SCULK
+        14:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: SCULK
+        15:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: SCULK
+      rarity: RARE
+    '19':
+      contents:
+        0:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: AMETHYST_SHARD
+        2:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: GLOW_LICHEN
+        3:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: GLOW_LICHEN
+        4:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: GLOW_LICHEN
+        5:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: GLOW_LICHEN
+        6:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: GLOW_LICHEN
+        8:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: AMETHYST_SHARD
+        11:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: GLOW_LICHEN
+        12:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: SCULK_SENSOR
+        13:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: SOUL_TORCH
+        14:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: SCULK_SENSOR
+        15:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: GLOW_LICHEN
+        18:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: AMETHYST_SHARD
+        20:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: GLOW_LICHEN
+        21:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: GLOW_LICHEN
+        22:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: GLOW_LICHEN
+        23:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: GLOW_LICHEN
+        24:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: GLOW_LICHEN
+        26:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: AMETHYST_SHARD
+      rarity: RARE
+    '20':
+      contents:
+        0:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: GLOW_LICHEN
+        18:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: GLOW_LICHEN
+        8:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: GLOW_LICHEN
+        26:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: GLOW_LICHEN
+        11:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: SADDLE
+        13:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: GLOW_LICHEN
+        15:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: DIAMOND_HORSE_ARMOR
+      rarity: RARE
+    '21':
+      contents:
+        3:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: IRON_INGOT
+        4:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: IRON_INGOT
+        5:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: IRON_INGOT
+        21:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: IRON_INGOT
+        22:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: IRON_INGOT
+        23:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: IRON_INGOT
+        12:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: IRON_INGOT
+        13:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: MUSIC_DISC_CAT
+        14:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: IRON_INGOT
+      rarity: EPIC
+    '22':
+      contents:
+        0:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: SCULK_SENSOR
+        2:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: GLOW_LICHEN
+        3:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: GLOW_LICHEN
+        4:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: GLOW_LICHEN
+        5:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: GLOW_LICHEN
+        6:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: GLOW_LICHEN
+        8:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: CANDLE
+        11:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: GLOW_LICHEN
+        12:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: SCULK_CATALYST
+        13:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: DIAMOND_HOE
+          meta:
+            ==: ItemMeta
+            meta-type: UNSPECIFIC
+            display-name: '{"text":"Hoe of Smiting"}'
+            enchants:
+              DAMAGE_UNDEAD: 2
+              VANISHING_CURSE: 1
+            repair-cost: 3
+        14:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: SCULK_CATALYST
+        15:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: GLOW_LICHEN
+        18:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: CANDLE
+        20:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: GLOW_LICHEN
+        21:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: GLOW_LICHEN
+        22:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: GLOW_LICHEN
+        23:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: GLOW_LICHEN
+        24:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: GLOW_LICHEN
+        26:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: SCULK_SENSOR
+      rarity: EPIC
+    '23':
+      contents:
+        2:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: GLOW_LICHEN
+        3:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: GLOW_LICHEN
+        4:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: GLOW_LICHEN
+        5:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: GLOW_LICHEN
+        6:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: GLOW_LICHEN
+        11:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: GLOW_LICHEN
+        13:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: ENCHANTED_GOLDEN_APPLE
+        15:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: GLOW_LICHEN
+        20:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: GLOW_LICHEN
+        21:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: GLOW_LICHEN
+        22:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: GLOW_LICHEN
+        23:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: GLOW_LICHEN
+        24:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: GLOW_LICHEN
+      rarity: EPIC
+    '24':
+      contents:
+        2:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: GLOW_LICHEN
+        3:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: GLOW_LICHEN
+        4:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: GLOW_LICHEN
+        5:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: GLOW_LICHEN
+        6:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: GLOW_LICHEN
+        11:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: GLOW_LICHEN
+        13:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: DIAMOND_LEGGINGS
+          meta:
+            ==: ItemMeta
+            meta-type: UNSPECIFIC
+            display-name: '{"text":"Sneaky Leggings"}'
+            enchants:
+              PROTECTION_ENVIRONMENTAL: 3
+              SWIFT_SNEAK: 3
+              VANISHING_CURSE: 1
+            repair-cost: 7
+        15:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: GLOW_LICHEN
+        20:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: GLOW_LICHEN
+        21:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: GLOW_LICHEN
+        22:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: GLOW_LICHEN
+        23:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: GLOW_LICHEN
+        24:
+          ==: org.bukkit.inventory.ItemStack
+          v: 3218
+          type: GLOW_LICHEN
+      rarity: EPIC

@@ -425,4 +425,20 @@ public class OneBlockPhase {
     public void setHologramLines(Map<Integer, String> hologramLines) {
         this.holograms = hologramLines;
     }
+
+    @Override
+    public String toString() {
+        return "OneBlockPhase [" + (phaseName != null ? "phaseName=" + phaseName + ", " : "")
+                + (phaseBiome != null ? "phaseBiome=" + phaseBiome + ", " : "")
+                + (environment != null ? "environment=" + environment + ", " : "")
+                + (firstBlock != null ? "firstBlock=" + firstBlock + ", " : "")
+                + (iconBlock != null ? "iconBlock=" + iconBlock + ", " : "")
+                + (gotoBlock != null ? "gotoBlock=" + gotoBlock + ", " : "") + "blockTotal=" + blockTotal
+                + ", entityTotal=" + entityTotal + ", "
+                + (startCommands != null ? "startCommands=" + startCommands + ", " : "")
+                + (endCommands != null ? "endCommands=" + endCommands + ", " : "")
+                + (requirements != null ? "requirements=" + requirements + ", " : "")
+                + (fixedBlocks != null ? "fixedBlocks=" + fixedBlocks + ", " : "")
+                + (holograms != null ? "holograms=" + holograms : "") + "]";
+    }
 }
