@@ -49,6 +49,9 @@ world:
   # World difficulty setting - PEACEFUL, EASY, NORMAL, HARD
   # Other plugins may override this setting
   difficulty: NORMAL
+  # Duration in seconds that phase holograms will exist after being displayed, if used.
+  # If set to 0, then holograms will persist until cleared some other way.
+  hologram-duration: 10
   spawn-limits:
     # Spawn limits. These override the limits set in bukkit.yml
     # If set to a negative number, the server defaults will be used
@@ -137,9 +140,9 @@ world:
     create-obsidian-platform: false
   # Mob white list - these mobs will NOT be removed when logging in or doing /island
   remove-mobs-whitelist:
-  - ZOMBIE_VILLAGER
-  - WITHER
   - ENDERMAN
+  - WITHER
+  - ZOMBIE_VILLAGER
   # World flags. These are boolean settings for various flags for this world
   flags:
     CREEPER_DAMAGE: true
@@ -511,4 +514,3 @@ protection:
 do-not-edit-these-settings:
   # These settings should not be edited
   reset-epoch: 0
-

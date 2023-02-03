@@ -1,5 +1,6 @@
 package world.bentobox.aoneblock.listeners;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.event.EventHandler;
@@ -78,9 +79,13 @@ public class HoloListener implements Listener {
         is.setHologram(hololine == null ? "" : hololine);
         Location center = i.getCenter();
         if (hololine != null && center != null) {
-            final Hologram hologram = HologramsAPI.createHologram(BentoBox.getInstance(), center.add(0.5, 2.6, 0.5));
+            final Hologram hologram = HologramsAPI.createHologram(BentoBox.getInstance(), center.add(0.5, 2.6, 0.5));            
             for (String line : hololine.split("\\n")) {
                 hologram.appendTextLine(ChatColor.translateAlternateColorCodes('&', line));
+            }
+            // Set up auto delete
+            if (addon.getSettings().getHologramDuration() > 0) {
+                Bukkit.getScheduler().runTaskLater(BentoBox.getInstance(), () -> hologram.delete(), addon.getSettings().getHologramDuration() * 20L);
             }
         }
     }

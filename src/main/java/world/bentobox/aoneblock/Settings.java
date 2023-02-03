@@ -94,6 +94,11 @@ public class Settings implements WorldSettings {
     @ConfigComment("Other plugins may override this setting")
     @ConfigEntry(path = "world.difficulty")
     private Difficulty difficulty = Difficulty.NORMAL;
+    
+    @ConfigComment("Duration in seconds that phase holograms will exist after being displayed, if used.")
+    @ConfigComment("If set to 0, then holograms will persist until cleared some other way.")
+    @ConfigEntry(path = "world.hologram-duration")
+    private int hologramDuration = 10;
 
     @ConfigComment("Spawn limits. These override the limits set in bukkit.yml")
     @ConfigComment("If set to a negative number, the server defaults will be used")
@@ -1894,5 +1899,13 @@ public class Settings implements WorldSettings {
     public void setRespawnBlockCommand(String respawnBlockCommand)
     {
         this.respawnBlockCommand = respawnBlockCommand;
+    }
+
+    public int getHologramDuration() {
+        return hologramDuration;
+    }
+
+    public void setHologramDuration(int hologramDuration) {
+        this.hologramDuration = hologramDuration;
     }
 }
