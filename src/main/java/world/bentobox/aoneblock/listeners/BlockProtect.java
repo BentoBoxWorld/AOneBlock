@@ -67,7 +67,7 @@ public class BlockProtect implements Listener {
      */
     @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
     public void onExplosion(final EntityExplodeEvent e) {
-        if (!addon.inWorld(e.getEntity().getWorld())) {
+        if (!addon.inWorld(e.getLocation().getWorld())) {
             return;
         }
         e.blockList().removeIf(b -> addon.getIslands().getIslandAt(b.getLocation()).filter(i -> b.getLocation().equals(i.getCenter())).isPresent());
@@ -86,7 +86,7 @@ public class BlockProtect implements Listener {
      * @param e - BlockPistonRetractEvent
      */
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
-    public void onPistonExtend(BlockPistonRetractEvent e) {
+    public void onPistonRetract(BlockPistonRetractEvent e) {
         checkPiston(e, e.getBlock(), e.getBlocks());
     }
     private void checkPiston(Cancellable e, Block block, List<Block> blocks) {

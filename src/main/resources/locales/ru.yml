@@ -3,9 +3,10 @@ aoneblock:
   commands:
     admin:
       setcount:
-        parameters: "<имя> <кол-во>"
+        parameters: "<name> <count> [lifetime]"
         description: установить количество блоков игрока
         set: "&a [name] кол-во блоков установлено на [number]"
+        set-lifetime: "&a Счетчик жизни [name] установлен на [number]"
       setchest:
         parameters: "<phase> <rarity>"
         description: положить проверенный сундук в фазу с указанной редкостью
@@ -31,7 +32,57 @@ aoneblock:
       name-syntax: "&a [name]"
       description-syntax: "&b [number] блоков"
     island:
-      setcount: {}
-  phase: {}
-  placeholders: {}
-  island: {}
+      setcount:
+        parameters: "<count>"
+        description: установить счетчик блоков на ранее завершенное значение
+        set: "&a Счетчик установлен на [number]."
+        too-high: "&c Максимум, что вы можете установить, это [number]!"
+    respawn-block:
+      description: возрождает магический блок в ситуациях, когда они исчезают
+      block-exist: "&a Блок существует, не требует возрождения. Я отметил это для
+        вас."
+      block-respawned: "& Блок возродился, пожалуйста, не аннулируйте его снова."
+  phase:
+    insufficient-level: "&c Уровень вашего острова слишком низок для продолжения!
+      Должно быть [number]."
+    insufficient-funds: "&c У вас слишком мало средств для продолжения! Они должны
+      быть [number]."
+    insufficient-bank-balance: "&c Баланс банка острова слишком низок для продолжения!
+      Должно быть [number]."
+    insufficient-permission: "&c Вы не можете продолжать, пока не получите разрешение
+      [name]!"
+  placeholders:
+    infinite: Бесконечный
+  gui:
+    titles:
+      phases: "&0&l Фазы OneBlock"
+    buttons:
+      previous:
+        name: "&f&l Предыдущая страница"
+        description: "&7 Перейти на [number] страницы"
+      next:
+        name: "&f&l Следующая страница"
+        description: "&7 Перейти на [number] страницы"
+      phase:
+        name: "&f&l [phase]"
+        description: |-
+          [starting-block]
+          [biome]
+          [bank]
+          [economy]
+          [level]
+          [permission]
+        starting-block: "&7 Запускается после разбиения блоков &e [number]."
+        biome: "&7 Биом: &e [biome]"
+        bank: "&7 Требуется &e $[number] &7 на банковском счете."
+        economy: "&7 Требуется &e $[number] &7 в учетной записи игрока."
+        level: "&7 Требуется &e [number] &7 уровня острова."
+        permission: "&7 Требуется разрешение `&e[permission]&7`."
+    tips:
+      click-to-previous: "&e Нажмите &7, чтобы просмотреть предыдущую страницу."
+      click-to-next: "&e Нажмите &7 для просмотра следующей страницы."
+      click-to-change: "&e Нажмите &7, чтобы изменить."
+  island:
+    starting-hologram: |-
+      &aДобро пожаловать в AOneBlock
+      &eРазбейте этот блок, чтобы начать

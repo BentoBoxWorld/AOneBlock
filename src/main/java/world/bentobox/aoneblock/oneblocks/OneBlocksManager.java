@@ -3,8 +3,18 @@ package world.bentobox.aoneblock.oneblocks;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 import java.util.Map.Entry;
+import java.util.NavigableMap;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.TreeMap;
 import java.util.jar.JarFile;
 import java.util.stream.Collectors;
 
@@ -574,7 +584,7 @@ public class OneBlocksManager {
         if (p.isGotoPhase()) {
             return p.getBlockNumber() + "_goto_" + p.getGotoBlock();
         }
-        return p.getBlockNumber() + "_" + (p.getPhaseName() == null ? "" : p.getPhaseName().toLowerCase());
+        return p.getBlockNumber() + "_" + (p.getPhaseName() == null ? "" : p.getPhaseName().toLowerCase().replace(' ', '_'));
     }
 
     private void saveChests(ConfigurationSection phSec, OneBlockPhase phase) {

@@ -130,6 +130,11 @@ OneBlock is an add-on that uses the BentoBox API. Here are some other ones that 
 
 You can add all the usual addons to OneBlock, like Challeges, Likes, Level, Warps, etc. but it is not required.
 
+### Other Plugins
+
+* To use the Holographic phase names, you will need to install the [Holographic Displays plugin](https://dev.bukkit.org/projects/holographic-displays)
+
+
 Bugs and Feature requests
 =========================
 File bug and feature requests here: https://github.com/BentoBoxWorld/OneBlock/issues

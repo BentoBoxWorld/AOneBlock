@@ -14,6 +14,7 @@ public class JoinLeaveListener implements Listener {
     final AOneBlock addon;
 
     /**
+     * Save island on player quitting
      * @param addon - AOneBlock
      */
     public JoinLeaveListener(AOneBlock addon) {
@@ -21,7 +22,7 @@ public class JoinLeaveListener implements Listener {
     }
 
     /**
-     * Show particles when block is hit
+     * Save island on player quitting
      * @param e - event
      */
     @EventHandler(priority = EventPriority.NORMAL)

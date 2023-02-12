@@ -3,6 +3,7 @@ package world.bentobox.aoneblock.dataobjects;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
+
 import org.bukkit.entity.EntityType;
 import org.eclipse.jdt.annotation.NonNull;
 
@@ -136,10 +137,22 @@ public class OneBlockIslands implements DataObject {
         return getQueue().stream().limit(i).filter(OneBlockObject::isEntity).map(OneBlockObject::getEntityType).toList();
     }
 
+    /**
+     * Adds a OneBlockObject to the queue
+     * @param nextBlock
+     */
     public void add(OneBlockObject nextBlock) {
         getQueue().add(nextBlock);
     }
 
+    /**
+     * Retrieves and removes the head of the queue, or returns null if this queue is empty.
+     * Inserts the specified element into the queue if it is possible to do so immediately without
+     * violating capacity restrictions, and throwing an 
+     * {@code IllegalStateException} if no space is currently available.
+     * @param toAdd OneBlockObject
+     * @return OneBlockObject head of the queue, or returns null if this queue is empty.
+     */
     public OneBlockObject pollAndAdd(OneBlockObject toAdd) {
         getQueue();
         OneBlockObject b = queue.poll();

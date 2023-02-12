@@ -37,6 +37,11 @@ aoneblock:
         description: définir le nombre de blocs à la valeur précédemment terminée
         set: "&a Nombre défini sur [number]."
         too-high: "&c Le maximum que vous pouvez définir est [number] !"
+    respawn-block:
+      description: Force la réapparition du bloc magique dans le cas ou il disparait
+      block-exist: "&a Le bloc magique existe déja, inutile de le faire réapparaitre.
+        Je l'ai marqué pour toi."
+      block-respawned: "&a Bloc magique réapparu, s'il te plait, ne recommence pas."
   phase:
     insufficient-level: Ton niveau d'île est trop bas ! Il doit être de [number] au
       minimum.
@@ -48,7 +53,36 @@ aoneblock:
       : [name] !'
   placeholders:
     infinite: Infini
+  gui:
+    titles:
+      phases: "&0&l Phases OneBlock"
+    buttons:
+      previous:
+        name: "&f&l Page Précédente"
+        description: "&7 Aller à la page [number]"
+      next:
+        name: "&f&l Page Suivante"
+        description: "&7 Aller à la page [number]"
+      phase:
+        name: "&f&l [phase]"
+        description: |-
+          [Bloc de départ]
+          [biome]
+          [banque]
+          [économie]
+          [niveau]
+          [autorisation]
+        starting-block: "&7 Commence après avoir détruit &e [number] blocs."
+        biome: "&7 Biome : &e [biome]"
+        bank: "&7 Requiert &e $[number] &7 dans ta banque."
+        economy: "&7 Requiert &e $[number] &7 dans ton solde."
+        level: "&7 Requiert &e [number] &7 niveaux d'île."
+        permission: "&7 Requiert la permission : `&e[permission]&7` ."
+    tips:
+      click-to-previous: "&e Click &7 pour voir la page précédente."
+      click-to-next: "&e Click &7 pour voir la page suivante."
+      click-to-change: "&e Click &7 pour changer."
   island:
     starting-hologram: |-
       &aBienvenue sur AOneBlock
-      &eBrise ce bloc pour commencer
+      &eMine ce bloc pour commencer

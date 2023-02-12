@@ -144,5 +144,5 @@
         13:
           ==: org.bukkit.inventory.ItemStack
           v: 2230
-          type: MUSIC_DISC_11
+          type: ICE
       rarity: RARE

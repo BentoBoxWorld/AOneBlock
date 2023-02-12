@@ -12,7 +12,7 @@ import world.bentobox.bentobox.api.user.User;
 /**
  * Provides stats based on the user's location.<br>
  * Submit "player" -> UUID to {@link #handle(Map)}.<br>
- * Return map is a Map<String, String> of the following:
+ * Return map is a {@code Map<String, String>} of the following:
  *      <ul><li>"count" - block count of island</li>
  *      <li>"doneScale" - character scale of phase completion</li>
  *      <li>"nextPhaseBlocks" - number of blocks to next phase</li>

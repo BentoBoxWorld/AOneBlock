@@ -8,6 +8,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.World.Environment;
+import org.bukkit.entity.SpawnCategory;
 import org.bukkit.WorldCreator;
 import org.bukkit.WorldType;
 import org.bukkit.generator.ChunkGenerator;
@@ -60,12 +61,13 @@ public class AOneBlock extends GameModeAddon {
         // Save the default config from config.yml
         saveDefaultConfig();
         // Load settings from config.yml. This will check if there are any issues with it too.
-        loadSettings();
-        // Chunk generator
-        chunkGenerator = settings.isUseOwnGenerator() ? null : new ChunkGeneratorWorld(this);
-        // Register commands
-        playerCommand = new PlayerCommand(this);
-        adminCommand = new AdminCommand(this);
+        if (loadSettings()) {
+            // Chunk generator
+            chunkGenerator = settings.isUseOwnGenerator() ? null : new ChunkGeneratorWorld(this);
+            // Register commands
+            playerCommand = new PlayerCommand(this);
+            adminCommand = new AdminCommand(this);
+        }
     }
 
     private boolean loadSettings() {
@@ -96,12 +98,26 @@ public class AOneBlock extends GameModeAddon {
             setState(State.DISABLED);
             return;
         }
-
         registerListener(blockListener);
         registerListener(new NoBlockHandler(this));
         registerListener(new BlockProtect(this));
         registerListener(new JoinLeaveListener(this));
         // Register placeholders
+        registerPlaceholders();
+
+        // Register request handlers
+        registerRequestHandler(new IslandStatsHandler(this));
+        registerRequestHandler(new LocationStatsHandler(this));
+
+        // Decide if HolographicDisplays is Usable
+        useHolographicDisplays = Bukkit.getPluginManager().isPluginEnabled("HolographicDisplays");
+        if (this.useHolographicDisplays) {
+            holoListener = new HoloListener(this);
+            registerListener(holoListener);
+        }
+    }
+
+    private void registerPlaceholders() {
         phManager = new PlaceholdersManager(this);
         getPlugin().getPlaceholdersManager().registerPlaceholder(this, "visited_island_phase", phManager::getPhaseByLocation);
         getPlugin().getPlaceholdersManager().registerPlaceholder(this, "visited_island_count", phManager::getCountByLocation);
@@ -115,21 +131,9 @@ public class AOneBlock extends GameModeAddon {
         getPlugin().getPlaceholdersManager().registerPlaceholder(this, "visited_island_percent_done", phManager::getPercentDoneByLocation);
         getPlugin().getPlaceholdersManager().registerPlaceholder(this, "my_island_done_scale", phManager::getDoneScale);
         getPlugin().getPlaceholdersManager().registerPlaceholder(this, "visited_island_done_scale", phManager::getDoneScaleByLocation);
-
         // Since 1.10
         getPlugin().getPlaceholdersManager().registerPlaceholder(this, "visited_island_lifetime_count", phManager::getLifetimeByLocation);
-        getPlugin().getPlaceholdersManager().registerPlaceholder(this, "my_island_lifetime_count", phManager::getLifetime);
-
-        // Register request handlers
-        registerRequestHandler(new IslandStatsHandler(this));
-        registerRequestHandler(new LocationStatsHandler(this));
-
-        // Decide if HolographicDisplays is Usable
-        useHolographicDisplays = Bukkit.getPluginManager().isPluginEnabled("HolographicDisplays");
-        if (this.useHolographicDisplays) {
-            holoListener = new HoloListener(this);
-            registerListener(holoListener);
-        }
+        getPlugin().getPlaceholdersManager().registerPlaceholder(this, "my_island_lifetime_count", phManager::getLifetime);        
     }
 
     @Override
@@ -203,22 +207,22 @@ public class AOneBlock extends GameModeAddon {
 
     private void setSpawnRates(World w) {
         if (getSettings().getSpawnLimitMonsters() > 0) {
-            w.setMonsterSpawnLimit(getSettings().getSpawnLimitMonsters());
+            w.setSpawnLimit(SpawnCategory.MONSTER, getSettings().getSpawnLimitMonsters());
         }
         if (getSettings().getSpawnLimitAmbient() > 0) {
-            w.setAmbientSpawnLimit(getSettings().getSpawnLimitAmbient());
+            w.setSpawnLimit(SpawnCategory.AMBIENT, getSettings().getSpawnLimitAmbient());
         }
         if (getSettings().getSpawnLimitAnimals() > 0) {
-            w.setAnimalSpawnLimit(getSettings().getSpawnLimitAnimals());
+            w.setSpawnLimit(SpawnCategory.ANIMAL, getSettings().getSpawnLimitAnimals());
         }
         if (getSettings().getSpawnLimitWaterAnimals() > 0) {
-            w.setWaterAnimalSpawnLimit(getSettings().getSpawnLimitWaterAnimals());
+            w.setSpawnLimit(SpawnCategory.WATER_ANIMAL, getSettings().getSpawnLimitWaterAnimals());
         }
         if (getSettings().getTicksPerAnimalSpawns() > 0) {
-            w.setTicksPerAnimalSpawns(getSettings().getTicksPerAnimalSpawns());
+            w.setTicksPerSpawns(SpawnCategory.ANIMAL, getSettings().getTicksPerAnimalSpawns());
         }
         if (getSettings().getTicksPerMonsterSpawns() > 0) {
-            w.setTicksPerMonsterSpawns(getSettings().getTicksPerMonsterSpawns());
+            w.setTicksPerSpawns(SpawnCategory.MONSTER, getSettings().getTicksPerMonsterSpawns());
         }
 
     }
@@ -264,7 +268,7 @@ public class AOneBlock extends GameModeAddon {
                 OneBlockIslands oneBlockIsland = getOneBlocksIsland(island);
                 String hololine = oneBlockIsland.getHologram();
                 Location center = island.getCenter();
-                if (hololine != null && center != null) {
+                if (hololine != null) {
                     final Hologram hologram = HologramsAPI.createHologram(BentoBox.getInstance(), center.add(0.5, 2.6, 0.5));
                     for (String line : hololine.split("\\n")) {
                         hologram.appendTextLine(ChatColor.translateAlternateColorCodes('&', line));
