@@ -13,9 +13,6 @@ import org.bukkit.GameMode;
 import org.bukkit.block.Biome;
 import org.bukkit.entity.EntityType;
 
-import com.google.common.base.Enums;
-import com.google.gson.annotations.JsonAdapter;
-
 import world.bentobox.aoneblock.listeners.BlockListener;
 import world.bentobox.bentobox.api.configuration.ConfigComment;
 import world.bentobox.bentobox.api.configuration.ConfigEntry;
@@ -97,7 +94,7 @@ public class Settings implements WorldSettings {
     @ConfigComment("Other plugins may override this setting")
     @ConfigEntry(path = "world.difficulty")
     private Difficulty difficulty = Difficulty.NORMAL;
-    
+
     @ConfigComment("Duration in seconds that phase holograms will exist after being displayed, if used.")
     @ConfigComment("If set to 0, then holograms will persist until cleared some other way.")
     @ConfigEntry(path = "world.hologram-duration")
