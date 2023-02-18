@@ -173,6 +173,14 @@ public class SettingsTest {
     }
 
     /**
+     * Test method for {@link world.bentobox.aoneblock.Settings#isNetherRoof()}.
+     */
+    @Test
+    public void testIsNetherRoof() {
+        assertFalse(s.isNetherRoof());
+    }
+
+    /**
      * Test method for {@link world.bentobox.aoneblock.Settings#getNetherSpawnRadius()}.
      */
     @Test
@@ -571,6 +579,15 @@ public class SettingsTest {
     }
 
     /**
+     * Test method for {@link world.bentobox.aoneblock.Settings#setSeaHeight(int)}.
+     */
+    @Test
+    public void testSetSeaHeight() {
+        s.setSeaHeight(12345);
+        assertEquals(12345, s.getSeaHeight());
+    }
+
+    /**
      * Test method for {@link world.bentobox.aoneblock.Settings#setMaxIslands(int)}.
      */
     @Test
@@ -600,6 +617,28 @@ public class SettingsTest {
     }
 
     /**
+     * Test method for {@link world.bentobox.aoneblock.Settings#setNetherIslands(boolean)}.
+     */
+    @Test
+    public void testSetNetherIslands() {
+        s.setNetherIslands(false);
+        assertFalse(s.isNetherIslands());
+        s.setNetherIslands(true);
+        assertTrue(s.isNetherIslands());
+    }
+
+    /**
+     * Test method for {@link world.bentobox.aoneblock.Settings#setNetherRoof(boolean)}.
+     */
+    @Test
+    public void testSetNetherRoof() {
+        s.setNetherRoof(false);
+        assertFalse(s.isNetherRoof());
+        s.setNetherRoof(true);
+        assertTrue(s.isNetherRoof());
+    }
+
+    /**
      * Test method for {@link world.bentobox.aoneblock.Settings#setNetherSpawnRadius(int)}.
      */
     @Test
@@ -617,6 +656,17 @@ public class SettingsTest {
         assertFalse(s.isEndGenerate());
         s.setEndGenerate(true);
         assertTrue(s.isEndGenerate());
+    }
+
+    /**
+     * Test method for {@link world.bentobox.aoneblock.Settings#setEndIslands(boolean)}.
+     */
+    @Test
+    public void testSetEndIslands() {
+        s.setEndIslands(false);
+        assertFalse(s.isEndIslands());
+        s.setEndIslands(true);
+        assertTrue(s.isEndIslands());
     }
 
     /**
@@ -1493,6 +1543,42 @@ public class SettingsTest {
         assertFalse(s.isDropOnTop());
         s.setDropOnTop(true);
         assertTrue(s.isDropOnTop());
+    }
+
+    /**
+     * Test method for {@link world.bentobox.aoneblock.Settings#getDefaultNetherBiome()}.
+     */
+    @Test
+    public void testGetDefaultNetherBiome() {
+        assertEquals(Biome.NETHER_WASTES, s.getDefaultNetherBiome());
+    }
+
+    /**
+     * Test method for {@link world.bentobox.aoneblock.Settings#setDefaultNetherBiome(org.bukkit.block.Biome)}.
+     */
+    @Test
+    public void testSetDefaultNetherBiome() {
+        assertEquals(Biome.NETHER_WASTES, s.getDefaultNetherBiome());
+        s.setDefaultNetherBiome(Biome.BADLANDS);
+        assertEquals(Biome.BADLANDS, s.getDefaultNetherBiome());
+    }
+
+    /**
+     * Test method for {@link world.bentobox.aoneblock.Settings#getDefaultEndBiome()}.
+     */
+    @Test
+    public void testGetDefaultEndBiome() {
+        assertEquals(Biome.THE_END, s.getDefaultEndBiome());
+    }
+
+    /**
+     * Test method for {@link world.bentobox.aoneblock.Settings#setDefaultEndBiome(org.bukkit.block.Biome)}.
+     */
+    @Test
+    public void testSetDefaultEndBiome() {
+        assertEquals(Biome.THE_END, s.getDefaultEndBiome());
+        s.setDefaultEndBiome(Biome.BADLANDS);
+        assertEquals(Biome.BADLANDS, s.getDefaultEndBiome());
     }
 
     /**
