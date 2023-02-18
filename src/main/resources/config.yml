@@ -129,6 +129,7 @@ world:
     # portal will return them back to their islands.
     generate: true
     # Islands in Nether. Change to false for standard vanilla nether.
+    # Note that there is currently no magic block in the Nether
     # /!\ BentoBox currently does not support changing this value mid-game. If you do need to change it, do a full reset of your databases and worlds.
     islands: false
     # Make the nether roof, if false, there is nothing up there
@@ -151,6 +152,7 @@ world:
     # the end will not occur. Other plugins may still enable portal usage.
     generate: true
     # Islands in The End. Change to false for standard vanilla end.
+    # Note that there is currently no magic block in the End
     # /!\ BentoBox currently does not support changing this value mid-game. If you do need to change it, do a full reset of your databases and worlds.
     islands: false
     # This option indicates if obsidian platform in the end should be generated
@@ -160,8 +162,8 @@ world:
     create-obsidian-platform: false
   # Mob white list - these mobs will NOT be removed when logging in or doing /island
   remove-mobs-whitelist:
-  - WITHER
   - ENDERMAN
+  - WITHER
   - ZOMBIE_VILLAGER
   # World flags. These are boolean settings for various flags for this world
   flags:
