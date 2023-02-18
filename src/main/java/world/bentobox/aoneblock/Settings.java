@@ -204,6 +204,7 @@ public class Settings implements WorldSettings {
     private boolean netherGenerate = true;
 
     @ConfigComment("Islands in Nether. Change to false for standard vanilla nether.")
+    @ConfigComment("Note that there is currently no magic block in the Nether")
     @ConfigEntry(path = "world.nether.islands", needsReset = true)
     private boolean netherIslands = false;
 
@@ -234,6 +235,7 @@ public class Settings implements WorldSettings {
     private boolean endGenerate = false;
 
     @ConfigComment("Islands in The End. Change to false for standard vanilla end.")
+    @ConfigComment("Note that there is currently no magic block in the End")
     @ConfigEntry(path = "world.end.islands", needsReset = true)
     private boolean endIslands = false;
 
