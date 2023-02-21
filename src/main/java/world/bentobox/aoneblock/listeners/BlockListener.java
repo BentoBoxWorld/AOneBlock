@@ -825,6 +825,13 @@ public class BlockListener implements Listener {
         return cache.containsKey(i.getUniqueId()) ? cache.get(i.getUniqueId()) : loadIsland(i.getUniqueId());
     }
 
+    /**
+     * Get all the OneBlockIslands from the Database
+     * @return list of oneblock islands
+     */
+    public List<OneBlockIslands> getAllIslands() {
+        return handler.loadObjects();
+    }
 
     @NonNull
     private OneBlockIslands loadIsland(@NonNull String uniqueId) {
