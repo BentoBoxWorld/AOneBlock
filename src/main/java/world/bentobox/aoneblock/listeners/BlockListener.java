@@ -57,6 +57,7 @@ import world.bentobox.aoneblock.oneblocks.OneBlockPhase;
 import world.bentobox.aoneblock.oneblocks.OneBlocksManager;
 import world.bentobox.aoneblock.oneblocks.Requirement;
 import world.bentobox.bank.Bank;
+import world.bentobox.bentobox.api.events.BentoBoxReadyEvent;
 import world.bentobox.bentobox.api.events.island.IslandCreatedEvent;
 import world.bentobox.bentobox.api.events.island.IslandDeleteEvent;
 import world.bentobox.bentobox.api.events.island.IslandResettedEvent;
@@ -172,6 +173,23 @@ public class BlockListener implements Listener {
         handler = new Database<>(addon, OneBlockIslands.class);
         cache = new HashMap<>();
         oneBlocksManager = addon.getOneBlockManager();
+    }
+
+    /**
+     * This cleans up the cache files in the database and removed old junk.
+     * This is to address a bug introduced 2 years ago that caused non AOneBlock islands
+     * to be stored in the AOneBlock database. This should be able to be
+     * removed in the future.
+     * @deprecated will be removed in the future
+     * @param e event
+     */
+    @Deprecated(since = "1.12.3", forRemoval = true)
+    @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
+    private void cleanCache(BentoBoxReadyEvent e) {
+        handler.loadObjects().forEach(i -> 
+            addon.getIslandsManager().getIslandById(i.getUniqueId())
+            .filter(is -> !addon.inWorld(is.getWorld()) || is.isUnowned())
+            .ifPresent(is -> handler.deleteID(is.getUniqueId())));
     }
 
     /**

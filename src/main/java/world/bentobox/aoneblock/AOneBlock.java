@@ -264,17 +264,19 @@ public class AOneBlock extends GameModeAddon {
 
         // Manage Old Holograms
         if (useHolographicDisplays()) {
-            for (Island island : getIslands().getIslands()) {
+            getIslands().getIslands().stream()
+            .filter(i -> this.inWorld(i.getWorld()))
+            .forEach(island -> {
                 OneBlockIslands oneBlockIsland = getOneBlocksIsland(island);
                 String hololine = oneBlockIsland.getHologram();
                 Location center = island.getCenter();
-                if (hololine != null) {
+                if (!hololine.isEmpty()) {
                     final Hologram hologram = HologramsAPI.createHologram(BentoBox.getInstance(), center.add(0.5, 2.6, 0.5));
                     for (String line : hololine.split("\\n")) {
                         hologram.appendTextLine(ChatColor.translateAlternateColorCodes('&', line));
                     }
                 }
-            }
+            });
         }
     }
 
