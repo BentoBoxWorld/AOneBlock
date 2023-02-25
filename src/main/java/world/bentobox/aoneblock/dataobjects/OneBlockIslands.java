@@ -93,6 +93,7 @@ public class OneBlockIslands implements DataObject {
     /**
      * @return the hologram Line
      */
+    @NonNull
     public String getHologram() {
         return hologram == null ? "" : hologram;
     }

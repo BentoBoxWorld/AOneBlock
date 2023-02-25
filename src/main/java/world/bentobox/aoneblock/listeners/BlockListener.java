@@ -57,6 +57,7 @@ import world.bentobox.aoneblock.oneblocks.OneBlockPhase;
 import world.bentobox.aoneblock.oneblocks.OneBlocksManager;
 import world.bentobox.aoneblock.oneblocks.Requirement;
 import world.bentobox.bank.Bank;
+import world.bentobox.bentobox.api.events.BentoBoxReadyEvent;
 import world.bentobox.bentobox.api.events.island.IslandCreatedEvent;
 import world.bentobox.bentobox.api.events.island.IslandDeleteEvent;
 import world.bentobox.bentobox.api.events.island.IslandResettedEvent;
@@ -175,6 +176,23 @@ public class BlockListener implements Listener {
     }
 
     /**
+     * This cleans up the cache files in the database and removed old junk.
+     * This is to address a bug introduced 2 years ago that caused non AOneBlock islands
+     * to be stored in the AOneBlock database. This should be able to be
+     * removed in the future.
+     * @deprecated will be removed in the future
+     * @param e event
+     */
+    @Deprecated(since = "1.12.3", forRemoval = true)
+    @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
+    private void cleanCache(BentoBoxReadyEvent e) {
+        handler.loadObjects().forEach(i -> 
+            addon.getIslandsManager().getIslandById(i.getUniqueId())
+            .filter(is -> !addon.inWorld(is.getWorld()) || is.isUnowned())
+            .ifPresent(is -> handler.deleteID(is.getUniqueId())));
+    }
+
+    /**
      * Save the island cache
      */
     public void saveCache() {
@@ -182,9 +200,9 @@ public class BlockListener implements Listener {
     }
 
 
-// ---------------------------------------------------------------------
-// Section: Listeners
-// ---------------------------------------------------------------------
+    // ---------------------------------------------------------------------
+    // Section: Listeners
+    // ---------------------------------------------------------------------
 
 
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
@@ -290,8 +308,8 @@ public class BlockListener implements Listener {
         Location location = event.getLocation();
 
         Optional<Island> optionalIsland = this.addon.getIslands().
-            getIslandAt(location).
-            filter(island -> location.getBlock().getLocation().equals(island.getCenter()));
+                getIslandAt(location).
+                filter(island -> location.getBlock().getLocation().equals(island.getCenter()));
 
         if (optionalIsland.isPresent())
         {
@@ -302,9 +320,9 @@ public class BlockListener implements Listener {
     }
 
 
-// ---------------------------------------------------------------------
-// Section: Processing methods
-// ---------------------------------------------------------------------
+    // ---------------------------------------------------------------------
+    // Section: Processing methods
+    // ---------------------------------------------------------------------
 
 
     private void setUp(@NonNull Island island) {
@@ -488,24 +506,34 @@ public class BlockListener implements Listener {
      * @return true if this is a new phase, false if not
      */
     private boolean checkPhase(@Nullable Player player, @NonNull Island i, @NonNull OneBlockIslands is, @NonNull OneBlockPhase phase) {
+        // Handle NPCs
+        User user;
+        if (player == null || player.hasMetadata("NPC")) {
+            // Default to the owner
+            user = addon.getPlayers().getUser(i.getOwner());
+        } else {
+            user = User.getInstance(player);
+        }
+
         String phaseName = phase.getPhaseName() == null ? "" : phase.getPhaseName();
         if (!is.getPhaseName().equalsIgnoreCase(phaseName)) {
             // Run previous phase end commands
             oneBlocksManager.getPhase(is.getPhaseName()).ifPresent(oldPhase -> {
                 String oldPhaseName = oldPhase.getPhaseName() == null ? "" : oldPhase.getPhaseName();
-                Util.runCommands(User.getInstance(player),
+                Util.runCommands(user,
                         replacePlaceholders(player, oldPhaseName, phase.getBlockNumber(), i, oldPhase.getEndCommands()),
                         "Commands run for end of " + oldPhaseName);
             });
             // Set the phase name
             is.setPhaseName(phaseName);
-            if (player != null) {
-                player.sendTitle(phaseName, null, -1, -1, -1);
-                // Run phase start commands
-                Util.runCommands(User.getInstance(player),
-                        replacePlaceholders(player, phaseName, phase.getBlockNumber(), i, phase.getStartCommands()),
-                        "Commands run for start of " + phaseName);
+            if (user.isPlayer() && user.isOnline() && addon.inWorld(user.getWorld())) {
+                user.getPlayer().sendTitle(phaseName, null, -1, -1, -1);
             }
+            // Run phase start commands
+            Util.runCommands(user,
+                    replacePlaceholders(player, phaseName, phase.getBlockNumber(), i, phase.getStartCommands()),
+                    "Commands run for start of " + phaseName);
+
             saveIsland(i);
             return true;
         }
@@ -644,7 +672,7 @@ public class BlockListener implements Listener {
         // Make space for entity based on the entity's size
         final BoundingBox boundingBox = entity.getBoundingBox();
         final boolean isWaterProtected = this.addon.getSettings().isWaterMobProtection() &&
-            WATER_ENTITIES.contains(entity.getType());
+                WATER_ENTITIES.contains(entity.getType());
 
         for (double y = boundingBox.getMinY(); y <= Math.min(boundingBox.getMaxY(), world.getMaxHeight()); y++)
         {
@@ -673,9 +701,9 @@ public class BlockListener implements Listener {
                     for (double z = boundingBox.getMinZ() - 0.5; z < boundingBox.getMaxZ() + 0.5; z++)
                     {
                         block = world.getBlockAt(new Location(world,
-                            x,
-                            y,
-                            z));
+                                x,
+                                y,
+                                z));
 
                         // Check if block should be marked.
                         this.checkBlock(block, boundingBox, isWaterProtected, airBlocks, waterBlocks);
@@ -688,9 +716,9 @@ public class BlockListener implements Listener {
                 for (double x = boundingBox.getMinX() - 0.5; x < boundingBox.getMaxX() + 0.5; x++)
                 {
                     block = world.getBlockAt(new Location(world,
-                        x,
-                        y,
-                        spawnLocation.getZ()));
+                            x,
+                            y,
+                            spawnLocation.getZ()));
 
                     // Check if block should be marked.
                     this.checkBlock(block, boundingBox, isWaterProtected, airBlocks, waterBlocks);
@@ -702,9 +730,9 @@ public class BlockListener implements Listener {
                 for (double z = boundingBox.getMinZ() - 0.5; z < boundingBox.getMaxZ() + 0.5; z++)
                 {
                     block = world.getBlockAt(new Location(world,
-                        spawnLocation.getX(),
-                        y,
-                        z));
+                            spawnLocation.getX(),
+                            y,
+                            z));
 
                     // Check if block should be marked.
                     this.checkBlock(block, boundingBox, isWaterProtected, airBlocks, waterBlocks);
@@ -749,10 +777,10 @@ public class BlockListener implements Listener {
      * @param waterBlocks List of water blocks.
      */
     private void checkBlock(Block block,
-        BoundingBox boundingBox,
-        boolean isWaterEntity,
-        List<Block> airBlocks,
-        List<Block> waterBlocks)
+            BoundingBox boundingBox,
+            boolean isWaterEntity,
+            List<Block> airBlocks,
+            List<Block> waterBlocks)
     {
         // Check if block should be marked for destroying.
         if (block.getBoundingBox().overlaps(boundingBox))
@@ -815,6 +843,13 @@ public class BlockListener implements Listener {
         return cache.containsKey(i.getUniqueId()) ? cache.get(i.getUniqueId()) : loadIsland(i.getUniqueId());
     }
 
+    /**
+     * Get all the OneBlockIslands from the Database
+     * @return list of oneblock islands
+     */
+    public List<OneBlockIslands> getAllIslands() {
+        return handler.loadObjects();
+    }
 
     @NonNull
     private OneBlockIslands loadIsland(@NonNull String uniqueId) {
