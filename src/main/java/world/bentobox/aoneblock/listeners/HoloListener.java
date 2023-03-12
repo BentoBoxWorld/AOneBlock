@@ -1,15 +1,16 @@
 package world.bentobox.aoneblock.listeners;
 
+import me.hsgamer.unihologram.common.api.Hologram;
+import me.hsgamer.unihologram.common.line.TextHologramLine;
+import me.hsgamer.unihologram.spigot.SpigotHologramProvider;
+import me.hsgamer.unihologram.spigot.plugin.UniHologramPlugin;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.eclipse.jdt.annotation.NonNull;
-
-import com.gmail.filoghost.holographicdisplays.api.Hologram;
-import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
 
 import world.bentobox.aoneblock.AOneBlock;
 import world.bentobox.aoneblock.dataobjects.OneBlockIslands;
@@ -19,19 +20,23 @@ import world.bentobox.bentobox.api.events.island.IslandDeleteEvent;
 import world.bentobox.bentobox.api.user.User;
 import world.bentobox.bentobox.database.objects.Island;
 
+import java.util.UUID;
+
 /**
- * Handles Holographic elements. Relies on Holographic Plugin
- * @author tastybento
+ * Handles Holographic elements. Relies on UniHologram Plugin
+ * @author tastybento, HSGamer
  */
 public class HoloListener implements Listener {
 
     private final AOneBlock addon;
+    private final SpigotHologramProvider hologramProvider;
 
     /**
      * @param addon - OneBlock
      */
     public HoloListener(@NonNull AOneBlock addon) {
         this.addon = addon;
+        this.hologramProvider = JavaPlugin.getPlugin(UniHologramPlugin.class).getProvider();
     }
 
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
@@ -40,13 +45,32 @@ public class HoloListener implements Listener {
     }
 
     /**
+     * Setup holograms on startup
+     */
+    public void setup() {
+        addon.getIslands().getIslands().stream()
+                .filter(i -> addon.inWorld(i.getWorld()))
+                .forEach(island -> {
+                    OneBlockIslands oneBlockIsland = addon.getOneBlocksIsland(island);
+                    String hololine = oneBlockIsland.getHologram();
+                    Location center = island.getCenter();
+                    if (!hololine.isEmpty()) {
+                        final Hologram<Location> hologram = hologramProvider.createHologram(island.getName() + "-" + UUID.randomUUID(), center.add(0.5, 2.6, 0.5));
+                        for (String line : hololine.split("\\n")) {
+                            hologram.addLine(new TextHologramLine(line));
+                        }
+                    }
+                });
+    }
+
+    /**
      * Delete old holograms
      * @param island island
      */
     private void deleteOldHolograms(@NonNull Island island) {
-        for (Hologram hologram : HologramsAPI.getHolograms(BentoBox.getInstance())) {
-            if (!addon.inWorld(hologram.getWorld())) continue;
-            if (island.getBoundingBox().contains(hologram.getLocation().toVector())) hologram.delete();
+        for (Hologram<Location> hologram : hologramProvider.getAllHolograms()) {
+            if (!addon.inWorld(hologram.getLocation())) continue;
+            if (island.getBoundingBox().contains(hologram.getLocation().toVector())) hologram.clear();
         }
     }
 
@@ -60,9 +84,9 @@ public class HoloListener implements Listener {
             is.setHologram(hololine == null ? "" : hololine);
             Location center = island.getCenter();
             if (hololine != null && center != null) {
-                final Hologram hologram = HologramsAPI.createHologram(BentoBox.getInstance(), center.add(0.5, 2.6, 0.5));
+                final Hologram<Location> hologram = hologramProvider.createHologram(island.getName() + "-" + UUID.randomUUID(), center.add(0.5, 2.6, 0.5));
                 for (String line : hololine.split("\\n")) {
-                    hologram.appendTextLine(ChatColor.translateAlternateColorCodes('&', line));
+                    hologram.addLine(new TextHologramLine(line));
                 }
             }
         }
@@ -71,21 +95,21 @@ public class HoloListener implements Listener {
 
     protected void process(@NonNull Island i, @NonNull OneBlockIslands is, @NonNull OneBlockPhase phase) {
         // Manage Holograms
-        for (Hologram hologram : HologramsAPI.getHolograms(BentoBox.getInstance())) {
-            if (!addon.inWorld(hologram.getWorld())) continue;
-            if (i.getBoundingBox().contains(hologram.getLocation().toVector())) hologram.delete();
+        for (Hologram<Location> hologram : hologramProvider.getAllHolograms()) {
+            if (!addon.inWorld(hologram.getLocation())) continue;
+            if (i.getBoundingBox().contains(hologram.getLocation().toVector())) hologram.clear();
         }
         String hololine = phase.getHologramLine(is.getBlockNumber());
         is.setHologram(hololine == null ? "" : hololine);
         Location center = i.getCenter();
         if (hololine != null && center != null) {
-            final Hologram hologram = HologramsAPI.createHologram(BentoBox.getInstance(), center.add(0.5, 2.6, 0.5));            
+            final Hologram<Location> hologram = hologramProvider.createHologram(i.getName() + "-" + UUID.randomUUID(), center.add(0.5, 2.6, 0.5));
             for (String line : hololine.split("\\n")) {
-                hologram.appendTextLine(ChatColor.translateAlternateColorCodes('&', line));
+                hologram.addLine(new TextHologramLine(line));
             }
             // Set up auto delete
             if (addon.getSettings().getHologramDuration() > 0) {
-                Bukkit.getScheduler().runTaskLater(BentoBox.getInstance(), () -> hologram.delete(), addon.getSettings().getHologramDuration() * 20L);
+                Bukkit.getScheduler().runTaskLater(BentoBox.getInstance(), hologram::clear, addon.getSettings().getHologramDuration() * 20L);
             }
         }
     }

@@ -333,11 +333,11 @@ public class AOneBlockTest {
     }
 
     /**
-     * Test method for {@link world.bentobox.aoneblock.AOneBlock#useHolographicDisplays()}.
+     * Test method for {@link world.bentobox.aoneblock.AOneBlock#useUniHologram()}.
      */
     @Test
-    public void testUseHolographicDisplays() {
-        assertFalse(addon.useHolographicDisplays());
+    public void testUseUniHologram() {
+        assertFalse(addon.useUniHologram());
     }
 
 }
