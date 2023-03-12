@@ -65,6 +65,12 @@ public class HoloListener implements Listener {
         hologram.setLines(hologramLines);
     }
 
+    private void clearIfInitialized(Hologram<Location> hologram) {
+        if (hologram.isInitialized()) {
+            hologram.clear();
+        }
+    }
+
     private void setLines(Island island, String lines) {
         setLines(getHologram(island), lines);
     }
@@ -75,13 +81,7 @@ public class HoloListener implements Listener {
     public void setUp() {
         addon.getIslands().getIslands().stream()
                 .filter(i -> addon.inWorld(i.getWorld()))
-                .forEach(island -> {
-                    OneBlockIslands oneBlockIsland = addon.getOneBlocksIsland(island);
-                    String holoLine = oneBlockIsland.getHologram();
-                    if (!holoLine.isEmpty()) {
-                        setLines(island, holoLine);
-                    }
-                });
+                .forEach(island -> setUp(island, addon.getOneBlocksIsland(island), false));
     }
 
     public void clear() {
@@ -95,16 +95,21 @@ public class HoloListener implements Listener {
      */
     private void deleteHologram(@NonNull Island island) {
         Hologram<Location> hologram = cachedHolograms.remove(island);
-        if (hologram != null && hologram.isInitialized()) {
-            hologram.clear();
+        if (hologram != null) {
+            clearIfInitialized(hologram);
         }
     }
 
-    protected void setUp(@NonNull Island island, @NonNull OneBlockIslands is) {
+    protected void setUp(@NonNull Island island, @NonNull OneBlockIslands is, boolean newIsland) {
         UUID ownerUUID = island.getOwner();
         if (ownerUUID != null) {
             User owner = User.getInstance(ownerUUID);
-            String holoLine = owner.getTranslation("aoneblock.island.starting-hologram");
+            String holoLine;
+            if (newIsland) {
+                holoLine = owner.getTranslation("aoneblock.island.starting-hologram");
+            } else {
+                holoLine = is.getHologram();
+            }
             is.setHologram(holoLine == null ? "" : holoLine);
             if (holoLine != null) {
                 setLines(island, holoLine);
@@ -121,8 +126,10 @@ public class HoloListener implements Listener {
             setLines(hologram, holoLine);
             // Set up auto delete
             if (addon.getSettings().getHologramDuration() > 0) {
-                Bukkit.getScheduler().runTaskLater(BentoBox.getInstance(), hologram::clear, addon.getSettings().getHologramDuration() * 20L);
+                Bukkit.getScheduler().runTaskLater(BentoBox.getInstance(), () -> clearIfInitialized(hologram), addon.getSettings().getHologramDuration() * 20L);
             }
+        } else {
+            deleteHologram(i);
         }
     }
 }

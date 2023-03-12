@@ -333,7 +333,7 @@ public class BlockListener implements Listener {
         cache.put(island.getUniqueId(), is);
         handler.saveObjectAsync(is);
         if (addon.useUniHologram()) {
-            addon.getHoloListener().setUp(island, is);
+            addon.getHoloListener().setUp(island, is, true);
         }
     }
 
