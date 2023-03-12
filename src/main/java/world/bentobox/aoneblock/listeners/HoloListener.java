@@ -1,6 +1,7 @@
 package world.bentobox.aoneblock.listeners;
 
 import me.hsgamer.unihologram.common.api.Hologram;
+import me.hsgamer.unihologram.common.api.HologramLine;
 import me.hsgamer.unihologram.common.line.TextHologramLine;
 import me.hsgamer.unihologram.spigot.SpigotHologramProvider;
 import me.hsgamer.unihologram.spigot.plugin.UniHologramPlugin;
@@ -20,7 +21,7 @@ import world.bentobox.bentobox.api.events.island.IslandDeleteEvent;
 import world.bentobox.bentobox.api.user.User;
 import world.bentobox.bentobox.database.objects.Island;
 
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Handles Holographic elements. Relies on UniHologram Plugin
@@ -30,6 +31,7 @@ public class HoloListener implements Listener {
 
     private final AOneBlock addon;
     private final SpigotHologramProvider hologramProvider;
+    private final Map<Island, Hologram<Location>> cachedHolograms;
 
     /**
      * @param addon - OneBlock
@@ -37,76 +39,86 @@ public class HoloListener implements Listener {
     public HoloListener(@NonNull AOneBlock addon) {
         this.addon = addon;
         this.hologramProvider = JavaPlugin.getPlugin(UniHologramPlugin.class).getProvider();
+        this.cachedHolograms = new IdentityHashMap<>();
     }
 
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onDeletedIsland(IslandDeleteEvent e) {
-        deleteOldHolograms(e.getIsland());
+        deleteHologram(e.getIsland());
+    }
+
+    private Hologram<Location> getHologram(Island island) {
+        return cachedHolograms.compute(island, (is, hologram) -> {
+            if (hologram == null) {
+                Location center = island.getCenter();
+                hologram = hologramProvider.createHologram(UUID.randomUUID().toString(), center.add(0.5, 2.6, 0.5));
+            }
+            if (!hologram.isInitialized()) {
+                hologram.init();
+            }
+            return hologram;
+        });
+    }
+
+    private void setLines(Hologram<Location> hologram, String lines) {
+        List<HologramLine> hologramLines = Arrays.stream(lines.split("\\n")).<HologramLine>map(TextHologramLine::new).toList();
+        hologram.setLines(hologramLines);
+    }
+
+    private void setLines(Island island, String lines) {
+        setLines(getHologram(island), lines);
     }
 
     /**
      * Setup holograms on startup
      */
-    public void setup() {
+    public void setUp() {
         addon.getIslands().getIslands().stream()
                 .filter(i -> addon.inWorld(i.getWorld()))
                 .forEach(island -> {
                     OneBlockIslands oneBlockIsland = addon.getOneBlocksIsland(island);
-                    String hololine = oneBlockIsland.getHologram();
-                    Location center = island.getCenter();
-                    if (!hololine.isEmpty()) {
-                        final Hologram<Location> hologram = hologramProvider.createHologram(island.getName() + "-" + UUID.randomUUID(), center.add(0.5, 2.6, 0.5));
-                        for (String line : hololine.split("\\n")) {
-                            hologram.addLine(new TextHologramLine(line));
-                        }
+                    String holoLine = oneBlockIsland.getHologram();
+                    if (!holoLine.isEmpty()) {
+                        setLines(island, holoLine);
                     }
                 });
     }
 
+    public void clear() {
+        cachedHolograms.values().forEach(Hologram::clear);
+        cachedHolograms.clear();
+    }
+
     /**
-     * Delete old holograms
+     * Delete hologram
      * @param island island
      */
-    private void deleteOldHolograms(@NonNull Island island) {
-        for (Hologram<Location> hologram : hologramProvider.getAllHolograms()) {
-            if (!addon.inWorld(hologram.getLocation())) continue;
-            if (island.getBoundingBox().contains(hologram.getLocation().toVector())) hologram.clear();
+    private void deleteHologram(@NonNull Island island) {
+        Hologram<Location> hologram = cachedHolograms.remove(island);
+        if (hologram != null && hologram.isInitialized()) {
+            hologram.clear();
         }
     }
 
     protected void setUp(@NonNull Island island, @NonNull OneBlockIslands is) {
-        // Delete Old Holograms
-        deleteOldHolograms(island);
-        // Manage New Hologram
-        if (island.getOwner() != null) {
-            User owner = User.getInstance(island.getOwner());
-            String hololine = owner.getTranslation("aoneblock.island.starting-hologram");
-            is.setHologram(hololine == null ? "" : hololine);
-            Location center = island.getCenter();
-            if (hololine != null && center != null) {
-                final Hologram<Location> hologram = hologramProvider.createHologram(island.getName() + "-" + UUID.randomUUID(), center.add(0.5, 2.6, 0.5));
-                for (String line : hololine.split("\\n")) {
-                    hologram.addLine(new TextHologramLine(line));
-                }
+        UUID ownerUUID = island.getOwner();
+        if (ownerUUID != null) {
+            User owner = User.getInstance(ownerUUID);
+            String holoLine = owner.getTranslation("aoneblock.island.starting-hologram");
+            is.setHologram(holoLine == null ? "" : holoLine);
+            if (holoLine != null) {
+                setLines(island, holoLine);
             }
         }
     }
 
 
     protected void process(@NonNull Island i, @NonNull OneBlockIslands is, @NonNull OneBlockPhase phase) {
-        // Manage Holograms
-        for (Hologram<Location> hologram : hologramProvider.getAllHolograms()) {
-            if (!addon.inWorld(hologram.getLocation())) continue;
-            if (i.getBoundingBox().contains(hologram.getLocation().toVector())) hologram.clear();
-        }
-        String hololine = phase.getHologramLine(is.getBlockNumber());
-        is.setHologram(hololine == null ? "" : hololine);
-        Location center = i.getCenter();
-        if (hololine != null && center != null) {
-            final Hologram<Location> hologram = hologramProvider.createHologram(i.getName() + "-" + UUID.randomUUID(), center.add(0.5, 2.6, 0.5));
-            for (String line : hololine.split("\\n")) {
-                hologram.addLine(new TextHologramLine(line));
-            }
+        String holoLine = phase.getHologramLine(is.getBlockNumber());
+        is.setHologram(holoLine == null ? "" : holoLine);
+        if (holoLine != null) {
+            final Hologram<Location> hologram = getHologram(i);
+            setLines(hologram, holoLine);
             // Set up auto delete
             if (addon.getSettings().getHologramDuration() > 0) {
                 Bukkit.getScheduler().runTaskLater(BentoBox.getInstance(), hologram::clear, addon.getSettings().getHologramDuration() * 20L);

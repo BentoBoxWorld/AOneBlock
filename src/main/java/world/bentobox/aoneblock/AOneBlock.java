@@ -134,6 +134,11 @@ public class AOneBlock extends GameModeAddon {
     public void onDisable() {
         // save cache
         blockListener.saveCache();
+
+        // Clear holograms
+        if (useUniHologram) {
+            holoListener.clear();
+        }
     }
 
     @Override
@@ -258,7 +263,7 @@ public class AOneBlock extends GameModeAddon {
 
         // Manage Old Holograms
         if (useUniHologram()) {
-            holoListener.setup();
+            holoListener.setUp();
         }
     }
 
