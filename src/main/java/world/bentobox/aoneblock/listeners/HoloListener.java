@@ -12,7 +12,6 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.eclipse.jdt.annotation.NonNull;
-
 import world.bentobox.aoneblock.AOneBlock;
 import world.bentobox.aoneblock.dataobjects.OneBlockIslands;
 import world.bentobox.aoneblock.oneblocks.OneBlockPhase;
@@ -25,6 +24,7 @@ import java.util.*;
 
 /**
  * Handles Holographic elements. Relies on UniHologram Plugin
+ *
  * @author tastybento, HSGamer
  */
 public class HoloListener implements Listener {
@@ -48,21 +48,7 @@ public class HoloListener implements Listener {
     }
 
     private Hologram<Location> getHologram(Island island) {
-        return cachedHolograms.compute(island, (is, hologram) -> {
-            if (hologram == null) {
-                Location center = island.getCenter();
-                hologram = hologramProvider.createHologram(UUID.randomUUID().toString(), center.add(0.5, 2.6, 0.5));
-            }
-            if (!hologram.isInitialized()) {
-                hologram.init();
-            }
-            return hologram;
-        });
-    }
-
-    private void setLines(Hologram<Location> hologram, String lines) {
-        List<HologramLine> hologramLines = Arrays.stream(lines.split("\\n")).<HologramLine>map(TextHologramLine::new).toList();
-        hologram.setLines(hologramLines);
+        return cachedHolograms.computeIfAbsent(island, is -> hologramProvider.createHologram(UUID.randomUUID().toString(), is.getCenter().add(0.5, 2.6, 0.5)));
     }
 
     private void clearIfInitialized(Hologram<Location> hologram) {
@@ -71,8 +57,29 @@ public class HoloListener implements Listener {
         }
     }
 
-    private void setLines(Island island, String lines) {
-        setLines(getHologram(island), lines);
+    private void updateLines(Island island, OneBlockIslands oneBlockIsland) {
+        Hologram<Location> hologram = getHologram(island);
+        String holoLine = oneBlockIsland.getHologram();
+
+        // Clear hologram if empty
+        if (holoLine.isEmpty()) {
+            clearIfInitialized(hologram);
+            return;
+        }
+
+        // Initialize hologram
+        if (!hologram.isInitialized()) {
+            hologram.init();
+        }
+
+        // Convert and set lines to hologram
+        List<HologramLine> hologramLines = Arrays.stream(holoLine.split("\\n")).<HologramLine>map(TextHologramLine::new).toList();
+        hologram.setLines(hologramLines);
+
+        // Set up auto delete
+        if (addon.getSettings().getHologramDuration() > 0) {
+            Bukkit.getScheduler().runTaskLater(BentoBox.getInstance(), () -> clearIfInitialized(hologram), addon.getSettings().getHologramDuration() * 20L);
+        }
     }
 
     /**
@@ -91,6 +98,7 @@ public class HoloListener implements Listener {
 
     /**
      * Delete hologram
+     *
      * @param island island
      */
     private void deleteHologram(@NonNull Island island) {
@@ -102,34 +110,22 @@ public class HoloListener implements Listener {
 
     protected void setUp(@NonNull Island island, @NonNull OneBlockIslands is, boolean newIsland) {
         UUID ownerUUID = island.getOwner();
-        if (ownerUUID != null) {
-            User owner = User.getInstance(ownerUUID);
-            String holoLine;
-            if (newIsland) {
-                holoLine = owner.getTranslation("aoneblock.island.starting-hologram");
-            } else {
-                holoLine = is.getHologram();
-            }
-            is.setHologram(holoLine == null ? "" : holoLine);
-            if (holoLine != null) {
-                setLines(island, holoLine);
-            }
+        if (ownerUUID == null) {
+            return;
         }
+
+        User owner = User.getInstance(ownerUUID);
+        if (newIsland) {
+            String holoLine = owner.getTranslation("aoneblock.island.starting-hologram");
+            is.setHologram(holoLine == null ? "" : holoLine);
+        }
+        updateLines(island, is);
     }
 
 
     protected void process(@NonNull Island i, @NonNull OneBlockIslands is, @NonNull OneBlockPhase phase) {
         String holoLine = phase.getHologramLine(is.getBlockNumber());
         is.setHologram(holoLine == null ? "" : holoLine);
-        if (holoLine != null) {
-            final Hologram<Location> hologram = getHologram(i);
-            setLines(hologram, holoLine);
-            // Set up auto delete
-            if (addon.getSettings().getHologramDuration() > 0) {
-                Bukkit.getScheduler().runTaskLater(BentoBox.getInstance(), () -> clearIfInitialized(hologram), addon.getSettings().getHologramDuration() * 20L);
-            }
-        } else {
-            deleteHologram(i);
-        }
+        updateLines(i, is);
     }
 }
