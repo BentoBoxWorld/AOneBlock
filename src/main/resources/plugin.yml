@@ -1,8 +1,6 @@
-name: Pladdon
+name: AOneBlock
 main: world.bentobox.aoneblock.AOneBlockPladdon
 version: ${version}
 api-version: 1.16
 description: A OneBlock Plugin
 author: tastybento
-depend:
-  - BentoBox
