@@ -157,13 +157,6 @@
             <version>1.2.3-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
-        <!-- Holographic Displays API -->
-        <dependency>
-            <groupId>com.gmail.filoghost.holographicdisplays</groupId>
-            <artifactId>holographicdisplays-api</artifactId>
-            <version>2.4.0</version>
-            <scope>provided</scope>
-        </dependency>
         <!-- Apache Commons Text -->
         <dependency>
             <groupId>org.apache.commons</groupId>

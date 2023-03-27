@@ -1,20 +1,21 @@
 package world.bentobox.aoneblock.listeners;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.entity.Display.Billboard;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.TextDisplay;
+import org.bukkit.entity.TextDisplay.TextAligment;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.eclipse.jdt.annotation.NonNull;
 
-import com.gmail.filoghost.holographicdisplays.api.Hologram;
-import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
-
+import net.md_5.bungee.api.ChatColor;
 import world.bentobox.aoneblock.AOneBlock;
 import world.bentobox.aoneblock.dataobjects.OneBlockIslands;
 import world.bentobox.aoneblock.oneblocks.OneBlockPhase;
-import world.bentobox.bentobox.BentoBox;
 import world.bentobox.bentobox.api.events.island.IslandDeleteEvent;
 import world.bentobox.bentobox.api.user.User;
 import world.bentobox.bentobox.database.objects.Island;
@@ -44,10 +45,7 @@ public class HoloListener implements Listener {
      * @param island island
      */
     private void deleteOldHolograms(@NonNull Island island) {
-        for (Hologram hologram : HologramsAPI.getHolograms(BentoBox.getInstance())) {
-            if (!addon.inWorld(hologram.getWorld())) continue;
-            if (island.getBoundingBox().contains(hologram.getLocation().toVector())) hologram.delete();
-        }
+        island.getWorld().getEntities().stream().filter(e -> e instanceof TextDisplay).filter(e -> island.onIsland(e.getLocation())).forEach(Entity::remove);
     }
 
     protected void setUp(@NonNull Island island, @NonNull OneBlockIslands is) {
@@ -59,34 +57,34 @@ public class HoloListener implements Listener {
             String hololine = owner.getTranslation("aoneblock.island.starting-hologram");
             is.setHologram(hololine == null ? "" : hololine);
             Location center = island.getCenter();
-            if (hololine != null && center != null) {
-                final Hologram hologram = HologramsAPI.createHologram(BentoBox.getInstance(), center.add(0.5, 2.6, 0.5));
-                for (String line : hololine.split("\\n")) {
-                    hologram.appendTextLine(ChatColor.translateAlternateColorCodes('&', line));
-                }
-            }
+            showHologram(hololine, center);            
         }
     }
 
+    private void showHologram(String hololine, Location center) {      
+        if (hololine != null && center != null) {
+            Location pos = center.clone().add(0.5, 1.1, 0.5);
+            center.getWorld().getEntities().stream().filter(e -> e instanceof TextDisplay).filter(e -> e.getLocation().getBlockX() == pos.getBlockX()
+                    && e.getLocation().getBlockY() == pos.getBlockY()
+                    && e.getLocation().getBlockZ() == pos.getBlockZ()).forEach(Entity::remove);
+            TextDisplay td = (TextDisplay) center.getWorld().spawnEntity(pos, EntityType.TEXT_DISPLAY);
+            td.setText(hololine);
+            td.setAlignment(TextAligment.CENTER);
+            td.setBillboard(Billboard.CENTER);
+            // Kill hologram
+            Bukkit.getScheduler().runTaskLater(addon.getPlugin(), () -> {
+                if (td != null) td.remove();
+            }, addon.getSettings().getHologramDuration() * 20L);
+        }        
+    }
 
     protected void process(@NonNull Island i, @NonNull OneBlockIslands is, @NonNull OneBlockPhase phase) {
-        // Manage Holograms
-        for (Hologram hologram : HologramsAPI.getHolograms(BentoBox.getInstance())) {
-            if (!addon.inWorld(hologram.getWorld())) continue;
-            if (i.getBoundingBox().contains(hologram.getLocation().toVector())) hologram.delete();
-        }
-        String hololine = phase.getHologramLine(is.getBlockNumber());
-        is.setHologram(hololine == null ? "" : hololine);
-        Location center = i.getCenter();
-        if (hololine != null && center != null) {
-            final Hologram hologram = HologramsAPI.createHologram(BentoBox.getInstance(), center.add(0.5, 2.6, 0.5));            
-            for (String line : hololine.split("\\n")) {
-                hologram.appendTextLine(ChatColor.translateAlternateColorCodes('&', line));
-            }
-            // Set up auto delete
-            if (addon.getSettings().getHologramDuration() > 0) {
-                Bukkit.getScheduler().runTaskLater(BentoBox.getInstance(), () -> hologram.delete(), addon.getSettings().getHologramDuration() * 20L);
-            }
+        String text = phase.getHologramLine(is.getBlockNumber());
+        if (text != null) {
+            String hololine = ChatColor.translateAlternateColorCodes('&', text);
+            is.setHologram(hololine == null ? "" : hololine);
+            Location center = i.getCenter();
+            showHologram(hololine, center);
         }
     }
 }

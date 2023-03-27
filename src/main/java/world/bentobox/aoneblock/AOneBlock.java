@@ -3,20 +3,14 @@ package world.bentobox.aoneblock;
 import java.io.IOException;
 import java.util.Objects;
 
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.World.Environment;
-import org.bukkit.entity.SpawnCategory;
 import org.bukkit.WorldCreator;
 import org.bukkit.WorldType;
+import org.bukkit.entity.SpawnCategory;
 import org.bukkit.generator.ChunkGenerator;
 import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jdt.annotation.Nullable;
-
-import com.gmail.filoghost.holographicdisplays.api.Hologram;
-import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
 
 import world.bentobox.aoneblock.commands.admin.AdminCommand;
 import world.bentobox.aoneblock.commands.island.PlayerCommand;
@@ -30,7 +24,6 @@ import world.bentobox.aoneblock.listeners.NoBlockHandler;
 import world.bentobox.aoneblock.oneblocks.OneBlocksManager;
 import world.bentobox.aoneblock.requests.IslandStatsHandler;
 import world.bentobox.aoneblock.requests.LocationStatsHandler;
-import world.bentobox.bentobox.BentoBox;
 import world.bentobox.bentobox.api.addons.GameModeAddon;
 import world.bentobox.bentobox.api.configuration.Config;
 import world.bentobox.bentobox.api.configuration.WorldSettings;
@@ -53,7 +46,7 @@ public class AOneBlock extends GameModeAddon {
     private BlockListener blockListener;
     private OneBlocksManager oneBlockManager;
     private PlaceholdersManager phManager;
-    private boolean useHolographicDisplays;
+    private boolean useHolographicDisplays = true; // TODO: make a setting
     private HoloListener holoListener;
 
     @Override
@@ -109,12 +102,9 @@ public class AOneBlock extends GameModeAddon {
         registerRequestHandler(new IslandStatsHandler(this));
         registerRequestHandler(new LocationStatsHandler(this));
 
-        // Decide if HolographicDisplays is Usable
-        useHolographicDisplays = Bukkit.getPluginManager().isPluginEnabled("HolographicDisplays");
-        if (this.useHolographicDisplays) {
-            holoListener = new HoloListener(this);
-            registerListener(holoListener);
-        }
+        // Register Holograms
+        holoListener = new HoloListener(this);
+        registerListener(holoListener);
     }
 
     private void registerPlaceholders() {
@@ -261,23 +251,6 @@ public class AOneBlock extends GameModeAddon {
     public void allLoaded() {
         // save settings. This will occur after all addons have loaded
         this.saveWorldSettings();
-
-        // Manage Old Holograms
-        if (useHolographicDisplays()) {
-            getIslands().getIslands().stream()
-            .filter(i -> this.inWorld(i.getWorld()))
-            .forEach(island -> {
-                OneBlockIslands oneBlockIsland = getOneBlocksIsland(island);
-                String hololine = oneBlockIsland.getHologram();
-                Location center = island.getCenter();
-                if (!hololine.isEmpty()) {
-                    final Hologram hologram = HologramsAPI.createHologram(BentoBox.getInstance(), center.add(0.5, 2.6, 0.5));
-                    for (String line : hololine.split("\\n")) {
-                        hologram.appendTextLine(ChatColor.translateAlternateColorCodes('&', line));
-                    }
-                }
-            });
-        }
     }
 
     /**
