@@ -132,7 +132,6 @@ You can add all the usual addons to OneBlock, like Challeges, Likes, Level, Warp
 
 ### Other Plugins
 
-* To use the Holographic phase names, you will need to install [UniHologram](https://www.spigotmc.org/resources/unihologram.108572/)
 
 
 Bugs and Feature requests

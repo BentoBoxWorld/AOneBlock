@@ -4,13 +4,11 @@ import me.hsgamer.unihologram.common.api.Hologram;
 import me.hsgamer.unihologram.common.api.HologramLine;
 import me.hsgamer.unihologram.common.line.TextHologramLine;
 import me.hsgamer.unihologram.spigot.SpigotHologramProvider;
-import me.hsgamer.unihologram.spigot.plugin.UniHologramPlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.plugin.java.JavaPlugin;
 import org.eclipse.jdt.annotation.NonNull;
 import world.bentobox.aoneblock.AOneBlock;
 import world.bentobox.aoneblock.dataobjects.OneBlockIslands;
@@ -23,7 +21,7 @@ import world.bentobox.bentobox.database.objects.Island;
 import java.util.*;
 
 /**
- * Handles Holographic elements. Relies on UniHologram Plugin
+ * Handles Holographic elements.
  *
  * @author tastybento, HSGamer
  */
@@ -38,7 +36,7 @@ public class HoloListener implements Listener {
      */
     public HoloListener(@NonNull AOneBlock addon) {
         this.addon = addon;
-        this.hologramProvider = JavaPlugin.getPlugin(UniHologramPlugin.class).getProvider();
+        this.hologramProvider = new SpigotHologramProvider(addon.getPlugin());
         this.cachedHolograms = new IdentityHashMap<>();
     }
 

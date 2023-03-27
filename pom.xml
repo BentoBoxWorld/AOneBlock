@@ -155,21 +155,20 @@
             <groupId>org.spigotmc</groupId>
             <artifactId>plugin-annotations</artifactId>
             <version>1.2.3-SNAPSHOT</version>
-            <scope>compile</scope>
+            <scope>provided</scope>
         </dependency>
         <!-- Hologram API -->
         <dependency>
             <groupId>me.hsgamer</groupId>
-            <artifactId>uni-hologram-spigot-plugin</artifactId>
-            <version>1.5.2</version>
-            <scope>provided</scope>
+            <artifactId>uni-hologram-spigot-bundle</artifactId>
+            <version>1.5.4</version>
         </dependency>
         <!-- Apache Commons Text -->
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-text</artifactId>
             <version>1.10.0</version>
-            <scope>compile</scope>
+            <scope>provided</scope>
         </dependency>
         <!-- Mojang Auth -->
         <dependency>
@@ -359,6 +358,28 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-deploy-plugin</artifactId>
                 <version>3.0.0-M1</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.4.1</version>
+                <configuration>
+                    <minimizeJar>true</minimizeJar>
+                    <relocations>
+                        <relocation>
+                            <pattern>me.hsgamer.unihologram</pattern>
+                            <shadedPattern>world.bentobox.aoneblock.unihologram</shadedPattern>
+                        </relocation>
+                    </relocations>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
             <plugin>
                 <groupId>org.jacoco</groupId>

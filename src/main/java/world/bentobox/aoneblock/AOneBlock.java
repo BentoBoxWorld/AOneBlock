@@ -3,7 +3,6 @@ package world.bentobox.aoneblock;
 import java.io.IOException;
 import java.util.Objects;
 
-import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.World.Environment;
 import org.bukkit.entity.SpawnCategory;
@@ -47,7 +46,6 @@ public class AOneBlock extends GameModeAddon {
     private BlockListener blockListener;
     private OneBlocksManager oneBlockManager;
     private PlaceholdersManager phManager;
-    private boolean useUniHologram;
     private HoloListener holoListener;
 
     @Override
@@ -103,12 +101,9 @@ public class AOneBlock extends GameModeAddon {
         registerRequestHandler(new IslandStatsHandler(this));
         registerRequestHandler(new LocationStatsHandler(this));
 
-        // Decide if UniHologram is Usable
-        useUniHologram = Bukkit.getPluginManager().isPluginEnabled("UniHologram");
-        if (this.useUniHologram) {
-            holoListener = new HoloListener(this);
-            registerListener(holoListener);
-        }
+        // Use hologram
+        holoListener = new HoloListener(this);
+        registerListener(holoListener);
     }
 
     private void registerPlaceholders() {
@@ -136,9 +131,7 @@ public class AOneBlock extends GameModeAddon {
         blockListener.saveCache();
 
         // Clear holograms
-        if (useUniHologram) {
-            holoListener.clear();
-        }
+        holoListener.clear();
     }
 
     @Override
@@ -262,9 +255,7 @@ public class AOneBlock extends GameModeAddon {
         this.saveWorldSettings();
 
         // Manage Old Holograms
-        if (useUniHologram()) {
-            holoListener.setUp();
-        }
+        holoListener.setUp();
     }
 
     /**
@@ -302,12 +293,4 @@ public class AOneBlock extends GameModeAddon {
     public HoloListener getHoloListener() {
         return holoListener;
     }
-
-    /**
-     * @return whether to use UniHologram or Not
-     */
-    public boolean useUniHologram() {
-        return useUniHologram;
-    }
-
 }

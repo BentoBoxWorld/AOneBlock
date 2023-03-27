@@ -332,12 +332,4 @@ public class AOneBlockTest {
         assertNull(addon.getHoloListener());
     }
 
-    /**
-     * Test method for {@link world.bentobox.aoneblock.AOneBlock#useUniHologram()}.
-     */
-    @Test
-    public void testUseUniHologram() {
-        assertFalse(addon.useUniHologram());
-    }
-
 }
