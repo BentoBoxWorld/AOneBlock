@@ -72,6 +72,11 @@ public class Settings implements WorldSettings {
     @ConfigEntry(path = "aoneblock.command.set-count-command", since = "1.10.0")
     private String setCountCommand = "setCount";
 
+    @ConfigComment("How long a player must wait until they can use the setCount command again. In minutes.")
+    @ConfigComment("This is the command that is run from the phases panel.")
+    @ConfigEntry(path = "aoneblock.command.set-count-cooldown", since = "1.13.0")
+    private int setCountCooldown = 5;
+
     @ConfigComment("The command label that allows to check if magic block is present and respawns it if not.")
     @ConfigComment("By default it is 'respawnBlock check'.")
     @ConfigEntry(path = "aoneblock.command.respawn-block-command", since = "1.10.0")
@@ -2003,5 +2008,19 @@ public class Settings implements WorldSettings {
 
     public void setHologramDuration(int hologramDuration) {
         this.hologramDuration = hologramDuration;
+    }
+
+    /**
+     * @return the setCountCooldown
+     */
+    public int getSetCountCooldown() {
+        return setCountCooldown;
+    }
+
+    /**
+     * @param setCountCooldown the setCountCooldown to set
+     */
+    public void setSetCountCooldown(int setCountCooldown) {
+        this.setCountCooldown = setCountCooldown;
     }
 }

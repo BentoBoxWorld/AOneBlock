@@ -40,6 +40,15 @@ public class IslandSetCountCommand extends CompositeCommand {
     }
 
     @Override
+    public boolean canExecute(User user, String label, List<String> args) {
+        // Check cooldown
+        if (addon.getSettings().getSetCountCooldown() > 0 && checkCooldown(user)) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
     public boolean execute(User user, String label, List<String> args) {
         if (args.size() != 1) {
             showHelp(this, user);
@@ -75,6 +84,7 @@ public class IslandSetCountCommand extends CompositeCommand {
         i.setBlockNumber(count);
         i.clearQueue();
         user.sendMessage("aoneblock.commands.island.setcount.set", TextVariables.NUMBER, String.valueOf(i.getBlockNumber()));
+        setCooldown(user.getUniqueId(), addon.getSettings().getSetCountCooldown() * 60);
         return true;
     }
 

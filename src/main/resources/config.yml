@@ -31,6 +31,10 @@ aoneblock:
     # By default it is 'setCount'.
     # Added since 1.10.0.
     set-count-command: setCount
+    # How long a player must wait until they can use the setCount command again. In minutes.
+    # This is the command that is run from the phases panel.
+    # Added since 1.13.0
+    set-count-cooldown: 5
     # The command label that allows to check if magic block is present and respawns it if not.
     # By default it is 'respawnBlock check'.
     # Added since 1.10.0.
