@@ -101,6 +101,10 @@ public class Settings implements WorldSettings {
     @ConfigComment("Other plugins may override this setting")
     @ConfigEntry(path = "world.difficulty")
     private Difficulty difficulty = Difficulty.NORMAL;
+    
+    @ConfigComment("Display holograms")
+    @ConfigEntry(path = "world.holograms")
+    private boolean useHolograms = true;
 
     @ConfigComment("Duration in seconds that phase holograms will exist after being displayed, if used.")
     @ConfigComment("If set to 0, then holograms will persist until cleared some other way.")
@@ -2022,5 +2026,19 @@ public class Settings implements WorldSettings {
      */
     public void setSetCountCooldown(int setCountCooldown) {
         this.setCountCooldown = setCountCooldown;
+    }
+
+    /**
+     * @return the useHolograms
+     */
+    public boolean isUseHolograms() {
+        return useHolograms;
+    }
+
+    /**
+     * @param useHolograms the useHolograms to set
+     */
+    public void setUseHolograms(boolean useHolograms) {
+        this.useHolograms = useHolograms;
     }
 }

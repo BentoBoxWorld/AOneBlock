@@ -1,7 +1,6 @@
 package world.bentobox.aoneblock;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
@@ -176,7 +175,6 @@ public class AOneBlockTest {
         when(plugin.getFlagsManager()).thenReturn(fm);
         when(fm.getFlags()).thenReturn(Collections.emptyList());
 
-
     }
 
     private void add(Path path, JarOutputStream tempJarOutputStream) throws FileNotFoundException, IOException {
@@ -337,7 +335,8 @@ public class AOneBlockTest {
      */
     @Test
     public void testUseHolographicDisplays() {
-        assertFalse(addon.useHolographicDisplays());
+        addon.onLoad();
+        assertTrue(addon.useHolographicDisplays());
     }
 
 }

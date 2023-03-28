@@ -53,6 +53,8 @@ world:
   # World difficulty setting - PEACEFUL, EASY, NORMAL, HARD
   # Other plugins may override this setting
   difficulty: NORMAL
+  # Display holograms
+  holograms: true
   # Duration in seconds that phase holograms will exist after being displayed, if used.
   # If set to 0, then holograms will persist until cleared some other way.
   hologram-duration: 10

@@ -46,7 +46,6 @@ public class AOneBlock extends GameModeAddon {
     private BlockListener blockListener;
     private OneBlocksManager oneBlockManager;
     private PlaceholdersManager phManager;
-    private boolean useHolographicDisplays = true; // TODO: make a setting
     private HoloListener holoListener;
 
     @Override
@@ -293,7 +292,7 @@ public class AOneBlock extends GameModeAddon {
      * @return whether to use Holographic Displays or Not
      */
     public boolean useHolographicDisplays() {
-        return useHolographicDisplays;
+        return settings.isUseHolograms();
     }
 
 }
