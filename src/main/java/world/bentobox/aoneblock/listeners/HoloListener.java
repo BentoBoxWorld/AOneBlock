@@ -16,6 +16,7 @@ import world.bentobox.aoneblock.oneblocks.OneBlockPhase;
 import world.bentobox.bentobox.api.events.island.IslandDeleteEvent;
 import world.bentobox.bentobox.api.user.User;
 import world.bentobox.bentobox.database.objects.Island;
+import world.bentobox.bentobox.util.Util;
 
 import java.util.IdentityHashMap;
 import java.util.Map;
@@ -137,7 +138,7 @@ public class HoloListener implements Listener {
 
     protected void process(@NonNull Island i, @NonNull OneBlockIslands is, @NonNull OneBlockPhase phase) {
         String holoLine = phase.getHologramLine(is.getBlockNumber());
-        is.setHologram(holoLine == null ? "" : holoLine);
+        is.setHologram(holoLine == null ? "" : Util.translateColorCodes(holoLine));
         updateLines(i, is);
     }
 }
