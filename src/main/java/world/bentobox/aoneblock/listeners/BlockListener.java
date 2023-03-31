@@ -332,9 +332,7 @@ public class BlockListener implements Listener {
         OneBlockIslands is = new OneBlockIslands(island.getUniqueId());
         cache.put(island.getUniqueId(), is);
         handler.saveObjectAsync(is);
-        if (addon.useHolographicDisplays()) {
-            addon.getHoloListener().setUp(island, is);
-        }
+        addon.getHoloListener().setUp(island, is, true);
     }
 
 
@@ -389,9 +387,7 @@ public class BlockListener implements Listener {
             }
         }
         // Manage Holograms
-        if (addon.useHolographicDisplays()) {
-            addon.getHoloListener().process(i, is, phase);
-        }
+        addon.getHoloListener().process(i, is, phase);
         // Play warning sound for upcoming mobs
         if (addon.getSettings().getMobWarning() > 0) {
             playWarning(is, block);

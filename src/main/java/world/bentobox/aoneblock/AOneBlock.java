@@ -129,6 +129,9 @@ public class AOneBlock extends GameModeAddon {
     public void onDisable() {
         // save cache
         blockListener.saveCache();
+
+        // Clear holograms
+        holoListener.clear();
     }
 
     @Override
@@ -250,6 +253,9 @@ public class AOneBlock extends GameModeAddon {
     public void allLoaded() {
         // save settings. This will occur after all addons have loaded
         this.saveWorldSettings();
+
+        // Manage Old Holograms
+        holoListener.setUp();
     }
 
     /**
@@ -287,12 +293,4 @@ public class AOneBlock extends GameModeAddon {
     public HoloListener getHoloListener() {
         return holoListener;
     }
-
-    /**
-     * @return whether to use Holographic Displays or Not
-     */
-    public boolean useHolographicDisplays() {
-        return settings.isUseHolograms();
-    }
-
 }
