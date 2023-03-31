@@ -70,7 +70,7 @@ public class HoloListener implements Listener {
 
     private void updateLines(Island island, OneBlockIslands oneBlockIsland) {
         // Ignore if holograms are disabled
-        if (addon.getSettings().isUseHolograms()) {
+        if (!addon.getSettings().isUseHolograms()) {
             return;
         }
 
