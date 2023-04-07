@@ -7,6 +7,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -31,6 +32,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockFromToEvent;
+import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jdt.annotation.Nullable;
 import org.junit.After;
 import org.junit.Before;
@@ -45,6 +47,8 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.reflect.Whitebox;
 
 import world.bentobox.aoneblock.AOneBlock;
+import world.bentobox.aoneblock.dataobjects.OneBlockIslands;
+import world.bentobox.aoneblock.oneblocks.OneBlockPhase;
 import world.bentobox.aoneblock.oneblocks.OneBlocksManager;
 import world.bentobox.bank.Bank;
 import world.bentobox.bank.BankManager;
@@ -80,7 +84,7 @@ public class BlockListenerTest {
     private static AbstractDatabaseHandler<Object> h;
     @Mock
     private Settings pluginSettings;
-    @Mock
+
     private User user;
     @Mock
     private World world;
@@ -104,6 +108,10 @@ public class BlockListenerTest {
     private Location location;
     @Mock
     private IslandsManager im;
+
+    private @NonNull OneBlockIslands is;
+
+    private @NonNull OneBlockPhase phase;
 
     @SuppressWarnings("unchecked")
     @BeforeClass
@@ -142,12 +150,15 @@ public class BlockListenerTest {
         when(addon.getPlayers()).thenReturn(pm);
         when(addon.getOverWorld()).thenReturn(world);
         when(addon.getIslands()).thenReturn(im);
+        when(addon.inWorld(world)).thenReturn(true);
 
         // Player
         when(player.getUniqueId()).thenReturn(UUID.randomUUID());
         when(player.getName()).thenReturn("tastybento");
+        when(player.isOnline()).thenReturn(true);
+        when(player.getWorld()).thenReturn(world);
         User.setPlugin(plugin);
-        User.getInstance(player);
+        user = User.getInstance(player);
 
         // Island
         island = new Island();
@@ -156,6 +167,7 @@ public class BlockListenerTest {
 
         // Players Manager
         when(pm.getName(any())).thenReturn("tastybento2");
+        when(pm.getUser(any(UUID.class))).thenReturn(user);
 
         // Bank
         BankManager bm = mock(BankManager.class);
@@ -269,4 +281,143 @@ public class BlockListenerTest {
         bl.onBlockFromTo(e);
         assertTrue(e.isCancelled());
     }
+    
+    /**
+     * Test method for {@link world.bentobox.aoneblock.listeners.BlockListener#checkPhase(Player, Island, world.bentobox.aoneblock.dataobjects.OneBlockIslands, world.bentobox.aoneblock.oneblocks.OneBlockPhase)}
+     */
+    @Test
+    public void testCheckPhase() {
+        // Set up that a phase has been completed
+        is = new OneBlockIslands(UUID.randomUUID().toString());
+        is.setPhaseName("Previous");
+        is.setBlockNumber(500);
+        is.setLifetime(500L);
+        // The phase the user has just moved to
+        phase = new OneBlockPhase("500");
+        phase.setPhaseName("Next Phase");
+        phase.setStartCommands(List.of("start1", "start2"));
+        
+        // The previous phase        
+        OneBlockPhase previous = mock(OneBlockPhase.class);
+        when(previous.getPhaseName()).thenReturn("Previous");
+        
+        when(obm.getPhase("Previous")).thenReturn(Optional.of(previous));
+        
+        assertTrue(bl.checkPhase(player, island, is, phase));
+        // Verify commands run
+        verify(previous).getEndCommands();
+        verify(previous).getFirstTimeEndCommands();
+        // Verify title shown
+        verify(player).sendTitle("Next Phase", null, -1, -1, -1);
+        
+    }
+    
+    /**
+     * Test method for {@link world.bentobox.aoneblock.listeners.BlockListener#checkPhase(Player, Island, world.bentobox.aoneblock.dataobjects.OneBlockIslands, world.bentobox.aoneblock.oneblocks.OneBlockPhase)}
+     */
+    @Test
+    public void testCheckPhaseSecondTime() {
+        // Set up that a phase has been completed
+        is = new OneBlockIslands(UUID.randomUUID().toString());
+        is.setPhaseName("Previous");
+        is.setBlockNumber(500);
+        is.setLifetime(10500L);
+        // The phase the user has just moved to
+        phase = new OneBlockPhase("500");
+        phase.setPhaseName("Next Phase");
+        phase.setStartCommands(List.of("start1", "start2"));
+        
+        // The previous phase        
+        OneBlockPhase previous = mock(OneBlockPhase.class);
+        when(previous.getPhaseName()).thenReturn("Previous");
+        
+        when(obm.getPhase("Previous")).thenReturn(Optional.of(previous));
+        
+        assertTrue(bl.checkPhase(player, island, is, phase));
+        // Verify commands run
+        verify(previous).getEndCommands();
+        verify(previous, never()).getFirstTimeEndCommands();
+        // Verify title shown
+        verify(player).sendTitle("Next Phase", null, -1, -1, -1);
+        
+    }
+    
+    /**
+     * Test method for {@link world.bentobox.aoneblock.listeners.BlockListener#checkPhase(Player, Island, world.bentobox.aoneblock.dataobjects.OneBlockIslands, world.bentobox.aoneblock.oneblocks.OneBlockPhase)}
+     */
+    @Test
+    public void testCheckPhaseNullPlayer() {
+        // Set up that a phase has been completed
+        is = new OneBlockIslands(UUID.randomUUID().toString());
+        is.setPhaseName("Previous");
+        is.setBlockNumber(500);
+        is.setLifetime(500L);
+        // The phase the user has just moved to
+        phase = new OneBlockPhase("500");
+        phase.setPhaseName("Next Phase");
+        phase.setStartCommands(List.of("start1", "start2"));
+        
+        // The previous phase        
+        OneBlockPhase previous = mock(OneBlockPhase.class);
+        when(previous.getPhaseName()).thenReturn("Previous");
+        
+        when(obm.getPhase("Previous")).thenReturn(Optional.of(previous));
+        
+        assertTrue(bl.checkPhase(null, island, is, phase));
+        // Verify commands run
+        verify(previous).getEndCommands();
+        verify(previous).getFirstTimeEndCommands();
+        // Verify title shown
+        verify(player).sendTitle("Next Phase", null, -1, -1, -1);
+        
+    }
+    
+    /**
+     * Test method for {@link world.bentobox.aoneblock.listeners.BlockListener#checkPhase(Player, Island, world.bentobox.aoneblock.dataobjects.OneBlockIslands, world.bentobox.aoneblock.oneblocks.OneBlockPhase)}
+     */
+    @Test
+    public void testCheckPhaseNPCPlayer() {
+        when(player.hasMetadata("NPC")).thenReturn(true);
+        // Set up that a phase has been completed
+        is = new OneBlockIslands(UUID.randomUUID().toString());
+        is.setPhaseName("Previous");
+        is.setBlockNumber(500);
+        is.setLifetime(500L);
+        // The phase the user has just moved to
+        phase = new OneBlockPhase("500");
+        phase.setPhaseName("Next Phase");
+        phase.setStartCommands(List.of("start1", "start2"));
+        
+        // The previous phase        
+        OneBlockPhase previous = mock(OneBlockPhase.class);
+        when(previous.getPhaseName()).thenReturn("Previous");
+        
+        when(obm.getPhase("Previous")).thenReturn(Optional.of(previous));
+        
+        assertTrue(bl.checkPhase(player, island, is, phase));
+        // Verify commands run
+        verify(previous).getEndCommands();
+        verify(previous).getFirstTimeEndCommands();
+        // Verify title shown
+        verify(player).sendTitle("Next Phase", null, -1, -1, -1);
+        
+    }
+    
+    /**
+     * Test method for {@link world.bentobox.aoneblock.listeners.BlockListener#checkPhase(Player, Island, world.bentobox.aoneblock.dataobjects.OneBlockIslands, world.bentobox.aoneblock.oneblocks.OneBlockPhase)}
+     */
+    @Test
+    public void testCheckSamePhase() {
+        is = new OneBlockIslands(UUID.randomUUID().toString());
+        is.setPhaseName("Previous");
+        is.setBlockNumber(500);
+        is.setLifetime(500L);
+        // The phase the user has just moved to
+        phase = new OneBlockPhase("500");
+        phase.setPhaseName("Previous");
+                
+        assertFalse(bl.checkPhase(player, island, is, phase));
+        
+    }
+    
 }

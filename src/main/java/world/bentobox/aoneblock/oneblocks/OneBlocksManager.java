@@ -61,6 +61,7 @@ public class OneBlocksManager {
     private static final String GOTO_BLOCK = "gotoBlock";
     private static final String START_COMMANDS = "start-commands";
     private static final String END_COMMANDS = "end-commands";
+    private static final String END_COMMANDS_FIRST_TIME = "end-commands-first-time";
     private static final String REQUIREMENTS = "requirements";
     private final AOneBlock addon;
     private TreeMap<Integer, OneBlockPhase> blockProbs;
@@ -302,6 +303,9 @@ public class OneBlocksManager {
         }
         if (phase.contains(END_COMMANDS)) {
             obPhase.setEndCommands(phase.getStringList(END_COMMANDS));
+        }
+        if (phase.contains(END_COMMANDS_FIRST_TIME)) {
+            obPhase.setFirstTimeEndCommands(phase.getStringList(END_COMMANDS_FIRST_TIME));
         }
     }
 

@@ -39,6 +39,9 @@
   # - 'broadcast [player] just started OneBlock!'
   # end-commands:
   # - '[SUDO]summon minecraft:wither'
+  # These are run only the first time a phase is completed
+  # end-commands-first-time:
+  # - 'broadcast &c&l[!] &b[player] &fhas completed the &d&n[phase]&f phase for the first time.'
   #
   # Requirements
   # You can stipulate a set of requirements to start the phase:
