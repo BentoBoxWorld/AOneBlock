@@ -1,0 +1,9 @@
+name: BentoBox-AOneBlock
+main: world.bentobox.aoneblock.AOneBlockPladdon
+version: ${project.version}${build.number}
+api-version: "1.18"
+
+authors: [tastybento]
+contributors: ["The BentoBoxWorld Community"]
+website: https://bentobox.world
+description: ${project.description}
