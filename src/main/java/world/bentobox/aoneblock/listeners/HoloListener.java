@@ -6,7 +6,6 @@ import org.bukkit.entity.Display.Billboard;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.TextDisplay;
-import org.bukkit.entity.TextDisplay.TextAligment;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -69,7 +68,7 @@ public class HoloListener implements Listener {
                     && e.getLocation().getBlockZ() == pos.getBlockZ()).forEach(Entity::remove);
             TextDisplay td = (TextDisplay) center.getWorld().spawnEntity(pos, EntityType.TEXT_DISPLAY);
             td.setText(hololine);
-            td.setAlignment(TextAligment.CENTER);
+            td.setAlignment(TextDisplay.TextAlignment.CENTER);
             td.setBillboard(Billboard.CENTER);
             // Kill hologram
             Bukkit.getScheduler().runTaskLater(addon.getPlugin(), () -> {
