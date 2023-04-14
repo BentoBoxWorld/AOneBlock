@@ -5,7 +5,6 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Display.Billboard;
 import org.bukkit.entity.TextDisplay;
-import org.bukkit.entity.TextDisplay.TextAligment;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;

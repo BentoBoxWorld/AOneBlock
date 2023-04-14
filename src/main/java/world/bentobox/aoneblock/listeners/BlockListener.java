@@ -501,7 +501,7 @@ public class BlockListener implements Listener {
      * @param phase  - current phase name
      * @return true if this is a new phase, false if not
      */
-    private boolean checkPhase(@Nullable Player player, @NonNull Island i, @NonNull OneBlockIslands is, @NonNull OneBlockPhase phase) {
+    protected boolean checkPhase(@Nullable Player player, @NonNull Island i, @NonNull OneBlockIslands is, @NonNull OneBlockPhase phase) {
         // Handle NPCs
         User user;
         if (player == null || player.hasMetadata("NPC")) {
@@ -519,6 +519,12 @@ public class BlockListener implements Listener {
                 Util.runCommands(user,
                         replacePlaceholders(player, oldPhaseName, phase.getBlockNumber(), i, oldPhase.getEndCommands()),
                         "Commands run for end of " + oldPhaseName);
+                // If first time
+                if (is.getBlockNumber() >= is.getLifetime()) {
+                    Util.runCommands(user,
+                            replacePlaceholders(player, oldPhaseName, phase.getBlockNumber(), i, oldPhase.getFirstTimeEndCommands()),
+                            "Commands run for first time completing " + oldPhaseName);
+                }
             });
             // Set the phase name
             is.setPhaseName(phaseName);

@@ -54,6 +54,7 @@ public class OneBlockPhase {
     private int entityTotal = 0;
     private List<String> startCommands;
     private List<String> endCommands;
+    private List<String> firstTimeEndCommands;
     private List<Requirement> requirements;
     private Map<Integer, OneBlockObject> fixedBlocks;
     private Map<Integer, String> holograms;
@@ -68,6 +69,7 @@ public class OneBlockPhase {
         this.blockNumber = blockNumber;
         startCommands = new ArrayList<>();
         endCommands = new ArrayList<>();
+        firstTimeEndCommands = new ArrayList<>();
         requirements = new ArrayList<>();
         fixedBlocks = new HashMap<>();
         holograms = new HashMap<>();
@@ -406,6 +408,20 @@ public class OneBlockPhase {
     }
 
     /**
+     * @return the firstTimeEndCommands
+     */
+    public List<String> getFirstTimeEndCommands() {
+        return firstTimeEndCommands;
+    }
+
+    /**
+     * @param firstTimeEndCommands the firstTimeEndCommands to set
+     */
+    public void setFirstTimeEndCommands(List<String> firstTimeEndCommands) {
+        this.firstTimeEndCommands = firstTimeEndCommands;
+    }
+
+    /**
      * @return the fixedBlocks
      */
     public Map<Integer, OneBlockObject> getFixedBlocks() {
@@ -441,4 +457,6 @@ public class OneBlockPhase {
                 + (fixedBlocks != null ? "fixedBlocks=" + fixedBlocks + ", " : "")
                 + (holograms != null ? "holograms=" + holograms : "") + "]";
     }
+
+
 }
