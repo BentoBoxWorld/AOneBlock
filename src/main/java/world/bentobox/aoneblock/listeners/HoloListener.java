@@ -54,7 +54,7 @@ public class HoloListener implements Listener {
         assert world != null;
 
         TextDisplay newDisplay = world.spawn(pos, TextDisplay.class);
-        newDisplay.setAlignment(TextAligment.CENTER);
+        newDisplay.setAlignment(TextDisplay.TextAlignment.CENTER);
         newDisplay.setBillboard(Billboard.CENTER);
 
         cachedHolograms.put(island, newDisplay);
