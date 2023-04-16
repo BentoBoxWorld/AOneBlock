@@ -329,14 +329,4 @@ public class AOneBlockTest {
     public void testGetHoloListener() {
         assertNull(addon.getHoloListener());
     }
-
-    /**
-     * Test method for {@link world.bentobox.aoneblock.AOneBlock#useHolographicDisplays()}.
-     */
-    @Test
-    public void testUseHolographicDisplays() {
-        addon.onLoad();
-        assertTrue(addon.useHolographicDisplays());
-    }
-
 }
