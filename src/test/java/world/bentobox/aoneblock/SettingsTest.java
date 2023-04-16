@@ -1705,4 +1705,33 @@ public class SettingsTest {
         assertEquals("respawn", s.getRespawnBlockCommand());
     }
 
+    /**
+     * Test method for {@link world.bentobox.aoneblock.Settings#isUseHolograms()}.
+     */
+    @Test
+    public void testIsUseHolograms() {
+        assertTrue(s.isUseHolograms());
+    }
+    
+    /**
+     * Test method for {@link world.bentobox.aoneblock.Settings#setUseHolograms(boolean)}.
+     */
+    @Test
+    public void testSetUseHolograms() {
+        assertTrue(s.isUseHolograms());
+        s.setUseHolograms(false);
+        assertFalse(s.isUseHolograms());
+    }
+    
+    /**
+     * Test method for {@link world.bentobox.aoneblock.Settings#setHologramDuration(int)}.
+     */
+    @Test
+    public void testSetHologramDuration() {
+        s.setHologramDuration(2345);
+        assertEquals(2345, s.getHologramDuration());
+    }
+    
+    
+    
 }

@@ -31,6 +31,10 @@ aoneblock:
     # By default it is 'setCount'.
     # Added since 1.10.0.
     set-count-command: setCount
+    # How long a player must wait until they can use the setCount command again. In minutes.
+    # This is the command that is run from the phases panel.
+    # Added since 1.13.0
+    set-count-cooldown: 5
     # The command label that allows to check if magic block is present and respawns it if not.
     # By default it is 'respawnBlock check'.
     # Added since 1.10.0.
@@ -49,6 +53,8 @@ world:
   # World difficulty setting - PEACEFUL, EASY, NORMAL, HARD
   # Other plugins may override this setting
   difficulty: NORMAL
+  # Display holograms
+  holograms: true
   # Duration in seconds that phase holograms will exist after being displayed, if used.
   # If set to 0, then holograms will persist until cleared some other way.
   hologram-duration: 10

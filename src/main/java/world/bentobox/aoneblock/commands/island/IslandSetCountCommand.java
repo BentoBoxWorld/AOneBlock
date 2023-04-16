@@ -1,6 +1,7 @@
 package world.bentobox.aoneblock.commands.island;
 
 import java.util.List;
+import java.util.Objects;
 
 import org.eclipse.jdt.annotation.NonNull;
 
@@ -35,6 +36,16 @@ public class IslandSetCountCommand extends CompositeCommand {
         // Permission
         setPermission("island.setcount");
         addon = getAddon();
+        setConfigurableRankCommand();
+    }
+
+    @Override
+    public boolean canExecute(User user, String label, List<String> args) {
+        // Check cooldown
+        if (addon.getSettings().getSetCountCooldown() > 0 && checkCooldown(user)) {
+            return false;
+        }
+        return true;
     }
 
     @Override
@@ -43,15 +54,16 @@ public class IslandSetCountCommand extends CompositeCommand {
             showHelp(this, user);
             return false;
         }
-        // Get their island
-        Island island = getIslands().getIsland(getWorld(), user);
-        if (island == null) {
+        // Player issuing the command must have an island or be in a team
+        if (!getIslands().inTeam(getWorld(), user.getUniqueId()) && !getIslands().hasIsland(getWorld(), user.getUniqueId())) {
             user.sendMessage("general.errors.no-island");
             return false;
         }
-        // Check ownership
-        if (!getIslands().hasIsland(getWorld(), user)) {
-            user.sendMessage("general.errors.not-owner");
+        // Check rank to use command
+        Island island = Objects.requireNonNull(getIslands().getIsland(getWorld(), user));
+        int rank = island.getRank(user);
+        if (rank < island.getRankCommand(getUsage())) {
+            user.sendMessage("general.errors.insufficient-rank", TextVariables.RANK, user.getTranslation(getPlugin().getRanksManager().getRank(rank)));
             return false;
         }
         // Get value
@@ -72,6 +84,7 @@ public class IslandSetCountCommand extends CompositeCommand {
         i.setBlockNumber(count);
         i.clearQueue();
         user.sendMessage("aoneblock.commands.island.setcount.set", TextVariables.NUMBER, String.valueOf(i.getBlockNumber()));
+        setCooldown(user.getUniqueId(), addon.getSettings().getSetCountCooldown() * 60);
         return true;
     }
 
