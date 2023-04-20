@@ -110,6 +110,12 @@ public class Settings implements WorldSettings {
     @ConfigComment("If set to 0, then holograms will persist until cleared some other way.")
     @ConfigEntry(path = "world.hologram-duration")
     private int hologramDuration = 10;
+    
+    @ConfigComment("Clear blocks when spawning mobs.")
+    @ConfigComment("Mobs break blocks when they spawn is to prevent players from building a box around the magic block,")
+    @ConfigComment("having the mob spawn, and then die by suffocation, i.e., it's a cheat prevention.")
+    @ConfigEntry(path = "world.mobs-clear-blocks")
+    private boolean clearBlocks = true;
 
     @ConfigComment("Spawn limits. These override the limits set in bukkit.yml")
     @ConfigComment("If set to a negative number, the server defaults will be used")
@@ -2040,5 +2046,19 @@ public class Settings implements WorldSettings {
      */
     public void setUseHolograms(boolean useHolograms) {
         this.useHolograms = useHolograms;
+    }
+
+    /**
+     * @return the clearBlocks
+     */
+    public boolean isClearBlocks() {
+        return clearBlocks;
+    }
+
+    /**
+     * @param clearBlocks the clearBlocks to set
+     */
+    public void setClearBlocks(boolean clearBlocks) {
+        this.clearBlocks = clearBlocks;
     }
 }

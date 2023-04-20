@@ -187,9 +187,9 @@ public class BlockListener implements Listener {
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     private void cleanCache(BentoBoxReadyEvent e) {
         handler.loadObjects().forEach(i -> 
-            addon.getIslandsManager().getIslandById(i.getUniqueId())
-            .filter(is -> !addon.inWorld(is.getWorld()) || is.isUnowned())
-            .ifPresent(is -> handler.deleteID(is.getUniqueId())));
+        addon.getIslandsManager().getIslandById(i.getUniqueId())
+        .filter(is -> !addon.inWorld(is.getWorld()) || is.isUnowned())
+        .ifPresent(is -> handler.deleteID(is.getUniqueId())));
     }
 
     /**
@@ -656,7 +656,9 @@ public class BlockListener implements Listener {
         Location spawnLoc = block.getLocation().add(new Vector(0.5D, 1D, 0.5D));
         Entity entity = block.getWorld().spawnEntity(spawnLoc, nextBlock.getEntityType());
         // Make space for entity - this will blot out blocks
-        makeSpace(entity, spawnLoc);
+        if (addon.getSettings().isClearBlocks()) {
+            makeSpace(entity, spawnLoc);
+        }
         block.getWorld().playSound(block.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 1F, 2F);
     }
 
