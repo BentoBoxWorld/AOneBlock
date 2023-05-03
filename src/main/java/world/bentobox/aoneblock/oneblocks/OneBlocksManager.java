@@ -18,6 +18,7 @@ import java.util.TreeMap;
 import java.util.jar.JarFile;
 import java.util.stream.Collectors;
 
+import dev.lone.itemsadder.api.CustomBlock;
 import org.apache.commons.lang.math.NumberUtils;
 import org.bukkit.Material;
 import org.bukkit.block.Biome;
@@ -402,7 +403,20 @@ public class OneBlocksManager {
         if (phase.isConfigurationSection(BLOCKS)) {
             ConfigurationSection blocks = phase.getConfigurationSection(BLOCKS);
             for (String material : blocks.getKeys(false)) {
-                addMaterial(obPhase, material, Objects.toString(blocks.get(material)));
+                if (Material.getMaterial(material) != null) {
+                    addMaterial(obPhase, material, Objects.toString(blocks.get(material)));
+                } else {
+                    if (addon.hasItemsAdder()) {
+                        CustomBlock block = CustomBlock.getInstance(material);
+                        if (block != null) {
+                            addItemsAdderBlock(obPhase, material, Objects.toString(blocks.get(material)));
+                        } else {
+                            addon.logError("Bad block material in " + obPhase.getPhaseName() + ": " + material);
+                        }
+                    } else {
+                        addon.logError("Bad block material in " + obPhase.getPhaseName() + ": " + material);
+                    }
+                }
             }
         } else if (phase.isList(BLOCKS)) {
             List<Map<?, ?>> blocks = phase.getMapList(BLOCKS);
@@ -444,6 +458,21 @@ public class OneBlocksManager {
             obPhase.addBlock(m, prob);
             return true;
         }
+    }
+
+    private void addItemsAdderBlock(OneBlockPhase obPhase, String block, String probability) {
+        int prob;
+        try {
+            prob = Integer.parseInt(probability);
+            if (prob < 1) {
+                addon.logWarning("Bad item weight for " + obPhase.getPhaseName() + ": " + block + ". Must be positive number above 1.");
+            } else {
+                obPhase.addItemsAdderCustomBlock(block, prob);
+            }
+        } catch (Exception e) {
+            addon.logError("Bad item weight for " + obPhase.getPhaseName() + ": " + block + ". Must be a number.");
+        }
+
     }
 
     /**
