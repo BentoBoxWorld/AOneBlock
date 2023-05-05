@@ -396,9 +396,6 @@ public class OneBlocksManager {
     }
 
     void addBlocks(OneBlockPhase obPhase, ConfigurationSection phase) {
-        if (!phase.isConfigurationSection(BLOCKS)) {
-            return;
-        }
         if (phase.isConfigurationSection(BLOCKS)) {
             ConfigurationSection blocks = phase.getConfigurationSection(BLOCKS);
             for (String material : blocks.getKeys(false)) {
