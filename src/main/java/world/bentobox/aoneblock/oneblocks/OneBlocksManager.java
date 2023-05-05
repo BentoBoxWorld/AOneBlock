@@ -423,7 +423,6 @@ public class OneBlocksManager {
     }
 
     private boolean addMaterial(OneBlockPhase obPhase, String material, String probability) {
-        Material m = Material.matchMaterial(material);
         int prob;
         try {
             prob = Integer.parseInt(probability);
@@ -431,16 +430,26 @@ public class OneBlocksManager {
             return false;
         }
 
+        if (prob < 1) {
+            addon.logWarning("Bad item weight for " + obPhase.getPhaseName() + ": " + material + ". Must be positive number above 1.");
+            return false;
+        }
+
+        // Register if the material is a valid custom block and can be created from the short creator from OneBlockCustomBlockCreator
+        Optional<OneBlockCustomBlock> optionalCustomBlock = OneBlockCustomBlockCreator.create(material);
+        if (optionalCustomBlock.isPresent()) {
+            obPhase.addCustomBlock(optionalCustomBlock.get(), prob);
+            return true;
+        }
+
+        // Otherwise, register the material as a block
+        Material m = Material.matchMaterial(material);
         if (m == null || !m.isBlock()) {
             addon.logError("Bad block material in " + obPhase.getPhaseName() + ": " + material);
             return false;
-        } else if (prob < 1) {
-            addon.logWarning("Bad item weight for " + obPhase.getPhaseName() + ": " + material + ". Must be positive number above 1.");
-            return false;
-        } else {
-            obPhase.addBlock(m, prob);
-            return true;
         }
+        obPhase.addBlock(m, prob);
+        return true;
     }
 
     /**

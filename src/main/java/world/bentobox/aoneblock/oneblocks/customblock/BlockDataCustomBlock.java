@@ -23,11 +23,11 @@ public class BlockDataCustomBlock implements OneBlockCustomBlock {
     }
 
     public static Optional<BlockDataCustomBlock> fromMap(Map<?, ?> map) {
-        if (map.containsKey("data")) {
-            return Optional.of(new BlockDataCustomBlock(Objects.toString(map.get("data"))));
-        } else {
+        String type = Objects.toString(map.get("data"), null);
+        if (type == null) {
             return Optional.empty();
         }
+        return Optional.of(new BlockDataCustomBlock(type));
     }
 
     @Override

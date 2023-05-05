@@ -16,6 +16,13 @@ public final class OneBlockCustomBlockCreator {
 
     static {
         register("block-data", BlockDataCustomBlock::fromMap);
+        register("short", map -> {
+            String type = Objects.toString(map.get("data"), null);
+            if (type == null) {
+                return Optional.empty();
+            }
+            return create(type);
+        });
     }
 
     private OneBlockCustomBlockCreator() {
@@ -56,14 +63,14 @@ public final class OneBlockCustomBlockCreator {
     }
 
     /**
-     * Create a custom block from the short type
+     * Create a custom block from the string value
      *
-     * @param type the short type
+     * @param value the value
      * @return the custom block
      */
-    public static Optional<OneBlockCustomBlock> create(String type) {
+    public static Optional<OneBlockCustomBlock> create(String value) {
         for (Function<String, Optional<? extends OneBlockCustomBlock>> creator : shortCreatorList) {
-            Optional<? extends OneBlockCustomBlock> customBlock = creator.apply(type);
+            Optional<? extends OneBlockCustomBlock> customBlock = creator.apply(value);
             if (customBlock.isPresent()) {
                 return Optional.of(customBlock.get());
             }
