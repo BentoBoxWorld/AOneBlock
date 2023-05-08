@@ -230,7 +230,14 @@ public class OneBlocksManager {
                 }
             } else {
                 String mat = fb.getString(key);
-                if (mat != null) {
+                if (mat == null) {
+                    continue;
+                }
+
+                Optional<OneBlockCustomBlock> customBlock = OneBlockCustomBlockCreator.create(mat);
+                if (customBlock.isPresent()) {
+                    result.put(k, new OneBlockObject(customBlock.get(), 0));
+                } else {
                     Material m = Material.matchMaterial(mat);
                     if (m != null && m.isBlock()) {
                         result.put(k, new OneBlockObject(m, 0));
