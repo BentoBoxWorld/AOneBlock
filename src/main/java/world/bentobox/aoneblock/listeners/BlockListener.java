@@ -11,6 +11,7 @@ import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
+import dev.lone.itemsadder.api.CustomBlock;
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.Location;
@@ -633,6 +634,13 @@ public class BlockListener implements Listener {
         if (nextBlock.isCustomBlock()) {
             nextBlock.getCustomBlock().setBlock(block);
             return;
+        } else if (nextBlock.isItemsAdderBlock()) {
+            //Get Custom Block from ItemsAdder and place it
+            CustomBlock cBlock = CustomBlock.getInstance(nextBlock.getItemsAdderBlock());
+            if (cBlock != null) {
+                cBlock.place(block.getLocation());
+                return;
+            }
         }
 
         @NonNull

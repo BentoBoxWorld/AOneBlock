@@ -3,11 +3,15 @@ package world.bentobox.aoneblock;
 import java.io.IOException;
 import java.util.Objects;
 
+import dev.lone.itemsadder.api.Events.ItemsAdderLoadDataEvent;
+import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.World.Environment;
 import org.bukkit.WorldCreator;
 import org.bukkit.WorldType;
 import org.bukkit.entity.SpawnCategory;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 import org.bukkit.generator.ChunkGenerator;
 import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jdt.annotation.Nullable;
@@ -16,14 +20,11 @@ import world.bentobox.aoneblock.commands.admin.AdminCommand;
 import world.bentobox.aoneblock.commands.island.PlayerCommand;
 import world.bentobox.aoneblock.dataobjects.OneBlockIslands;
 import world.bentobox.aoneblock.generators.ChunkGeneratorWorld;
-import world.bentobox.aoneblock.listeners.BlockListener;
-import world.bentobox.aoneblock.listeners.BlockProtect;
-import world.bentobox.aoneblock.listeners.HoloListener;
-import world.bentobox.aoneblock.listeners.JoinLeaveListener;
-import world.bentobox.aoneblock.listeners.NoBlockHandler;
+import world.bentobox.aoneblock.listeners.*;
 import world.bentobox.aoneblock.oneblocks.OneBlocksManager;
 import world.bentobox.aoneblock.requests.IslandStatsHandler;
 import world.bentobox.aoneblock.requests.LocationStatsHandler;
+import world.bentobox.bentobox.api.addons.Addon;
 import world.bentobox.bentobox.api.addons.GameModeAddon;
 import world.bentobox.bentobox.api.configuration.Config;
 import world.bentobox.bentobox.api.configuration.WorldSettings;
@@ -38,6 +39,7 @@ public class AOneBlock extends GameModeAddon {
 
     private static final String NETHER = "_nether";
     private static final String THE_END = "_the_end";
+    public static boolean hasItemsAdder = false;
 
     // Settings
     private Settings settings;
@@ -50,6 +52,11 @@ public class AOneBlock extends GameModeAddon {
 
     @Override
     public void onLoad() {
+        // Check if ItemsAdder exists, if yes register listener
+        if (Bukkit.getPluginManager().getPlugin("ItemsAdder") != null) {
+            registerListener(new ItemsAdderListener(this));
+            hasItemsAdder = true;
+        }
         // Save the default config from config.yml
         saveDefaultConfig();
         // Load settings from config.yml. This will check if there are any issues with it too.
@@ -79,18 +86,8 @@ public class AOneBlock extends GameModeAddon {
 
     @Override
     public void onEnable() {
-        try {
-            oneBlockManager = new OneBlocksManager(this);
-            oneBlockManager.loadPhases();
-            blockListener = new BlockListener(this);
-        } catch (IOException e) {
-            // Disable
-            logError("AOneBlock settings could not load (oneblock.yml error)! Addon disabled.");
-            logError(e.getMessage());
-            setState(State.DISABLED);
-            return;
-        }
-        registerListener(blockListener);
+        loadData();
+
         registerListener(new NoBlockHandler(this));
         registerListener(new BlockProtect(this));
         registerListener(new JoinLeaveListener(this));
@@ -104,6 +101,22 @@ public class AOneBlock extends GameModeAddon {
         // Register Holograms
         holoListener = new HoloListener(this);
         registerListener(holoListener);
+    }
+
+    //Load some of Manager
+    public void loadData() {
+        try {
+            oneBlockManager = new OneBlocksManager(this);
+            oneBlockManager.loadPhases();
+            blockListener = new BlockListener(this);
+        } catch (IOException e) {
+            // Disable
+            logError("AOneBlock settings could not load (oneblock.yml error)! Addon disabled.");
+            logError(e.getMessage());
+            setState(State.DISABLED);
+            return;
+        }
+        registerListener(blockListener);
     }
 
     private void registerPlaceholders() {
@@ -292,5 +305,12 @@ public class AOneBlock extends GameModeAddon {
      */
     public HoloListener getHoloListener() {
         return holoListener;
+    }
+
+    /**
+     * @return true if ItemsAdder is on the server
+     */
+    public boolean hasItemsAdder() {
+        return hasItemsAdder;
     }
 }
