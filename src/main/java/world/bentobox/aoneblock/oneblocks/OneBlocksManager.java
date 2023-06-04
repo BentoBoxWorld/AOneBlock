@@ -19,6 +19,7 @@ import java.util.jar.JarFile;
 import java.util.stream.Collectors;
 
 import dev.lone.itemsadder.api.CustomBlock;
+import dev.lone.itemsadder.api.ItemsAdder;
 import org.apache.commons.lang.math.NumberUtils;
 import org.bukkit.Material;
 import org.bukkit.block.Biome;
@@ -410,7 +411,7 @@ public class OneBlocksManager {
                         CustomBlock block = CustomBlock.getInstance(material);
                         if (block != null) {
                             addItemsAdderBlock(obPhase, material, Objects.toString(blocks.get(material)));
-                        } else {
+                        } else if (ItemsAdder.getAllItems().size() != 0){
                             addon.logError("Bad block material in " + obPhase.getPhaseName() + ": " + material);
                         }
                     } else {

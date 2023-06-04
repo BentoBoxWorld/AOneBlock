@@ -35,7 +35,7 @@ import world.bentobox.bentobox.database.objects.Island;
  *
  * @author tastybento
  */
-public class AOneBlock extends GameModeAddon implements Listener {
+public class AOneBlock extends GameModeAddon {
 
     private static final String NETHER = "_nether";
     private static final String THE_END = "_the_end";
@@ -45,8 +45,8 @@ public class AOneBlock extends GameModeAddon implements Listener {
     private Settings settings;
     private ChunkGeneratorWorld chunkGenerator;
     private final Config<Settings> configObject = new Config<>(this, Settings.class);
-    private static BlockListener blockListener;
-    private static OneBlocksManager oneBlockManager;
+    private BlockListener blockListener;
+    private OneBlocksManager oneBlockManager;
     private PlaceholdersManager phManager;
     private HoloListener holoListener;
 
@@ -86,7 +86,7 @@ public class AOneBlock extends GameModeAddon implements Listener {
 
     @Override
     public void onEnable() {
-        loadData(true);
+        loadData();
 
         registerListener(new NoBlockHandler(this));
         registerListener(new BlockProtect(this));
@@ -104,7 +104,7 @@ public class AOneBlock extends GameModeAddon implements Listener {
     }
 
     //Load some of Manager
-    public void loadData(boolean register) {
+    public void loadData() {
         try {
             oneBlockManager = new OneBlocksManager(this);
             oneBlockManager.loadPhases();
@@ -116,9 +116,7 @@ public class AOneBlock extends GameModeAddon implements Listener {
             setState(State.DISABLED);
             return;
         }
-        if (register) {
-            registerListener(blockListener);
-        }
+        registerListener(blockListener);
     }
 
     private void registerPlaceholders() {
