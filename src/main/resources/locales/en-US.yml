@@ -28,6 +28,8 @@ aoneblock:
     count:
       description: show the block count and phase
       info: "&a You are on block &b [number] in the &a [name] phase"
+    info:
+      count: "&a Island is on block &b [number]&a in the &b [name] &a phase. Lifetime count &b [lifetime] &a."
     phases:
       description: show a list of all the phases
       title: "&2 OneBlock Phases"

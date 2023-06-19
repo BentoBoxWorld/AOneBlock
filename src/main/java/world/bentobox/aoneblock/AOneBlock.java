@@ -3,15 +3,12 @@ package world.bentobox.aoneblock;
 import java.io.IOException;
 import java.util.Objects;
 
-import dev.lone.itemsadder.api.Events.ItemsAdderLoadDataEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.World.Environment;
 import org.bukkit.WorldCreator;
 import org.bukkit.WorldType;
 import org.bukkit.entity.SpawnCategory;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
 import org.bukkit.generator.ChunkGenerator;
 import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jdt.annotation.Nullable;
@@ -20,11 +17,16 @@ import world.bentobox.aoneblock.commands.admin.AdminCommand;
 import world.bentobox.aoneblock.commands.island.PlayerCommand;
 import world.bentobox.aoneblock.dataobjects.OneBlockIslands;
 import world.bentobox.aoneblock.generators.ChunkGeneratorWorld;
-import world.bentobox.aoneblock.listeners.*;
+import world.bentobox.aoneblock.listeners.BlockListener;
+import world.bentobox.aoneblock.listeners.BlockProtect;
+import world.bentobox.aoneblock.listeners.HoloListener;
+import world.bentobox.aoneblock.listeners.InfoListener;
+import world.bentobox.aoneblock.listeners.ItemsAdderListener;
+import world.bentobox.aoneblock.listeners.JoinLeaveListener;
+import world.bentobox.aoneblock.listeners.NoBlockHandler;
 import world.bentobox.aoneblock.oneblocks.OneBlocksManager;
 import world.bentobox.aoneblock.requests.IslandStatsHandler;
 import world.bentobox.aoneblock.requests.LocationStatsHandler;
-import world.bentobox.bentobox.api.addons.Addon;
 import world.bentobox.bentobox.api.addons.GameModeAddon;
 import world.bentobox.bentobox.api.configuration.Config;
 import world.bentobox.bentobox.api.configuration.WorldSettings;
@@ -91,6 +93,7 @@ public class AOneBlock extends GameModeAddon {
         registerListener(new NoBlockHandler(this));
         registerListener(new BlockProtect(this));
         registerListener(new JoinLeaveListener(this));
+        registerListener(new InfoListener(this));
         // Register placeholders
         registerPlaceholders();
 

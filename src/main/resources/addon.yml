@@ -1,7 +1,7 @@
 name: AOneBlock
 main: world.bentobox.aoneblock.AOneBlock
 version: ${version}${build.number}
-api-version: 1.16.5
+api-version: 1.24
 metrics: true
 icon: "STONE"
 repository: "BentoBoxWorld/AOneBlock"
