@@ -2,6 +2,8 @@ package world.bentobox.aoneblock.listeners;
 
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -22,6 +24,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import world.bentobox.aoneblock.AOneBlock;
 import world.bentobox.aoneblock.dataobjects.OneBlockIslands;
 import world.bentobox.bentobox.BentoBox;
+import world.bentobox.bentobox.api.addons.Addon;
 import world.bentobox.bentobox.api.events.island.IslandInfoEvent;
 import world.bentobox.bentobox.api.user.User;
 import world.bentobox.bentobox.database.objects.Island;
@@ -127,9 +130,19 @@ public class InfoListenerTest {
      */
     @Test
     public void testOnInfo() {
-        IslandInfoEvent e = new IslandInfoEvent(island, ID, false, location);
+        IslandInfoEvent e = new IslandInfoEvent(island, ID, false, location, addon);
         il.onInfo(e);
         verify(player).sendMessage("aoneblock.commands.info.count");
+    }
+    
+    /**
+     * Test method for {@link world.bentobox.aoneblock.listeners.InfoListener#onInfo(world.bentobox.bentobox.api.events.island.IslandInfoEvent)}.
+     */
+    @Test
+    public void testOnInfoOtherAddon() {
+        IslandInfoEvent e = new IslandInfoEvent(island, ID, false, location, mock(Addon.class));
+        il.onInfo(e);
+        verify(player, never()).sendMessage("aoneblock.commands.info.count");
     }
 
 }

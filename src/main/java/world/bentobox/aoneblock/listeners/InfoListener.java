@@ -30,6 +30,8 @@ public class InfoListener implements Listener {
      */
     @EventHandler(priority = EventPriority.NORMAL)
     public void onInfo(IslandInfoEvent e) {
+        // Check if island is in AOneBlock
+        if (!addon.equals(e.getAddon())) return;
         User user = e.getPlayerUUID() == null ? User.getInstance(Bukkit.getConsoleSender()) : User.getInstance(e.getPlayerUUID());
         @NonNull
         OneBlockIslands is = addon.getOneBlocksIsland(e.getIsland());
