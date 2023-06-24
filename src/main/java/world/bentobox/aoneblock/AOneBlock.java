@@ -138,7 +138,7 @@ public class AOneBlock extends GameModeAddon {
         getPlugin().getPlaceholdersManager().registerPlaceholder(this, "visited_island_done_scale", phManager::getDoneScaleByLocation);
         // Since 1.10
         getPlugin().getPlaceholdersManager().registerPlaceholder(this, "visited_island_lifetime_count", phManager::getLifetimeByLocation);
-        getPlugin().getPlaceholdersManager().registerPlaceholder(this, "my_island_lifetime_count", phManager::getLifetime);        
+        getPlugin().getPlaceholdersManager().registerPlaceholder(this, "my_island_lifetime_count", phManager::getLifetime);
     }
 
     @Override
@@ -269,9 +269,6 @@ public class AOneBlock extends GameModeAddon {
     public void allLoaded() {
         // save settings. This will occur after all addons have loaded
         this.saveWorldSettings();
-
-        // Manage Old Holograms
-        holoListener.setUp();
     }
 
     /**
