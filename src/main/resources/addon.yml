@@ -69,22 +69,13 @@ permissions:
     description: Allow use of '/ob settings' command - display island settings
     default: TRUE
   aoneblock.island.name:
-    description: Allow use of '/ob setname' command - set a name for your island
-    default: TRUE
-  aoneblock.island.name:
-    description: Allow use of '/ob resetname' command - reset your island name
+    description: Allow use of '/ob setname' or '/ob resetname' command - your island name
     default: TRUE
   aoneblock.island.language:
     description: Allow use of '/ob language' command - select language
     default: TRUE
   aoneblock.island.ban:
-    description: Allow use of '/ob ban' command - ban a player from your island
-    default: TRUE
-  aoneblock.island.ban:
-    description: Allow use of '/ob unban' command - unban a player from your island
-    default: TRUE
-  aoneblock.island.ban:
-    description: Allow use of '/ob banlist' command - list banned players
+    description: Allow use of '/ob ban' or '/ob unban' or '/ob banlist' command - banned players
     default: TRUE
   aoneblock.island.expel:
     description: Allow use of '/ob expel' command - expel a player from your island
@@ -162,13 +153,7 @@ permissions:
     description: Allow use of '/obadmin version' command - display BentoBox and addons versions
     default: OP
   aoneblock.admin.tp:
-    description: Allow use of '/obadmin tp' command - teleport to a player's island
-    default: OP
-  aoneblock.admin.tp:
-    description: Allow use of '/obadmin tpnether' command - teleport to a player's island
-    default: OP
-  aoneblock.admin.tp:
-    description: Allow use of '/obadmin tpend' command - teleport to a player's island
+    description: Allow use of '/obadmin tp/tpnether/tpend' command - teleport to a player's island
     default: OP
   aoneblock.admin.getrank:
     description: Allow use of '/obadmin getrank' command - get a player's rank on their island or the island of the owner
