@@ -9,96 +9,13 @@ repository: "BentoBoxWorld/AOneBlock"
 authors: tastybento
 
 permissions:
-  aoneblock.count:
-    description: Allow use of the aoneblock count command
-    default: true   
-  aoneblock.setcount:
-    descrition: Allow player to set their block count to a value already completed.
-    default: false
-  aoneblock.phases:
-    description: Allow the use of the phases command
-    default: false
-  aoneblock.respawn-block:
-    description: Allow the use of use block respawn command.
-    default: true
-  aoneblock.island:
-   description: Allow island command usage
-   default: true
-  aoneblock.island.create:
-    description: Allow island creation
-    default: true
-  aoneblock.island.home:
-    description: Allow teleporting to player island
-    default: true
-  aoneblock.island.sethome:
-    description: Let the player use the sethome command
-    default: true
-  aoneblock.island.info:
-    description: Let the player check other players info
-    default: true
+# Non-command permissions
   aoneblock.island.lock:
-    description: Allows island locking
-    default: true
-  aoneblock.island.near:
-    description: Players can see nearby island names
-    default: true
-  aoneblock.island.expel:
-    description: Allows expelling of visitors
-    default: true
-  aoneblock.island.ban:
-    description: Allows banning of visitors
-    default: true
-  aoneblock.island.settings:
-    description: Player can see server settings
-    default: true
-  aoneblock.island.language:
-    description: Player can select a language
-    default: true
-  aoneblock.island.name:
-    description: Player can set the name of their island
-    default: true
-  aoneblock.island.spawn:
-    description: Player can use the island spawn command if spawn exists
-    default: true
-  aoneblock.island.reset:
-    description: Player can use the island reset or restart command
-    default: true  
-  aoneblock.island.team:
-    description: Let a player use team command
-    default: true
-  aoneblock.island.team.setowner:
-    description: Let a player change the team owner
-    default: true
-  aoneblock.island.team.invite:
-    description: Let a player invite others
-    default: true
-  aoneblock.island.team.reject:
-    description: Let a player reject invites
-    default: true
-  aoneblock.island.team.leave:
-    description: Let a player leave the team
-    default: true
-  aoneblock.island.team.kick:
-    description: Let a player kick team members
-    default: true
-  aoneblock.island.team.accept:
-    description: Let a player accept invitations
-    default: true
-  aoneblock.island.team.trust:
-    description: Let a player use team trust commands
-    default: true
-  aoneblock.island.team.coop:
-    description: Let a player use team coop commands
-    default: true
-  aoneblock.island.team.promote:
-    description: Let a player use promote commands
+    description: Allows island locking in settings
     default: true
   aoneblock.settings.*:
     description: Allow use of settings on island
     default: true
-  aoneblock.mod.info:
-    description: Let a moderator see info on a player
-    default: op
   aoneblock.mod.clearreset:
     description: Allow clearing of island reset limit
     default: false
@@ -114,11 +31,8 @@ permissions:
   aoneblock.mod.bypassexpel:
     description: Allow moderator to bypass island expulsion
     default: op
-  aoneblock.mod.switch:
-    description: Allows moderator to switch bypass protection on and off
-    default: op
   aoneblock.mod.lock:
-    description: Locks or unlocks an island
+    description: Allows lock or unlock of an island
     default: op
   aoneblock.mod.bypasslock:
     description: Bypasses an island lock
@@ -126,55 +40,319 @@ permissions:
   aoneblock.mod.bypassban:
     description: Bypasses island ban
     default: op
-  aoneblock.mod.resetname:
-    description: Allows to reset island name
-    default: op
-  aoneblock.mod.team:
-    description: Enables modification of teams via kick and add commands
-    default: false
-  aoneblock.admin.tp:
-    description: Allows teleport to an island
-    default: op    
-  aoneblock.admin.clearresetall:
-    description: Allow clearing of island reset limit of all players
-    default: op
-  aoneblock.admin.reload:
-    description: Reload the config.yml
-    default: op
-  aoneblock.admin.delete:
-    description: Let a player completely remove a player (including island)
-    default: op
-  aoneblock.admin.register:
-    description: Let a player register the nearest island to another player.
-    default: op
-  aoneblock.admin.unregister:
-    description: Removes a player from an island without deleting the island blocks.
-    default: op
-  aoneblock.admin.setspawn:
-    description: Allows use of spawn tools
-    default: op
-  aoneblock.admin.setrange:
-    description: Allows setting of island protection range
-    default: op
-  aoneblock.admin.settingsreset:
-    description: Resets all the islands to default protection settings
-    default: op
   aoneblock.admin.noban:
     description: Player cannot be banned from an island
     default: op
   aoneblock.admin.noexpel:
     description: Player cannot be expelled from an island
     default: op
-  aoneblock.admin.setlanguage:
-    description: Resets all player languages and sets the default language
-    default: op
+  # Command permissions
+  aoneblock.island:
+    description: Allow use of '/ob' command - the main island command
+    default: TRUE
+  aoneblock.island.home:
+    description: Allow use of '/ob go' command - teleport you to your island
+    default: TRUE
+  aoneblock.island.spawn:
+    description: Allow use of '/ob spawn' command - teleport you to the spawn
+    default: TRUE
+  aoneblock.island.create:
+    description: Allow use of '/ob create' command - create an island, using optional blueprint (requires permission)
+    default: TRUE
+  aoneblock.island.reset:
+    description: Allow use of '/ob reset' command - restart your island and remove the old one
+    default: TRUE
+  aoneblock.island.info:
+    description: Allow use of '/ob info' command - display info about your island or the player's island
+    default: TRUE
+  aoneblock.island.settings:
+    description: Allow use of '/ob settings' command - display island settings
+    default: TRUE
+  aoneblock.island.name:
+    description: Allow use of '/ob setname' command - set a name for your island
+    default: TRUE
+  aoneblock.island.name:
+    description: Allow use of '/ob resetname' command - reset your island name
+    default: TRUE
+  aoneblock.island.language:
+    description: Allow use of '/ob language' command - select language
+    default: TRUE
+  aoneblock.island.ban:
+    description: Allow use of '/ob ban' command - ban a player from your island
+    default: TRUE
+  aoneblock.island.ban:
+    description: Allow use of '/ob unban' command - unban a player from your island
+    default: TRUE
+  aoneblock.island.ban:
+    description: Allow use of '/ob banlist' command - list banned players
+    default: TRUE
+  aoneblock.island.expel:
+    description: Allow use of '/ob expel' command - expel a player from your island
+    default: TRUE
+  aoneblock.island.near:
+    description: Allow use of '/ob near' command - show the name of neighboring islands around you
+    default: TRUE
+  aoneblock.island.team:
+    description: Allow use of '/ob team' command - manage your team
+    default: TRUE
+  aoneblock.island.team.invite:
+    description: Allow use of '/ob team invite' command - invite a player to join your island
+    default: TRUE
+  aoneblock.island.team.leave:
+    description: Allow use of '/ob team leave' command - leave your island
+    default: TRUE
+  aoneblock.island.team.setowner:
+    description: Allow use of '/ob team setowner' command - transfer your island ownership to a member
+    default: TRUE
+  aoneblock.island.team.kick:
+    description: Allow use of '/ob team kick' command - remove a member from your island
+    default: TRUE
+  aoneblock.island.team.accept:
+    description: Allow use of '/ob team accept' command - accept an invitation
+    default: TRUE
+  aoneblock.island.team.reject:
+    description: Allow use of '/ob team reject' command - reject an invitation
+    default: TRUE
+  aoneblock.island.team.coop:
+    description: Allow use of '/ob team coop' command - make a player coop rank on your island
+    default: TRUE
+  aoneblock.island.team.coop:
+    description: Allow use of '/ob team uncoop' command - remove a coop rank from player
+    default: TRUE
+  aoneblock.island.team.trust:
+    description: Allow use of '/ob team trust' command - give a player trusted rank on your island
+    default: TRUE
+  aoneblock.island.team.trust:
+    description: Allow use of '/ob team untrust' command - remove trusted player rank from player
+    default: TRUE
+  aoneblock.island.team.promote:
+    description: Allow use of '/ob team promote' command - promote a player on your island up a rank
+    default: TRUE
+  aoneblock.island.team.promote:
+    description: Allow use of '/ob team demote' command - demote a player on your island down a rank
+    default: TRUE
+  aoneblock.island.sethome:
+    description: Allow use of '/ob sethome' command - set your home teleport point
+    default: TRUE
+  aoneblock.island.deletehome:
+    description: Allow use of '/ob deletehome' command - delete a home location
+    default: OP
+  aoneblock.island.renamehome:
+    description: Allow use of '/ob renamehome' command - rename a home location
+    default: OP
+  aoneblock.island.homes:
+    description: Allow use of '/ob homes' command - list your homes
+    default: OP
+  aoneblock.count:
+    description: Allow use of '/ob count' command - show the block count and phase
+    default: TRUE
+  aoneblock.phases:
+    description: Allow use of '/ob phases' command - show a list of all the phases
+    default: FALSE
+  aoneblock.island.setcount:
+    description: Allow use of '/ob setCount' command - set block count to previously completed value
+    default: OP
+  aoneblock.respawn-block:
+    description: Allow use of '/ob respawnBlock' command - respawns magic block in situations when they disappear
+    default: TRUE
+  aoneblock.admin:
+    description: Allow use of '/obadmin' command - admin command
+    default: OP
+  aoneblock.admin.version:
+    description: Allow use of '/obadmin version' command - display BentoBox and addons versions
+    default: OP
+  aoneblock.admin.tp:
+    description: Allow use of '/obadmin tp' command - teleport to a player's island
+    default: OP
+  aoneblock.admin.tp:
+    description: Allow use of '/obadmin tpnether' command - teleport to a player's island
+    default: OP
+  aoneblock.admin.tp:
+    description: Allow use of '/obadmin tpend' command - teleport to a player's island
+    default: OP
   aoneblock.admin.getrank:
-    description: Get a player's rank
-    default: op
+    description: Allow use of '/obadmin getrank' command - get a player's rank on their island or the island of the owner
+    default: OP
   aoneblock.admin.setrank:
-    description: Set a player's rank
-    default: op
+    description: Allow use of '/obadmin setrank' command - set a player's rank on their island or the island of the owner
+    default: OP
+  aoneblock.mod.info:
+    description: Allow use of '/obadmin info' command - get info on where you are or player's island
+    default: OP
+  aoneblock.mod.team:
+    description: Allow use of '/obadmin team' command - manage teams
+    default: FALSE
+  aoneblock.mod.team.add:
+    description: Allow use of '/obadmin team add' command - add player to owner's team
+    default: OP
+  aoneblock.mod.team.disband:
+    description: Allow use of '/obadmin team disband' command - disband owner's team
+    default: OP
+  aoneblock.mod.team.fix:
+    description: Allow use of '/obadmin team fix' command - scans and fixes cross island membership in database
+    default: OP
+  aoneblock.mod.team.kick:
+    description: Allow use of '/obadmin team kick' command - kick a player from a team
+    default: OP
+  aoneblock.mod.team.setowner:
+    description: Allow use of '/obadmin team setowner' command - transfers island ownership to the player
+    default: OP
+  aoneblock.mod.team.add:
+    description: Allow use of '/obadmin add' command - add player to owner's team
+    default: OP
+  aoneblock.mod.team.kick:
+    description: Allow use of '/obadmin kick' command - kick a player from a team
+    default: OP
+  aoneblock.mod.team.disband:
+    description: Allow use of '/obadmin disband' command - disband owner's team
+    default: OP
+  aoneblock.mod.team.setowner:
+    description: Allow use of '/obadmin setowner' command - transfers island ownership to the player
+    default: OP
+  aoneblock.mod.team.fix:
+    description: Allow use of '/obadmin fix' command - scans and fixes cross island membership in database
+    default: OP
+  aoneblock.admin.blueprint:
+    description: Allow use of '/obadmin blueprint' command - manipulate blueprints
+    default: OP
+  aoneblock.admin.blueprint.load:
+    description: Allow use of '/obadmin blueprint load' command - load blueprint into the clipboard
+    default: OP
+  aoneblock.admin.blueprint.paste:
+    description: Allow use of '/obadmin blueprint paste' command - paste the clipboard to your location
+    default: OP
+  aoneblock.admin.blueprint.origin:
+    description: Allow use of '/obadmin blueprint origin' command - set the blueprint's origin to your position
+    default: OP
+  aoneblock.admin.blueprint.copy:
+    description: Allow use of '/obadmin blueprint copy' command - copy the clipboard set by pos1 and pos2 and optionally the air blocks
+    default: OP
+  aoneblock.admin.blueprint.save:
+    description: Allow use of '/obadmin blueprint save' command - save the copied clipboard
+    default: OP
+  aoneblock.admin.blueprint.rename:
+    description: Allow use of '/obadmin blueprint rename' command - rename a blueprint
+    default: OP
+  aoneblock.admin.blueprint.delete:
+    description: Allow use of '/obadmin blueprint delete' command - delete the blueprint
+    default: OP
+  aoneblock.admin.blueprint.pos1:
+    description: Allow use of '/obadmin blueprint pos1' command - set 1st corner of cuboid clipboard
+    default: OP
+  aoneblock.admin.blueprint.pos2:
+    description: Allow use of '/obadmin blueprint pos2' command - set 2nd corner of cuboid clipboard
+    default: OP
+  aoneblock.admin.blueprint.list:
+    description: Allow use of '/obadmin blueprint list' command - list available blueprints
+    default: OP
+  aoneblock.admin.register:
+    description: Allow use of '/obadmin register' command - register player to unowned island you are on
+    default: OP
+  aoneblock.admin.unregister:
+    description: Allow use of '/obadmin unregister' command - unregister owner from island, but keep island blocks
+    default: OP
+  aoneblock.admin.range:
+    description: Allow use of '/obadmin range' command - admin island range command
+    default: OP
+  aoneblock.admin.range.display:
+    description: Allow use of '/obadmin range display' command - show/hide island range indicators
+    default: OP
+  aoneblock.admin.range.set:
+    description: Allow use of '/obadmin range set' command - sets the island protected range
+    default: OP
+  aoneblock.admin.range.reset:
+    description: Allow use of '/obadmin range reset' command - resets the island protected range to the world default
+    default: OP
+  aoneblock.admin.range.add:
+    description: Allow use of '/obadmin range add' command - increases the island protected range
+    default: OP
+  aoneblock.admin.range.remove:
+    description: Allow use of '/obadmin range remove' command - decreases the island protected range
+    default: OP
+  aoneblock.admin.resets:
+    description: Allow use of '/obadmin resets' command - edit player reset values
+    default: OP
+  aoneblock.admin.resets.set:
+    description: Allow use of '/obadmin resets set' command - sets how many times this player has reset his island
+    default: OP
+  aoneblock.admin.resets.remove:
+    description: Allow use of '/obadmin resets reset' command - sets the player's island reset count to 0
+    default: OP
+  aoneblock.admin.resets.add:
+    description: Allow use of '/obadmin resets add' command - adds this player's island reset count
+    default: OP
+  aoneblock.admin.resets.remove:
+    description: Allow use of '/obadmin resets remove' command - reduces the player's island reset count
+    default: OP
+  aoneblock.admin.delete:
+    description: Allow use of '/obadmin delete' command - deletes a player's island
+    default: OP
+  aoneblock.admin.why:
+    description: Allow use of '/obadmin why' command - toggle console protection debug reporting
+    default: OP
+  aoneblock.admin.deaths:
+    description: Allow use of '/obadmin deaths' command - edit deaths of players
+    default: OP
+  aoneblock.admin.deaths.reset:
+    description: Allow use of '/obadmin deaths reset' command - resets deaths of the player
+    default: OP
+  aoneblock.admin.deaths.set:
+    description: Allow use of '/obadmin deaths set' command - sets deaths of the player
+    default: OP
+  aoneblock.admin.deaths.add:
+    description: Allow use of '/obadmin deaths add' command - adds deaths to the player
+    default: OP
+  aoneblock.admin.deaths.remove:
+    description: Allow use of '/obadmin deaths remove' command - removes deaths to the player
+    default: OP
+  aoneblock.admin.reload:
+    description: Allow use of '/obadmin reload' command - reload
+    default: OP
+  aoneblock.admin.setspawn:
+    description: Allow use of '/obadmin setspawn' command - set an island as spawn for this gamemode
+    default: OP
+  aoneblock.admin.setspawnpoint:
+    description: Allow use of '/obadmin setspawnpoint' command - set current location as spawn point for this island
+    default: OP
+  aoneblock.admin.resetflags:
+    description: Allow use of '/obadmin resetflags' command - Reset all islands to default flag settings in config.yml
+    default: OP
+  aoneblock.mod.switch:
+    description: Allow use of '/obadmin switch' command - switch on/off protection bypass
+    default: OP
+  aoneblock.admin.purge:
+    description: Allow use of '/obadmin purge' command - purge islands abandoned for more than [days]
+    default: OP
+  aoneblock.admin.purge.status:
+    description: Allow use of '/obadmin purge status' command - displays the status of the purge
+    default: OP
+  aoneblock.admin.purge.stop:
+    description: Allow use of '/obadmin purge stop' command - stop a purge in progress
+    default: OP
+  aoneblock.admin.purge.unowned:
+    description: Allow use of '/obadmin purge unowned' command - purge unowned islands
+    default: OP
+  aoneblock.admin.purge.protect:
+    description: Allow use of '/obadmin purge protect' command - toggle island purge protection
+    default: OP
+  aoneblock.admin.settings:
+    description: Allow use of '/obadmin settings' command - open settings GUI or set settings
+    default: OP
+  aoneblock.admin.setprotectionlocation:
+    description: Allow use of '/obadmin setprotectionlocation' command - set current location or [x y z] as center of island's protection area
+    default: OP
+  aoneblock.mod.deletehomes:
+    description: Allow use of '/obadmin deletehomes' command - deletes all named homes from an island
+    default: OP
+  aoneblock.mod.resetname:
+    description: Allow use of '/obadmin resetname' command - reset player island name
+    default: OP
+  aoneblock.admin.setcount:
+    description: Allow use of '/obadmin setcount' command - set player's block count
+    default: OP
   aoneblock.admin.setchest:
-    description: Puts the looked-at chest into a phase with a given rarity
-    default: op
-  
+    description: Allow use of '/obadmin setchest' command - put the looked-at chest in a phase with the rarity specified
+    default: OP
+  aoneblock.admin.sanity:
+    description: Allow use of '/obadmin sanity' command - display a sanity check of the phase probabilities in the console
+    default: OP 
