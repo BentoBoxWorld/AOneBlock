@@ -664,8 +664,10 @@ public class OneBlocksManager {
      * @param phase - one block phase
      * @return next phase or null if there isn't one
      */
+    @SuppressWarnings("WrapperTypeMayBePrimitive")
     @Nullable
     public OneBlockPhase getNextPhase(@NonNull OneBlockPhase phase) {
+        // These are Integer objects because GSON can yield nulls if they do not exist
         Integer blockNum = phase.getBlockNumberValue();
         Integer nextKey = blockProbs.ceilingKey(blockNum + 1);
         return nextKey != null ? this.getPhase(nextKey) : null;
