@@ -42,10 +42,7 @@ public class IslandSetCountCommand extends CompositeCommand {
     @Override
     public boolean canExecute(User user, String label, List<String> args) {
         // Check cooldown
-        if (addon.getSettings().getSetCountCooldown() > 0 && checkCooldown(user)) {
-            return false;
-        }
-        return true;
+        return addon.getSettings().getSetCountCooldown() <= 0 || !checkCooldown(user);
     }
 
     @Override
