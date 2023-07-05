@@ -105,22 +105,13 @@ permissions:
     description: Allow use of '/ob team reject' command - reject an invitation
     default: TRUE
   aoneblock.island.team.coop:
-    description: Allow use of '/ob team coop' command - make a player coop rank on your island
-    default: TRUE
-  aoneblock.island.team.coop:
-    description: Allow use of '/ob team uncoop' command - remove a coop rank from player
+    description: Allow use of '/ob team coop, uncoop' commands
     default: TRUE
   aoneblock.island.team.trust:
-    description: Allow use of '/ob team trust' command - give a player trusted rank on your island
-    default: TRUE
-  aoneblock.island.team.trust:
-    description: Allow use of '/ob team untrust' command - remove trusted player rank from player
+    description: Allow use of '/ob team trust, untrust' commands
     default: TRUE
   aoneblock.island.team.promote:
-    description: Allow use of '/ob team promote' command - promote a player on your island up a rank
-    default: TRUE
-  aoneblock.island.team.promote:
-    description: Allow use of '/ob team demote' command - demote a player on your island down a rank
+    description: Allow use of '/ob team promote, demote' command
     default: TRUE
   aoneblock.island.sethome:
     description: Allow use of '/ob sethome' command - set your home teleport point
@@ -168,34 +159,19 @@ permissions:
     description: Allow use of '/obadmin team' command - manage teams
     default: FALSE
   aoneblock.mod.team.add:
-    description: Allow use of '/obadmin team add' command - add player to owner's team
+    description: Allow use of '/obadmin team add' or '/obadmin add' command - add player to owner's team
     default: OP
   aoneblock.mod.team.disband:
-    description: Allow use of '/obadmin team disband' command - disband owner's team
+    description: Allow use of '/obadmin team disband' or '/obadmin disband' command - disband owner's team
     default: OP
   aoneblock.mod.team.fix:
-    description: Allow use of '/obadmin team fix' command - scans and fixes cross island membership in database
+    description: Allow use of '/obadmin team fix' or '/obadmin fix' command - scans and fixes cross island membership in database
     default: OP
   aoneblock.mod.team.kick:
-    description: Allow use of '/obadmin team kick' command - kick a player from a team
+    description: Allow use of '/obadmin team kick' or '/obadmin kick' command - kick a player from a team
     default: OP
   aoneblock.mod.team.setowner:
     description: Allow use of '/obadmin team setowner' command - transfers island ownership to the player
-    default: OP
-  aoneblock.mod.team.add:
-    description: Allow use of '/obadmin add' command - add player to owner's team
-    default: OP
-  aoneblock.mod.team.kick:
-    description: Allow use of '/obadmin kick' command - kick a player from a team
-    default: OP
-  aoneblock.mod.team.disband:
-    description: Allow use of '/obadmin disband' command - disband owner's team
-    default: OP
-  aoneblock.mod.team.setowner:
-    description: Allow use of '/obadmin setowner' command - transfers island ownership to the player
-    default: OP
-  aoneblock.mod.team.fix:
-    description: Allow use of '/obadmin fix' command - scans and fixes cross island membership in database
     default: OP
   aoneblock.admin.blueprint:
     description: Allow use of '/obadmin blueprint' command - manipulate blueprints
@@ -259,9 +235,6 @@ permissions:
     default: OP
   aoneblock.admin.resets.set:
     description: Allow use of '/obadmin resets set' command - sets how many times this player has reset his island
-    default: OP
-  aoneblock.admin.resets.remove:
-    description: Allow use of '/obadmin resets reset' command - sets the player's island reset count to 0
     default: OP
   aoneblock.admin.resets.add:
     description: Allow use of '/obadmin resets add' command - adds this player's island reset count
