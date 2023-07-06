@@ -3,6 +3,7 @@ package world.bentobox.aoneblock;
 import java.io.IOException;
 import java.util.Objects;
 
+import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.World.Environment;
 import org.bukkit.WorldCreator;
@@ -19,6 +20,8 @@ import world.bentobox.aoneblock.generators.ChunkGeneratorWorld;
 import world.bentobox.aoneblock.listeners.BlockListener;
 import world.bentobox.aoneblock.listeners.BlockProtect;
 import world.bentobox.aoneblock.listeners.HoloListener;
+import world.bentobox.aoneblock.listeners.InfoListener;
+import world.bentobox.aoneblock.listeners.ItemsAdderListener;
 import world.bentobox.aoneblock.listeners.JoinLeaveListener;
 import world.bentobox.aoneblock.listeners.NoBlockHandler;
 import world.bentobox.aoneblock.oneblocks.OneBlocksManager;
@@ -38,6 +41,7 @@ public class AOneBlock extends GameModeAddon {
 
     private static final String NETHER = "_nether";
     private static final String THE_END = "_the_end";
+    public static boolean hasItemsAdder = false;
 
     // Settings
     private Settings settings;
@@ -50,6 +54,11 @@ public class AOneBlock extends GameModeAddon {
 
     @Override
     public void onLoad() {
+        // Check if ItemsAdder exists, if yes register listener
+        if (Bukkit.getPluginManager().getPlugin("ItemsAdder") != null) {
+            registerListener(new ItemsAdderListener(this));
+            hasItemsAdder = true;
+        }
         // Save the default config from config.yml
         saveDefaultConfig();
         // Load settings from config.yml. This will check if there are any issues with it too.
@@ -79,6 +88,26 @@ public class AOneBlock extends GameModeAddon {
 
     @Override
     public void onEnable() {
+        loadData();
+
+        registerListener(new NoBlockHandler(this));
+        registerListener(new BlockProtect(this));
+        registerListener(new JoinLeaveListener(this));
+        registerListener(new InfoListener(this));
+        // Register placeholders
+        registerPlaceholders();
+
+        // Register request handlers
+        registerRequestHandler(new IslandStatsHandler(this));
+        registerRequestHandler(new LocationStatsHandler(this));
+
+        // Register Holograms
+        holoListener = new HoloListener(this);
+        registerListener(holoListener);
+    }
+
+    //Load some of Manager
+    public void loadData() {
         try {
             oneBlockManager = new OneBlocksManager(this);
             oneBlockManager.loadPhases();
@@ -91,19 +120,6 @@ public class AOneBlock extends GameModeAddon {
             return;
         }
         registerListener(blockListener);
-        registerListener(new NoBlockHandler(this));
-        registerListener(new BlockProtect(this));
-        registerListener(new JoinLeaveListener(this));
-        // Register placeholders
-        registerPlaceholders();
-
-        // Register request handlers
-        registerRequestHandler(new IslandStatsHandler(this));
-        registerRequestHandler(new LocationStatsHandler(this));
-
-        // Register Holograms
-        holoListener = new HoloListener(this);
-        registerListener(holoListener);
     }
 
     private void registerPlaceholders() {
@@ -122,7 +138,7 @@ public class AOneBlock extends GameModeAddon {
         getPlugin().getPlaceholdersManager().registerPlaceholder(this, "visited_island_done_scale", phManager::getDoneScaleByLocation);
         // Since 1.10
         getPlugin().getPlaceholdersManager().registerPlaceholder(this, "visited_island_lifetime_count", phManager::getLifetimeByLocation);
-        getPlugin().getPlaceholdersManager().registerPlaceholder(this, "my_island_lifetime_count", phManager::getLifetime);        
+        getPlugin().getPlaceholdersManager().registerPlaceholder(this, "my_island_lifetime_count", phManager::getLifetime);
     }
 
     @Override
@@ -253,9 +269,6 @@ public class AOneBlock extends GameModeAddon {
     public void allLoaded() {
         // save settings. This will occur after all addons have loaded
         this.saveWorldSettings();
-
-        // Manage Old Holograms
-        holoListener.setUp();
     }
 
     /**
@@ -292,5 +305,12 @@ public class AOneBlock extends GameModeAddon {
      */
     public HoloListener getHoloListener() {
         return holoListener;
+    }
+
+    /**
+     * @return true if ItemsAdder is on the server
+     */
+    public boolean hasItemsAdder() {
+        return hasItemsAdder;
     }
 }

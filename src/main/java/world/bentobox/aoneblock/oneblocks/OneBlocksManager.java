@@ -18,6 +18,8 @@ import java.util.TreeMap;
 import java.util.jar.JarFile;
 import java.util.stream.Collectors;
 
+import dev.lone.itemsadder.api.CustomBlock;
+import dev.lone.itemsadder.api.ItemsAdder;
 import org.apache.commons.lang.math.NumberUtils;
 import org.bukkit.Material;
 import org.bukkit.block.Biome;
@@ -230,7 +232,14 @@ public class OneBlocksManager {
                 }
             } else {
                 String mat = fb.getString(key);
-                if (mat != null) {
+                if (mat == null) {
+                    continue;
+                }
+
+                Optional<OneBlockCustomBlock> customBlock = OneBlockCustomBlockCreator.create(mat);
+                if (customBlock.isPresent()) {
+                    result.put(k, new OneBlockObject(customBlock.get(), 0));
+                } else {
                     Material m = Material.matchMaterial(mat);
                     if (m != null && m.isBlock()) {
                         result.put(k, new OneBlockObject(m, 0));
@@ -396,13 +405,23 @@ public class OneBlocksManager {
     }
 
     void addBlocks(OneBlockPhase obPhase, ConfigurationSection phase) {
-        if (!phase.isConfigurationSection(BLOCKS)) {
-            return;
-        }
         if (phase.isConfigurationSection(BLOCKS)) {
             ConfigurationSection blocks = phase.getConfigurationSection(BLOCKS);
             for (String material : blocks.getKeys(false)) {
-                addMaterial(obPhase, material, Objects.toString(blocks.get(material)));
+                if (Material.getMaterial(material) != null) {
+                    addMaterial(obPhase, material, Objects.toString(blocks.get(material)));
+                } else {
+                    if (addon.hasItemsAdder()) {
+                        CustomBlock block = CustomBlock.getInstance(material);
+                        if (block != null) {
+                            addItemsAdderBlock(obPhase, material, Objects.toString(blocks.get(material)));
+                        } else if (ItemsAdder.getAllItems().size() != 0){
+                            addon.logError("Bad block material in " + obPhase.getPhaseName() + ": " + material);
+                        }
+                    } else {
+                        addon.logError("Bad block material in " + obPhase.getPhaseName() + ": " + material);
+                    }
+                }
             }
         } else if (phase.isList(BLOCKS)) {
             List<Map<?, ?>> blocks = phase.getMapList(BLOCKS);
@@ -426,7 +445,6 @@ public class OneBlocksManager {
     }
 
     private boolean addMaterial(OneBlockPhase obPhase, String material, String probability) {
-        Material m = Material.matchMaterial(material);
         int prob;
         try {
             prob = Integer.parseInt(probability);
@@ -434,16 +452,41 @@ public class OneBlocksManager {
             return false;
         }
 
+        if (prob < 1) {
+            addon.logWarning("Bad item weight for " + obPhase.getPhaseName() + ": " + material + ". Must be positive number above 1.");
+            return false;
+        }
+
+        // Register if the material is a valid custom block and can be created from the short creator from OneBlockCustomBlockCreator
+        Optional<OneBlockCustomBlock> optionalCustomBlock = OneBlockCustomBlockCreator.create(material);
+        if (optionalCustomBlock.isPresent()) {
+            obPhase.addCustomBlock(optionalCustomBlock.get(), prob);
+            return true;
+        }
+
+        // Otherwise, register the material as a block
+        Material m = Material.matchMaterial(material);
         if (m == null || !m.isBlock()) {
             addon.logError("Bad block material in " + obPhase.getPhaseName() + ": " + material);
             return false;
-        } else if (prob < 1) {
-            addon.logWarning("Bad item weight for " + obPhase.getPhaseName() + ": " + material + ". Must be positive number above 1.");
-            return false;
-        } else {
-            obPhase.addBlock(m, prob);
-            return true;
         }
+        obPhase.addBlock(m, prob);
+        return true;
+    }
+
+    private void addItemsAdderBlock(OneBlockPhase obPhase, String block, String probability) {
+        int prob;
+        try {
+            prob = Integer.parseInt(probability);
+            if (prob < 1) {
+                addon.logWarning("Bad item weight for " + obPhase.getPhaseName() + ": " + block + ". Must be positive number above 1.");
+            } else {
+                obPhase.addItemsAdderCustomBlock(block, prob);
+            }
+        } catch (Exception e) {
+            addon.logError("Bad item weight for " + obPhase.getPhaseName() + ": " + block + ". Must be a number.");
+        }
+
     }
 
     /**
@@ -621,8 +664,10 @@ public class OneBlocksManager {
      * @param phase - one block phase
      * @return next phase or null if there isn't one
      */
+    @SuppressWarnings("WrapperTypeMayBePrimitive")
     @Nullable
     public OneBlockPhase getNextPhase(@NonNull OneBlockPhase phase) {
+        // These are Integer objects because GSON can yield nulls if they do not exist
         Integer blockNum = phase.getBlockNumberValue();
         Integer nextKey = blockProbs.ceilingKey(blockNum + 1);
         return nextKey != null ? this.getPhase(nextKey) : null;

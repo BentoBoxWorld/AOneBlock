@@ -140,7 +140,7 @@ public class OneBlockIslands implements DataObject {
 
     /**
      * Adds a OneBlockObject to the queue
-     * @param nextBlock
+     * @param nextBlock the OneBlockObject to be added
      */
     public void add(OneBlockObject nextBlock) {
         getQueue().add(nextBlock);

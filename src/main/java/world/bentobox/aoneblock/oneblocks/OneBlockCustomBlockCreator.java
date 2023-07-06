@@ -1,12 +1,9 @@
 package world.bentobox.aoneblock.oneblocks;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.function.Function;
-
 import world.bentobox.aoneblock.oneblocks.customblock.BlockDataCustomBlock;
+
+import java.util.*;
+import java.util.function.Function;
 
 /**
  * A creator for {@link OneBlockCustomBlock}
@@ -15,9 +12,17 @@ import world.bentobox.aoneblock.oneblocks.customblock.BlockDataCustomBlock;
  */
 public final class OneBlockCustomBlockCreator {
     private static final Map<String, Function<Map<?, ?>, Optional<? extends OneBlockCustomBlock>>> creatorMap = new LinkedHashMap<>();
+    private static final List<Function<String, Optional<? extends OneBlockCustomBlock>>> shortCreatorList = new ArrayList<>();
 
     static {
         register("block-data", BlockDataCustomBlock::fromMap);
+        register("short", map -> {
+            String type = Objects.toString(map.get("data"), null);
+            if (type == null) {
+                return Optional.empty();
+            }
+            return create(type);
+        });
     }
 
     private OneBlockCustomBlockCreator() {
@@ -35,6 +40,15 @@ public final class OneBlockCustomBlockCreator {
     }
 
     /**
+     * Register a short creator
+     *
+     * @param creator the creator
+     */
+    public static void register(Function<String, Optional<? extends OneBlockCustomBlock>> creator) {
+        shortCreatorList.add(creator);
+    }
+
+    /**
      * Create a custom block from the map
      *
      * @param map the map
@@ -46,5 +60,21 @@ public final class OneBlockCustomBlockCreator {
             return Optional.empty();
         }
         return Optional.ofNullable(creatorMap.get(type)).flatMap(builder -> builder.apply(map));
+    }
+
+    /**
+     * Create a custom block from the string value
+     *
+     * @param value the value
+     * @return the custom block
+     */
+    public static Optional<OneBlockCustomBlock> create(String value) {
+        for (Function<String, Optional<? extends OneBlockCustomBlock>> creator : shortCreatorList) {
+            Optional<? extends OneBlockCustomBlock> customBlock = creator.apply(value);
+            if (customBlock.isPresent()) {
+                return Optional.of(customBlock.get());
+            }
+        }
+        return Optional.empty();
     }
 }

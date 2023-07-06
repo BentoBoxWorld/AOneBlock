@@ -166,6 +166,17 @@ public class OneBlockPhase {
     }
 
     /**
+     * Adds a ItemsAdder's custom block and associated probability
+     * @param namedSpaceID - name space and ID
+     * @param prob        - probability
+     */
+    public void addItemsAdderCustomBlock(String namedSpaceID, int prob) {
+        total += prob;
+        blockTotal += prob;
+        probMap.put(total, new OneBlockObject(namedSpaceID, prob));
+    }
+
+    /**
      * Adds an entity type and associated probability
      *
      * @param entityType - entityType
@@ -210,7 +221,10 @@ public class OneBlockPhase {
     }
 
     private OneBlockObject getResult(OneBlockObject block) {
-        return block.getMaterial().equals(Material.CHEST) && !chests.isEmpty() ? getRandomChest() : block;
+        if (block.isMaterial()) {
+            return block.getMaterial().equals(Material.CHEST) && !chests.isEmpty() ? getRandomChest() : block;
+        }
+        return block;
     }
 
     private OneBlockObject getRandomChest() {

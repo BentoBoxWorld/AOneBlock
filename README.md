@@ -24,11 +24,11 @@ The user command is `/ob`. The admin command is `/oba`.
 
 Q: What phases are there?
 
-A: There are 11 phases: Plains, Underground, Winter, Ocean, Jungle, Swamp, Dungeon, Desert, The Nether, Plenty, Desolation, and The End. Each phase features a set of blocks, items, and mobs appropriate for the setting.
+A: There are 12 phases: Plains, Underground, Winter, Ocean, Jungle, Swamp, Dungeon, Desert, The Nether, Plenty, Desolation, Deep Dark, and The End. Each phase features a set of blocks, chests, items, and mobs appropriate for the setting.
 
-Q: How many blocks are there in the 11 phases?
+Q: How many blocks are there in the phases?
 
-A: There are currently 11 thousand blocks!
+A: There are currently 12 thousand blocks!
 
 Q: What happens after the last phase?
 
@@ -36,19 +36,19 @@ A: The phases repeat.
 
 Q: Why do I keep falling and dying!
 
-A: There are tricks to surviving, but it might be difficult! You need to build defenses.
+A: There are tricks to surviving, but it might be difficult! You need to build space so you don't fall.
 
 Q: I can't catch the blocks when I mine them! How do I do that?
 
-A: Yep. It's tough. You can't catch them all, but it *is* an infinite block!
+A: You can't catch them all, but it *is* an infinite block!
 
 Q: Why do certain blocks spawn more frequently than others?
 
-A: They just do! You can set the relative probability in the config files in the phases folder.
+A: They just do! It's random. You can set the relative probability in the config files in the phases folder. Admins can also set certain blocks to appear at certain times no matter what. Look out for the sponge for example!
 
 Q. How do I know which is the magic block?
 
-A. Hit it and it will give out green particles.
+A. Hit it and it will give out green particles. It's also at the center of your island.
 
 Q. My magic block is no longer there! How do I get another one?
 
@@ -68,7 +68,7 @@ A. Be prepared. Listen carefully when you mine a block and you will hear hostile
 
 Q. When mobs spawn, my defenses are destroyed! Why?
 
-A. Mobs make space to spawn. If there's anything in the way, it'll be broken and dropped. You'll have to build accordingly.
+A. Mobs make space to spawn. If there's anything in the way, it'll be broken and dropped. You'll have to build accordingly. This is to prevent suffocation exploits.
 
 Q: Do chests spawn?
 
@@ -76,7 +76,7 @@ A: Yes. Chests spawn with random items in them from the current phase. There are
 
 Q: Is it possible to reach the Nether or End in this map?
 
-A: The vanilla Nether exists by default but there is no End world. 
+A: The vanilla Nether exists by default but there is no End world, just an End Phase.
 
 Q: What is the end goal?
 
@@ -100,14 +100,81 @@ The config files to make the phases are in the phases folder.
 There are two files per phase - a file that contains the blocks and mobs, and a file that contains the chests.
 
 The first number of any file is how many blocks need to be mined to reach that phase. This is the phase's key number.
-Each phase also has a name, a biome and the following sections:
+Each phase also has a name, an icon, a biome and the following sections:
 
+- name
+- icon
+- fixedBlocks
+- holograms
+- biome
+- start-commands
+- end-commands
+- end-commands-first-time
+- requirements
 - blocks
 - mobs
 
 In the chests file, it just has the phase number and a chests section.
 
+### name
+Name of the phase
 
+### icon
+The material for an icon to show
+
+### fixedBlocks
+List of blocks that will generate at these specific block counts. The numbers are relative to the phase and not the overall player's count.
+If you define 0 here, then firstBlock is not required and firstBlock will be replaced with this block.
+
+### holograms
+
+Hologram Lines to Display. The key number is the block of the phase to show the hologram. Chat color codes can be used. A hologram plugin is not required for these holograms.
+The First (Before Phase 1) Hologram is Located in your Locale.
+
+### Biome
+The biomes for this phase.
+
+### Commands
+A list of commands can be run at the start and end of a phase. Commands are run as the Console
+unless the command is prefixed with [SUDO], then the command is run as the player
+triggering the commands.
+
+These placeholders in the command string will be replaced with the appropriate value:
+* [island] - Island name
+* [owner] - Island owner's name
+* [player] - The name of the player who broke the block triggering the commands
+* [phase] - the name of this phase
+* [blocks] - the number of blocks broken
+* [level] - your island level (Requires Levels Addon)
+* [bank-balance] - your island bank balance (Requires Bank Addon)
+* [eco-balance] - player's economy balance (Requires Vault and an economy plugin)
+
+Examples:
+```
+  start-commands:
+  - 'give [player] WOODEN_AXE 1'
+  - 'broadcast [player] just started OneBlock!'
+  end-commands:
+  - '[SUDO]summon minecraft:wither'
+  These are run only the first time a phase is completed
+  end-commands-first-time:
+  - 'broadcast &c&l[!] &b[player] &fhas completed the &d&n[phase]&f phase for the first time.'
+```
+### Requirements
+
+You can stipulate a set of requirements to start the phase:
+  * economy-balance - the minimum player's economy balance (Requires Vault and an economy plugin)
+  * bank-balance - the minimum island bank balance (requires Bank Addon)
+  * level - the island level (Requires Levels Addon)
+  * permission - a permission string
+  Example:
+  ```
+   requirements:
+     bank-balance: 10000
+     level: 10
+     permission: ready.for.battle
+  ```
+  
 ### blocks
 
 The blocks section list Bukkit Materials followed by a relative probability. All the probability values are added up for the whole phase and the chance of the block being placed is the relative probability divided by the total of all the probabilities.
@@ -129,11 +196,6 @@ OneBlock is an add-on that uses the BentoBox API. Here are some other ones that 
 * [**Addons**](https://github.com/BentoBoxWorld/BentoBox/blob/develop/ADDON.md)
 
 You can add all the usual addons to OneBlock, like Challeges, Likes, Level, Warps, etc. but it is not required.
-
-### Other Plugins
-
-* To use the Holographic phase names, you will need to install the [Holographic Displays plugin](https://dev.bukkit.org/projects/holographic-displays)
-
 
 Bugs and Feature requests
 =========================
