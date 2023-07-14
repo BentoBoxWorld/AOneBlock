@@ -22,6 +22,7 @@
     MELON: 20
     EMERALD_ORE: 40
     LAPIS_ORE: 50
+    SUSPICIOUS_GRAVEL: 30
   mobs:
     WITCH: 100
     PARROT: 50

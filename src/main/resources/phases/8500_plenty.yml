@@ -44,6 +44,7 @@
     EMERALD_ORE: 1
     DIRT_PATH: 1
     LIGHT_GRAY_TERRACOTTA: 1
+    SUSPICIOUS_SAND: 1
   mobs:
     COW: 1
     DONKEY: 1

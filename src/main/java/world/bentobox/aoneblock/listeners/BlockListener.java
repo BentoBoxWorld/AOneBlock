@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Random;
 import java.util.concurrent.CompletableFuture;
 
 import org.bukkit.Bukkit;
@@ -18,6 +19,7 @@ import org.bukkit.World;
 import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.block.BrushableBlock;
 import org.bukkit.block.Chest;
 import org.bukkit.block.data.type.Leaves;
 import org.bukkit.entity.Entity;
@@ -33,6 +35,8 @@ import org.bukkit.event.entity.EntityInteractEvent;
 import org.bukkit.event.entity.EntitySpawnEvent;
 import org.bukkit.event.player.PlayerBucketFillEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.loot.LootTable;
+import org.bukkit.loot.LootTables;
 import org.bukkit.util.Vector;
 import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jdt.annotation.Nullable;
@@ -98,6 +102,7 @@ public class BlockListener implements Listener {
      */
     public static final int SAVE_EVERY = 50;
 
+    private final Random random = new Random();
 
 
     /**
@@ -314,8 +319,9 @@ public class BlockListener implements Listener {
         }
         // Get the next block
         OneBlockObject nextBlock = (newPhase && phase.getFirstBlock() != null) ? phase.getFirstBlock() : is.pollAndAdd(phase.getNextBlock(addon, blockNumber++));
-        // Set the biome for the block and one block above it
+        // Check if this is a new Phase
         if (newPhase) {
+            // Set the biome for the block and one block above it
             setBiome(block, phase.getPhaseBiome());
             // Fire new phase event
             Bukkit.getPluginManager().callEvent(new MagicBlockPhaseEvent(i, player == null ? null : player.getUniqueId(), block, phase.getPhaseName(), originalPhase, is.getBlockNumber()));
@@ -416,11 +422,27 @@ public class BlockListener implements Listener {
         if (type.equals(Material.CHEST) && nextBlock.getChest() != null) {
             fillChest(nextBlock, block);
             return;
-        }
-        if (Tag.LEAVES.isTagged(type)) {
+        } else if (Tag.LEAVES.isTagged(type)) {
             Leaves leaves = (Leaves) block.getState().getBlockData();
             leaves.setPersistent(true);
             block.setBlockData(leaves);
+        } else if (block.getState() instanceof BrushableBlock bb) {
+            LootTable lt = switch(bb.getBlock().getBiome()) {
+            default -> {
+                if (random.nextDouble() < 0.8) {
+                    yield LootTables.TRAIL_RUINS_ARCHAEOLOGY_COMMON.getLootTable();
+                } else {
+                    // 20% rare
+                    yield LootTables.TRAIL_RUINS_ARCHAEOLOGY_RARE.getLootTable();
+                }
+            }
+            case DESERT -> LootTables.DESERT_PYRAMID_ARCHAEOLOGY.getLootTable();
+            case FROZEN_OCEAN -> LootTables.OCEAN_RUIN_COLD_ARCHAEOLOGY.getLootTable();
+            case OCEAN -> LootTables.OCEAN_RUIN_COLD_ARCHAEOLOGY.getLootTable();
+            case WARM_OCEAN -> LootTables.OCEAN_RUIN_WARM_ARCHAEOLOGY.getLootTable();
+            };
+            bb.setLootTable(lt);
+            bb.update();
         }
     }
 
