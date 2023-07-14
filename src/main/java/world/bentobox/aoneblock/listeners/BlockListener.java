@@ -1,6 +1,5 @@
 package world.bentobox.aoneblock.listeners;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumMap;
 import java.util.HashMap;
@@ -11,7 +10,6 @@ import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
-import dev.lone.itemsadder.api.CustomBlock;
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.Location;
@@ -24,7 +22,6 @@ import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Chest;
-import org.bukkit.block.data.Waterlogged;
 import org.bukkit.block.data.type.Leaves;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -39,16 +36,13 @@ import org.bukkit.event.entity.EntityInteractEvent;
 import org.bukkit.event.entity.EntitySpawnEvent;
 import org.bukkit.event.player.PlayerBucketFillEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.util.BoundingBox;
 import org.bukkit.util.Vector;
 import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jdt.annotation.Nullable;
 
-import com.google.common.base.Enums;
-
+import dev.lone.itemsadder.api.CustomBlock;
 import world.bentobox.aoneblock.AOneBlock;
 import world.bentobox.aoneblock.dataobjects.OneBlockIslands;
-import world.bentobox.aoneblock.events.BlockClearEvent;
 import world.bentobox.aoneblock.events.MagicBlockEntityEvent;
 import world.bentobox.aoneblock.events.MagicBlockEvent;
 import world.bentobox.aoneblock.events.MagicBlockPhaseEvent;
@@ -58,7 +52,6 @@ import world.bentobox.aoneblock.oneblocks.OneBlockPhase;
 import world.bentobox.aoneblock.oneblocks.OneBlocksManager;
 import world.bentobox.aoneblock.oneblocks.Requirement;
 import world.bentobox.bank.Bank;
-import world.bentobox.bentobox.api.events.BentoBoxReadyEvent;
 import world.bentobox.bentobox.api.events.island.IslandCreatedEvent;
 import world.bentobox.bentobox.api.events.island.IslandDeleteEvent;
 import world.bentobox.bentobox.api.events.island.IslandResettedEvent;
@@ -95,11 +88,6 @@ public class BlockListener implements Listener {
     private final Map<String, OneBlockIslands> cache;
 
     /**
-     * Water entities
-     */
-    private static final List<EntityType> WATER_ENTITIES = new ArrayList<>();
-
-    /**
      * Mob aspects.
      */
     private static final Map<EntityType, MobAspects> MOB_ASPECTS;
@@ -113,21 +101,6 @@ public class BlockListener implements Listener {
      * How often data is saved.
      */
     public static final int SAVE_EVERY = 50;
-
-    static {
-        WATER_ENTITIES.add(EntityType.GUARDIAN);
-        WATER_ENTITIES.add(EntityType.ELDER_GUARDIAN);
-        WATER_ENTITIES.add(EntityType.COD);
-        WATER_ENTITIES.add(EntityType.SALMON);
-        WATER_ENTITIES.add(EntityType.PUFFERFISH);
-        WATER_ENTITIES.add(EntityType.TROPICAL_FISH);
-        WATER_ENTITIES.add(EntityType.DROWNED);
-        WATER_ENTITIES.add(EntityType.DOLPHIN);
-        WATER_ENTITIES.add(EntityType.SQUID);
-        // 1.16.5 compatibility
-        Enums.getIfPresent(EntityType.class, "AXOLOTL").toJavaUtil().ifPresent(WATER_ENTITIES::add);
-        Enums.getIfPresent(EntityType.class, "GLOW_SQUID").toJavaUtil().ifPresent(WATER_ENTITIES::add);
-    }
 
     static {
         Map<EntityType, MobAspects> m = new EnumMap<>(EntityType.class);
@@ -174,23 +147,6 @@ public class BlockListener implements Listener {
         handler = new Database<>(addon, OneBlockIslands.class);
         cache = new HashMap<>();
         oneBlocksManager = addon.getOneBlockManager();
-    }
-
-    /**
-     * This cleans up the cache files in the database and removed old junk.
-     * This is to address a bug introduced 2 years ago that caused non AOneBlock islands
-     * to be stored in the AOneBlock database. This should be able to be
-     * removed in the future.
-     * @deprecated will be removed in the future
-     * @param e event
-     */
-    @Deprecated(since = "1.12.3", forRemoval = true)
-    @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
-    private void cleanCache(BentoBoxReadyEvent e) {
-        handler.loadObjects().forEach(i -> 
-        addon.getIslandsManager().getIslandById(i.getUniqueId())
-        .filter(is -> !addon.inWorld(is.getWorld()) || is.isUnowned())
-        .ifPresent(is -> handler.deleteID(is.getUniqueId())));
     }
 
     /**
@@ -665,162 +621,11 @@ public class BlockListener implements Listener {
         Entity entity = block.getWorld().spawnEntity(spawnLoc, nextBlock.getEntityType());
         // Make space for entity - this will blot out blocks
         if (addon.getSettings().isClearBlocks()) {
-            makeSpace(entity, spawnLoc);
+            new MakeSpace(addon).makeSpace(entity, spawnLoc);
         }
         block.getWorld().playSound(block.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 1F, 2F);
     }
 
-
-    /**
-     * This method creates a space for entities to spawn. Avoids block damage.
-     * @param entity Entity that is spawned.
-     * @param spawnLocation Location where entity is spawned.
-     */
-    private void makeSpace(@NonNull Entity entity, @NonNull Location spawnLocation)
-    {
-        World world = entity.getWorld();
-        List<Block> airBlocks = new ArrayList<>();
-        List<Block> waterBlocks = new ArrayList<>();
-        // Make space for entity based on the entity's size
-        final BoundingBox boundingBox = entity.getBoundingBox();
-        final boolean isWaterProtected = this.addon.getSettings().isWaterMobProtection() &&
-                WATER_ENTITIES.contains(entity.getType());
-
-        for (double y = boundingBox.getMinY(); y <= Math.min(boundingBox.getMaxY(), world.getMaxHeight()); y++)
-        {
-            // Start with middle block.
-            Block block = world.getBlockAt(new Location(world, spawnLocation.getBlockX(), y, spawnLocation.getBlockZ()));
-
-            // Check if block must be replaced with air or water.
-            this.checkBlock(block, boundingBox, isWaterProtected, airBlocks, waterBlocks);
-
-            // If entity requires water protection, then add air block above it. Dolphin protection.
-            if (isWaterProtected)
-            {
-                // Look up only if possible
-                if (y + 1 < world.getMaxHeight())
-                {
-                    airBlocks.add(block.getRelative(BlockFace.UP));
-                }
-            }
-
-            // Process entity width and depth.
-            if (boundingBox.getWidthX() > 1 && boundingBox.getWidthZ() > 1)
-            {
-                // Entities are spawned in the middle of block. So add extra half block to both dimensions.
-                for (double x = boundingBox.getMinX() - 0.5; x < boundingBox.getMaxX() + 0.5; x++)
-                {
-                    for (double z = boundingBox.getMinZ() - 0.5; z < boundingBox.getMaxZ() + 0.5; z++)
-                    {
-                        block = world.getBlockAt(new Location(world,
-                                x,
-                                y,
-                                z));
-
-                        // Check if block should be marked.
-                        this.checkBlock(block, boundingBox, isWaterProtected, airBlocks, waterBlocks);
-                    }
-                }
-            }
-            else if (boundingBox.getWidthX() > 1)
-            {
-                // If entity is just wider, then check the one dimension.
-                for (double x = boundingBox.getMinX() - 0.5; x < boundingBox.getMaxX() + 0.5; x++)
-                {
-                    block = world.getBlockAt(new Location(world,
-                            x,
-                            y,
-                            spawnLocation.getZ()));
-
-                    // Check if block should be marked.
-                    this.checkBlock(block, boundingBox, isWaterProtected, airBlocks, waterBlocks);
-                }
-            }
-            else if (boundingBox.getWidthZ() > 1)
-            {
-                // If entity is just wider, then check the one dimension.
-                for (double z = boundingBox.getMinZ() - 0.5; z < boundingBox.getMaxZ() + 0.5; z++)
-                {
-                    block = world.getBlockAt(new Location(world,
-                            spawnLocation.getX(),
-                            y,
-                            z));
-
-                    // Check if block should be marked.
-                    this.checkBlock(block, boundingBox, isWaterProtected, airBlocks, waterBlocks);
-                }
-            }
-        }
-
-        // Fire event
-        BlockClearEvent event = new BlockClearEvent(entity, airBlocks, waterBlocks);
-        Bukkit.getPluginManager().callEvent(event);
-
-        if (event.isCancelled())
-        {
-            // Event is cancelled. Blocks cannot be removed.
-            return;
-        }
-
-        // Break blocks.
-        airBlocks.forEach(Block::breakNaturally);
-        airBlocks.forEach(b -> b.setType(Material.AIR));
-        waterBlocks.forEach(block -> {
-            if (block.getBlockData() instanceof Waterlogged waterlogged)
-            {
-                // If block was not removed and is waterlogged, then it means it can be just waterlogged.
-                waterlogged.setWaterlogged(true);
-            }
-            else
-            {
-                // Replace block with water.
-                block.setType(Material.WATER);
-            }
-        });
-    }
-
-
-    /**
-     * This method checks if block bounding box overlaps with entity bounding box and populates lists accordingly.
-     * @param block Block that need to be checked.
-     * @param boundingBox The bounding box of entity.
-     * @param isWaterEntity Boolean that indicate that entity must be water-protected.
-     * @param airBlocks List of air blocks.
-     * @param waterBlocks List of water blocks.
-     */
-    private void checkBlock(Block block,
-            BoundingBox boundingBox,
-            boolean isWaterEntity,
-            List<Block> airBlocks,
-            List<Block> waterBlocks)
-    {
-        // Check if block should be marked for destroying.
-        if (block.getBoundingBox().overlaps(boundingBox))
-        {
-            // Only if entity collides with the block.
-            airBlocks.add(block);
-        }
-
-        // Check if block should be marked for replacing with water.
-        if (isWaterEntity)
-        {
-            if (block.getBlockData() instanceof Waterlogged waterlogged)
-            {
-                // Check if waterlogged block collides.
-                if (block.getBoundingBox().overlaps(boundingBox) || !waterlogged.isWaterlogged())
-                {
-                    // if block overlaps with entity, it will be replaced with air.
-                    // if block is not waterlogged, put water in it.
-                    waterBlocks.add(block);
-                }
-            }
-            else if (block.getType() != Material.WATER)
-            {
-                // Well, unfortunately block must go.
-                waterBlocks.add(block);
-            }
-        }
-    }
 
 
     private void fillChest(@NonNull OneBlockObject nextBlock, @NonNull Block block) {
