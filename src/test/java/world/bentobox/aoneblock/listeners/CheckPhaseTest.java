@@ -141,7 +141,7 @@ public class CheckPhaseTest {
         when(phm.replacePlaceholders(any(), anyString())).thenAnswer(a -> (String)a.getArgument(1, String.class));
 
 
-        bl = new CheckPhase(addon);
+        bl = new CheckPhase(addon, blis);
     }
 
     /**

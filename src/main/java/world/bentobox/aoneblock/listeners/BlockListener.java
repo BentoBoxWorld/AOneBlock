@@ -113,7 +113,7 @@ public class BlockListener implements Listener {
         handler = new Database<>(addon, OneBlockIslands.class);
         cache = new HashMap<>();
         oneBlocksManager = addon.getOneBlockManager();
-        check = new CheckPhase(addon);
+        check = new CheckPhase(addon, this);
         warningSounder = new WarningSounder(addon);
     }
 
