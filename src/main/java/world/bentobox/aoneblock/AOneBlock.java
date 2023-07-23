@@ -88,8 +88,13 @@ public class AOneBlock extends GameModeAddon {
 
     @Override
     public void onEnable() {
-        loadData();
-
+        oneBlockManager = new OneBlocksManager(this);
+        if (loadData()) {
+            // Failed to load - don't register anything
+            return;
+        }
+        blockListener = new BlockListener(this);
+        registerListener(blockListener);
         registerListener(new NoBlockHandler(this));
         registerListener(new BlockProtect(this));
         registerListener(new JoinLeaveListener(this));
@@ -106,20 +111,18 @@ public class AOneBlock extends GameModeAddon {
         registerListener(holoListener);
     }
 
-    //Load some of Manager
-    public void loadData() {
+    // Load phase data
+    public boolean loadData() {
         try {
-            oneBlockManager = new OneBlocksManager(this);
             oneBlockManager.loadPhases();
-            blockListener = new BlockListener(this);
         } catch (IOException e) {
             // Disable
             logError("AOneBlock settings could not load (oneblock.yml error)! Addon disabled.");
             logError(e.getMessage());
             setState(State.DISABLED);
-            return;
+            return true;
         }
-        registerListener(blockListener);
+        return false;
     }
 
     private void registerPlaceholders() {
