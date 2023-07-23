@@ -87,6 +87,7 @@
     CLAY: 40
     EMERALD_ORE: 10
     DIRT_PATH: 100
+    COPPER_ORE: 200
   mobs:
     COW: 150
     SPIDER: 75

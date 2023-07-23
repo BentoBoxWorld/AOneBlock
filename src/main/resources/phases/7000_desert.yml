@@ -9,6 +9,7 @@
     SANDSTONE: 500
     RED_SAND: 100
     CHEST: 100
+    SUSPICIOUS_SAND: 20
   mobs:
     ZOMBIE: 30
     SKELETON: 50

@@ -1,17 +1,13 @@
 package world.bentobox.aoneblock.listeners;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Random;
 import java.util.concurrent.CompletableFuture;
-import java.util.stream.Collectors;
 
-import dev.lone.itemsadder.api.CustomBlock;
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.Location;
@@ -23,8 +19,8 @@ import org.bukkit.World;
 import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.block.BrushableBlock;
 import org.bukkit.block.Chest;
-import org.bukkit.block.data.Waterlogged;
 import org.bukkit.block.data.type.Leaves;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -39,35 +35,27 @@ import org.bukkit.event.entity.EntityInteractEvent;
 import org.bukkit.event.entity.EntitySpawnEvent;
 import org.bukkit.event.player.PlayerBucketFillEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.util.BoundingBox;
+import org.bukkit.loot.LootTable;
+import org.bukkit.loot.LootTables;
 import org.bukkit.util.Vector;
 import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jdt.annotation.Nullable;
 
-import com.google.common.base.Enums;
-
+import dev.lone.itemsadder.api.CustomBlock;
 import world.bentobox.aoneblock.AOneBlock;
 import world.bentobox.aoneblock.dataobjects.OneBlockIslands;
-import world.bentobox.aoneblock.events.BlockClearEvent;
 import world.bentobox.aoneblock.events.MagicBlockEntityEvent;
 import world.bentobox.aoneblock.events.MagicBlockEvent;
 import world.bentobox.aoneblock.events.MagicBlockPhaseEvent;
-import world.bentobox.aoneblock.oneblocks.MobAspects;
 import world.bentobox.aoneblock.oneblocks.OneBlockObject;
 import world.bentobox.aoneblock.oneblocks.OneBlockPhase;
 import world.bentobox.aoneblock.oneblocks.OneBlocksManager;
-import world.bentobox.aoneblock.oneblocks.Requirement;
-import world.bentobox.bank.Bank;
-import world.bentobox.bentobox.api.events.BentoBoxReadyEvent;
 import world.bentobox.bentobox.api.events.island.IslandCreatedEvent;
 import world.bentobox.bentobox.api.events.island.IslandDeleteEvent;
 import world.bentobox.bentobox.api.events.island.IslandResettedEvent;
-import world.bentobox.bentobox.api.localization.TextVariables;
-import world.bentobox.bentobox.api.user.User;
 import world.bentobox.bentobox.database.Database;
 import world.bentobox.bentobox.database.objects.Island;
 import world.bentobox.bentobox.util.Util;
-import world.bentobox.level.Level;
 
 /**
  * @author tastybento
@@ -95,14 +83,14 @@ public class BlockListener implements Listener {
     private final Map<String, OneBlockIslands> cache;
 
     /**
-     * Water entities
+     * Phase checker class
      */
-    private static final List<EntityType> WATER_ENTITIES = new ArrayList<>();
+    private final CheckPhase check;
 
     /**
-     * Mob aspects.
+     * Sound player
      */
-    private static final Map<EntityType, MobAspects> MOB_ASPECTS;
+    private final WarningSounder warningSounder;
 
     /**
      * How many blocks ahead it should look.
@@ -114,57 +102,8 @@ public class BlockListener implements Listener {
      */
     public static final int SAVE_EVERY = 50;
 
-    static {
-        WATER_ENTITIES.add(EntityType.GUARDIAN);
-        WATER_ENTITIES.add(EntityType.ELDER_GUARDIAN);
-        WATER_ENTITIES.add(EntityType.COD);
-        WATER_ENTITIES.add(EntityType.SALMON);
-        WATER_ENTITIES.add(EntityType.PUFFERFISH);
-        WATER_ENTITIES.add(EntityType.TROPICAL_FISH);
-        WATER_ENTITIES.add(EntityType.DROWNED);
-        WATER_ENTITIES.add(EntityType.DOLPHIN);
-        WATER_ENTITIES.add(EntityType.SQUID);
-        // 1.16.5 compatibility
-        Enums.getIfPresent(EntityType.class, "AXOLOTL").toJavaUtil().ifPresent(WATER_ENTITIES::add);
-        Enums.getIfPresent(EntityType.class, "GLOW_SQUID").toJavaUtil().ifPresent(WATER_ENTITIES::add);
-    }
+    private final Random random = new Random();
 
-    static {
-        Map<EntityType, MobAspects> m = new EnumMap<>(EntityType.class);
-        m.put(EntityType.BLAZE, new MobAspects(Sound.ENTITY_BLAZE_AMBIENT, Color.fromRGB(238, 211, 91)));
-        m.put(EntityType.CAVE_SPIDER, new MobAspects(Sound.ENTITY_SPIDER_AMBIENT, Color.fromRGB(63, 37, 31)));
-        m.put(EntityType.CREEPER, new MobAspects(Sound.ENTITY_CREEPER_PRIMED, Color.fromRGB(125, 255, 106)));
-        m.put(EntityType.DROWNED, new MobAspects(Sound.ENTITY_DROWNED_AMBIENT, Color.fromRGB(109, 152, 144)));
-        m.put(EntityType.ELDER_GUARDIAN, new MobAspects(Sound.ENTITY_ELDER_GUARDIAN_AMBIENT, Color.fromRGB(201, 143, 113)));
-        m.put(EntityType.ENDERMAN, new MobAspects(Sound.ENTITY_ENDERMAN_AMBIENT, Color.fromRGB(0, 0, 0)));
-        m.put(EntityType.ENDERMITE, new MobAspects(Sound.ENTITY_ENDERMITE_AMBIENT, Color.fromRGB(30, 30, 30)));
-        m.put(EntityType.EVOKER, new MobAspects(Sound.ENTITY_EVOKER_AMBIENT, Color.fromRGB(144, 148, 148)));
-        m.put(EntityType.GHAST, new MobAspects(Sound.ENTITY_GHAST_AMBIENT, Color.fromRGB(242, 242, 242)));
-        m.put(EntityType.GUARDIAN, new MobAspects(Sound.ENTITY_GUARDIAN_AMBIENT, Color.fromRGB(201, 143, 113)));
-        m.put(EntityType.HUSK, new MobAspects(Sound.ENTITY_HUSK_AMBIENT, Color.fromRGB(111, 104, 90)));
-        m.put(EntityType.ILLUSIONER, new MobAspects(Sound.ENTITY_ILLUSIONER_AMBIENT, Color.fromRGB(144, 149, 149)));
-        m.put(EntityType.PIGLIN, new MobAspects(Sound.ENTITY_PIGLIN_AMBIENT, Color.fromRGB(255, 215, 0)));
-        m.put(EntityType.PIGLIN_BRUTE, new MobAspects(Sound.ENTITY_PIGLIN_BRUTE_AMBIENT, Color.fromRGB(255, 215, 0)));
-        m.put(EntityType.ZOMBIFIED_PIGLIN, new MobAspects(Sound.ENTITY_ZOMBIFIED_PIGLIN_AMBIENT, Color.fromRGB(125, 100, 0)));
-        m.put(EntityType.PILLAGER, new MobAspects(Sound.ENTITY_PILLAGER_AMBIENT, Color.fromRGB(74, 74, 53)));
-        m.put(EntityType.RAVAGER, new MobAspects(Sound.ENTITY_RAVAGER_AMBIENT, Color.fromRGB(85, 78, 73)));
-        m.put(EntityType.SHULKER, new MobAspects(Sound.ENTITY_SHULKER_AMBIENT, Color.fromRGB(142, 106, 146)));
-        m.put(EntityType.SILVERFISH, new MobAspects(Sound.ENTITY_SILVERFISH_AMBIENT, Color.fromRGB(211, 211, 211)));
-        m.put(EntityType.SKELETON, new MobAspects(Sound.ENTITY_SKELETON_AMBIENT, Color.fromRGB(211, 211, 211)));
-        m.put(EntityType.SPIDER, new MobAspects(Sound.ENTITY_SPIDER_AMBIENT, Color.fromRGB(94, 84, 73)));
-        m.put(EntityType.STRAY, new MobAspects(Sound.ENTITY_STRAY_AMBIENT, Color.fromRGB(118, 132, 135)));
-        m.put(EntityType.VEX, new MobAspects(Sound.ENTITY_VEX_AMBIENT, Color.fromRGB(137, 156, 176)));
-        m.put(EntityType.VINDICATOR, new MobAspects(Sound.ENTITY_VINDICATOR_AMBIENT, Color.fromRGB(137, 156, 166)));
-        m.put(EntityType.WITCH, new MobAspects(Sound.ENTITY_WITCH_AMBIENT, Color.fromRGB(56, 39, 67)));
-        m.put(EntityType.WITHER, new MobAspects(Sound.ENTITY_WITHER_AMBIENT, Color.fromRGB(80, 80, 80)));
-        m.put(EntityType.WARDEN, new MobAspects(Sound.ENTITY_WARDEN_AMBIENT, Color.fromRGB(6, 72, 86))); //ADDED WARDEN SOUND
-        m.put(EntityType.WITHER_SKELETON, new MobAspects(Sound.ENTITY_WITHER_SKELETON_AMBIENT, Color.fromRGB(100, 100, 100)));
-        m.put(EntityType.ZOGLIN, new MobAspects(Sound.ENTITY_ZOGLIN_AMBIENT, Color.fromRGB(255, 192, 203)));
-        m.put(EntityType.ZOMBIE, new MobAspects(Sound.ENTITY_ZOMBIE_AMBIENT, Color.fromRGB(74, 99, 53)));
-        m.put(EntityType.ZOMBIE_VILLAGER, new MobAspects(Sound.ENTITY_ZOMBIE_VILLAGER_AMBIENT, Color.fromRGB(111, 104, 90)));
-
-        MOB_ASPECTS = Collections.unmodifiableMap(m);
-    }
 
     /**
      * @param addon - OneBlock
@@ -174,23 +113,8 @@ public class BlockListener implements Listener {
         handler = new Database<>(addon, OneBlockIslands.class);
         cache = new HashMap<>();
         oneBlocksManager = addon.getOneBlockManager();
-    }
-
-    /**
-     * This cleans up the cache files in the database and removed old junk.
-     * This is to address a bug introduced 2 years ago that caused non AOneBlock islands
-     * to be stored in the AOneBlock database. This should be able to be
-     * removed in the future.
-     * @deprecated will be removed in the future
-     * @param e event
-     */
-    @Deprecated(since = "1.12.3", forRemoval = true)
-    @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
-    private void cleanCache(BentoBoxReadyEvent e) {
-        handler.loadObjects().forEach(i -> 
-        addon.getIslandsManager().getIslandById(i.getUniqueId())
-        .filter(is -> !addon.inWorld(is.getWorld()) || is.isUnowned())
-        .ifPresent(is -> handler.deleteID(is.getUniqueId())));
+        check = new CheckPhase(addon, this);
+        warningSounder = new WarningSounder(addon);
     }
 
     /**
@@ -354,22 +278,16 @@ public class BlockListener implements Listener {
         String originalPhase = is.getPhaseName();
         // Check for a goto
         if (Objects.requireNonNull(phase).getGotoBlock() != null) {
-            int gotoBlock = phase.getGotoBlock();
-            phase = oneBlocksManager.getPhase(gotoBlock);
-            // Store lifetime
-            is.setLifetime(is.getLifetime() + gotoBlock);
-            // Set current block
-            is.setBlockNumber(gotoBlock);
-
+            handleGoto(is, phase);
         }
         // Check for new phase and run commands if required
-        boolean newPhase = checkPhase(player, i, is, Objects.requireNonNull(phase));
+        boolean newPhase = check.checkPhase(player, i, is, Objects.requireNonNull(phase));
         if (!newPhase && is.getBlockNumber() % SAVE_EVERY == 0) {
             // Save island data every MAX_LOOK_AHEAD blocks.
             saveIsland(i);
         }
         // Check if requirements met
-        if (phaseRequirementsFail(player, i, phase, world)) {
+        if (check.phaseRequirementsFail(player, i, phase, world)) {
             e.setCancelled(true);
             return;
         }
@@ -391,12 +309,13 @@ public class BlockListener implements Listener {
         addon.getHoloListener().process(i, is, phase);
         // Play warning sound for upcoming mobs
         if (addon.getSettings().getMobWarning() > 0) {
-            playWarning(is, block);
+            warningSounder.play(is, block);
         }
         // Get the next block
         OneBlockObject nextBlock = (newPhase && phase.getFirstBlock() != null) ? phase.getFirstBlock() : is.pollAndAdd(phase.getNextBlock(addon, blockNumber++));
-        // Set the biome for the block and one block above it
+        // Check if this is a new Phase
         if (newPhase) {
+            // Set the biome for the block and one block above it
             setBiome(block, phase.getPhaseBiome());
             // Fire new phase event
             Bukkit.getPluginManager().callEvent(new MagicBlockPhaseEvent(i, player == null ? null : player.getUniqueId(), block, phase.getPhaseName(), originalPhase, is.getBlockNumber()));
@@ -430,158 +349,13 @@ public class BlockListener implements Listener {
         is.incrementBlockNumber();
     }
 
-    /**
-     * Checks whether the player can proceed to the next phase
-     *
-     * @param player - player
-     * @param i      - island
-     * @param phase  - one block phase
-     * @param world  - world
-     * @return true if the player can proceed to the next phase, false if not or if there is no next phase.
-     */
-    private boolean phaseRequirementsFail(@Nullable Player player, @NonNull Island i, OneBlockPhase phase, @NonNull World world) {
-        if (phase.getRequirements().isEmpty()) {
-            return false;
-        }
-        // Check requirements
-        for (Requirement r : phase.getRequirements()) {
-            switch (r.getType()) {
-            case LEVEL:
-                return addon.getAddonByName("Level").map(l -> {
-                    if (((Level) l).getIslandLevel(world, i.getOwner()) < r.getLevel()) {
-                        User.getInstance(player).sendMessage("aoneblock.phase.insufficient-level", TextVariables.NUMBER, String.valueOf(r.getLevel()));
-                        return true;
-                    }
-                    return false;
-                }).orElse(false);
-            case BANK:
-                return addon.getAddonByName("Bank").map(l -> {
-                    if (((Bank) l).getBankManager().getBalance(i).getValue() < r.getBank()) {
-                        User.getInstance(player).sendMessage("aoneblock.phase.insufficient-bank-balance", TextVariables.NUMBER, String.valueOf(r.getBank()));
-                        return true;
-                    }
-                    return false;
-                }).orElse(false);
-            case ECO:
-                return addon.getPlugin().getVault().map(l -> {
-                    if (l.getBalance(User.getInstance(player), world) < r.getEco()) {
-                        User.getInstance(player).sendMessage("aoneblock.phase.insufficient-funds", TextVariables.NUMBER, String.valueOf(r.getEco()));
-                        return true;
-                    }
-                    return false;
-                }).orElse(false);
-            case PERMISSION:
-                if (player != null && !player.hasPermission(r.getPermission())) {
-                    User.getInstance(player).sendMessage("aoneblock.phase.insufficient-permission", TextVariables.NAME, String.valueOf(r.getPermission()));
-                    return true;
-                }
-                return false;
-            default:
-                break;
-
-            }
-        }
-        return false;
-    }
-
-    private void playWarning(@NonNull OneBlockIslands is, @NonNull Block block) {
-        List<EntityType> opMob = is.getNearestMob(addon.getSettings().getMobWarning());
-        opMob.stream().filter(MOB_ASPECTS::containsKey).map(MOB_ASPECTS::get).forEach(s -> {
-            block.getWorld().playSound(block.getLocation(), s.sound(), 1F, 1F);
-            block.getWorld().spawnParticle(Particle.REDSTONE, block.getLocation().add(new Vector(0.5, 1.0, 0.5)), 10, 0.5, 0, 0.5, 1, new Particle.DustOptions(s.color(), 1));
-        });
-
-    }
-
-    /**
-     * Check whether this phase is done or not.
-     *
-     * @param player - player
-     * @param i      - island
-     * @param is     - OneBlockIslands object
-     * @param phase  - current phase name
-     * @return true if this is a new phase, false if not
-     */
-    protected boolean checkPhase(@Nullable Player player, @NonNull Island i, @NonNull OneBlockIslands is, @NonNull OneBlockPhase phase) {
-        // Handle NPCs
-        User user;
-        if (player == null || player.hasMetadata("NPC")) {
-            // Default to the owner
-            user = addon.getPlayers().getUser(i.getOwner());
-        } else {
-            user = User.getInstance(player);
-        }
-
-        String phaseName = phase.getPhaseName() == null ? "" : phase.getPhaseName();
-        if (!is.getPhaseName().equalsIgnoreCase(phaseName)) {
-            // Run previous phase end commands
-            oneBlocksManager.getPhase(is.getPhaseName()).ifPresent(oldPhase -> {
-                String oldPhaseName = oldPhase.getPhaseName() == null ? "" : oldPhase.getPhaseName();
-                Util.runCommands(user,
-                        replacePlaceholders(player, oldPhaseName, phase.getBlockNumber(), i, oldPhase.getEndCommands()),
-                        "Commands run for end of " + oldPhaseName);
-                // If first time
-                if (is.getBlockNumber() >= is.getLifetime()) {
-                    Util.runCommands(user,
-                            replacePlaceholders(player, oldPhaseName, phase.getBlockNumber(), i, oldPhase.getFirstTimeEndCommands()),
-                            "Commands run for first time completing " + oldPhaseName);
-                }
-            });
-            // Set the phase name
-            is.setPhaseName(phaseName);
-            if (user.isPlayer() && user.isOnline() && addon.inWorld(user.getWorld())) {
-                user.getPlayer().sendTitle(phaseName, null, -1, -1, -1);
-            }
-            // Run phase start commands
-            Util.runCommands(user,
-                    replacePlaceholders(player, phaseName, phase.getBlockNumber(), i, phase.getStartCommands()),
-                    "Commands run for start of " + phaseName);
-
-            saveIsland(i);
-            return true;
-        }
-        return false;
-    }
-
-    /**
-     * Replaces placeholders in commands.
-     * <pre>
-     * [island] - Island name
-     * [owner] - Island owner's name
-     * [player] - The name of the player who broke the block triggering the commands
-     * [phase] - the name of this phase
-     * [blocks] - the number of blocks broken
-     * [level] - island level (Requires Levels Addon)
-     * [bank-balance] - island bank balance (Requires Bank Addon)
-     * [eco-balance] - player's economy balance (Requires Vault and an economy plugin)
-     * </pre>
-     *
-     * @param player      - player
-     * @param phaseName   - phase name
-     * @param phaseNumber - phase's block number
-     * @param i           - island
-     * @param commands    - list of commands
-     * @return list of commands with placeholders replaced
-     */
-    @NonNull
-    List<String> replacePlaceholders(@Nullable Player player, @NonNull String phaseName, @NonNull String phaseNumber, @NonNull Island i, List<String> commands) {
-        return commands.stream()
-                .map(c -> {
-                    long level = addon.getAddonByName("Level").map(l -> ((Level) l).getIslandLevel(addon.getOverWorld(), i.getOwner())).orElse(0L);
-                    double balance = addon.getAddonByName("Bank").map(b -> ((Bank) b).getBankManager().getBalance(i).getValue()).orElse(0D);
-                    double ecoBalance = addon.getPlugin().getVault().map(v -> v.getBalance(User.getInstance(player), addon.getOverWorld())).orElse(0D);
-
-                    return c.replace("[island]", i.getName() == null ? "" : i.getName())
-                            .replace("[owner]", addon.getPlayers().getName(i.getOwner()))
-                            .replace("[phase]", phaseName)
-                            .replace("[blocks]", phaseNumber)
-                            .replace("[level]", String.valueOf(level))
-                            .replace("[bank-balance]", String.valueOf(balance))
-                            .replace("[eco-balance]", String.valueOf(ecoBalance));
-
-                })
-                .map(c -> addon.getPlugin().getPlaceholdersManager().replacePlaceholders(player, c))
-                .collect(Collectors.toList());
+    private void handleGoto(OneBlockIslands is, OneBlockPhase phase) {
+        int gotoBlock = phase.getGotoBlock();
+        phase = oneBlocksManager.getPhase(gotoBlock);
+        // Store lifetime
+        is.setLifetime(is.getLifetime() + gotoBlock);
+        // Set current block
+        is.setBlockNumber(gotoBlock);
     }
 
     private void setBiome(@NonNull Block block, @Nullable Biome biome) {
@@ -651,11 +425,27 @@ public class BlockListener implements Listener {
         if (type.equals(Material.CHEST) && nextBlock.getChest() != null) {
             fillChest(nextBlock, block);
             return;
-        }
-        if (Tag.LEAVES.isTagged(type)) {
+        } else if (Tag.LEAVES.isTagged(type)) {
             Leaves leaves = (Leaves) block.getState().getBlockData();
             leaves.setPersistent(true);
             block.setBlockData(leaves);
+        } else if (block.getState() instanceof BrushableBlock bb) {
+            LootTable lt = switch(bb.getBlock().getBiome()) {
+            default -> {
+                if (random.nextDouble() < 0.8) {
+                    yield LootTables.TRAIL_RUINS_ARCHAEOLOGY_COMMON.getLootTable();
+                } else {
+                    // 20% rare
+                    yield LootTables.TRAIL_RUINS_ARCHAEOLOGY_RARE.getLootTable();
+                }
+            }
+            case DESERT -> LootTables.DESERT_PYRAMID_ARCHAEOLOGY.getLootTable();
+            case FROZEN_OCEAN -> LootTables.OCEAN_RUIN_COLD_ARCHAEOLOGY.getLootTable();
+            case OCEAN -> LootTables.OCEAN_RUIN_COLD_ARCHAEOLOGY.getLootTable();
+            case WARM_OCEAN -> LootTables.OCEAN_RUIN_WARM_ARCHAEOLOGY.getLootTable();
+            };
+            bb.setLootTable(lt);
+            bb.update();
         }
     }
 
@@ -665,162 +455,11 @@ public class BlockListener implements Listener {
         Entity entity = block.getWorld().spawnEntity(spawnLoc, nextBlock.getEntityType());
         // Make space for entity - this will blot out blocks
         if (addon.getSettings().isClearBlocks()) {
-            makeSpace(entity, spawnLoc);
+            new MakeSpace(addon).makeSpace(entity, spawnLoc);
         }
         block.getWorld().playSound(block.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 1F, 2F);
     }
 
-
-    /**
-     * This method creates a space for entities to spawn. Avoids block damage.
-     * @param entity Entity that is spawned.
-     * @param spawnLocation Location where entity is spawned.
-     */
-    private void makeSpace(@NonNull Entity entity, @NonNull Location spawnLocation)
-    {
-        World world = entity.getWorld();
-        List<Block> airBlocks = new ArrayList<>();
-        List<Block> waterBlocks = new ArrayList<>();
-        // Make space for entity based on the entity's size
-        final BoundingBox boundingBox = entity.getBoundingBox();
-        final boolean isWaterProtected = this.addon.getSettings().isWaterMobProtection() &&
-                WATER_ENTITIES.contains(entity.getType());
-
-        for (double y = boundingBox.getMinY(); y <= Math.min(boundingBox.getMaxY(), world.getMaxHeight()); y++)
-        {
-            // Start with middle block.
-            Block block = world.getBlockAt(new Location(world, spawnLocation.getBlockX(), y, spawnLocation.getBlockZ()));
-
-            // Check if block must be replaced with air or water.
-            this.checkBlock(block, boundingBox, isWaterProtected, airBlocks, waterBlocks);
-
-            // If entity requires water protection, then add air block above it. Dolphin protection.
-            if (isWaterProtected)
-            {
-                // Look up only if possible
-                if (y + 1 < world.getMaxHeight())
-                {
-                    airBlocks.add(block.getRelative(BlockFace.UP));
-                }
-            }
-
-            // Process entity width and depth.
-            if (boundingBox.getWidthX() > 1 && boundingBox.getWidthZ() > 1)
-            {
-                // Entities are spawned in the middle of block. So add extra half block to both dimensions.
-                for (double x = boundingBox.getMinX() - 0.5; x < boundingBox.getMaxX() + 0.5; x++)
-                {
-                    for (double z = boundingBox.getMinZ() - 0.5; z < boundingBox.getMaxZ() + 0.5; z++)
-                    {
-                        block = world.getBlockAt(new Location(world,
-                                x,
-                                y,
-                                z));
-
-                        // Check if block should be marked.
-                        this.checkBlock(block, boundingBox, isWaterProtected, airBlocks, waterBlocks);
-                    }
-                }
-            }
-            else if (boundingBox.getWidthX() > 1)
-            {
-                // If entity is just wider, then check the one dimension.
-                for (double x = boundingBox.getMinX() - 0.5; x < boundingBox.getMaxX() + 0.5; x++)
-                {
-                    block = world.getBlockAt(new Location(world,
-                            x,
-                            y,
-                            spawnLocation.getZ()));
-
-                    // Check if block should be marked.
-                    this.checkBlock(block, boundingBox, isWaterProtected, airBlocks, waterBlocks);
-                }
-            }
-            else if (boundingBox.getWidthZ() > 1)
-            {
-                // If entity is just wider, then check the one dimension.
-                for (double z = boundingBox.getMinZ() - 0.5; z < boundingBox.getMaxZ() + 0.5; z++)
-                {
-                    block = world.getBlockAt(new Location(world,
-                            spawnLocation.getX(),
-                            y,
-                            z));
-
-                    // Check if block should be marked.
-                    this.checkBlock(block, boundingBox, isWaterProtected, airBlocks, waterBlocks);
-                }
-            }
-        }
-
-        // Fire event
-        BlockClearEvent event = new BlockClearEvent(entity, airBlocks, waterBlocks);
-        Bukkit.getPluginManager().callEvent(event);
-
-        if (event.isCancelled())
-        {
-            // Event is cancelled. Blocks cannot be removed.
-            return;
-        }
-
-        // Break blocks.
-        airBlocks.forEach(Block::breakNaturally);
-        airBlocks.forEach(b -> b.setType(Material.AIR));
-        waterBlocks.forEach(block -> {
-            if (block.getBlockData() instanceof Waterlogged waterlogged)
-            {
-                // If block was not removed and is waterlogged, then it means it can be just waterlogged.
-                waterlogged.setWaterlogged(true);
-            }
-            else
-            {
-                // Replace block with water.
-                block.setType(Material.WATER);
-            }
-        });
-    }
-
-
-    /**
-     * This method checks if block bounding box overlaps with entity bounding box and populates lists accordingly.
-     * @param block Block that need to be checked.
-     * @param boundingBox The bounding box of entity.
-     * @param isWaterEntity Boolean that indicate that entity must be water-protected.
-     * @param airBlocks List of air blocks.
-     * @param waterBlocks List of water blocks.
-     */
-    private void checkBlock(Block block,
-            BoundingBox boundingBox,
-            boolean isWaterEntity,
-            List<Block> airBlocks,
-            List<Block> waterBlocks)
-    {
-        // Check if block should be marked for destroying.
-        if (block.getBoundingBox().overlaps(boundingBox))
-        {
-            // Only if entity collides with the block.
-            airBlocks.add(block);
-        }
-
-        // Check if block should be marked for replacing with water.
-        if (isWaterEntity)
-        {
-            if (block.getBlockData() instanceof Waterlogged waterlogged)
-            {
-                // Check if waterlogged block collides.
-                if (block.getBoundingBox().overlaps(boundingBox) || !waterlogged.isWaterlogged())
-                {
-                    // if block overlaps with entity, it will be replaced with air.
-                    // if block is not waterlogged, put water in it.
-                    waterBlocks.add(block);
-                }
-            }
-            else if (block.getType() != Material.WATER)
-            {
-                // Well, unfortunately block must go.
-                waterBlocks.add(block);
-            }
-        }
-    }
 
 
     private void fillChest(@NonNull OneBlockObject nextBlock, @NonNull Block block) {
