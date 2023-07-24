@@ -278,13 +278,7 @@ public class BlockListener implements Listener {
         String originalPhase = is.getPhaseName();
         // Check for a goto
         if (Objects.requireNonNull(phase).getGotoBlock() != null) {
-            int gotoBlock = phase.getGotoBlock();
-            phase = oneBlocksManager.getPhase(gotoBlock);
-            // Store lifetime
-            is.setLifetime(is.getLifetime() + gotoBlock);
-            // Set current block
-            is.setBlockNumber(gotoBlock);
-
+            handleGoto(is, phase);
         }
         // Check for new phase and run commands if required
         boolean newPhase = check.checkPhase(player, i, is, Objects.requireNonNull(phase));
@@ -353,6 +347,15 @@ public class BlockListener implements Listener {
         }
         // Increment the block number
         is.incrementBlockNumber();
+    }
+
+    private void handleGoto(OneBlockIslands is, OneBlockPhase phase) {
+        int gotoBlock = phase.getGotoBlock();
+        phase = oneBlocksManager.getPhase(gotoBlock);
+        // Store lifetime
+        is.setLifetime(is.getLifetime() + gotoBlock);
+        // Set current block
+        is.setBlockNumber(gotoBlock);
     }
 
     private void setBiome(@NonNull Block block, @Nullable Biome biome) {
