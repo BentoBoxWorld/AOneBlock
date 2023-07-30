@@ -415,8 +415,10 @@ public class OneBlocksManager {
                         CustomBlock block = CustomBlock.getInstance(material);
                         if (block != null) {
                             addItemsAdderBlock(obPhase, material, Objects.toString(blocks.get(material)));
-                        } else if (ItemsAdder.getAllItems().size() != 0){
-                            addon.logError("Bad block material in " + obPhase.getPhaseName() + ": " + material);
+                        } else if (ItemsAdder.getAllItems() != null){
+                            if (ItemsAdder.getAllItems().size() != 0) {
+                                addon.logError("Bad block material in " + obPhase.getPhaseName() + ": " + material);
+                            }
                         }
                     } else {
                         addon.logError("Bad block material in " + obPhase.getPhaseName() + ": " + material);

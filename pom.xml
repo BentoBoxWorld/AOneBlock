@@ -215,7 +215,7 @@
         <dependency>
             <groupId>com.github.LoneDev6</groupId>
             <artifactId>API-ItemsAdder</artifactId>
-            <version>3.2.5</version>
+            <version>3.5.0b</version>
             <scope>provided</scope>
         </dependency>
 
