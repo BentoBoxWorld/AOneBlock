@@ -387,7 +387,7 @@ public class PhasesPanel
         final StringBuilder permissionText = new StringBuilder();
         final StringBuilder levelText = new StringBuilder();
 
-        // For each requirement add whatever is required
+        // Build the requirements description
         phase.getRequirements().forEach(requirement -> {
             switch (requirement.getType())
             {
@@ -418,6 +418,7 @@ public class PhasesPanel
         }
         else
         {
+            // Null description, so we make our own
             String blockText = this.user.getTranslationOrNothing(reference + "starting-block",
                     TextVariables.NUMBER, phase.getBlockNumber());
             String biomeText = this.user.getTranslationOrNothing(reference + "biome",
@@ -432,6 +433,7 @@ public class PhasesPanel
                     PERMISSION, permissionText.toString());
         }
 
+        // Strip out or replace formating
         descriptionText = descriptionText.replaceAll("(?m)^[ \\t]*\\r?\\n", "").
                 replaceAll("(?<!\\\\)\\|", "\n").
                 replaceAll("\\\\\\|", "|");
@@ -446,12 +448,7 @@ public class PhasesPanel
         {
             long lifetime = this.oneBlockIsland.getLifetime();
 
-            if (this.oneBlockIsland.getPhaseName().equals(phase.getPhaseName()))
-            {
-                // Players can always reset a phase they are in now.
-                canApply = true;
-            }
-            else if (phase.getBlockNumberValue() < lifetime)
+            if (phase.getBlockNumberValue() < lifetime)
             {
                 // Check if phase requirements are met.
                 canApply = !this.phaseRequirementsFail(phase);
@@ -524,38 +521,25 @@ public class PhasesPanel
      */
     private boolean phaseRequirementsFail(OneBlockPhase phase)
     {
-        if (phase.getRequirements().isEmpty())
-        {
-            return false;
-        }
-        boolean result = false;
         // Check requirements
         for (Requirement requirement : phase.getRequirements())
         {
             // Check all the requirements and if one fails, then exit
-            result = switch (requirement.getType())
-                    {
-                    case LEVEL ->
-                    this.addon.getAddonByName("Level").filter(Addon::isEnabled).map(a ->
-                    ((Level) a).getIslandLevel(this.world, this.island.getOwner()) < requirement.getLevel()).
-                    orElse(false);
-                    case BANK ->
-                    this.addon.getAddonByName("Bank").filter(Addon::isEnabled).map(a ->
-                    ((Bank) a).getBankManager().getBalance(this.island).getValue() < requirement.getBank()).
-                    orElse(false);
-                    case ECO ->
-                    this.addon.getPlugin().getVault().map(a ->
-                    a.getBalance(this.user, this.world) < requirement.getEco()).
-                    orElse(false);
-                    case PERMISSION ->
-                    this.user != null && !this.user.hasPermission(requirement.getPermission());
-                    };
-                    if (result) {
-                        break;
-                    }
-        }
+            if (switch (requirement.getType()) {
+            case LEVEL -> this.addon.getAddonByName("Level").filter(Addon::isEnabled).map(a ->
+            ((Level) a).getIslandLevel(this.world, this.island.getOwner()) < requirement.getLevel()).orElse(false);
 
-        return result;
+            case BANK -> this.addon.getAddonByName("Bank").filter(Addon::isEnabled).map(a ->
+            ((Bank) a).getBankManager().getBalance(this.island).getValue() < requirement.getBank()).orElse(false);
+
+            case ECO -> this.addon.getPlugin().getVault().map(a -> a.getBalance(this.user, this.world) < requirement.getEco()).orElse(false);
+
+            case PERMISSION -> this.user != null && !this.user.hasPermission(requirement.getPermission());
+            }) {
+                return true;
+            }
+        }
+        return false;
     }
 
 

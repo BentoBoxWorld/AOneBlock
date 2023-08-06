@@ -18,8 +18,6 @@ import java.util.TreeMap;
 import java.util.jar.JarFile;
 import java.util.stream.Collectors;
 
-import dev.lone.itemsadder.api.CustomBlock;
-import dev.lone.itemsadder.api.ItemsAdder;
 import org.apache.commons.lang.math.NumberUtils;
 import org.bukkit.Material;
 import org.bukkit.block.Biome;
@@ -33,6 +31,8 @@ import org.eclipse.jdt.annotation.Nullable;
 import com.google.common.base.Enums;
 import com.google.common.io.Files;
 
+import dev.lone.itemsadder.api.CustomBlock;
+import dev.lone.itemsadder.api.ItemsAdder;
 import world.bentobox.aoneblock.AOneBlock;
 import world.bentobox.aoneblock.dataobjects.OneBlockIslands;
 import world.bentobox.aoneblock.oneblocks.OneBlockObject.Rarity;
@@ -323,16 +323,18 @@ public class OneBlocksManager {
         if (!phase.isConfigurationSection(REQUIREMENTS)) {
             return;
         }
+        ConfigurationSection reqs = phase.getConfigurationSection(REQUIREMENTS);
         for (ReqType key : Requirement.ReqType.values()) {
-            ConfigurationSection reqs = phase.getConfigurationSection(REQUIREMENTS);
             if (reqs.contains(key.getKey())) {
+                Requirement r;
                 if (key.getClazz().equals(Double.class)) {
-                    reqList.add(new Requirement(key, reqs.getDouble(key.getKey())));
+                    r = new Requirement(key, reqs.getDouble(key.getKey()));
                 } else if (key.getClazz().equals(Long.class)) {
-                    reqList.add(new Requirement(key, reqs.getLong(key.getKey())));
+                    r = new Requirement(key, reqs.getLong(key.getKey()));
                 } else {
-                    reqList.add(new Requirement(key, reqs.getString(key.getKey())));
+                    r = new Requirement(key, reqs.getString(key.getKey()));
                 }
+                reqList.add(r);
             }
         }
         obPhase.setRequirements(reqList);

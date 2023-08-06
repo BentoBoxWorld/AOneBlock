@@ -50,51 +50,48 @@ public class CheckPhase {
      * @param i      - island
      * @param phase  - one block phase
      * @param world  - world
-     * @return true if the player can proceed to the next phase, false if not or if there is no next phase.
+     * @return true if the player cannot proceed to the next phase.
      */
     protected boolean phaseRequirementsFail(@Nullable Player player, @NonNull Island i, OneBlockPhase phase, @NonNull World world) {
         if (phase.getRequirements().isEmpty()) {
             return false;
         }
         // Check requirements
+        boolean blocked = false;
         for (Requirement r : phase.getRequirements()) {
-            switch (r.getType()) {
-            case LEVEL:
-                return addon.getAddonByName("Level").map(l -> {
-                    if (((Level) l).getIslandLevel(world, i.getOwner()) < r.getLevel()) {
-                        User.getInstance(player).sendMessage("aoneblock.phase.insufficient-level", TextVariables.NUMBER, String.valueOf(r.getLevel()));
-                        return true;
-                    }
-                    return false;
-                }).orElse(false);
-            case BANK:
-                return addon.getAddonByName("Bank").map(l -> {
-                    if (((Bank) l).getBankManager().getBalance(i).getValue() < r.getBank()) {
-                        User.getInstance(player).sendMessage("aoneblock.phase.insufficient-bank-balance", TextVariables.NUMBER, String.valueOf(r.getBank()));
-                        return true;
-                    }
-                    return false;
-                }).orElse(false);
-            case ECO:
-                return addon.getPlugin().getVault().map(l -> {
-                    if (l.getBalance(User.getInstance(player), world) < r.getEco()) {
-                        User.getInstance(player).sendMessage("aoneblock.phase.insufficient-funds", TextVariables.NUMBER, String.valueOf(r.getEco()));
-                        return true;
-                    }
-                    return false;
-                }).orElse(false);
-            case PERMISSION:
-                if (player != null && !player.hasPermission(r.getPermission())) {
-                    User.getInstance(player).sendMessage("aoneblock.phase.insufficient-permission", TextVariables.NAME, String.valueOf(r.getPermission()));
+            boolean b = switch (r.getType()) {
+            case LEVEL -> addon.getAddonByName("Level").map(l -> {
+                if (((Level) l).getIslandLevel(world, i.getOwner()) < r.getLevel()) {
+                    User.getInstance(player).sendMessage("aoneblock.phase.insufficient-level", TextVariables.NUMBER, String.valueOf(r.getLevel()));
                     return true;
                 }
                 return false;
-            default:
-                break;
-
+            }).orElse(false);
+            case BANK -> addon.getAddonByName("Bank").map(l -> {
+                if (((Bank) l).getBankManager().getBalance(i).getValue() < r.getBank()) {
+                    User.getInstance(player).sendMessage("aoneblock.phase.insufficient-bank-balance", TextVariables.NUMBER, String.valueOf(r.getBank()));
+                    return true;
+                }
+                return false;
+            }).orElse(false);
+            case ECO -> addon.getPlugin().getVault().map(l -> {
+                if (l.getBalance(User.getInstance(player), world) < r.getEco()) {
+                    User.getInstance(player).sendMessage("aoneblock.phase.insufficient-funds", TextVariables.NUMBER, String.valueOf(r.getEco()));
+                    return true;
+                }
+                return false;
+            }).orElse(false);
+            case PERMISSION -> {
+                if (player != null && !player.hasPermission(r.getPermission())) {
+                    User.getInstance(player).sendMessage("aoneblock.phase.insufficient-permission", TextVariables.NAME, String.valueOf(r.getPermission()));
+                    yield true;
+                }
+                yield false;
             }
+            };
+            if (b) blocked = true;
         }
-        return false;
+        return blocked;
     }
 
     /**
