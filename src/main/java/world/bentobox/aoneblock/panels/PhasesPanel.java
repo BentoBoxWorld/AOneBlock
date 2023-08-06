@@ -26,6 +26,7 @@ import world.bentobox.aoneblock.dataobjects.OneBlockIslands;
 import world.bentobox.aoneblock.oneblocks.OneBlockPhase;
 import world.bentobox.aoneblock.oneblocks.Requirement;
 import world.bentobox.bank.Bank;
+import world.bentobox.bentobox.api.addons.Addon;
 import world.bentobox.bentobox.api.localization.TextVariables;
 import world.bentobox.bentobox.api.panels.PanelItem;
 import world.bentobox.bentobox.api.panels.TemplatedPanel;
@@ -337,11 +338,23 @@ public class PhasesPanel
         }
 
         OneBlockPhase phase = phaseEntry.getValue();
+        /* Example in locale:
+         *       phase:
+                    name: "&f&l [phase]"
+                    description: |-
+                      [starting-block]
+                      [biome]
+                      [bank]
+                      [economy]
+                      [level]
+                      [permission]
+         */
         final String reference = "aoneblock.gui.buttons.phase.";
 
         // Get settings for island.
         PanelItemBuilder builder = new PanelItemBuilder();
 
+        // Set the icon of the button
         if (template.icon() != null)
         {
             builder.icon(template.icon().clone());
@@ -354,7 +367,7 @@ public class PhasesPanel
 
             builder.icon(phase.getIconBlock() == null ? firstBlock : phase.getIconBlock());
         }
-
+        // Set the title of the button
         if (template.title() != null)
         {
             builder.name(this.user.getTranslation(this.world, template.title(),
@@ -374,21 +387,22 @@ public class PhasesPanel
         final StringBuilder permissionText = new StringBuilder();
         final StringBuilder levelText = new StringBuilder();
 
+        // For each requirement add whatever is required
         phase.getRequirements().forEach(requirement -> {
             switch (requirement.getType())
             {
             case ECO -> economyText.append(this.user.getTranslationOrNothing(reference + "economy",
-                        TextVariables.NUMBER, String.valueOf(requirement.getEco())));
-            
+                    TextVariables.NUMBER, String.valueOf(requirement.getEco())));
+
             case BANK -> bankText.append(this.user.getTranslationOrNothing(reference + "bank",
-                        TextVariables.NUMBER, String.valueOf(requirement.getBank())));
-            
+                    TextVariables.NUMBER, String.valueOf(requirement.getBank())));
+
             case LEVEL -> levelText.append(this.user.getTranslationOrNothing(reference + "level",
-                        TextVariables.NUMBER, String.valueOf(requirement.getLevel())));
-            
+                    TextVariables.NUMBER, String.valueOf(requirement.getLevel())));
+
             case PERMISSION -> permissionText.append(this.user.getTranslationOrNothing(reference + "permission",
-                        TextVariables.NUMBER, requirement.getPermission()));
-            
+                    PERMISSION, requirement.getPermission()));
+
             }
         });
 
@@ -522,11 +536,11 @@ public class PhasesPanel
             result = switch (requirement.getType())
                     {
                     case LEVEL ->
-                    this.addon.getAddonByName("Level").map(a ->
+                    this.addon.getAddonByName("Level").filter(Addon::isEnabled).map(a ->
                     ((Level) a).getIslandLevel(this.world, this.island.getOwner()) < requirement.getLevel()).
                     orElse(false);
                     case BANK ->
-                    this.addon.getAddonByName("Bank").map(a ->
+                    this.addon.getAddonByName("Bank").filter(Addon::isEnabled).map(a ->
                     ((Bank) a).getBankManager().getBalance(this.island).getValue() < requirement.getBank()).
                     orElse(false);
                     case ECO ->
@@ -551,17 +565,17 @@ public class PhasesPanel
     private void runCommandCall(String command, OneBlockPhase phase)
     {
         // Get first player command label.
-        this.addon.getPlayerCommand().ifPresent(mainCommand -> 
-            mainCommand.getSubCommand(command).ifPresent(subCommand -> {
-                // Check if subcommand is setCount command.
-                if (Arrays.stream(this.addon.getSettings().getSetCountCommand().split(" ")).
+        this.addon.getPlayerCommand().ifPresent(mainCommand ->
+        mainCommand.getSubCommand(command).ifPresent(subCommand -> {
+            // Check if subcommand is setCount command.
+            if (Arrays.stream(this.addon.getSettings().getSetCountCommand().split(" ")).
                     anyMatch(text -> text.equalsIgnoreCase(subCommand.getLabel())))
-                {
-                    this.addon.log(this.user.getName() + " called: `" + mainCommand.getTopLabel() + " " + subCommand.getLabel() + " " + phase.getBlockNumber());
-                    // Confirmation is done via GUI. Bypass.
-                    this.user.performCommand(mainCommand.getTopLabel() + " " + subCommand.getLabel() + " " + phase.getBlockNumber());
-                }
-            }));
+            {
+                this.addon.log(this.user.getName() + " called: `" + mainCommand.getTopLabel() + " " + subCommand.getLabel() + " " + phase.getBlockNumber());
+                // Confirmation is done via GUI. Bypass.
+                this.user.performCommand(mainCommand.getTopLabel() + " " + subCommand.getLabel() + " " + phase.getBlockNumber());
+            }
+        }));
 
         // Close inventory
         this.user.closeInventory();
