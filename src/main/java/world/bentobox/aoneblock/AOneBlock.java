@@ -41,7 +41,7 @@ public class AOneBlock extends GameModeAddon {
 
     private static final String NETHER = "_nether";
     private static final String THE_END = "_the_end";
-    public static boolean hasItemsAdder = false;
+    private boolean hasItemsAdder = false;
 
     // Settings
     private Settings settings;
