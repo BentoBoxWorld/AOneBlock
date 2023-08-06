@@ -326,7 +326,13 @@ public class OneBlocksManager {
         for (ReqType key : Requirement.ReqType.values()) {
             ConfigurationSection reqs = phase.getConfigurationSection(REQUIREMENTS);
             if (reqs.contains(key.getKey())) {
-                reqList.add(new Requirement(key, reqs.get(key.getKey())));
+                if (key.getClazz().equals(Double.class)) {
+                    reqList.add(new Requirement(key, reqs.getDouble(key.getKey())));
+                } else if (key.getClazz().equals(Long.class)) {
+                    reqList.add(new Requirement(key, reqs.getLong(key.getKey())));
+                } else {
+                    reqList.add(new Requirement(key, reqs.getString(key.getKey())));
+                }
             }
         }
         obPhase.setRequirements(reqList);
