@@ -8,6 +8,11 @@ import world.bentobox.aoneblock.oneblocks.OneBlockPhase;
 import world.bentobox.bentobox.api.commands.CompositeCommand;
 import world.bentobox.bentobox.api.user.User;
 
+/**
+ * Command to run a sanity check
+ * @author tastybento
+ *
+ */
 public class AdminSanityCheck extends CompositeCommand {
 
     private AOneBlock addon;
