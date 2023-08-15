@@ -408,9 +408,11 @@ public class PhasesPanel
 
         if (template.description() != null)
         {
+            String biomeText = phase.getPhaseBiome() == null ? "" : LangUtilsHook.getBiomeName(phase.getPhaseBiome(), this.user);
+
             descriptionText = this.user.getTranslationOrNothing(template.description(),
                     TextVariables.NUMBER, phase.getBlockNumber(),
-                    BIOME, LangUtilsHook.getBiomeName(phase.getPhaseBiome(), this.user),
+                    BIOME, biomeText,
                     BANK, bankText.toString(),
                     ECONOMY, economyText.toString(),
                     LEVEL, levelText.toString(),
@@ -421,7 +423,7 @@ public class PhasesPanel
             // Null description, so we make our own
             String blockText = this.user.getTranslationOrNothing(reference + "starting-block",
                     TextVariables.NUMBER, phase.getBlockNumber());
-            String biomeText = this.user.getTranslationOrNothing(reference + "biome",
+            String biomeText = phase.getPhaseBiome() == null ? "" : this.user.getTranslationOrNothing(reference + "biome",
                     BIOME, LangUtilsHook.getBiomeName(phase.getPhaseBiome(), this.user));
 
             descriptionText = this.user.getTranslationOrNothing(reference + "description",

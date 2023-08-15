@@ -175,7 +175,6 @@ public class OneBlocksManager {
             if (obPhase.getPhaseName() != null) {
                 throw new IOException("Block " + blockNumber + ": Phase name trying to be set to " + phase.getString(NAME) + " but already set to " + obPhase.getPhaseName() + ". Duplicate phase file?");
             }
-            System.out.println("name");
             // name
             obPhase.setPhaseName(phase.getString(NAME, blockNumber));
         }
