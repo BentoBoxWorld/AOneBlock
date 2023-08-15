@@ -163,11 +163,19 @@ public class OneBlocksManager {
         }
     }
 
+    /**
+     * Load in the phase's init
+     * @param blockNumber string representation of this phase's block number
+     * @param obPhase OneBlockPhase
+     * @param phase configuration section being read
+     * @throws IOException if there's an error in the config file
+     */
     void initBlock(String blockNumber, OneBlockPhase obPhase, ConfigurationSection phase) throws IOException {
         if (phase.contains(NAME, true)) {
             if (obPhase.getPhaseName() != null) {
                 throw new IOException("Block " + blockNumber + ": Phase name trying to be set to " + phase.getString(NAME) + " but already set to " + obPhase.getPhaseName() + ". Duplicate phase file?");
             }
+            System.out.println("name");
             // name
             obPhase.setPhaseName(phase.getString(NAME, blockNumber));
         }
@@ -793,6 +801,9 @@ public class OneBlocksManager {
         }
     }
 
+    /**
+     * Get all the probs for each phases and log to console
+     */
     public void getAllProbs() {
         blockProbs.values().forEach(this::getProbs);
     }
