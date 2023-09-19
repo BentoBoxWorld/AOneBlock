@@ -10,7 +10,7 @@
 
     <name>AOneBlock</name>
     <description>AOneBlock is an add-on for BentoBox, an expandable Minecraft Bukkit plugin for island-type games like SkyBlock or AcidIsland.</description>
-    <url>https://github.com/BentoBoxWorlgit checkout masterd/AOneBlock</url>
+    <url>https://github.com/BentoBoxWorld/AOneBlock</url>
     <inceptionYear>2020</inceptionYear>
 
     <developers>
@@ -67,7 +67,7 @@
         <!-- Do not change unless you want different name for local builds. -->
         <build.number>-LOCAL</build.number>
         <!-- This allows to change between versions. -->
-        <build.version>1.14.1</build.version>
+        <build.version>1.14.2</build.version>
         <!-- SonarCloud -->
         <sonar.projectKey>BentoBoxWorld_AOneBlock</sonar.projectKey>
         <sonar.organization>bentobox-world</sonar.organization>
@@ -215,7 +215,7 @@
         <dependency>
             <groupId>com.github.LoneDev6</groupId>
             <artifactId>API-ItemsAdder</artifactId>
-            <version>3.2.5</version>
+            <version>3.5.0b</version>
             <scope>provided</scope>
         </dependency>
 

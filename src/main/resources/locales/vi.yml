@@ -6,7 +6,7 @@ aoneblock:
         parameters: "<tên> <số>"
         description: chỉnh số đếm khối của người chơi
         set: "&a Số đếm khối của [name] được đặt thành [number]"
-        set-lifetime: "& bộ đếm thời gian tồn tại của [name] được đặt thành [number]"
+        set-lifetime: "&a Bộ đếm thời gian tồn tại của [name] được đặt thành [number]"
       setchest:
         parameters: "<giai đoạn> <độ hiếm>"
         description: thêm rương đang nhìn vào một giai đoạn với độ hiếm được chỉ định
@@ -36,7 +36,7 @@ aoneblock:
       setcount:
         parameters: "<số lượng>"
         description: đặt số khối thành giá trị đã hoàn thành trước đó
-        set: "& Bộ đếm được đặt thành [number]."
+        set: "&a Bộ đếm được đặt thành [number]."
         too-high: "&cMức tối đa bạn có thể đặt là[number]!"
   phase:
     insufficient-level: Cấp đảo của bạn quá thấp để thực thi! Nó phải là [number].

@@ -18,8 +18,6 @@ import java.util.TreeMap;
 import java.util.jar.JarFile;
 import java.util.stream.Collectors;
 
-import dev.lone.itemsadder.api.CustomBlock;
-import dev.lone.itemsadder.api.ItemsAdder;
 import org.apache.commons.lang.math.NumberUtils;
 import org.bukkit.Material;
 import org.bukkit.block.Biome;
@@ -33,6 +31,8 @@ import org.eclipse.jdt.annotation.Nullable;
 import com.google.common.base.Enums;
 import com.google.common.io.Files;
 
+import dev.lone.itemsadder.api.CustomBlock;
+import dev.lone.itemsadder.api.ItemsAdder;
 import world.bentobox.aoneblock.AOneBlock;
 import world.bentobox.aoneblock.dataobjects.OneBlockIslands;
 import world.bentobox.aoneblock.oneblocks.OneBlockObject.Rarity;
@@ -163,6 +163,13 @@ public class OneBlocksManager {
         }
     }
 
+    /**
+     * Load in the phase's init
+     * @param blockNumber string representation of this phase's block number
+     * @param obPhase OneBlockPhase
+     * @param phase configuration section being read
+     * @throws IOException if there's an error in the config file
+     */
     void initBlock(String blockNumber, OneBlockPhase obPhase, ConfigurationSection phase) throws IOException {
         if (phase.contains(NAME, true)) {
             if (obPhase.getPhaseName() != null) {
@@ -323,10 +330,18 @@ public class OneBlocksManager {
         if (!phase.isConfigurationSection(REQUIREMENTS)) {
             return;
         }
+        ConfigurationSection reqs = phase.getConfigurationSection(REQUIREMENTS);
         for (ReqType key : Requirement.ReqType.values()) {
-            ConfigurationSection reqs = phase.getConfigurationSection(REQUIREMENTS);
             if (reqs.contains(key.getKey())) {
-                reqList.add(new Requirement(key, reqs.get(key.getKey())));
+                Requirement r;
+                if (key.getClazz().equals(Double.class)) {
+                    r = new Requirement(key, reqs.getDouble(key.getKey()));
+                } else if (key.getClazz().equals(Long.class)) {
+                    r = new Requirement(key, reqs.getLong(key.getKey()));
+                } else {
+                    r = new Requirement(key, reqs.getString(key.getKey()));
+                }
+                reqList.add(r);
             }
         }
         obPhase.setRequirements(reqList);
@@ -415,8 +430,10 @@ public class OneBlocksManager {
                         CustomBlock block = CustomBlock.getInstance(material);
                         if (block != null) {
                             addItemsAdderBlock(obPhase, material, Objects.toString(blocks.get(material)));
-                        } else if (ItemsAdder.getAllItems().size() != 0){
-                            addon.logError("Bad block material in " + obPhase.getPhaseName() + ": " + material);
+                        } else if (ItemsAdder.getAllItems() != null){
+                            if (ItemsAdder.getAllItems().size() != 0) {
+                                addon.logError("Bad block material in " + obPhase.getPhaseName() + ": " + material);
+                            }
                         }
                     } else {
                         addon.logError("Bad block material in " + obPhase.getPhaseName() + ": " + material);
@@ -783,6 +800,9 @@ public class OneBlocksManager {
         }
     }
 
+    /**
+     * Get all the probs for each phases and log to console
+     */
     public void getAllProbs() {
         blockProbs.values().forEach(this::getProbs);
     }

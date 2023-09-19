@@ -407,46 +407,46 @@ public class BlockListener implements Listener {
     private void spawnBlock(@NonNull OneBlockObject nextBlock, @NonNull Block block) {
         if (nextBlock.isCustomBlock()) {
             nextBlock.getCustomBlock().setBlock(block);
-            return;
         } else if (nextBlock.isItemsAdderBlock()) {
             //Get Custom Block from ItemsAdder and place it
             CustomBlock cBlock = CustomBlock.getInstance(nextBlock.getItemsAdderBlock());
             if (cBlock != null) {
+                block.getLocation().getBlock().setType(Material.AIR);
                 cBlock.place(block.getLocation());
+            }
+        } else {
+            @NonNull
+            Material type = nextBlock.getMaterial();
+            // Place new block with no physics
+            block.setType(type, false);
+            // Fill the chest
+            if (type.equals(Material.CHEST) && nextBlock.getChest() != null) {
+                fillChest(nextBlock, block);
                 return;
+            } else if (Tag.LEAVES.isTagged(type)) {
+                Leaves leaves = (Leaves) block.getState().getBlockData();
+                leaves.setPersistent(true);
+                block.setBlockData(leaves);
+            } else if (block.getState() instanceof BrushableBlock bb) {
+                LootTable lt = switch(bb.getBlock().getBiome()) {
+                    default -> {
+                        if (random.nextDouble() < 0.8) {
+                            yield LootTables.TRAIL_RUINS_ARCHAEOLOGY_COMMON.getLootTable();
+                        } else {
+                            // 20% rare
+                            yield LootTables.TRAIL_RUINS_ARCHAEOLOGY_RARE.getLootTable();
+                        }
+                    }
+                    case DESERT -> LootTables.DESERT_PYRAMID_ARCHAEOLOGY.getLootTable();
+                    case FROZEN_OCEAN -> LootTables.OCEAN_RUIN_COLD_ARCHAEOLOGY.getLootTable();
+                    case OCEAN -> LootTables.OCEAN_RUIN_COLD_ARCHAEOLOGY.getLootTable();
+                    case WARM_OCEAN -> LootTables.OCEAN_RUIN_WARM_ARCHAEOLOGY.getLootTable();
+                };
+                bb.setLootTable(lt);
+                bb.update();
             }
         }
 
-        @NonNull
-        Material type = nextBlock.getMaterial();
-        // Place new block with no physics
-        block.setType(type, false);
-        // Fill the chest
-        if (type.equals(Material.CHEST) && nextBlock.getChest() != null) {
-            fillChest(nextBlock, block);
-            return;
-        } else if (Tag.LEAVES.isTagged(type)) {
-            Leaves leaves = (Leaves) block.getState().getBlockData();
-            leaves.setPersistent(true);
-            block.setBlockData(leaves);
-        } else if (block.getState() instanceof BrushableBlock bb) {
-            LootTable lt = switch(bb.getBlock().getBiome()) {
-            default -> {
-                if (random.nextDouble() < 0.8) {
-                    yield LootTables.TRAIL_RUINS_ARCHAEOLOGY_COMMON.getLootTable();
-                } else {
-                    // 20% rare
-                    yield LootTables.TRAIL_RUINS_ARCHAEOLOGY_RARE.getLootTable();
-                }
-            }
-            case DESERT -> LootTables.DESERT_PYRAMID_ARCHAEOLOGY.getLootTable();
-            case FROZEN_OCEAN -> LootTables.OCEAN_RUIN_COLD_ARCHAEOLOGY.getLootTable();
-            case OCEAN -> LootTables.OCEAN_RUIN_COLD_ARCHAEOLOGY.getLootTable();
-            case WARM_OCEAN -> LootTables.OCEAN_RUIN_WARM_ARCHAEOLOGY.getLootTable();
-            };
-            bb.setLootTable(lt);
-            bb.update();
-        }
     }
 
     private void spawnEntity(@NonNull OneBlockObject nextBlock, @NonNull Block block) {
