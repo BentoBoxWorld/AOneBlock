@@ -6,6 +6,7 @@ aoneblock:
         parameters: "<név> <szám>"
         description: állítsa be a játékos blokkszámát
         set: "&a [name] számának beállítása erre: [number]"
+        set-lifetime: "&a [name] élettartama a következőre van állítva: [number]"
       setchest:
         parameters: "<fázis> <ritkaság>"
         description: helyezze a nézett mellkasát egy szakaszba a megadott ritkasággal
@@ -26,7 +27,9 @@ aoneblock:
     count:
       description: mutassa meg a blokkok számát és a fázist
       info: "&a Ön a &b [number] blokkban van a &a [name] fázisban"
-    info: {}
+    info:
+      count: Az &a sziget a &b [number]&a blokkon található, a &b [name] &a fázisban.
+        Élettartam száma &b [lifetime] &a.
     phases:
       description: az összes fázis felsorolása
       title: "&2 OneBlock Fázis"
@@ -35,14 +38,38 @@ aoneblock:
     island:
       setcount:
         parameters: "<szám>"
+        too-high: "&c A beállítható maximum [number]!"
     respawn-block: {}
-  phase: {}
+  phase:
+    insufficient-level: "&c A sziget szintje túl alacsony a folytatáshoz! Ennek a
+      következőnek kell lennie: [number]."
+    insufficient-funds: "&c A kerete túl kevés a folytatáshoz! Ezeknek [number]-nak
+      kell lenniük."
+    insufficient-bank-balance: "&c A sziget banki egyenlege túl alacsony a folytatáshoz!
+      Ennek a következőnek kell lennie: [number]."
+    insufficient-permission: "&c Nem folytathatja tovább, amíg meg nem szerzi a [name]
+      engedélyt!"
   placeholders: {}
   gui:
     titles: {}
     buttons:
-      previous: {}
-      next: {}
-      phase: {}
+      previous:
+        description: "&7 Váltás a [number] oldalra"
+      next:
+        description: "&7 Váltás a [number] oldalra"
+      phase:
+        name: "&f&l [phase]"
+        description: |-
+          [starting-block]
+          [biome]
+          [bank]
+          [economy]
+          [level]
+          [permission]
+        starting-block: "&7 Az &e [number] blokk feltörése után indul."
+        biome: "&7 életrajz: &e [biome]"
+        bank: "&7 Szükséges &e $[number] &7 bankszámlára."
+        economy: "&7 &e $[number] &7 játékos fiókot igényel."
+        level: "&7 &e [number] &7 szigetszint szükséges."
     tips: {}
   island: {}
