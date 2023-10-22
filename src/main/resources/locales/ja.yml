@@ -34,20 +34,31 @@ aoneblock:
       description-syntax: "&b [number]ブロック"
     island:
       setcount:
+        parameters: "<カウント>"
+        description: ブロック数を以前に完了した値に設定する
+        set: "&a カウントを [数値] に設定します。"
         too-high: "&c 設定できる最大値は [number] です!"
-    respawn-block: {}
+    respawn-block:
+      description: マジックブロックが消えた場合に再出現します
+      block-exist: "&a ブロックが存在します。再生成は必要ありませんでした。私はあなたのためにそれをマークしました。"
+      block-respawned: "&a ブロックが復活しました。"
   phase:
     insufficient-level: "&c 島のレベルが低すぎるので先に進めません! [number] である必要があります。"
     insufficient-funds: "&c 資金が少なすぎるため続行できません。 [number] である必要があります。"
     insufficient-bank-balance: "&c 島の銀行残高が少なすぎるため続行できません。 [number] である必要があります。"
     insufficient-permission: "&c [name] の許可を取得するまで、これ以上先に進むことはできません。"
-  placeholders: {}
+  placeholders:
+    infinite: 無限
   gui:
-    titles: {}
+    titles:
+      phases: "&0&l ワンブロックフェーズ"
     buttons:
       previous:
+        name: "&f&l 前のページ"
         description: "&7 [number]ページに切り替えます"
-      next: {}
+      next:
+        name: "&f&l 次のページ"
+        description: "&7 [番号]ページに切り替えます"
       phase:
         name: "&f&l [phase]"
         description: |-
@@ -60,6 +71,14 @@ aoneblock:
         starting-block: "&7 &e [number] ブロックを分割した後に開始します。"
         biome: "&7 バイオーム: &e [biome]"
         bank: "&7 銀行口座に &e $[number] &7 が必要です。"
+        economy: "&7 プレイヤーアカウントに &e $[number] &7 が必要です。"
         level: "&7 &e [number] &7 の島レベルが必要です。"
-    tips: {}
-  island: {}
+        permission: "&7 `&e[permission]&7` 権限が必要です。"
+    tips:
+      click-to-previous: "&e &7 をクリックして前のページを表示します。"
+      click-to-next: "&e &7 をクリックして次のページを表示します。"
+      click-to-change: "&e &7 をクリックして変更します。"
+  island:
+    starting-hologram: |-
+      &aAOneBlock へようこそ
+      &eこのブロックを壊して開始してください
