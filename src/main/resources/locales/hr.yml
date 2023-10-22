@@ -6,6 +6,7 @@ aoneblock:
         parameters: "<ime> <broj>"
         description: postavljanje broja blokova igrača
         set: "&a broj [name] postavljen je na [number]"
+        set-lifetime: "&broj životnog vijeka [name] postavljen na [number]"
       setchest:
         parameters: "<phase> <rarity>"
         description: stavite pregledani sanduk u fazu s specificiranom rijetkošću
@@ -24,8 +25,46 @@ aoneblock:
     count:
       description: prikazuju broj i fazu bloka
       info: "&a Nalazite se na bloku &b [number] u fazi &a [name]"
+    info:
+      count: "&a Otok je u bloku &b [number]&a u &b [name] &a fazi. Životni vijek
+        &b [lifetime] &a."
     phases:
       description: prikažite popis svih faza
       title: "&2 OneBlock Faze"
       name-syntax: "&a [name]"
       description-syntax: "&b [number] blokova"
+    island:
+      setcount:
+        set: "&a Brojanje postavljeno na [number]."
+        too-high: "&c Maksimalno što možete postaviti je [number]!"
+    respawn-block: {}
+  phase:
+    insufficient-level: "&c Vaša razina otoka je preniska za nastavak! Mora biti [number]."
+    insufficient-funds: "&c Vaša su sredstva premala za nastavak! Moraju biti [number]."
+    insufficient-bank-balance: "&c Stanje otočne banke je premalo za nastavak! Mora
+      biti [number]."
+    insufficient-permission: "&c Ne možete nastaviti dok ne dobijete dopuštenje [name]!"
+  placeholders: {}
+  gui:
+    titles: {}
+    buttons:
+      previous:
+        description: "&7 Prijeđi na stranicu [number]."
+      next:
+        description: "&7 Prijeđi na stranicu [number]."
+      phase:
+        name: "&f&l [phase]"
+        description: |-
+          [starting-block]
+          [biome]
+          [bank]
+          [economy]
+          [level]
+          [permission]
+        starting-block: "&7 Počinje nakon razbijanja &e [number] blokova."
+        biome: "&7 Biome: &e [biome]"
+        bank: "&7 Zahtijeva &e $[number] &7 na bankovnom računu."
+        economy: "&7 Zahtijeva &e $[number] &7 na računu igrača."
+        level: "&7 Zahtijeva &e [number] &7 razinu otoka."
+    tips: {}
+  island: {}
