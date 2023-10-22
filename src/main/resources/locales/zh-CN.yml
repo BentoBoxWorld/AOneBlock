@@ -24,6 +24,8 @@ aoneblock:
     count:
       description: 显示方块数量和阶段
       info: "&a 您当前挖掘的方块数量是 &b [number], 为 &a [name] 阶段"
+    info:
+      count: "&a 岛位于 &b [name] &a 阶段的 &b [number]&a 区块。生命周期计数 &b [lifetime] &a。"
     phases:
       description: 显示所有阶段的列表
       title: "&2 OneBlock 阶段"
@@ -35,13 +37,46 @@ aoneblock:
         description: 将块计数设置为先前完成的值
         set: "&a 数量设置为 [number]."
         too-high: "&c 你最大只能设置 [number]!"
+    respawn-block:
+      description: 在魔法块消失的情况下重生
+      block-exist: "&a 块存在，不需要重生。我给你标记了。"
+      block-respawned: "&a 块重生。"
   phase:
     insufficient-level: "&c 岛屿等级过低, 无法执行此操作! 等级必须达到 [number]."
     insufficient-funds: "&c 余额不足, 无法执行此操作! 余额应多于 [number]."
     insufficient-bank-balance: "&c 岛屿银行余额不足, 无法执行此操作! 余额应多于 [number]."
-    insufficient-permission: "&c 您不能继续执行操作了, 因为没有 [name] 权限!"
+    insufficient-permission: "&c 在获得 [name] 许可之前，您不能继续操作！"
   placeholders:
     infinite: 无限
+  gui:
+    titles:
+      phases: "&0&l OneBlock 阶段"
+    buttons:
+      previous:
+        name: "&f&l 上一页"
+        description: "&7 切换到[number]页"
+      next:
+        name: "&f&l 下一页"
+        description: "&7 切换到[number]页"
+      phase:
+        name: "&f&l [phase]"
+        description: |-
+          [starting-block]
+          [biome]
+          [bank]
+          [economy]
+          [level]
+          [permission]
+        starting-block: "&7 在破坏 &e [number] 块后开始。"
+        biome: "&7 生物群落：&e [biome]"
+        bank: "&7 需要银行帐户中有 &e $[number] &7。"
+        economy: "&7 需要玩家帐户中有 &e $[number] &7。"
+        level: "&7 需要 &e [number] &7 岛屿等级。"
+        permission: "&7 需要 `&e[permission]&7` 权限。"
+    tips:
+      click-to-previous: "&e 单击&7 查看上一页。"
+      click-to-next: "&e 单击 &7 查看下一页。"
+      click-to-change: "&e 单击 &7 进行更改。"
   island:
     starting-hologram: |-
       &a欢迎来到 AOneBlock
