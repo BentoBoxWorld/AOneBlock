@@ -23,8 +23,37 @@ aoneblock:
     count:
       description: 顯示塊數和相位
       info: "&a您正在&a[name]]階段中阻止&b[number]"
+    info:
+      count: "&a 島位於 &b [names] &a 階段的 &b [number]&a 區塊。生命週期計數 &b [lifetime] &a。"
     phases:
       description: 顯示所有階段的列表
       title: "＆2 OneBlock階段"
       name-syntax: "&a [name]"
       description-syntax: "&b [number]塊"
+    island:
+      setcount: {}
+    respawn-block: {}
+  phase:
+    insufficient-level: "&c 你的島嶼等級太低，無法繼續！必須是[number]。"
+    insufficient-bank-balance: "&c 島上銀行餘額太低，無法繼續！必須是[number]。"
+  placeholders: {}
+  gui:
+    titles: {}
+    buttons:
+      previous:
+        description: "&7 切換到[number]頁"
+      next:
+        description: "&7 切換到[number]頁"
+      phase:
+        description: |-
+          [starting-block]
+          [biome]
+          [bank]
+          [economy]
+          [level]
+          [permission]
+        biome: "&7 生物群落：&e [biome]"
+        level: "&7 需要 &e [number] &7 島嶼等級。"
+        permission: "&7 需要 `&e[permission]&7` 權限。"
+    tips: {}
+  island: {}
