@@ -41,6 +41,7 @@ aoneblock:
       setcount:
         parameters: "<Anzahl>"
         description: Setzen Sie die Blockanzahl auf den zuvor abgeschlossenen Wert
+        set: "&a Zähler auf [number] gesetzt."
         too-high: "&c Das Maximum, das Sie festlegen können, ist [number]!"
     respawn-block:
       description: lässt den magischen Block in Situationen wieder erscheinen, in
@@ -60,11 +61,14 @@ aoneblock:
   placeholders:
     infinite: Unendlich
   gui:
-    titles: {}
+    titles:
+      phases: "&0&l OneBlock-Phasen"
     buttons:
       previous:
+        name: "&f&l Vorherige Seite"
         description: "&7 Zur Seite [number] wechseln"
       next:
+        name: "&f&l Nächste Seite"
         description: "&7 Zur Seite [number] wechseln"
       phase:
         name: "&f&l [phase]"
@@ -84,6 +88,7 @@ aoneblock:
     tips:
       click-to-previous: "&e Klicken Sie auf &7, um die vorherige Seite anzuzeigen."
       click-to-next: "&e Klicken Sie auf &7, um die nächste Seite anzuzeigen."
+      click-to-change: "&e Zum Ändern &7klicken."
   island:
     starting-hologram: |-
       &aWillkommen bei AOneBlock
