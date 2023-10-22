@@ -38,8 +38,14 @@ aoneblock:
     island:
       setcount:
         parameters: "<szám>"
+        description: állítsa be a blokkszámot a korábban kitöltött értékre
+        set: "&a A számláló értéke [szám]."
         too-high: "&c A beállítható maximum [number]!"
-    respawn-block: {}
+    respawn-block:
+      description: varázsblokkot hoz újra olyan helyzetekben, amikor eltűnik
+      block-exist: "&a Blokk létezik, nem igényelt újbóli megjelenést. megjelöltem
+        neked."
+      block-respawned: "&a blokk újjáéledt."
   phase:
     insufficient-level: "&c A sziget szintje túl alacsony a folytatáshoz! Ennek a
       következőnek kell lennie: [number]."
@@ -49,13 +55,17 @@ aoneblock:
       Ennek a következőnek kell lennie: [number]."
     insufficient-permission: "&c Nem folytathatja tovább, amíg meg nem szerzi a [name]
       engedélyt!"
-  placeholders: {}
+  placeholders:
+    infinite: Végtelen
   gui:
-    titles: {}
+    titles:
+      phases: "&0&l OneBlock fázisok"
     buttons:
       previous:
+        name: "&f&l Előző oldal"
         description: "&7 Váltás a [number] oldalra"
       next:
+        name: "&f&l Következő oldal"
         description: "&7 Váltás a [number] oldalra"
       phase:
         name: "&f&l [phase]"
@@ -71,5 +81,12 @@ aoneblock:
         bank: "&7 Szükséges &e $[number] &7 bankszámlára."
         economy: "&7 &e $[number] &7 játékos fiókot igényel."
         level: "&7 &e [number] &7 szigetszint szükséges."
-    tips: {}
-  island: {}
+        permission: "&7 `&e[permission]&7` engedély szükséges."
+    tips:
+      click-to-previous: "&e Kattintson a &7 gombra az előző oldal megtekintéséhez."
+      click-to-next: "&e Kattintson a &7 gombra a következő oldal megtekintéséhez."
+      click-to-change: "&e Kattintson a &7 gombra a módosításhoz."
+  island:
+    starting-hologram: |-
+      &aÜdvözlünk az AOneBlockban
+      &eSzüntesse meg ezt a blokkot a kezdéshez
