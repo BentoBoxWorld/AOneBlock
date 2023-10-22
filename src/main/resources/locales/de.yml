@@ -3,9 +3,10 @@ aoneblock:
   commands:
     admin:
       setcount:
-        parameters: "<Name> <Anzahl>"
+        parameters: "<Name> <Anzahl>[lifetime]"
         description: Setze die Blockanzahl des Spielers
         set: "&a [name] zählt auf [number]"
+        set-lifetime: Die Lebenszeitanzahl von &a [name] wurde auf [number] gesetzt
       setchest:
         parameters: "<Phase> <Rarität>"
         description: Versetzen Sie die betrachtete Truhe in eine Phase mit der angegebenen
@@ -28,11 +29,18 @@ aoneblock:
     count:
       description: Zeige die Blockanzahl und Phase
       info: "&a Sie befinden sich in der Phase &a [name] in Block &b [number]"
+    info:
+      count: "&a Island befindet sich in Block &b [number]&a in der Phase &b [Name]
+        &a. Lebenszeitanzahl &b [lifetime] &a."
     phases:
       description: Zeigen Sie eine Liste aller Phasen an
       title: "&2 OneBlock-Phasen"
       name-syntax: "&a [name]"
       description-syntax: "&b [number] Blöcke"
+    island:
+      setcount:
+        too-high: "&c Das Maximum, das Sie festlegen können, ist [number]!"
+    respawn-block: {}
   phase:
     insufficient-level: "&c Ihr Insellevel ist zu niedrig, um fortzufahren! Es muss
       [number] sein."
@@ -40,10 +48,32 @@ aoneblock:
       [number] sein."
     insufficient-bank-balance: "&c Der Saldo der Inselbank ist zu niedrig, um fortzufahren!
       Es muss [number] sein."
-    insufficient-permission: "&c Sie können nicht weitermachen, bis Sie die Berechtigung
-      [name] erhalten haben!"
+    insufficient-permission: "&c Sie können nicht weitermachen, bis Sie die [name]-Berechtigung
+      erhalten!"
   placeholders:
     infinite: Unendlich
+  gui:
+    titles: {}
+    buttons:
+      previous:
+        description: "&7 Zur Seite [number] wechseln"
+      next:
+        description: "&7 Zur Seite [number] wechseln"
+      phase:
+        name: "&f&l [phase]"
+        description: |-
+          [starting-block]
+          [biome]
+          [bank]
+          [economy]
+          [level]
+          [permission]
+        starting-block: "&7 Startet nach dem Aufbrechen von &e [number] Blöcken."
+        biome: "&7 Biom: &e [biome]"
+        bank: "&7 Erfordert &e $[number] &7 auf dem Bankkonto."
+        economy: "&7 Erfordert &e $[number] &7 im Spielerkonto."
+        level: "&7 Erfordert &e [number] &7 Inselebene."
+    tips: {}
   island:
     starting-hologram: |-
       &aWillkommen bei AOneBlock
