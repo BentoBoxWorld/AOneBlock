@@ -40,7 +40,11 @@ aoneblock:
         description: définir le nombre de blocs à la valeur précédemment terminée
         set: "&a Nombre défini sur [number]."
         too-high: "&c Le maximum que vous pouvez définir est [number] !"
-    respawn-block: {}
+    respawn-block:
+      description: réapparaît le bloc magique dans les situations où il disparaît
+      block-exist: "&un bloc existe, n'a pas nécessité de réapparition. Je l'ai noté
+        pour toi."
+      block-respawned: "&un bloc réapparu."
   phase:
     insufficient-level: Ton niveau d'île est trop bas ! Il doit être de [number] au
       minimum.
