@@ -3,9 +3,10 @@ aoneblock:
   commands:
     admin:
       setcount:
-        parameters: "<Name> <Anzahl>"
+        parameters: "<Name> <Anzahl>[lifetime]"
         description: Setze die Blockanzahl des Spielers
         set: "&a [name] zählt auf [number]"
+        set-lifetime: Die Lebenszeitanzahl von &a [name] wurde auf [number] gesetzt
       setchest:
         parameters: "<Phase> <Rarität>"
         description: Versetzen Sie die betrachtete Truhe in eine Phase mit der angegebenen
@@ -28,11 +29,26 @@ aoneblock:
     count:
       description: Zeige die Blockanzahl und Phase
       info: "&a Sie befinden sich in der Phase &a [name] in Block &b [number]"
+    info:
+      count: "&a Island befindet sich in Block &b [number]&a in der Phase &b [Name]
+        &a. Lebenszeitanzahl &b [lifetime] &a."
     phases:
       description: Zeigen Sie eine Liste aller Phasen an
       title: "&2 OneBlock-Phasen"
       name-syntax: "&a [name]"
       description-syntax: "&b [number] Blöcke"
+    island:
+      setcount:
+        parameters: "<Anzahl>"
+        description: Setzen Sie die Blockanzahl auf den zuvor abgeschlossenen Wert
+        set: "&a Zähler auf [number] gesetzt."
+        too-high: "&c Das Maximum, das Sie festlegen können, ist [number]!"
+    respawn-block:
+      description: lässt den magischen Block in Situationen wieder erscheinen, in
+        denen er verschwindet
+      block-exist: "&ein Block existiert, musste nicht neu gestartet werden. Ich habe
+        es für dich markiert."
+      block-respawned: "&a Block wieder aufgetaucht."
   phase:
     insufficient-level: "&c Ihr Insellevel ist zu niedrig, um fortzufahren! Es muss
       [number] sein."
@@ -40,10 +56,39 @@ aoneblock:
       [number] sein."
     insufficient-bank-balance: "&c Der Saldo der Inselbank ist zu niedrig, um fortzufahren!
       Es muss [number] sein."
-    insufficient-permission: "&c Sie können nicht weitermachen, bis Sie die Berechtigung
-      [name] erhalten haben!"
+    insufficient-permission: "&c Sie können nicht weitermachen, bis Sie die [name]-Berechtigung
+      erhalten!"
   placeholders:
     infinite: Unendlich
+  gui:
+    titles:
+      phases: "&0&l OneBlock-Phasen"
+    buttons:
+      previous:
+        name: "&f&l Vorherige Seite"
+        description: "&7 Zur Seite [number] wechseln"
+      next:
+        name: "&f&l Nächste Seite"
+        description: "&7 Zur Seite [number] wechseln"
+      phase:
+        name: "&f&l [phase]"
+        description: |-
+          [starting-block]
+          [biome]
+          [bank]
+          [economy]
+          [level]
+          [permission]
+        starting-block: "&7 Startet nach dem Aufbrechen von &e [number] Blöcken."
+        biome: "&7 Biom: &e [biome]"
+        bank: "&7 Erfordert &e $[number] &7 auf dem Bankkonto."
+        economy: "&7 Erfordert &e $[number] &7 im Spielerkonto."
+        level: "&7 Erfordert &e [number] &7 Inselebene."
+        permission: "&7 Erfordert die Berechtigung „&e[permission]&7“."
+    tips:
+      click-to-previous: "&e Klicken Sie auf &7, um die vorherige Seite anzuzeigen."
+      click-to-next: "&e Klicken Sie auf &7, um die nächste Seite anzuzeigen."
+      click-to-change: "&e Zum Ändern &7klicken."
   island:
     starting-hologram: |-
       &aWillkommen bei AOneBlock
