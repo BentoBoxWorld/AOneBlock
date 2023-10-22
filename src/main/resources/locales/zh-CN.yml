@@ -24,7 +24,8 @@ aoneblock:
     count:
       description: 显示方块数量和阶段
       info: "&a 您当前挖掘的方块数量是 &b [number], 为 &a [name] 阶段"
-    info: {}
+    info:
+      count: "&a 岛位于 &b [name] &a 阶段的 &b [number]&a 区块。生命周期计数 &b [lifetime] &a。"
     phases:
       description: 显示所有阶段的列表
       title: "&2 OneBlock 阶段"
@@ -53,12 +54,25 @@ aoneblock:
     buttons:
       previous:
         name: "&f&l 上一页"
+        description: "&7 切换到[number]页"
       next:
         name: "&f&l 下一页"
+        description: "&7 切换到[number]页"
       phase:
+        name: "&f&l [phase]"
+        description: |-
+          [starting-block]
+          [biome]
+          [bank]
+          [economy]
+          [level]
+          [permission]
         starting-block: "&7 在破坏 &e [number] 块后开始。"
+        biome: "&7 生物群落：&e [biome]"
         bank: "&7 需要银行帐户中有 &e $[number] &7。"
         economy: "&7 需要玩家帐户中有 &e $[number] &7。"
+        level: "&7 需要 &e [number] &7 岛屿等级。"
+        permission: "&7 需要 `&e[permission]&7` 权限。"
     tips:
       click-to-previous: "&e 单击&7 查看上一页。"
       click-to-next: "&e 单击 &7 查看下一页。"
