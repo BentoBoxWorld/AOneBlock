@@ -6,6 +6,7 @@ aoneblock:
         parameters: "<ime> <broj>"
         description: postavljanje broja blokova igrača
         set: "&a broj [name] postavljen je na [number]"
+        set-lifetime: "&broj životnog vijeka [name] postavljen na [number]"
       setchest:
         parameters: "<phase> <rarity>"
         description: stavite pregledani sanduk u fazu s specificiranom rijetkošću
@@ -24,8 +25,63 @@ aoneblock:
     count:
       description: prikazuju broj i fazu bloka
       info: "&a Nalazite se na bloku &b [number] u fazi &a [name]"
+    info:
+      count: "&a Otok je u bloku &b [number]&a u &b [name] &a fazi. Životni vijek
+        &b [lifetime] &a."
     phases:
       description: prikažite popis svih faza
       title: "&2 OneBlock Faze"
       name-syntax: "&a [name]"
       description-syntax: "&b [number] blokova"
+    island:
+      setcount:
+        parameters: "<count>"
+        description: postaviti broj blokova na prethodno dovršenu vrijednost
+        set: "&a Brojanje postavljeno na [number]."
+        too-high: "&c Maksimalno što možete postaviti je [number]!"
+    respawn-block:
+      description: ponovno rađa magični blok u situacijama kada nestane
+      block-exist: "&a blok postoji, nije zahtijevao ponovno stvaranje. Označila sam
+        za tebe."
+      block-respawned: "&a blok se ponovno pojavio."
+  phase:
+    insufficient-level: "&c Vaša razina otoka je preniska za nastavak! Mora biti [number]."
+    insufficient-funds: "&c Vaša su sredstva premala za nastavak! Moraju biti [number]."
+    insufficient-bank-balance: "&c Stanje otočne banke je premalo za nastavak! Mora
+      biti [number]."
+    insufficient-permission: "&c Ne možete nastaviti dok ne dobijete dopuštenje [name]!"
+  placeholders:
+    infinite: Beskonačno
+  gui:
+    titles:
+      phases: "&0&l OneBlock faze"
+    buttons:
+      previous:
+        name: "&f&l Prethodna stranica"
+        description: "&7 Prijeđi na stranicu [number]."
+      next:
+        name: "&f&l Sljedeća stranica"
+        description: "&7 Prijeđi na stranicu [number]."
+      phase:
+        name: "&f&l [phase]"
+        description: |-
+          [starting-block]
+          [biome]
+          [bank]
+          [economy]
+          [level]
+          [permission]
+        starting-block: "&7 Počinje nakon razbijanja &e [number] blokova."
+        biome: "&7 Biome: &e [biome]"
+        bank: "&7 Zahtijeva &e $[number] &7 na bankovnom računu."
+        economy: "&7 Zahtijeva &e $[number] &7 na računu igrača."
+        level: "&7 Zahtijeva &e [number] &7 razinu otoka."
+        permission: "&7 Zahtijeva dozvolu `&e[permission]&7`."
+    tips:
+      click-to-previous: "&e Kliknite &7 za pregled prethodne stranice."
+      click-to-next: "&e Kliknite &7 za pregled sljedeće stranice."
+      click-to-change: "&e Kliknite &7 za promjenu."
+  island:
+    starting-hologram: |-
+      &aDobro došli u AOneBlock
+      &eRazbijte ovaj blok za početak
