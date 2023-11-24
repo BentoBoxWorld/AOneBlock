@@ -50,6 +50,7 @@ aoneblock:
     insufficient-bank-balance: "&c Stanje otočne banke je premalo za nastavak! Mora
       biti [number]."
     insufficient-permission: "&c Ne možete nastaviti dok ne dobijete dopuštenje [name]!"
+    cooldown: "&c Sljedeća faza bit će dostupna za [number] sekundi!"
   placeholders:
     infinite: Beskonačno
   gui:

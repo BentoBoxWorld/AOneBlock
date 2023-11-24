@@ -44,6 +44,12 @@ public class OneBlockIslands implements DataObject {
     @Expose
     private String hologram = "";
 
+    /**
+     * Timestamp of last phase change
+     */
+    @Expose
+    private long lastPhaseChangeTime = 0;
+
     private Queue<OneBlockObject> queue = new LinkedList<>();
 
     /**
@@ -196,5 +202,17 @@ public class OneBlockIslands implements DataObject {
         this.lifetime = lifetime;
     }
 
+    /**
+     * @return Timestamp of last phase change
+     */
+    public long getLastPhaseChangeTime() {
+        return this.lastPhaseChangeTime;
+    }
 
+    /**
+     * @param lastPhaseChangeTime Timestamp of last phase change
+     */
+    public void setLastPhaseChangeTime(long lastPhaseChangeTime) {
+        this.lastPhaseChangeTime = lastPhaseChangeTime;
+    }
 }

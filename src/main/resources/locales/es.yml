@@ -53,6 +53,7 @@ aoneblock:
       para seguir! Debes tener [number]."
     insufficient-permission: "&c ¡No puede continuar hasta que obtenga el permiso
       de [name]!"
+    cooldown: "&c ¡La siguiente etapa estará disponible en [number] segundos!"
   placeholders:
     infinite: Infinito
   gui:

@@ -50,6 +50,7 @@ aoneblock:
     insufficient-funds: "&c Your funds are too low to proceed! They must be [number]."
     insufficient-bank-balance: "&c The island bank balance is too low to proceed! It must be [number]."
     insufficient-permission: "&c You can proceed no further until you obtain the [name] permission!"
+    cooldown: "&c Next phase will be available in [number] seconds!"
   placeholders:
     infinite: Infinite
   gui:

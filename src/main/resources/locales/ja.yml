@@ -47,6 +47,7 @@ aoneblock:
     insufficient-funds: "&c 資金が少なすぎるため続行できません。 [number] である必要があります。"
     insufficient-bank-balance: "&c 島の銀行残高が少なすぎるため続行できません。 [number] である必要があります。"
     insufficient-permission: "&c [name] の許可を取得するまで、これ以上先に進むことはできません。"
+    cooldown: "&c [number] 秒で次のステージへ!"
   placeholders:
     infinite: 無限
   gui:

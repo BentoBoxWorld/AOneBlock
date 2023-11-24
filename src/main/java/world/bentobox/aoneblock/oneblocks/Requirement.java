@@ -26,7 +26,11 @@ public record Requirement(ReqType type, Object requirement) {
         /**
          * Permission
          */
-        PERMISSION("permission", String.class);
+        PERMISSION("permission", String.class),
+        /**
+         * Cooldown
+         */
+        COOLDOWN("cooldown", Long.class);
 
         private final String key;
         private final Class<?> clazz;
@@ -77,6 +81,13 @@ public record Requirement(ReqType type, Object requirement) {
      */
     public String getPermission() {
         return (String)requirement;
+    }
+
+    /**
+     * @return the cooldown
+     */
+    public long getCooldown() {
+        return (long)requirement;
     }
 
     /**

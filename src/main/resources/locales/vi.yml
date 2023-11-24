@@ -44,6 +44,7 @@ aoneblock:
     insufficient-bank-balance: Ngân hàng đảo của bạn quá thấp để thực thi! Nó phải
       là [number].
     insufficient-permission: Bạn không thể thực thi tiếp cho đến khi có quyền [name]!
+    cooldown: Giai đoạn tiếp theo sẽ có sau [number] giây!
   placeholders:
     infinite: Vô hạn
   island:

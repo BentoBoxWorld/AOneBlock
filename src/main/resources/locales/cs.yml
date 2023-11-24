@@ -48,7 +48,8 @@ aoneblock:
     insufficient-funds: Nemáš dostatečné prostředky! Musíš mít alespoň [number].
     insufficient-bank-balance: V Bance ostrova není dostatek financí! Je potřeba alespoň
       [number].
-    insufficient-permission: "&c Nemůžete pokračovat, dokud nezískáte oprávnění [jméno]!"
+    insufficient-permission: "&c Nemůžete pokračovat, dokud nezískáte oprávnění [name]!"
+    cooldown: "&c Další fáze bude dostupná za [number] sekund!"
   placeholders:
     infinite: Nekonečný
   gui:

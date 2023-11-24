@@ -287,12 +287,13 @@ public class BlockListener implements Listener {
             saveIsland(i);
         }
         // Check if requirements met
-        if (check.phaseRequirementsFail(player, i, phase, world)) {
+        if (check.phaseRequirementsFail(player, i, is, phase, world)) {
             e.setCancelled(true);
             return;
         }
         if (newPhase) {
             is.clearQueue();
+            is.setLastPhaseChangeTime(System.currentTimeMillis());
         }
         // Get the block number in this phase
         int materialBlocksInQueue = (int) is.getQueue().stream().filter(obo -> obo.isMaterial() || obo.isCustomBlock()).count();
