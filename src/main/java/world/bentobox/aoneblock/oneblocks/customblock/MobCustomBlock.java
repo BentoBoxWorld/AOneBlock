@@ -19,7 +19,7 @@ import java.util.*;
 /**
  * A custom block that spawns mob on an underlying block
  *
- * @author HSGamer
+ * @author Baterka
  */
 public class MobCustomBlock implements OneBlockCustomBlock {
     private final EntityType mob;
