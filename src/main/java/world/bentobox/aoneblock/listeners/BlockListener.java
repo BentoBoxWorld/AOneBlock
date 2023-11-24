@@ -53,6 +53,7 @@ import world.bentobox.aoneblock.oneblocks.OneBlocksManager;
 import world.bentobox.bentobox.api.events.island.IslandCreatedEvent;
 import world.bentobox.bentobox.api.events.island.IslandDeleteEvent;
 import world.bentobox.bentobox.api.events.island.IslandResettedEvent;
+import world.bentobox.bentobox.api.user.User;
 import world.bentobox.bentobox.database.Database;
 import world.bentobox.bentobox.database.objects.Island;
 import world.bentobox.bentobox.util.Util;
@@ -270,58 +271,84 @@ public class BlockListener implements Listener {
      * @param world  - world where the block is being broken
      */
     private void process(@NonNull Cancellable e, @NonNull Island i, @Nullable Player player, @NonNull World world) {
-        // Get island from cache or load it
+        // Get the block that is being broken
+        Block block = Objects.requireNonNull(i.getCenter()).toVector().toLocation(world).getBlock();
+
+        // Get oneblock island
         OneBlockIslands is = getIsland(i);
-        // Get the phase for this island
+
+        // Get the phase for current block number
         OneBlockPhase phase = oneBlocksManager.getPhase(is.getBlockNumber());
-        // Store the original phase in case it changes.
-        String originalPhase = is.getPhaseName();
+
+        // Save previous processing phase name
+        String prevPhaseName = is.getPhaseName();
+
         // Check for a goto
         if (Objects.requireNonNull(phase).getGotoBlock() != null) {
             handleGoto(is, phase);
         }
-        // Check for new phase and run commands if required
-        boolean newPhase = check.checkPhase(player, i, is, Objects.requireNonNull(phase));
-        if (!newPhase && is.getBlockNumber() % SAVE_EVERY == 0) {
+
+        // Get current phase name
+        String currPhaseName = phase.getPhaseName() == null ? "" : phase.getPhaseName();
+
+        // Get the phase for next block number
+        OneBlockPhase nextPhase = oneBlocksManager.getPhase(is.getBlockNumber()+1);
+
+        // Get next phase name
+        String nextPhaseName = nextPhase == null || nextPhase.getPhaseName() == null ? "" : nextPhase.getPhaseName();
+
+        // If next phase is new, log break time of the last block of this phase
+        if(!currPhaseName.equalsIgnoreCase(nextPhaseName)){
+            is.setLastPhaseChangeTime(System.currentTimeMillis());
+        }
+
+        boolean isCurrPhaseNew = !is.getPhaseName().equalsIgnoreCase(currPhaseName);
+
+        if (isCurrPhaseNew) {
+            // Check if requirements for new phase are met
+            if (check.phaseRequirementsFail(player, i, is, phase, world)) {
+                e.setCancelled(true);
+                return;
+            }
+
+            setNewPhase(player, i, is, phase);
+            is.clearQueue();
+
+            // Set the biome for the block and one block above it
+            setBiome(block, phase.getPhaseBiome());
+
+            // Fire new phase event
+            Bukkit.getPluginManager().callEvent(new MagicBlockPhaseEvent(i, player == null ? null : player.getUniqueId(), block, phase.getPhaseName(), prevPhaseName, is.getBlockNumber()));
+        }
+
+        if (!isCurrPhaseNew && is.getBlockNumber() % SAVE_EVERY == 0) {
             // Save island data every MAX_LOOK_AHEAD blocks.
             saveIsland(i);
         }
-        // Check if requirements met
-        if (check.phaseRequirementsFail(player, i, is, phase, world)) {
-            e.setCancelled(true);
-            return;
-        }
-        if (newPhase) {
-            is.clearQueue();
-            is.setLastPhaseChangeTime(System.currentTimeMillis());
-        }
+
         // Get the block number in this phase
         int materialBlocksInQueue = (int) is.getQueue().stream().filter(obo -> obo.isMaterial() || obo.isCustomBlock()).count();
         int blockNumber = is.getBlockNumber() - (phase.getBlockNumberValue() - 1) + materialBlocksInQueue;
-        // Get the block that is being broken
-        Block block = Objects.requireNonNull(i.getCenter()).toVector().toLocation(world).getBlock();
+
         // Fill a 5 block queue
-        if (is.getQueue().isEmpty() || newPhase) {
+        if (is.getQueue().isEmpty() || isCurrPhaseNew) {
             // Add initial 5 blocks
             for (int j = 0; j < MAX_LOOK_AHEAD; j++) {
                 is.add(phase.getNextBlock(addon, blockNumber++));
             }
         }
+
         // Manage Holograms
         addon.getHoloListener().process(i, is, phase);
+
         // Play warning sound for upcoming mobs
         if (addon.getSettings().getMobWarning() > 0) {
             warningSounder.play(is, block);
         }
+
         // Get the next block
-        OneBlockObject nextBlock = (newPhase && phase.getFirstBlock() != null) ? phase.getFirstBlock() : is.pollAndAdd(phase.getNextBlock(addon, blockNumber++));
-        // Check if this is a new Phase
-        if (newPhase) {
-            // Set the biome for the block and one block above it
-            setBiome(block, phase.getPhaseBiome());
-            // Fire new phase event
-            Bukkit.getPluginManager().callEvent(new MagicBlockPhaseEvent(i, player == null ? null : player.getUniqueId(), block, phase.getPhaseName(), originalPhase, is.getBlockNumber()));
-        }
+        OneBlockObject nextBlock = (isCurrPhaseNew && phase.getFirstBlock() != null) ? phase.getFirstBlock() : is.pollAndAdd(phase.getNextBlock(addon, blockNumber++));
+
         // Entity
         if (nextBlock.isEntity()) {
             if (!(e instanceof EntitySpawnEvent)) e.setCancelled(true);
@@ -331,6 +358,7 @@ public class BlockListener implements Listener {
             Bukkit.getPluginManager().callEvent(new MagicBlockEntityEvent(i, player == null ? null : player.getUniqueId(), block, nextBlock.getEntityType()));
             return;
         }
+
         // Break the block
         if (e instanceof BlockBreakEvent) {
             this.breakBlock(player, block, nextBlock, i);
@@ -347,8 +375,60 @@ public class BlockListener implements Listener {
             // Fire event
             Bukkit.getPluginManager().callEvent(new MagicBlockEvent(i, null, null, block, nextBlock.getMaterial()));
         }
+
         // Increment the block number
         is.incrementBlockNumber();
+    }
+
+    /**
+     * Runs end phase commands, sets new phase and runs new phase commands
+     *
+     * @param player - player
+     * @param i      - island
+     * @param is     - OneBlockIslands object
+     * @param phase  - current phase
+     */
+    private void setNewPhase(
+            @Nullable Player player,
+            @NonNull Island i,
+            @NonNull OneBlockIslands is,
+            @NonNull OneBlockPhase phase
+    ) {
+        // Handle NPCs
+        User user;
+        if (player == null || player.hasMetadata("NPC")) {
+            // Default to the owner
+            user = addon.getPlayers().getUser(i.getOwner());
+        } else {
+            user = User.getInstance(player);
+        }
+
+        String newPhaseName = phase.getPhaseName();
+
+        // Run previous phase end commands
+        oneBlocksManager.getPhase(is.getPhaseName()).ifPresent(oldPhase -> {
+            String oldPhaseName = oldPhase.getPhaseName() == null ? "" : oldPhase.getPhaseName();
+            Util.runCommands(user,
+                    check.replacePlaceholders(player, oldPhaseName, phase.getBlockNumber(), i, oldPhase.getEndCommands()),
+                    "Commands run for end of " + oldPhaseName);
+            // If first time
+            if (is.getBlockNumber() >= is.getLifetime()) {
+                Util.runCommands(user,
+                        check.replacePlaceholders(player, oldPhaseName, phase.getBlockNumber(), i, oldPhase.getFirstTimeEndCommands()),
+                        "Commands run for first time completing " + oldPhaseName);
+            }
+        });
+        // Set the phase name
+        is.setPhaseName(newPhaseName);
+        if (user.isPlayer() && user.isOnline() && addon.inWorld(user.getWorld())) {
+            user.getPlayer().sendTitle(newPhaseName, null, -1, -1, -1);
+        }
+        // Run phase start commands
+        Util.runCommands(user,
+                check.replacePlaceholders(player, newPhaseName, phase.getBlockNumber(), i, phase.getStartCommands()),
+                "Commands run for start of " + newPhaseName);
+
+        saveIsland(i);
     }
 
     private void handleGoto(OneBlockIslands is, OneBlockPhase phase) {

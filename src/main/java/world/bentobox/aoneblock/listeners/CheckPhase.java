@@ -17,7 +17,6 @@ import world.bentobox.bank.Bank;
 import world.bentobox.bentobox.api.localization.TextVariables;
 import world.bentobox.bentobox.api.user.User;
 import world.bentobox.bentobox.database.objects.Island;
-import world.bentobox.bentobox.util.Util;
 import world.bentobox.level.Level;
 
 /**
@@ -100,56 +99,6 @@ public class CheckPhase {
             if (b) blocked = true;
         }
         return blocked;
-    }
-
-    /**
-     * Check whether this phase is done or not.
-     *
-     * @param player - player
-     * @param i      - island
-     * @param is     - OneBlockIslands object
-     * @param phase  - current phase name
-     * @return true if this is a new phase, false if not
-     */
-    protected boolean checkPhase(@Nullable Player player, @NonNull Island i, @NonNull OneBlockIslands is, @NonNull OneBlockPhase phase) {
-        // Handle NPCs
-        User user;
-        if (player == null || player.hasMetadata("NPC")) {
-            // Default to the owner
-            user = addon.getPlayers().getUser(i.getOwner());
-        } else {
-            user = User.getInstance(player);
-        }
-
-        String phaseName = phase.getPhaseName() == null ? "" : phase.getPhaseName();
-        if (!is.getPhaseName().equalsIgnoreCase(phaseName)) {
-            // Run previous phase end commands
-            oneBlocksManager.getPhase(is.getPhaseName()).ifPresent(oldPhase -> {
-                String oldPhaseName = oldPhase.getPhaseName() == null ? "" : oldPhase.getPhaseName();
-                Util.runCommands(user,
-                        replacePlaceholders(player, oldPhaseName, phase.getBlockNumber(), i, oldPhase.getEndCommands()),
-                        "Commands run for end of " + oldPhaseName);
-                // If first time
-                if (is.getBlockNumber() >= is.getLifetime()) {
-                    Util.runCommands(user,
-                            replacePlaceholders(player, oldPhaseName, phase.getBlockNumber(), i, oldPhase.getFirstTimeEndCommands()),
-                            "Commands run for first time completing " + oldPhaseName);
-                }
-            });
-            // Set the phase name
-            is.setPhaseName(phaseName);
-            if (user.isPlayer() && user.isOnline() && addon.inWorld(user.getWorld())) {
-                user.getPlayer().sendTitle(phaseName, null, -1, -1, -1);
-            }
-            // Run phase start commands
-            Util.runCommands(user,
-                    replacePlaceholders(player, phaseName, phase.getBlockNumber(), i, phase.getStartCommands()),
-                    "Commands run for start of " + phaseName);
-
-            blockListener.saveIsland(i);
-            return true;
-        }
-        return false;
     }
 
     /**
