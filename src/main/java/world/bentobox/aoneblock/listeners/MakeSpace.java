@@ -52,7 +52,7 @@ public class MakeSpace {
      * @param entity Entity that is spawned.
      * @param spawnLocation Location where entity is spawned.
      */
-    void makeSpace(@NonNull Entity entity, @NonNull Location spawnLocation)
+    public void makeSpace(@NonNull Entity entity, @NonNull Location spawnLocation)
     {
         World world = entity.getWorld();
         List<Block> airBlocks = new ArrayList<>();

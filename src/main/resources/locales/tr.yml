@@ -43,6 +43,7 @@ aoneblock:
     insufficient-bank-balance: "&c Ada bankası bakiyesi devam etmek için çok düşük!
       [number] olmalıdır."
     insufficient-permission: "&c [name] iznini alana kadar devam edemezsiniz!"
+    cooldown: "&c Bir sonraki aşama [number] saniye içinde hazır olacak!"
   placeholders:
     infinite: Sonsuz
   island:

@@ -52,7 +52,7 @@ public class CheckPhase {
      * @param world  - world
      * @return true if the player cannot proceed to the next phase.
      */
-    protected boolean phaseRequirementsFail(@Nullable Player player, @NonNull Island i, OneBlockPhase phase, @NonNull World world) {
+    protected boolean phaseRequirementsFail(@Nullable Player player, @NonNull Island i, @NonNull OneBlockIslands is, OneBlockPhase phase, @NonNull World world) {
         if (phase.getRequirements().isEmpty()) {
             return false;
         }
@@ -84,6 +84,14 @@ public class CheckPhase {
             case PERMISSION -> {
                 if (player != null && !player.hasPermission(r.getPermission())) {
                     User.getInstance(player).sendMessage("aoneblock.phase.insufficient-permission", TextVariables.NAME, String.valueOf(r.getPermission()));
+                    yield true;
+                }
+                yield false;
+            }
+            case COOLDOWN -> {
+                long remainingTime = r.getCooldown() - (System.currentTimeMillis() - is.getLastPhaseChangeTime()) / 1000;
+                if(remainingTime > 0){
+                    User.getInstance(player).sendMessage("aoneblock.phase.cooldown", TextVariables.NUMBER, String.valueOf(remainingTime));
                     yield true;
                 }
                 yield false;

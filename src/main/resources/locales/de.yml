@@ -58,6 +58,7 @@ aoneblock:
       Es muss [number] sein."
     insufficient-permission: "&c Sie können nicht weitermachen, bis Sie die [name]-Berechtigung
       erhalten!"
+    cooldown: "&c Die nächste Stufe ist in [number] Sekunden verfügbar!"
   placeholders:
     infinite: Unendlich
   gui:

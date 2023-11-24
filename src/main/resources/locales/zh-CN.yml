@@ -46,6 +46,7 @@ aoneblock:
     insufficient-funds: "&c 余额不足, 无法执行此操作! 余额应多于 [number]."
     insufficient-bank-balance: "&c 岛屿银行余额不足, 无法执行此操作! 余额应多于 [number]."
     insufficient-permission: "&c 在获得 [name] 许可之前，您不能继续操作！"
+    cooldown: "&c [number] 秒后即可进入下一阶段！"
   placeholders:
     infinite: 无限
   gui:

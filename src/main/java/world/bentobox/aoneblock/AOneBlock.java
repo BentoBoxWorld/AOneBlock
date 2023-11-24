@@ -172,6 +172,7 @@ public class AOneBlock extends GameModeAddon {
 		blockListener.saveCache();
 		if (loadSettings()) {
 			log("Reloaded AOneBlock settings");
+			loadData();
 		}
 	}
 

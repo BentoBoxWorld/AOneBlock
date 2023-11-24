@@ -48,6 +48,7 @@ aoneblock:
       aby kontynuować! Musi to być [number].
     insufficient-permission: Nie możesz kontynuować, dopóki nie uzyskasz pozwolenia
       [name]!
+    cooldown: "&c Następny etap będzie dostępny za [number] sekund!"
   placeholders:
     infinite: Nieskończony
   gui:

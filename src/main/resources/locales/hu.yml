@@ -55,6 +55,7 @@ aoneblock:
       Ennek a következőnek kell lennie: [number]."
     insufficient-permission: "&c Nem folytathatja tovább, amíg meg nem szerzi a [name]
       engedélyt!"
+    cooldown: "&c A következő szakasz [number] másodpercen belül elérhető lesz!"
   placeholders:
     infinite: Végtelen
   gui:
