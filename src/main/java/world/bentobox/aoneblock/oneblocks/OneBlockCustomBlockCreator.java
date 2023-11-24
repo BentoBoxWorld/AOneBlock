@@ -1,6 +1,7 @@
 package world.bentobox.aoneblock.oneblocks;
 
 import world.bentobox.aoneblock.oneblocks.customblock.BlockDataCustomBlock;
+import world.bentobox.aoneblock.oneblocks.customblock.MobCustomBlock;
 
 import java.util.*;
 import java.util.function.Function;
@@ -16,6 +17,7 @@ public final class OneBlockCustomBlockCreator {
 
     static {
         register("block-data", BlockDataCustomBlock::fromMap);
+        register("mob", MobCustomBlock::fromMap);
         register("short", map -> {
             String type = Objects.toString(map.get("data"), null);
             if (type == null) {

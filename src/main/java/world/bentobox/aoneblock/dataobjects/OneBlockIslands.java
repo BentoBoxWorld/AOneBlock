@@ -10,6 +10,7 @@ import org.eclipse.jdt.annotation.NonNull;
 import com.google.gson.annotations.Expose;
 
 import world.bentobox.aoneblock.oneblocks.OneBlockObject;
+import world.bentobox.aoneblock.oneblocks.customblock.MobCustomBlock;
 import world.bentobox.bentobox.database.objects.DataObject;
 import world.bentobox.bentobox.database.objects.Table;
 
@@ -135,7 +136,16 @@ public class OneBlockIslands implements DataObject {
      * @return list of upcoming mobs
      */
     public List<EntityType> getNearestMob(int i) {
-        return getQueue().stream().limit(i).filter(OneBlockObject::isEntity).map(OneBlockObject::getEntityType).toList();
+        return getQueue().stream().limit(i).filter(obo ->
+                // Include OneBlockObjects that are Entity, or custom block of type MobCustomBlock
+                obo.isEntity() || (obo.isCustomBlock() && obo.getCustomBlock() instanceof MobCustomBlock)
+        ).map(obo -> {
+            if (obo.isCustomBlock() && obo.getCustomBlock() instanceof MobCustomBlock) {
+                return ((MobCustomBlock) obo.getCustomBlock()).getMob();
+            }
+
+            return obo.getEntityType();
+        }).toList();
     }
 
     /**

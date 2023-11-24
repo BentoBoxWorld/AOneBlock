@@ -128,154 +128,161 @@ public class OneBlocksManager {
 		}
 	}
 
-	private void loadPhase(File phaseFile) throws IOException {
-		addon.log("Loading " + phaseFile.getName());
-		// Load the config file
-		YamlConfiguration oneBlocks = new YamlConfiguration();
-		try {
-			oneBlocks.load(phaseFile);
-		} catch (Exception e) {
-			addon.logError(e.getMessage());
-			return;
-		}
-		for (String blockNumber : oneBlocks.getKeys(false)) {
-			Integer blockNum = Integer.valueOf(blockNumber);
-			OneBlockPhase obPhase = blockProbs.computeIfAbsent(blockNum, k -> new OneBlockPhase(blockNumber));
-			// Get config Section
-			ConfigurationSection phase = oneBlocks.getConfigurationSection(blockNumber);
-			// goto
-			if (phase.contains(GOTO_BLOCK)) {
-				obPhase.setGotoBlock(phase.getInt(GOTO_BLOCK, 0));
-				continue;
-			}
-			initBlock(blockNumber, obPhase, phase);
-			// Blocks
-			addBlocks(obPhase, phase);
-			// Mobs
-			addMobs(obPhase, phase);
-			// Chests
-			addChests(obPhase, phase);
-			// Commands
-			addCommands(obPhase, phase);
-			// Requirements
-			addRequirements(obPhase, phase);
-			// Add to the map
-			blockProbs.put(blockNum, obPhase);
-		}
-	}
+    private void loadPhase(File phaseFile) throws IOException {
+        addon.log("Loading " + phaseFile.getName());
+        // Load the config file
+        YamlConfiguration oneBlocks = new YamlConfiguration();
+        try {
+            oneBlocks.load(phaseFile);
+        } catch (Exception e) {
+            addon.logError(e.getMessage());
+            return;
+        }
+        for (String phaseStartBlockNumKey : oneBlocks.getKeys(false)) {
+            Integer phaseStartBlockNum = Integer.valueOf(phaseStartBlockNumKey);
+            OneBlockPhase obPhase = blockProbs.computeIfAbsent(phaseStartBlockNum, k -> new OneBlockPhase(phaseStartBlockNumKey));
+            // Get config Section
+            ConfigurationSection phaseConfig = oneBlocks.getConfigurationSection(phaseStartBlockNumKey);
+            // goto
+            if (phaseConfig.contains(GOTO_BLOCK)) {
+                obPhase.setGotoBlock(phaseConfig.getInt(GOTO_BLOCK, 0));
+                continue;
+            }
+            initBlock(phaseStartBlockNumKey, obPhase, phaseConfig);
+            // Blocks
+            addBlocks(obPhase, phaseConfig);
+            // Mobs
+            addMobs(obPhase, phaseConfig);
+            // Chests
+            addChests(obPhase, phaseConfig);
+            // Commands
+            addCommands(obPhase, phaseConfig);
+            // Requirements
+            addRequirements(obPhase, phaseConfig);
+            // Add to the map
+            blockProbs.put(phaseStartBlockNum, obPhase);
+        }
+    }
 
-	/**
-	 * Load in the phase's init
-	 * 
-	 * @param blockNumber string representation of this phase's block number
-	 * @param obPhase     OneBlockPhase
-	 * @param phase       configuration section being read
-	 * @throws IOException if there's an error in the config file
-	 */
-	void initBlock(String blockNumber, OneBlockPhase obPhase, ConfigurationSection phase) throws IOException {
-		if (phase.contains(NAME, true)) {
-			if (obPhase.getPhaseName() != null) {
-				throw new IOException(
-						"Block " + blockNumber + ": Phase name trying to be set to " + phase.getString(NAME)
-								+ " but already set to " + obPhase.getPhaseName() + ". Duplicate phase file?");
-			}
-			// name
-			obPhase.setPhaseName(phase.getString(NAME, blockNumber));
-		}
-		// biome
-		if (phase.contains(BIOME, true)) {
-			if (obPhase.getPhaseBiome() != null) {
-				throw new IOException("Block " + blockNumber + ": Biome trying to be set to " + phase.getString(BIOME)
-						+ " but already set to " + obPhase.getPhaseBiome() + " Duplicate phase file?");
-			}
-			obPhase.setPhaseBiome(getBiome(phase.getString(BIOME)));
-		}
-		// First block
-		if (phase.contains(FIRST_BLOCK)) {
-			if (obPhase.getFirstBlock() != null) {
-				throw new IOException(
-						"Block " + blockNumber + ": First block trying to be set to " + phase.getString(FIRST_BLOCK)
-								+ " but already set to " + obPhase.getFirstBlock() + " Duplicate phase file?");
-			}
-			addFirstBlock(obPhase, phase.getString(FIRST_BLOCK));
-		}
-		// Icon block
-		if (phase.contains(ICON)) {
-			ItemStack icon = ItemParser.parse(phase.getString(ICON));
+    /**
+     * Load in the phase's init
+     *
+     * @param blockNumber string representation of this phase's block number
+     * @param obPhase     OneBlockPhase
+     * @param phaseConfig configuration section being read
+     * @throws IOException if there's an error in the config file
+     */
+    void initBlock(String blockNumber, OneBlockPhase obPhase, ConfigurationSection phaseConfig) throws IOException {
+        // Set name
+        if (phaseConfig.contains(NAME, true)) {
+            if (obPhase.getPhaseName() != null) {
+                throw new IOException(
+                        "Block " + blockNumber + ": Phase name trying to be set to " + phaseConfig.getString(NAME)
+                                + " but already set to " + obPhase.getPhaseName() + ". Duplicate phase file?");
+            }
+            obPhase.setPhaseName(phaseConfig.getString(NAME, blockNumber));
+        }
 
-			if (icon == null) {
-				throw new IOException("ItemParser failed to parse icon: '" + phase.getString(ICON) + "' for phase "
-						+ obPhase.getFirstBlock() + ". Can you check if it is correct?");
-			}
+        // Set biome
+        if (phaseConfig.contains(BIOME, true)) {
+            if (obPhase.getPhaseBiome() != null) {
+                throw new IOException("Block " + blockNumber + ": Biome trying to be set to " + phaseConfig.getString(BIOME)
+                        + " but already set to " + obPhase.getPhaseBiome() + " Duplicate phase file?");
+            }
+            obPhase.setPhaseBiome(getBiome(phaseConfig.getString(BIOME)));
+        }
 
-			obPhase.setIconBlock(icon);
-		}
-		// First blocks
-		if (phase.contains(FIXED_BLOCKS)) {
-			if (!obPhase.getFixedBlocks().isEmpty()) {
-				throw new IOException(
-						"Block " + blockNumber + ": Fixed blocks trying to be set to " + phase.getString(FIXED_BLOCKS)
-								+ " but already set to " + obPhase.getFixedBlocks() + " Duplicate phase file?");
-			}
-			addFixedBlocks(obPhase, phase.getConfigurationSection(FIXED_BLOCKS));
-		}
+        // Set first block
+        if (phaseConfig.contains(FIRST_BLOCK)) {
+            if (obPhase.getFirstBlock() != null) {
+                throw new IOException(
+                        "Block " + blockNumber + ": First block trying to be set to " + phaseConfig.getString(FIRST_BLOCK)
+                                + " but already set to " + obPhase.getFirstBlock() + " Duplicate phase file?");
+            }
+            addFirstBlock(obPhase, phaseConfig.getString(FIRST_BLOCK));
+        }
 
-		if (phase.contains(HOLOGRAMS)) {
-			if (!obPhase.getHologramLines().isEmpty()) {
-				throw new IOException(
-						"Block " + blockNumber + ": Hologram Lines trying to be set to " + phase.getString(HOLOGRAMS)
-								+ " but already set to " + obPhase.getHologramLines() + " Duplicate phase file?");
-			}
-			addHologramLines(obPhase, phase.getConfigurationSection(HOLOGRAMS));
-		}
-	}
+        // Set icon
+        if (phaseConfig.contains(ICON)) {
+            ItemStack icon = ItemParser.parse(phaseConfig.getString(ICON));
 
-	private void addFixedBlocks(OneBlockPhase obPhase, ConfigurationSection fb) {
-		if (fb == null) {
-			return;
-		}
-		Map<Integer, OneBlockObject> result = new HashMap<>();
-		for (String key : fb.getKeys(false)) {
-			if (!NumberUtils.isNumber(key)) {
-				addon.logError("Fixed block key must be an integer. " + key);
-				continue;
-			}
-			int k = Integer.parseInt(key);
-			if (fb.isConfigurationSection(key)) {
-				Map<String, Object> map = fb.getConfigurationSection(key).getValues(false);
-				Optional<OneBlockCustomBlock> customBlock = OneBlockCustomBlockCreator.create(map);
-				if (customBlock.isPresent()) {
-					result.put(k, new OneBlockObject(customBlock.get(), 0));
-				} else {
-					addon.logError("Fixed block key " + key + " material is not a valid custom block. Ignoring.");
-				}
-			} else {
-				String mat = fb.getString(key);
-				if (mat == null) {
-					continue;
-				}
+            if (icon == null) {
+                throw new IOException("ItemParser failed to parse icon: '" + phaseConfig.getString(ICON) + "' for phase "
+                        + obPhase.getFirstBlock() + ". Can you check if it is correct?");
+            }
 
-				Optional<OneBlockCustomBlock> customBlock = OneBlockCustomBlockCreator.create(mat);
-				if (customBlock.isPresent()) {
-					result.put(k, new OneBlockObject(customBlock.get(), 0));
-				} else {
-					Material m = Material.matchMaterial(mat);
-					if (m != null && m.isBlock()) {
-						result.put(k, new OneBlockObject(m, 0));
-					} else {
-						addon.logError("Fixed block key " + key + " material is invalid or not a block. Ignoring.");
-					}
-				}
-			}
-		}
-		// Set the first block if it exists
-		if (result.containsKey(0)) {
-			obPhase.setFirstBlock(result.get(0));
-		}
-		// Store the remainder
-		obPhase.setFixedBlocks(result);
+            obPhase.setIconBlock(icon);
+        }
 
-	}
+        // Add fixed blocks
+        if (phaseConfig.contains(FIXED_BLOCKS)) {
+            if (!obPhase.getFixedBlocks().isEmpty()) {
+                throw new IOException(
+                        "Block " + blockNumber + ": Fixed blocks trying to be set to " + phaseConfig.getString(FIXED_BLOCKS)
+                                + " but already set to " + obPhase.getFixedBlocks() + " Duplicate phase file?");
+            }
+            addFixedBlocks(obPhase, phaseConfig.getConfigurationSection(FIXED_BLOCKS));
+        }
+
+        // Add holograms
+        if (phaseConfig.contains(HOLOGRAMS)) {
+            if (!obPhase.getHologramLines().isEmpty()) {
+                throw new IOException(
+                        "Block " + blockNumber + ": Hologram Lines trying to be set to " + phaseConfig.getString(HOLOGRAMS)
+                                + " but already set to " + obPhase.getHologramLines() + " Duplicate phase file?");
+            }
+            addHologramLines(obPhase, phaseConfig.getConfigurationSection(HOLOGRAMS));
+        }
+    }
+
+    private void addFixedBlocks(OneBlockPhase obPhase, ConfigurationSection firstBlocksConfig) {
+        if (firstBlocksConfig == null) {
+            return;
+        }
+        Map<Integer, OneBlockObject> result = new HashMap<>();
+        for (String key : firstBlocksConfig.getKeys(false)) {
+            if (!NumberUtils.isNumber(key)) {
+                addon.logError("Fixed block key must be an integer. " + key);
+                continue;
+            }
+            int k = Integer.parseInt(key);
+
+            if (firstBlocksConfig.isConfigurationSection(key)) { // Item value is object
+                Map<String, Object> map = firstBlocksConfig.getConfigurationSection(key).getValues(false);
+                Optional<OneBlockCustomBlock> customBlock = OneBlockCustomBlockCreator.create(map);
+                if (customBlock.isPresent()) {
+                    result.put(k, new OneBlockObject(customBlock.get(), 0));
+                } else {
+                    addon.logError("Fixed block key " + key + " material is not a valid custom block. Ignoring.");
+                }
+            } else { // Item value is string
+                String mat = firstBlocksConfig.getString(key);
+                if (mat == null) {
+                    continue;
+                }
+
+                Optional<OneBlockCustomBlock> customBlock = OneBlockCustomBlockCreator.create(mat);
+                if (customBlock.isPresent()) {
+                    result.put(k, new OneBlockObject(customBlock.get(), 0));
+                } else {
+                    Material m = Material.matchMaterial(mat);
+                    if (m != null && m.isBlock()) {
+                        result.put(k, new OneBlockObject(m, 0));
+                    } else {
+                        addon.logError("Fixed block key " + key + " material is invalid or not a block. Ignoring.");
+                    }
+                }
+            }
+        }
+        // Set the first block if it exists
+        if (result.containsKey(0)) {
+            addon.log("Found firstBlock in fixedBlocks.");
+            obPhase.setFirstBlock(result.get(0));
+        }
+        // Store the remainder
+        obPhase.setFixedBlocks(result);
+
+    }
 
 	private void addHologramLines(OneBlockPhase obPhase, ConfigurationSection fb) {
 		if (fb == null)

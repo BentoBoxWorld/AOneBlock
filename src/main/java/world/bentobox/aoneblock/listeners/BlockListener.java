@@ -295,7 +295,8 @@ public class BlockListener implements Listener {
             is.clearQueue();
         }
         // Get the block number in this phase
-        int blockNumber = is.getBlockNumber() - phase.getBlockNumberValue() + (int) is.getQueue().stream().filter(OneBlockObject::isMaterial).count();
+        int materialBlocksInQueue = (int) is.getQueue().stream().filter(obo -> obo.isMaterial() || obo.isCustomBlock()).count();
+        int blockNumber = is.getBlockNumber() - (phase.getBlockNumberValue() - 1) + materialBlocksInQueue;
         // Get the block that is being broken
         Block block = Objects.requireNonNull(i.getCenter()).toVector().toLocation(world).getBlock();
         // Fill a 5 block queue
@@ -406,7 +407,7 @@ public class BlockListener implements Listener {
 
     private void spawnBlock(@NonNull OneBlockObject nextBlock, @NonNull Block block) {
         if (nextBlock.isCustomBlock()) {
-            nextBlock.getCustomBlock().setBlock(block);
+            nextBlock.getCustomBlock().execute(addon, block);
         } else if (nextBlock.isItemsAdderBlock()) {
             //Get Custom Block from ItemsAdder and place it
             CustomBlock cBlock = CustomBlock.getInstance(nextBlock.getItemsAdderBlock());
