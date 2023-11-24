@@ -14,7 +14,10 @@ import world.bentobox.aoneblock.listeners.MakeSpace;
 import world.bentobox.aoneblock.oneblocks.OneBlockCustomBlock;
 import world.bentobox.bentobox.BentoBox;
 
-import java.util.*;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 
 /**
  * A custom block that spawns mob on an underlying block
@@ -37,7 +40,7 @@ public class MobCustomBlock implements OneBlockCustomBlock {
         EntityType entityType = maybeEntity(entityTypeValue);
         Material underlyingBlock = Material.getMaterial(underlyingBlockValue);
 
-        if(underlyingBlock == null){
+        if (underlyingBlock == null) {
             BentoBox.getInstance().logWarning("Underlying block " + underlyingBlockValue + " does not exist and will be replaced with STONE.");
         }
 

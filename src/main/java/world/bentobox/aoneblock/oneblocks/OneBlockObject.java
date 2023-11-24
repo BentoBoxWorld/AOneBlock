@@ -42,7 +42,6 @@ public class OneBlockObject {
     private Map<Integer, ItemStack> chest;
     private Rarity rarity;
     private OneBlockCustomBlock customBlock;
-    private String itemsAdderBlock;
     private int prob;
 
     /**
@@ -79,18 +78,6 @@ public class OneBlockObject {
     }
 
     /**
-     * An ItemsAdder block
-     *
-     * @param namedSpaceID - ItemsAdder block
-     * @param prob        - relative probability
-     */
-
-    public OneBlockObject(String namedSpaceID, int prob) {
-        this.itemsAdderBlock = namedSpaceID;
-        this.prob = prob;
-    }
-
-    /**
      * A chest
      *
      * @param chest - list of itemstacks in the chest
@@ -113,7 +100,6 @@ public class OneBlockObject {
         this.rarity = ob.getRarity();
         this.prob = ob.getProb();
         this.customBlock = ob.getCustomBlock();
-        this.itemsAdderBlock = ob.getItemsAdderBlock();
     }
 
     /**
@@ -147,11 +133,6 @@ public class OneBlockObject {
         return customBlock;
     }
 
-    /**
-     * @return the itemsAdderBlock
-     */
-    public String getItemsAdderBlock() { return itemsAdderBlock; }
-
 
     /**
      * @return the isMaterial
@@ -174,13 +155,6 @@ public class OneBlockObject {
      */
     public boolean isCustomBlock() {
         return customBlock != null;
-    }
-
-    /**
-     * @return the isItemsAdderBlock
-     */
-    public boolean isItemsAdderBlock() {
-        return itemsAdderBlock != null;
     }
 
     /**
