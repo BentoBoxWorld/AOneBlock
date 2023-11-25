@@ -108,24 +108,25 @@ public class CheckPhase {
 	    return false;
 	}
 
-	return phase.getRequirements().stream().anyMatch(r -> checkRequirement(r, player, i, is, world));
+	return phase.getRequirements().stream()
+		.anyMatch(r -> checkRequirement(r, User.getInstance(player), i, is, world));
     }
 
-    private boolean checkRequirement(Requirement r, Player player, Island i, OneBlockIslands is, World world) {
+    private boolean checkRequirement(Requirement r, User user, Island i, OneBlockIslands is, World world) {
 	return switch (r.getType()) {
-	case LEVEL -> checkLevelRequirement(r, player, i, world);
-	case BANK -> checkBankRequirement(r, player, i, world);
-	case ECO -> checkEcoRequirement(r, player, world);
-	case PERMISSION -> checkPermissionRequirement(r, player);
-	case COOLDOWN -> checkCooldownRequirement(r, player, is);
+	case LEVEL -> checkLevelRequirement(r, user, i, world);
+	case BANK -> checkBankRequirement(r, user, i);
+	case ECO -> checkEcoRequirement(r, user, world);
+	case PERMISSION -> checkPermissionRequirement(r, user);
+	case COOLDOWN -> checkCooldownRequirement(r, user, is);
 	};
     }
 
-    private boolean checkLevelRequirement(Requirement r, Player player, Island i, World world) {
+    private boolean checkLevelRequirement(Requirement r, User user, Island i, World world) {
 	// Level checking logic
 	return addon.getAddonByName("Level").map(l -> {
 	    if (((Level) l).getIslandLevel(world, i.getOwner()) < r.getLevel()) {
-		User.getInstance(player).sendMessage("aoneblock.phase.insufficient-level", TextVariables.NUMBER,
+		user.sendMessage("aoneblock.phase.insufficient-level", TextVariables.NUMBER,
 			String.valueOf(r.getLevel()));
 		return true;
 	    }
@@ -133,11 +134,11 @@ public class CheckPhase {
 	}).orElse(false);
     }
 
-    private boolean checkBankRequirement(Requirement r, Player player, Island i, World world) {
+    private boolean checkBankRequirement(Requirement r, User user, Island i) {
 	// Bank checking logic
 	return addon.getAddonByName("Bank").map(l -> {
 	    if (((Bank) l).getBankManager().getBalance(i).getValue() < r.getBank()) {
-		User.getInstance(player).sendMessage("aoneblock.phase.insufficient-bank-balance", TextVariables.NUMBER,
+		user.sendMessage("aoneblock.phase.insufficient-bank-balance", TextVariables.NUMBER,
 			String.valueOf(r.getBank()));
 		return true;
 	    }
@@ -145,34 +146,32 @@ public class CheckPhase {
 	}).orElse(false);
     }
 
-    private boolean checkEcoRequirement(Requirement r, Player player, World world) {
+    private boolean checkEcoRequirement(Requirement r, User user, World world) {
 	// Eco checking logic
-	return addon.getPlugin().getVault().map(l -> {
-	    if (l.getBalance(User.getInstance(player), world) < r.getEco()) {
-		User.getInstance(player).sendMessage("aoneblock.phase.insufficient-funds", TextVariables.NUMBER,
-			String.valueOf(r.getEco()));
+	return addon.getPlugin().getVault().map(vaultHook -> {
+	    if (vaultHook.getBalance(user, world) < r.getEco()) {
+		user.sendMessage("aoneblock.phase.insufficient-funds", TextVariables.NUMBER,
+			vaultHook.format(r.getEco()));
 		return true;
 	    }
 	    return false;
 	}).orElse(false);
     }
 
-    private boolean checkPermissionRequirement(Requirement r, Player player) {
+    private boolean checkPermissionRequirement(Requirement r, User user) {
 	// Permission checking logic
-	if (player != null && !player.hasPermission(r.getPermission())) {
-	    User.getInstance(player).sendMessage("aoneblock.phase.insufficient-permission", TextVariables.NAME,
-		    String.valueOf(r.getPermission()));
+	if (user != null && !user.hasPermission(r.getPermission())) {
+	    user.sendMessage("aoneblock.phase.insufficient-permission", TextVariables.NAME, r.getPermission());
 	    return true;
 	}
 	return false;
     }
 
-    private boolean checkCooldownRequirement(Requirement r, Player player, OneBlockIslands is) {
+    private boolean checkCooldownRequirement(Requirement r, User player, OneBlockIslands is) {
 	// Cooldown checking logic
 	long remainingTime = r.getCooldown() - (System.currentTimeMillis() - is.getLastPhaseChangeTime()) / 1000;
 	if (remainingTime > 0) {
-	    User.getInstance(player).sendMessage("aoneblock.phase.cooldown", TextVariables.NUMBER,
-		    String.valueOf(remainingTime));
+	    player.sendMessage("aoneblock.phase.cooldown", TextVariables.NUMBER, String.valueOf(remainingTime));
 	    return true;
 	}
 	return false;
