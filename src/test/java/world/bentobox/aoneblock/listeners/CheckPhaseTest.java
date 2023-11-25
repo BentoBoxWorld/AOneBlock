@@ -153,10 +153,10 @@ public class CheckPhaseTest {
 
 
     /**
-     * Test method for {@link world.bentobox.aoneblock.listeners.CheckPhase#checkPhase(Player, Island, world.bentobox.aoneblock.dataobjects.OneBlockIslands, world.bentobox.aoneblock.oneblocks.OneBlockPhase)}
+     * Test method for {@link world.bentobox.aoneblock.listeners.CheckPhase#setNewPhase(Player, Island, world.bentobox.aoneblock.dataobjects.OneBlockIslands, world.bentobox.aoneblock.oneblocks.OneBlockPhase)}
      */
     @Test
-    public void testCheckPhase() {
+    public void testSetNewPhase() {
         // Set up that a phase has been completed
         is = new OneBlockIslands(UUID.randomUUID().toString());
         is.setPhaseName("Previous");
@@ -173,20 +173,22 @@ public class CheckPhaseTest {
 
         when(obm.getPhase("Previous")).thenReturn(Optional.of(previous));
 
-        assertTrue(bl.checkPhase(player, island, is, phase));
+        bl.setNewPhase(player, island, is, phase);
         // Verify commands run
         verify(previous).getEndCommands();
         verify(previous).getFirstTimeEndCommands();
+        // Verify phase name change
+        assertEquals("Next Phase", is.getPhaseName());
         // Verify title shown
         verify(player).sendTitle("Next Phase", null, -1, -1, -1);
 
     }
 
     /**
-     * Test method for {@link world.bentobox.aoneblock.listeners.CheckPhase#checkPhase(Player, Island, world.bentobox.aoneblock.dataobjects.OneBlockIslands, world.bentobox.aoneblock.oneblocks.OneBlockPhase)}
+     * Test method for {@link world.bentobox.aoneblock.listeners.CheckPhase#setNewPhase(Player, Island, world.bentobox.aoneblock.dataobjects.OneBlockIslands, world.bentobox.aoneblock.oneblocks.OneBlockPhase)}
      */
     @Test
-    public void testCheckPhaseSecondTime() {
+    public void testSetNewPhaseSecondTime() {
         // Set up that a phase has been completed
         is = new OneBlockIslands(UUID.randomUUID().toString());
         is.setPhaseName("Previous");
@@ -203,20 +205,22 @@ public class CheckPhaseTest {
 
         when(obm.getPhase("Previous")).thenReturn(Optional.of(previous));
 
-        assertTrue(bl.checkPhase(player, island, is, phase));
+        bl.setNewPhase(player, island, is, phase);
         // Verify commands run
         verify(previous).getEndCommands();
         verify(previous, never()).getFirstTimeEndCommands();
+        // Verify phase name change
+        assertEquals("Next Phase", is.getPhaseName());
         // Verify title shown
         verify(player).sendTitle("Next Phase", null, -1, -1, -1);
 
     }
 
     /**
-     * Test method for {@link world.bentobox.aoneblock.listeners.CheckPhase#checkPhase(Player, Island, world.bentobox.aoneblock.dataobjects.OneBlockIslands, world.bentobox.aoneblock.oneblocks.OneBlockPhase)}
+     * Test method for {@link world.bentobox.aoneblock.listeners.CheckPhase#setNewPhase(Player, Island, world.bentobox.aoneblock.dataobjects.OneBlockIslands, world.bentobox.aoneblock.oneblocks.OneBlockPhase)}
      */
     @Test
-    public void testCheckPhaseNullPlayer() {
+    public void testSetNewPhaseNullPlayer() {
         // Set up that a phase has been completed
         is = new OneBlockIslands(UUID.randomUUID().toString());
         is.setPhaseName("Previous");
@@ -233,17 +237,19 @@ public class CheckPhaseTest {
 
         when(obm.getPhase("Previous")).thenReturn(Optional.of(previous));
 
-        assertTrue(bl.checkPhase(null, island, is, phase));
+        bl.setNewPhase(null, island, is, phase);
         // Verify commands run
         verify(previous).getEndCommands();
         verify(previous).getFirstTimeEndCommands();
+        // Verify phase name change
+        assertEquals("Next Phase", is.getPhaseName());
         // Verify title shown
         verify(player).sendTitle("Next Phase", null, -1, -1, -1);
 
     }
 
     /**
-     * Test method for {@link world.bentobox.aoneblock.listeners.CheckPhase#checkPhase(Player, Island, world.bentobox.aoneblock.dataobjects.OneBlockIslands, world.bentobox.aoneblock.oneblocks.OneBlockPhase)}
+     * Test method for {@link world.bentobox.aoneblock.listeners.CheckPhase#setNewPhase(Player, Island, world.bentobox.aoneblock.dataobjects.OneBlockIslands, world.bentobox.aoneblock.oneblocks.OneBlockPhase)}
      */
     @Test
     public void testCheckPhaseNPCPlayer() {
@@ -264,29 +270,14 @@ public class CheckPhaseTest {
 
         when(obm.getPhase("Previous")).thenReturn(Optional.of(previous));
 
-        assertTrue(bl.checkPhase(player, island, is, phase));
+        bl.setNewPhase(player, island, is, phase);
         // Verify commands run
         verify(previous).getEndCommands();
         verify(previous).getFirstTimeEndCommands();
+        // Verify phase name change
+        assertEquals("Next Phase", is.getPhaseName());
         // Verify title shown
         verify(player).sendTitle("Next Phase", null, -1, -1, -1);
-
-    }
-
-    /**
-     * Test method for {@link world.bentobox.aoneblock.listeners.CheckPhase#checkPhase(Player, Island, world.bentobox.aoneblock.dataobjects.OneBlockIslands, world.bentobox.aoneblock.oneblocks.OneBlockPhase)}
-     */
-    @Test
-    public void testCheckSamePhase() {
-        is = new OneBlockIslands(UUID.randomUUID().toString());
-        is.setPhaseName("Previous");
-        is.setBlockNumber(500);
-        is.setLifetime(500L);
-        // The phase the user has just moved to
-        phase = new OneBlockPhase("500");
-        phase.setPhaseName("Previous");
-
-        assertFalse(bl.checkPhase(player, island, is, phase));
 
     }
 

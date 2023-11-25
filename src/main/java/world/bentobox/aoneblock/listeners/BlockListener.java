@@ -311,7 +311,7 @@ public class BlockListener implements Listener {
                 return;
             }
 
-            setNewPhase(player, i, is, phase);
+            check.setNewPhase(player, i, is, phase);
             is.clearQueue();
 
             // Set the biome for the block and one block above it
@@ -378,57 +378,6 @@ public class BlockListener implements Listener {
 
         // Increment the block number
         is.incrementBlockNumber();
-    }
-
-    /**
-     * Runs end phase commands, sets new phase and runs new phase commands
-     *
-     * @param player - player
-     * @param i      - island
-     * @param is     - OneBlockIslands object
-     * @param phase  - current phase
-     */
-    private void setNewPhase(
-            @Nullable Player player,
-            @NonNull Island i,
-            @NonNull OneBlockIslands is,
-            @NonNull OneBlockPhase phase
-    ) {
-        // Handle NPCs
-        User user;
-        if (player == null || player.hasMetadata("NPC")) {
-            // Default to the owner
-            user = addon.getPlayers().getUser(i.getOwner());
-        } else {
-            user = User.getInstance(player);
-        }
-
-        String newPhaseName = phase.getPhaseName();
-
-        // Run previous phase end commands
-        oneBlocksManager.getPhase(is.getPhaseName()).ifPresent(oldPhase -> {
-            String oldPhaseName = oldPhase.getPhaseName() == null ? "" : oldPhase.getPhaseName();
-            Util.runCommands(user,
-                    check.replacePlaceholders(player, oldPhaseName, phase.getBlockNumber(), i, oldPhase.getEndCommands()),
-                    "Commands run for end of " + oldPhaseName);
-            // If first time
-            if (is.getBlockNumber() >= is.getLifetime()) {
-                Util.runCommands(user,
-                        check.replacePlaceholders(player, oldPhaseName, phase.getBlockNumber(), i, oldPhase.getFirstTimeEndCommands()),
-                        "Commands run for first time completing " + oldPhaseName);
-            }
-        });
-        // Set the phase name
-        is.setPhaseName(newPhaseName);
-        if (user.isPlayer() && user.isOnline() && addon.inWorld(user.getWorld())) {
-            user.getPlayer().sendTitle(newPhaseName, null, -1, -1, -1);
-        }
-        // Run phase start commands
-        Util.runCommands(user,
-                check.replacePlaceholders(player, newPhaseName, phase.getBlockNumber(), i, phase.getStartCommands()),
-                "Commands run for start of " + newPhaseName);
-
-        saveIsland(i);
     }
 
     private void handleGoto(OneBlockIslands is, OneBlockPhase phase) {
