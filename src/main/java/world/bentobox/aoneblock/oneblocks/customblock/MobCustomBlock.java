@@ -1,6 +1,10 @@
 package world.bentobox.aoneblock.oneblocks.customblock;
 
-import com.google.common.base.Enums;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -9,12 +13,13 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.util.Vector;
 import org.eclipse.jdt.annotation.NonNull;
+
+import com.google.common.base.Enums;
+
 import world.bentobox.aoneblock.AOneBlock;
 import world.bentobox.aoneblock.listeners.MakeSpace;
 import world.bentobox.aoneblock.oneblocks.OneBlockCustomBlock;
 import world.bentobox.bentobox.BentoBox;
-
-import java.util.*;
 
 /**
  * A custom block that spawns mob on an underlying block
