@@ -343,12 +343,13 @@ public class BlockListener implements Listener {
 
 	// Get the next block
 	OneBlockObject nextBlock = (isCurrPhaseNew && phase.getFirstBlock() != null) ? phase.getFirstBlock()
-		: is.pollAndAdd(phase.getNextBlock(addon, blockNumber++));
+		: is.pollAndAdd(phase.getNextBlock(addon, blockNumber));
 
 	// Entity
 	if (nextBlock.isEntity()) {
-	    if (!(e instanceof EntitySpawnEvent))
+	    if (!(e instanceof EntitySpawnEvent)) {
 		e.setCancelled(true);
+	    }
 	    // Entity spawns do not increment the block number or break the block
 	    spawnEntity(nextBlock, block);
 	    // Fire event
