@@ -10,6 +10,7 @@ import world.bentobox.bentobox.database.objects.Island;
 public class PlaceholdersManager {
 
     private static final TreeMap<Double, String> SCALE;
+    private static final String INFINITE = "aoneblock.placeholders.infinite";
     static {
 	SCALE = new TreeMap<>();
 	SCALE.put(0D, "&c╍╍╍╍╍╍╍╍");
@@ -118,8 +119,7 @@ public class PlaceholdersManager {
 	    return "";
 	return addon.getIslands().getProtectedIslandAt(Objects.requireNonNull(user.getLocation()))
 		.map(addon::getOneBlocksIsland).map(addon.getOneBlockManager()::getNextPhaseBlocks)
-		.map(num -> num < 0 ? user.getTranslation("aoneblock.placeholders.infinite") : String.valueOf(num))
-		.orElse("");
+		.map(num -> num < 0 ? user.getTranslation(INFINITE) : String.valueOf(num)).orElse("");
     }
 
     /**
@@ -136,7 +136,7 @@ public class PlaceholdersManager {
 	    return "";
 	}
 	int num = addon.getOneBlockManager().getNextPhaseBlocks(addon.getOneBlocksIsland(i));
-	return num < 0 ? user.getTranslation("aoneblock.placeholders.infinite") : String.valueOf(num);
+	return num < 0 ? user.getTranslation(INFINITE) : String.valueOf(num);
     }
 
     /**
@@ -153,7 +153,7 @@ public class PlaceholdersManager {
 	    return "";
 	}
 	int num = addon.getOneBlockManager().getPhaseBlocks(addon.getOneBlocksIsland(i));
-	return num < 0 ? user.getTranslation("aoneblock.placeholders.infinite") : String.valueOf(num);
+	return num < 0 ? user.getTranslation(INFINITE) : String.valueOf(num);
     }
 
     /**
