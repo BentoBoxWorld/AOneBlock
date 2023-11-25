@@ -103,60 +103,79 @@ public class CheckPhase {
      */
     protected boolean phaseRequirementsFail(@Nullable Player player, @NonNull Island i, @NonNull OneBlockIslands is,
 	    OneBlockPhase phase, @NonNull World world) {
+
 	if (phase.getRequirements().isEmpty()) {
 	    return false;
 	}
-	// Check requirements
-	boolean blocked = false;
-	for (Requirement r : phase.getRequirements()) {
-	    boolean b = switch (r.getType()) {
-	    case LEVEL -> addon.getAddonByName("Level").map(l -> {
-		if (((Level) l).getIslandLevel(world, i.getOwner()) < r.getLevel()) {
-		    User.getInstance(player).sendMessage("aoneblock.phase.insufficient-level", TextVariables.NUMBER,
-			    String.valueOf(r.getLevel()));
-		    return true;
-		}
-		return false;
-	    }).orElse(false);
-	    case BANK -> addon.getAddonByName("Bank").map(l -> {
-		if (((Bank) l).getBankManager().getBalance(i).getValue() < r.getBank()) {
-		    User.getInstance(player).sendMessage("aoneblock.phase.insufficient-bank-balance",
-			    TextVariables.NUMBER, String.valueOf(r.getBank()));
-		    return true;
-		}
-		return false;
-	    }).orElse(false);
-	    case ECO -> addon.getPlugin().getVault().map(l -> {
-		if (l.getBalance(User.getInstance(player), world) < r.getEco()) {
-		    User.getInstance(player).sendMessage("aoneblock.phase.insufficient-funds", TextVariables.NUMBER,
-			    String.valueOf(r.getEco()));
-		    return true;
-		}
-		return false;
-	    }).orElse(false);
-	    case PERMISSION -> {
-		if (player != null && !player.hasPermission(r.getPermission())) {
-		    User.getInstance(player).sendMessage("aoneblock.phase.insufficient-permission", TextVariables.NAME,
-			    String.valueOf(r.getPermission()));
-		    yield true;
-		}
-		yield false;
+
+	return phase.getRequirements().stream().anyMatch(r -> checkRequirement(r, player, i, is, world));
+    }
+
+    private boolean checkRequirement(Requirement r, Player player, Island i, OneBlockIslands is, World world) {
+	return switch (r.getType()) {
+	case LEVEL -> checkLevelRequirement(r, player, i, world);
+	case BANK -> checkBankRequirement(r, player, i, world);
+	case ECO -> checkEcoRequirement(r, player, world);
+	case PERMISSION -> checkPermissionRequirement(r, player);
+	case COOLDOWN -> checkCooldownRequirement(r, player, is);
+	};
+    }
+
+    private boolean checkLevelRequirement(Requirement r, Player player, Island i, World world) {
+	// Level checking logic
+	return addon.getAddonByName("Level").map(l -> {
+	    if (((Level) l).getIslandLevel(world, i.getOwner()) < r.getLevel()) {
+		User.getInstance(player).sendMessage("aoneblock.phase.insufficient-level", TextVariables.NUMBER,
+			String.valueOf(r.getLevel()));
+		return true;
 	    }
-	    case COOLDOWN -> {
-		long remainingTime = r.getCooldown()
-			- (System.currentTimeMillis() - is.getLastPhaseChangeTime()) / 1000;
-		if (remainingTime > 0) {
-		    User.getInstance(player).sendMessage("aoneblock.phase.cooldown", TextVariables.NUMBER,
-			    String.valueOf(remainingTime));
-		    yield true;
-		}
-		yield false;
+	    return false;
+	}).orElse(false);
+    }
+
+    private boolean checkBankRequirement(Requirement r, Player player, Island i, World world) {
+	// Bank checking logic
+	return addon.getAddonByName("Bank").map(l -> {
+	    if (((Bank) l).getBankManager().getBalance(i).getValue() < r.getBank()) {
+		User.getInstance(player).sendMessage("aoneblock.phase.insufficient-bank-balance", TextVariables.NUMBER,
+			String.valueOf(r.getBank()));
+		return true;
 	    }
-	    };
-	    if (b)
-		blocked = true;
+	    return false;
+	}).orElse(false);
+    }
+
+    private boolean checkEcoRequirement(Requirement r, Player player, World world) {
+	// Eco checking logic
+	return addon.getPlugin().getVault().map(l -> {
+	    if (l.getBalance(User.getInstance(player), world) < r.getEco()) {
+		User.getInstance(player).sendMessage("aoneblock.phase.insufficient-funds", TextVariables.NUMBER,
+			String.valueOf(r.getEco()));
+		return true;
+	    }
+	    return false;
+	}).orElse(false);
+    }
+
+    private boolean checkPermissionRequirement(Requirement r, Player player) {
+	// Permission checking logic
+	if (player != null && !player.hasPermission(r.getPermission())) {
+	    User.getInstance(player).sendMessage("aoneblock.phase.insufficient-permission", TextVariables.NAME,
+		    String.valueOf(r.getPermission()));
+	    return true;
 	}
-	return blocked;
+	return false;
+    }
+
+    private boolean checkCooldownRequirement(Requirement r, Player player, OneBlockIslands is) {
+	// Cooldown checking logic
+	long remainingTime = r.getCooldown() - (System.currentTimeMillis() - is.getLastPhaseChangeTime()) / 1000;
+	if (remainingTime > 0) {
+	    User.getInstance(player).sendMessage("aoneblock.phase.cooldown", TextVariables.NUMBER,
+		    String.valueOf(remainingTime));
+	    return true;
+	}
+	return false;
     }
 
     /**
