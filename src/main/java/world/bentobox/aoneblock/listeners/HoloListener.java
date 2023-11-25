@@ -1,5 +1,10 @@
 package world.bentobox.aoneblock.listeners;
 
+import java.util.IdentityHashMap;
+import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -9,6 +14,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.eclipse.jdt.annotation.NonNull;
+
 import world.bentobox.aoneblock.AOneBlock;
 import world.bentobox.aoneblock.dataobjects.OneBlockIslands;
 import world.bentobox.aoneblock.oneblocks.OneBlockPhase;
@@ -16,11 +22,6 @@ import world.bentobox.bentobox.api.events.island.IslandDeleteEvent;
 import world.bentobox.bentobox.api.user.User;
 import world.bentobox.bentobox.database.objects.Island;
 import world.bentobox.bentobox.util.Util;
-
-import java.util.IdentityHashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
 
 /**
  * Handles Holographic elements
