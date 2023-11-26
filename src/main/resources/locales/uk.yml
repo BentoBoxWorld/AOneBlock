@@ -4,25 +4,45 @@ aoneblock:
     admin:
       setcount:
         parameters: "<name> <count> [lifetime]"
+        description: встановити кількість блоків гравця
         set: "&a [name] встановлено значення [number]"
       setchest:
         parameters: "<phase> <rarity>"
+        description: поставити скриню, на яку дивляться, у фазу з указаною рідкістю
+        chest-is-empty: "&c Ця скриня порожня, тому її неможливо додати"
+        unknown-phase: "&c Невідома фаза. Використовуйте Tab-complete, щоб побачити
+          їх"
+        unknown-rarity: "&c Невідома рідкість. Використовуйте COMMON, UNCOMMON, RARE
+          або EPIC"
+        look-at-chest: "&c Подивіться на заповнену скриню, щоб встановити її"
+        only-single-chest: "&c Можна встановити лише окремі скрині"
+        success: "& Скриню успішно додано до фази"
+        failure: "&c Скриня не може бути додана до фази! Перегляньте консоль для помилок"
       sanity:
         parameters: "<phase>"
+        description: відобразити перевірку працездатності ймовірностей фази на консолі
+        see-console: "&a Дивіться консоль для звіту"
     count:
+      description: показати кількість блоків і фазу
       info: "&a Ви знаходитесь у блоці &b [number] у фазі &a [name]."
     info:
       count: "&a Острів знаходиться на блоці &b [number]&a у фазі &b [name] &a. Підрахунок
         тривалості життя &b [lifetime] &a."
     phases:
+      description: показати список усіх фаз
+      title: "&2 OneBlock фази"
       name-syntax: "&a [name]"
       description-syntax: "&b [number] блоків"
     island:
       setcount:
         parameters: "<count>"
+        description: встановити кількість блоків до попередньо завершеного значення
         set: "&a Лічильник встановлено на [number]."
         too-high: "&c Максимум, який ви можете встановити, це [number]!"
-    respawn-block: {}
+    respawn-block:
+      description: відроджує магічний блок у ситуаціях, коли він зникає
+      block-exist: "&a Блок існує, не потребує відновлення. Я позначив це для вас."
+      block-respawned: "& Блок відродився."
   phase:
     insufficient-level: "&c Рівень вашого острова занадто низький, щоб продовжити!
       Це має бути [number]."
@@ -30,13 +50,20 @@ aoneblock:
       бути [number]."
     insufficient-bank-balance: "&c Баланс острівного банку занадто низький, щоб продовжити!
       Це має бути [number]."
-  placeholders: {}
+    insufficient-permission: "&c Ви не можете продовжувати далі, доки не отримаєте
+      дозвіл [name]!"
+    cooldown: "&c Наступна фаза буде доступна через [number] секунд!"
+  placeholders:
+    infinite: Нескінченний
   gui:
-    titles: {}
+    titles:
+      phases: "&0&l Фази одного блоку"
     buttons:
       previous:
+        name: "&f&l Попередня сторінка"
         description: "&7 Перейти на сторінку [number]."
       next:
+        name: "&f&l Наступна сторінка"
         description: "&7 Перейти на сторінку [number]."
       phase:
         name: "&f&l [phase]"
@@ -52,5 +79,12 @@ aoneblock:
         bank: "&7 Потрібен &e $[number] &7 на банківському рахунку."
         economy: "&7 Потрібен &e $[number] &7 в обліковому записі гравця."
         level: "&7 Потрібен рівень острова &e [number] &7."
-    tips: {}
-  island: {}
+        permission: "&7 Потрібен дозвіл `&e[permission]&7`."
+    tips:
+      click-to-previous: "&e Натисніть &7, щоб переглянути попередню сторінку."
+      click-to-next: "&e Натисніть &7, щоб переглянути наступну сторінку."
+      click-to-change: "&e Натисніть &7, щоб змінити."
+  island:
+    starting-hologram: |-
+      &aЛаскаво просимо до AOneBlock
+      &eРозбийте цей блок, щоб почати
