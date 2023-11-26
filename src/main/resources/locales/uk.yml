@@ -1,0 +1,56 @@
+---
+aoneblock:
+  commands:
+    admin:
+      setcount:
+        parameters: "<name> <count> [lifetime]"
+        set: "&a [name] встановлено значення [number]"
+      setchest:
+        parameters: "<phase> <rarity>"
+      sanity:
+        parameters: "<phase>"
+    count:
+      info: "&a Ви знаходитесь у блоці &b [number] у фазі &a [name]."
+    info:
+      count: "&a Острів знаходиться на блоці &b [number]&a у фазі &b [name] &a. Підрахунок
+        тривалості життя &b [lifetime] &a."
+    phases:
+      name-syntax: "&a [name]"
+      description-syntax: "&b [number] блоків"
+    island:
+      setcount:
+        parameters: "<count>"
+        set: "&a Лічильник встановлено на [number]."
+        too-high: "&c Максимум, який ви можете встановити, це [number]!"
+    respawn-block: {}
+  phase:
+    insufficient-level: "&c Рівень вашого острова занадто низький, щоб продовжити!
+      Це має бути [number]."
+    insufficient-funds: "&c Ваших коштів занадто мало, щоб продовжити! Вони мають
+      бути [number]."
+    insufficient-bank-balance: "&c Баланс острівного банку занадто низький, щоб продовжити!
+      Це має бути [number]."
+  placeholders: {}
+  gui:
+    titles: {}
+    buttons:
+      previous:
+        description: "&7 Перейти на сторінку [number]."
+      next:
+        description: "&7 Перейти на сторінку [number]."
+      phase:
+        name: "&f&l [phase]"
+        description: |-
+          [starting-block]
+          [biome]
+          [bank]
+          [economy]
+          [level]
+          [permission]
+        starting-block: "&7 Запускається після розбиття &e [number] блоків."
+        biome: "&7 Біом: &e [biome]"
+        bank: "&7 Потрібен &e $[number] &7 на банківському рахунку."
+        economy: "&7 Потрібен &e $[number] &7 в обліковому записі гравця."
+        level: "&7 Потрібен рівень острова &e [number] &7."
+    tips: {}
+  island: {}
