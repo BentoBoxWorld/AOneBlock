@@ -6,6 +6,7 @@ aoneblock:
         parameters: "<name> <count> [lifetime]"
         description: встановити кількість блоків гравця
         set: "&a [name] встановлено значення [number]"
+        set-lifetime: "&a [name] тривалість життя встановлено на [number]"
       setchest:
         parameters: "<phase> <rarity>"
         description: поставити скриню, на яку дивляться, у фазу з указаною рідкістю
