@@ -14,6 +14,7 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerRespawnEvent;
+import org.bukkit.event.player.PlayerRespawnEvent.RespawnReason;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -31,16 +32,16 @@ import world.bentobox.bentobox.managers.IslandsManager;
  */
 @RunWith(PowerMockRunner.class)
 public class NoBlockHandlerTest {
-    
+
     private static final UUID ID = UUID.randomUUID();
-    
+
     @Mock
     private AOneBlock aob;
     @Mock
     private Player p;
-    
+
     private NoBlockHandler nbh;
-    
+
     @Mock
     private Block block;
     @Mock
@@ -53,7 +54,6 @@ public class NoBlockHandlerTest {
     private Island island;
     @Mock
     private World world;
-
 
     /**
      * @throws java.lang.Exception
@@ -92,36 +92,38 @@ public class NoBlockHandlerTest {
     }
 
     /**
-     * Test method for {@link world.bentobox.aoneblock.listeners.NoBlockHandler#NoBlockHandler(world.bentobox.aoneblock.AOneBlock)}.
+     * Test method for
+     * {@link world.bentobox.aoneblock.listeners.NoBlockHandler#NoBlockHandler(world.bentobox.aoneblock.AOneBlock)}.
      */
     @Test
     public void testNoBlockHandler() {
-        assertNotNull(nbh);
+	assertNotNull(nbh);
+    }
+
+    /**
+     * Test method for
+     * {@link world.bentobox.aoneblock.listeners.NoBlockHandler#onRespawn(org.bukkit.event.player.PlayerRespawnEvent)}.
+     */
+    @Test
+    public void testOnRespawnSolidBlock() {
+	PlayerRespawnEvent event = new PlayerRespawnEvent(p, location, false, false, RespawnReason.DEATH);
+	nbh.onRespawn(event);
+	verify(block, never()).setType(any(Material.class));
+
     }
 
     /**
      * Test method for {@link world.bentobox.aoneblock.listeners.NoBlockHandler#onRespawn(org.bukkit.event.player.PlayerRespawnEvent)}.
      */
     @Test
-    public void testOnRespawnSolidBlock() {
-        PlayerRespawnEvent event = new PlayerRespawnEvent(p, location, false, false);
-        nbh.onRespawn(event);
-        verify(block, never()).setType(any(Material.class));
-        
-    }
-    
-    /**
-     * Test method for {@link world.bentobox.aoneblock.listeners.NoBlockHandler#onRespawn(org.bukkit.event.player.PlayerRespawnEvent)}.
-     */
-    @Test
     public void testOnRespawnAirBlock() {
         when(block.isEmpty()).thenReturn(true);
-        PlayerRespawnEvent event = new PlayerRespawnEvent(p, location, false, false);
+        PlayerRespawnEvent event = new PlayerRespawnEvent(p, location, false, false, RespawnReason.DEATH);
         nbh.onRespawn(event);
         verify(block).setType(any(Material.class));
         
     }
-    
+
     /**
      * Test method for {@link world.bentobox.aoneblock.listeners.NoBlockHandler#onRespawn(org.bukkit.event.player.PlayerRespawnEvent)}.
      */
@@ -129,12 +131,12 @@ public class NoBlockHandlerTest {
     public void testOnRespawnAirBlockWrongWorld() {
         when(aob.inWorld(world)).thenReturn(false);
         when(block.isEmpty()).thenReturn(true);
-        PlayerRespawnEvent event = new PlayerRespawnEvent(p, location, false, false);
+        PlayerRespawnEvent event = new PlayerRespawnEvent(p, location, false, false, RespawnReason.DEATH);
         nbh.onRespawn(event);
         verify(block, never()).setType(any(Material.class));
         
     }
-    
+
     /**
      * Test method for {@link world.bentobox.aoneblock.listeners.NoBlockHandler#onRespawn(org.bukkit.event.player.PlayerRespawnEvent)}.
      */
@@ -142,11 +144,10 @@ public class NoBlockHandlerTest {
     public void testOnRespawnAirBlockNoIsland() {
         when(im.getIsland(world, ID)).thenReturn(null);
         when(block.isEmpty()).thenReturn(true);
-        PlayerRespawnEvent event = new PlayerRespawnEvent(p, location, false, false);
+        PlayerRespawnEvent event = new PlayerRespawnEvent(p, location, false, false, RespawnReason.DEATH);
         nbh.onRespawn(event);
         verify(block, never()).setType(any(Material.class));
         
     }
-
 
 }
