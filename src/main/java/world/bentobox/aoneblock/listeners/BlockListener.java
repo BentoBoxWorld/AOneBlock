@@ -41,7 +41,6 @@ import org.bukkit.util.Vector;
 import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jdt.annotation.Nullable;
 
-import dev.lone.itemsadder.api.CustomBlock;
 import world.bentobox.aoneblock.AOneBlock;
 import world.bentobox.aoneblock.dataobjects.OneBlockIslands;
 import world.bentobox.aoneblock.events.MagicBlockEntityEvent;
@@ -435,13 +434,6 @@ public class BlockListener implements Listener {
     private void spawnBlock(@NonNull OneBlockObject nextBlock, @NonNull Block block) {
 	if (nextBlock.isCustomBlock()) {
 	    nextBlock.getCustomBlock().execute(addon, block);
-	} else if (nextBlock.isItemsAdderBlock()) {
-	    // Get Custom Block from ItemsAdder and place it
-	    CustomBlock cBlock = CustomBlock.getInstance(nextBlock.getItemsAdderBlock());
-	    if (cBlock != null) {
-		block.getLocation().getBlock().setType(Material.AIR);
-		cBlock.place(block.getLocation());
-	    }
 	} else {
 	    @NonNull
 	    Material type = nextBlock.getMaterial();

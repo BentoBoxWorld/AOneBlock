@@ -1,15 +1,14 @@
 package world.bentobox.aoneblock.oneblocks.customblock;
 
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-
 import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
-
 import world.bentobox.aoneblock.AOneBlock;
 import world.bentobox.aoneblock.oneblocks.OneBlockCustomBlock;
 import world.bentobox.bentobox.BentoBox;
+
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 
 /**
  * A custom block that is defined by a block data value.

@@ -24,7 +24,9 @@ import world.bentobox.aoneblock.listeners.InfoListener;
 import world.bentobox.aoneblock.listeners.ItemsAdderListener;
 import world.bentobox.aoneblock.listeners.JoinLeaveListener;
 import world.bentobox.aoneblock.listeners.NoBlockHandler;
+import world.bentobox.aoneblock.oneblocks.OneBlockCustomBlockCreator;
 import world.bentobox.aoneblock.oneblocks.OneBlocksManager;
+import world.bentobox.aoneblock.oneblocks.customblock.ItemsAdderCustomBlock;
 import world.bentobox.aoneblock.requests.IslandStatsHandler;
 import world.bentobox.aoneblock.requests.LocationStatsHandler;
 import world.bentobox.bentobox.api.addons.GameModeAddon;
@@ -57,6 +59,8 @@ public class AOneBlock extends GameModeAddon {
 		// Check if ItemsAdder exists, if yes register listener
 		if (Bukkit.getPluginManager().getPlugin("ItemsAdder") != null) {
 			registerListener(new ItemsAdderListener(this));
+			OneBlockCustomBlockCreator.register(ItemsAdderCustomBlock::fromId);
+			OneBlockCustomBlockCreator.register("itemsadder", ItemsAdderCustomBlock::fromMap);
 			hasItemsAdder = true;
 		}
 		// Save the default config from config.yml
