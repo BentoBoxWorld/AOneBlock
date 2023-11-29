@@ -50,6 +50,7 @@ import world.bentobox.aoneblock.events.MagicBlockPhaseEvent;
 import world.bentobox.aoneblock.oneblocks.OneBlockObject;
 import world.bentobox.aoneblock.oneblocks.OneBlockPhase;
 import world.bentobox.aoneblock.oneblocks.OneBlocksManager;
+import world.bentobox.bentobox.BentoBox;
 import world.bentobox.bentobox.api.events.island.IslandCreatedEvent;
 import world.bentobox.bentobox.api.events.island.IslandDeleteEvent;
 import world.bentobox.bentobox.api.events.island.IslandResettedEvent;
@@ -275,9 +276,9 @@ public class BlockListener implements Listener {
 	// Save previous processing phase name
 	String prevPhaseName = is.getPhaseName();
 
-	// Check for a goto
-	if (Objects.requireNonNull(phase).getGotoBlock() != null) {
-	    handleGoto(is, phase);
+	// Check if phase contains `gotoBlock`
+	if(Objects.requireNonNull(phase).getGotoBlock() != null){
+		phase = handleGoto(is, phase.getGotoBlock());
 	}
 
 	// Get current phase name
@@ -286,8 +287,15 @@ public class BlockListener implements Listener {
 	// Get the phase for next block number
 	OneBlockPhase nextPhase = oneBlocksManager.getPhase(is.getBlockNumber() + 1);
 
+	// Check if nextPhase contains `gotoBlock` and override `nextPhase`
+	if (Objects.requireNonNull(nextPhase).getGotoBlock() != null) {
+		nextPhase = oneBlocksManager.getPhase(nextPhase.getGotoBlock());
+	}
+
 	// Get next phase name
 	String nextPhaseName = nextPhase == null || nextPhase.getPhaseName() == null ? "" : nextPhase.getPhaseName();
+
+	BentoBox.getInstance().logWarning("Block number = " + is.getBlockNumber() + ", PrevPhase = " + prevPhaseName + ", CurrPhase = " + currPhaseName + ", NextPhase = " + nextPhaseName);
 
 	// If next phase is new, log break time of the last block of this phase
 	if (!currPhaseName.equalsIgnoreCase(nextPhaseName)) {
@@ -297,10 +305,11 @@ public class BlockListener implements Listener {
 	boolean isCurrPhaseNew = !is.getPhaseName().equalsIgnoreCase(currPhaseName);
 
 	if (isCurrPhaseNew) {
+
 	    // Check if requirements for new phase are met
 	    if (check.phaseRequirementsFail(player, i, is, phase, world)) {
-		e.setCancelled(true);
-		return;
+			e.setCancelled(true);
+			return;
 	    }
 
 	    check.setNewPhase(player, i, is, phase);
@@ -380,13 +389,12 @@ public class BlockListener implements Listener {
 	is.incrementBlockNumber();
     }
 
-    private void handleGoto(OneBlockIslands is, OneBlockPhase phase) {
-	int gotoBlock = phase.getGotoBlock();
-	phase = oneBlocksManager.getPhase(gotoBlock);
-	// Store lifetime
-	is.setLifetime(is.getLifetime() + gotoBlock);
-	// Set current block
-	is.setBlockNumber(gotoBlock);
+    private OneBlockPhase handleGoto(OneBlockIslands is, int gotoBlock) {
+		// Store lifetime
+		is.setLifetime(is.getLifetime() + gotoBlock);
+		// Set current block
+		is.setBlockNumber(gotoBlock);
+		return oneBlocksManager.getPhase(gotoBlock);
     }
 
     private void setBiome(@NonNull Block block, @Nullable Biome biome) {
