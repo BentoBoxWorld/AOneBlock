@@ -42,7 +42,7 @@ public class MobCustomBlock implements OneBlockCustomBlock {
         EntityType entityType = maybeEntity(entityTypeValue);
         Material underlyingBlock = Material.getMaterial(underlyingBlockValue);
 
-        if(underlyingBlock == null){
+        if (underlyingBlock == null) {
             BentoBox.getInstance().logWarning("Underlying block " + underlyingBlockValue + " does not exist and will be replaced with STONE.");
         }
 
