@@ -293,9 +293,7 @@ public class BlockListener implements Listener {
 
 	// Get next phase name
 	String nextPhaseName = nextPhase == null || nextPhase.getPhaseName() == null ? "" : nextPhase.getPhaseName();
-
-	BentoBox.getInstance().logWarning("Block number = " + is.getBlockNumber() + ", PrevPhase = " + prevPhaseName + ", CurrPhase = " + currPhaseName + ", NextPhase = " + nextPhaseName);
-
+	
 	// If next phase is new, log break time of the last block of this phase
 	if (!currPhaseName.equalsIgnoreCase(nextPhaseName)) {
 	    is.setLastPhaseChangeTime(System.currentTimeMillis());
