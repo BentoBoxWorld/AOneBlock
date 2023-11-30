@@ -1,15 +1,16 @@
 package world.bentobox.aoneblock.oneblocks.customblock;
 
-import dev.lone.itemsadder.api.CustomBlock;
-import org.bukkit.Material;
-import org.bukkit.block.Block;
-import world.bentobox.aoneblock.AOneBlock;
-import world.bentobox.aoneblock.oneblocks.OneBlockCustomBlock;
-import world.bentobox.bentobox.BentoBox;
-
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+
+import org.bukkit.Material;
+import org.bukkit.block.Block;
+
+import dev.lone.itemsadder.api.CustomBlock;
+import world.bentobox.aoneblock.AOneBlock;
+import world.bentobox.aoneblock.oneblocks.OneBlockCustomBlock;
+import world.bentobox.bentobox.BentoBox;
 
 public class ItemsAdderCustomBlock implements OneBlockCustomBlock {
     private final CustomBlock customBlock;
