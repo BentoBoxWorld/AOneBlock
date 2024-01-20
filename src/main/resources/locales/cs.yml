@@ -3,9 +3,10 @@ aoneblock:
   commands:
     admin:
       setcount:
-        parameters: "<name> <count>"
+        parameters: "<name> <count> [lifetime]"
         description: nastavit počet bloků hráče
         set: "&a počet [name] je nastaven na [number]"
+        set-lifetime: "&a [name] je nastaveno na [number]"
       setchest:
         parameters: "<phase> <rarity>"
         description: dejte pohled na hrudník do fáze se specifikovanou vzácností
@@ -24,6 +25,9 @@ aoneblock:
     count:
       description: zobrazit počet bloků a fázi
       info: "&a Jste na bloku &b [number] ve fázi &a [name]"
+    info:
+      count: Ostrov &a je na bloku &b [number]&a ve fázi &b [name] &a. Počet doživotí
+        &b [lifetime] &a.
     phases:
       description: zobrazit seznam všech fází
       title: "&2 Fáze OneBlock"
@@ -32,16 +36,45 @@ aoneblock:
     island:
       setcount:
         parameters: "<count>"
+        description: nastavte počet bloků na dříve dokončenou hodnotu
         set: "&a Počet nastaven na [number]."
         too-high: "&c Maximálně můžeš nastavit [number]!"
+    respawn-block:
+      description: respawnuje magický blok v situacích, kdy zmizí
+      block-exist: "&a Blok existuje, nevyžadoval respawning. Označil jsem to za vás."
+      block-respawned: "&a Blok byl znovu vytvořen."
   phase:
     insufficient-level: Tvůj ostrov je na příliš nízké úrovni, musí být alespoň [number].
     insufficient-funds: Nemáš dostatečné prostředky! Musíš mít alespoň [number].
     insufficient-bank-balance: V Bance ostrova není dostatek financí! Je potřeba alespoň
       [number].
-    insufficient-permission: Nemůžeš pokračovat, dokud nedostaneš oprávnění [name].
+    insufficient-permission: "&c Nemůžete pokračovat, dokud nezískáte oprávnění [name]!"
+    cooldown: "&c Další fáze bude dostupná za [number] sekund!"
   placeholders:
     infinite: Nekonečný
+  gui:
+    titles:
+      phases: "&0&l Jednoblokové fáze"
+    buttons:
+      previous:
+        name: "&f&l Předchozí stránka"
+        description: "&7 Přepnout na stránku [number]"
+      next:
+        name: "&f&l Další stránka"
+        description: "&7 Přepnout na stránku [number]"
+      phase:
+        name: "&f&l [phase]"
+        description: "[starting-block]\n[biome]\n[bank]\n[economy] \n[level]\n[permission]"
+        starting-block: "&7 Spustí se po rozbití bloků &e [number]."
+        biome: "&7 Biom: &e [biome]"
+        bank: "&7 Vyžaduje &e $[number] &7 na bankovním účtu."
+        economy: "&7 Vyžaduje &e $[number] &7 v hráčském účtu."
+        level: "&7 Vyžaduje &e [number] &7 úroveň ostrova."
+        permission: "&7 Vyžaduje oprávnění `&e[permission]&7`."
+    tips:
+      click-to-previous: "&e Klepnutím na &7 zobrazíte předchozí stránku."
+      click-to-next: "&e Klepnutím na &7 zobrazíte další stránku."
+      click-to-change: "&e Klikněte na &7 pro změnu."
   island:
     starting-hologram: |-
       &a Vítejte v AOneBlock

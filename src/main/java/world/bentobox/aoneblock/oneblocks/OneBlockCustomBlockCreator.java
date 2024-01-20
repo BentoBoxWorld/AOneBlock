@@ -1,9 +1,15 @@
 package world.bentobox.aoneblock.oneblocks;
 
-import world.bentobox.aoneblock.oneblocks.customblock.BlockDataCustomBlock;
-
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.function.Function;
+
+import world.bentobox.aoneblock.oneblocks.customblock.BlockDataCustomBlock;
+import world.bentobox.aoneblock.oneblocks.customblock.MobCustomBlock;
 
 /**
  * A creator for {@link OneBlockCustomBlock}
@@ -16,6 +22,7 @@ public final class OneBlockCustomBlockCreator {
 
     static {
         register("block-data", BlockDataCustomBlock::fromMap);
+        register("mob", MobCustomBlock::fromMap);
         register("short", map -> {
             String type = Objects.toString(map.get("data"), null);
             if (type == null) {

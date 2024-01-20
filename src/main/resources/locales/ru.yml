@@ -51,6 +51,7 @@ aoneblock:
       Должно быть [number]."
     insufficient-permission: "&c Вы не можете продолжать, пока не получите разрешение
       [name]!"
+    cooldown: "&c Следующий этап будет доступен через [number] секунд!"
   placeholders:
     infinite: Бесконечный
   gui:

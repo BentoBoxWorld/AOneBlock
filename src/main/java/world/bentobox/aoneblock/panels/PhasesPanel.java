@@ -402,6 +402,10 @@ public class PhasesPanel
 
             case PERMISSION -> permissionText.append(this.user.getTranslationOrNothing(reference + "permission",
                     PERMISSION, requirement.getPermission()));
+            case COOLDOWN -> {
+                // do nothing
+            }
+            default -> throw new IllegalArgumentException("Unexpected value: " + requirement.getType());
 
             }
         });
@@ -453,7 +457,7 @@ public class PhasesPanel
             if (phase.getBlockNumberValue() < lifetime)
             {
                 // Check if phase requirements are met.
-                canApply = !this.phaseRequirementsFail(phase);
+                canApply = !this.phaseRequirementsFail(phase, this.oneBlockIsland);
             }
             else
             {
@@ -521,7 +525,7 @@ public class PhasesPanel
      * @param phase Phase object.
      * @return {@code true} if phase requirements fails, {@code false} otherwise.
      */
-    private boolean phaseRequirementsFail(OneBlockPhase phase)
+    private boolean phaseRequirementsFail(OneBlockPhase phase, OneBlockIslands is)
     {
         // Check requirements
         for (Requirement requirement : phase.getRequirements())
@@ -537,6 +541,8 @@ public class PhasesPanel
             case ECO -> this.addon.getPlugin().getVault().map(a -> a.getBalance(this.user, this.world) < requirement.getEco()).orElse(false);
 
             case PERMISSION -> this.user != null && !this.user.hasPermission(requirement.getPermission());
+
+            case COOLDOWN -> (requirement.getCooldown() - (System.currentTimeMillis() - is.getLastPhaseChangeTime()) / 1000) > 0;
             }) {
                 return true;
             }

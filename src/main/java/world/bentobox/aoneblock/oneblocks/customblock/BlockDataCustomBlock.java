@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
 
+import world.bentobox.aoneblock.AOneBlock;
 import world.bentobox.aoneblock.oneblocks.OneBlockCustomBlock;
 import world.bentobox.bentobox.BentoBox;
 
@@ -31,7 +32,7 @@ public class BlockDataCustomBlock implements OneBlockCustomBlock {
     }
 
     @Override
-    public void setBlock(Block block) {
+    public void execute(AOneBlock addon, Block block) {
         try {
             block.setBlockData(Bukkit.createBlockData(blockData));
         } catch (IllegalArgumentException e) {

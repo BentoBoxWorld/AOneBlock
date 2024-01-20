@@ -56,6 +56,7 @@
   #   bank-balance: 10000
   #   level: 10
   #   permission: ready.for.battle
+  #   cooldown: 60 # seconds
   
   blocks:
     PODZOL: 40
