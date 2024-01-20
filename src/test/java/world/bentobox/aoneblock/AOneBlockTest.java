@@ -65,7 +65,6 @@ import world.bentobox.bentobox.managers.FlagsManager;
 import world.bentobox.bentobox.managers.IslandWorldManager;
 import world.bentobox.bentobox.managers.IslandsManager;
 import world.bentobox.bentobox.managers.PlaceholdersManager;
-import world.bentobox.bentobox.managers.RanksManager;
 
 /**
  * @author tastybento
@@ -215,10 +214,6 @@ public class AOneBlockTest {
 		// Flags manager
 		when(plugin.getFlagsManager()).thenReturn(fm);
 		when(fm.getFlags()).thenReturn(Collections.emptyList());
-
-		// RanksManager
-		RanksManager rm = new RanksManager();
-		when(plugin.getRanksManager()).thenReturn(rm);
 
 	}
 

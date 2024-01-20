@@ -65,7 +65,7 @@ import world.bentobox.bentobox.managers.RanksManager;
  *
  */
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({ Bukkit.class, BentoBox.class, User.class, DatabaseSetup.class })
+@PrepareForTest({ Bukkit.class, BentoBox.class, User.class, DatabaseSetup.class, RanksManager.class })
 public class IslandSetCountCommandTest {
 	@Mock
 	private BentoBox plugin;
@@ -89,6 +89,9 @@ public class IslandSetCountCommandTest {
 	private IslandSetCountCommand iscc;
 	@Mock
 	private BlockListener bl;
+    @Mock
+    private RanksManager rm;
+
 	private @NonNull OneBlockIslands oneBlockIsland = new OneBlockIslands(UUID.randomUUID().toString());
 
 	private static AbstractDatabaseHandler<Object> h;
@@ -131,6 +134,9 @@ public class IslandSetCountCommandTest {
 		BentoBox plugin = mock(BentoBox.class);
 		Whitebox.setInternalState(BentoBox.class, "instance", plugin);
 
+        // Set up RanksManager
+        Whitebox.setInternalState(RanksManager.class, "instance", rm);
+
 		// Command manager
 		CommandsManager cm = mock(CommandsManager.class);
 		when(plugin.getCommandsManager()).thenReturn(cm);
@@ -168,10 +174,6 @@ public class IslandSetCountCommandTest {
 		// Settings
 		Settings settings = new Settings();
 		when(addon.getSettings()).thenReturn(settings);
-
-		// RanksManager
-		RanksManager rm = new RanksManager();
-		when(plugin.getRanksManager()).thenReturn(rm);
 
 		// BlockListener
 		when(addon.getBlockListener()).thenReturn(bl);
@@ -231,6 +233,7 @@ public class IslandSetCountCommandTest {
 	 */
 	@Test
 	public void testExecuteUserStringListOfStringLowRank() {
+        when(rm.getRank(anyInt())).thenReturn(RanksManager.MEMBER_RANK_REF);
 		assertFalse(iscc.execute(user, "", List.of("2000")));
 		verify(user).sendMessage("general.errors.insufficient-rank", TextVariables.RANK, RanksManager.MEMBER_RANK_REF);
 	}

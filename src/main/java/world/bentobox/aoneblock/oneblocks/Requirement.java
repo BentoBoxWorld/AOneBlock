@@ -1,7 +1,5 @@
 package world.bentobox.aoneblock.oneblocks;
 
-import world.bentobox.aoneblock.oneblocks.Requirement.ReqType;
-
 /**
  * Requirement for finishing a phase
  * @author tastybento

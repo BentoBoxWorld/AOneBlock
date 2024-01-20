@@ -402,6 +402,10 @@ public class PhasesPanel
 
             case PERMISSION -> permissionText.append(this.user.getTranslationOrNothing(reference + "permission",
                     PERMISSION, requirement.getPermission()));
+            case COOLDOWN -> {
+                // do nothing
+            }
+            default -> throw new IllegalArgumentException("Unexpected value: " + requirement.getType());
 
             }
         });
