@@ -19,7 +19,7 @@ phases_panel:
       8: phase_button
     3:
       1:
-        icon: TIPPED_ARROW:INSTANT_HEAL::::1
+        icon: tipped_arrow{CustomPotionColor:11546150}
         title: aoneblock.gui.buttons.previous.name
         description: aoneblock.gui.buttons.previous.description
         data:
@@ -37,7 +37,7 @@ phases_panel:
       7: phase_button
       8: phase_button
       9:
-        icon: TIPPED_ARROW:JUMP::::1
+        icon: tipped_arrow{CustomPotionColor:8439583}
         title: aoneblock.gui.buttons.next.name
         description: aoneblock.gui.buttons.next.description
         data:
