@@ -7,7 +7,7 @@ import world.bentobox.aoneblock.dataobjects.OneBlockIslands;
 import world.bentobox.bentobox.api.user.User;
 import world.bentobox.bentobox.database.objects.Island;
 
-public class PlaceholdersManager {
+public class AOneBlockPlaceholders {
 
     private static final TreeMap<Double, String> SCALE;
     private static final String INFINITE = "aoneblock.placeholders.infinite";
@@ -26,8 +26,26 @@ public class PlaceholdersManager {
 
     private final AOneBlock addon;
 
-    public PlaceholdersManager(AOneBlock addon) {
+    public AOneBlockPlaceholders(AOneBlock addon,
+            world.bentobox.bentobox.managers.PlaceholdersManager placeholdersManager) {
 	this.addon = addon;
+        placeholdersManager.registerPlaceholder(addon, "visited_island_phase", this::getPhaseByLocation);
+        placeholdersManager.registerPlaceholder(addon, "visited_island_count", this::getCountByLocation);
+        placeholdersManager.registerPlaceholder(addon, "my_island_phase", this::getPhase);
+        placeholdersManager.registerPlaceholder(addon, "my_island_count", this::getCount);
+        placeholdersManager.registerPlaceholder(addon, "visited_island_next_phase", this::getNextPhaseByLocation);
+        placeholdersManager.registerPlaceholder(addon, "my_island_next_phase", this::getNextPhase);
+        placeholdersManager.registerPlaceholder(addon, "my_island_blocks_for_phase", this::getPhaseBlocks);
+        placeholdersManager.registerPlaceholder(addon, "my_island_blocks_to_next_phase", this::getNextPhaseBlocks);
+        placeholdersManager.registerPlaceholder(addon, "visited_island_blocks_to_next_phase",
+                this::getNextPhaseBlocksByLocation);
+        placeholdersManager.registerPlaceholder(addon, "my_island_percent_done", this::getPercentDone);
+        placeholdersManager.registerPlaceholder(addon, "visited_island_percent_done", this::getPercentDoneByLocation);
+        placeholdersManager.registerPlaceholder(addon, "my_island_done_scale", this::getDoneScale);
+        placeholdersManager.registerPlaceholder(addon, "visited_island_done_scale", this::getDoneScaleByLocation);
+        // Since 1.10
+        placeholdersManager.registerPlaceholder(addon, "visited_island_lifetime_count", this::getLifetimeByLocation);
+        placeholdersManager.registerPlaceholder(addon, "my_island_lifetime_count", this::getLifetime);
     }
 
     /**

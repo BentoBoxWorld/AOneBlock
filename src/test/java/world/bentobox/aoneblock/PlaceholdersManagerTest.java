@@ -22,6 +22,7 @@ import world.bentobox.aoneblock.oneblocks.OneBlocksManager;
 import world.bentobox.bentobox.api.user.User;
 import world.bentobox.bentobox.database.objects.Island;
 import world.bentobox.bentobox.managers.IslandsManager;
+import world.bentobox.bentobox.managers.PlaceholdersManager;
 
 /**
  * @author tastybento
@@ -36,7 +37,7 @@ public class PlaceholdersManagerTest {
 
     private UUID uuid = UUID.randomUUID();
 
-    private PlaceholdersManager pm;
+    private AOneBlockPlaceholders pm;
     @Mock
     private IslandsManager im;
     @Mock
@@ -49,6 +50,8 @@ public class PlaceholdersManagerTest {
     @Mock
     private OneBlocksManager obm;
     private Settings settings;
+    @Mock
+    private PlaceholdersManager phm;
 
     /**
      * @throws java.lang.Exception
@@ -76,11 +79,11 @@ public class PlaceholdersManagerTest {
         settings = new Settings();
         when(addon.getSettings()).thenReturn(settings);
 
-        pm = new PlaceholdersManager(addon);
+        pm = new AOneBlockPlaceholders(addon, phm);
     }
 
     /**
-     * Test method for {@link world.bentobox.aoneblock.PlaceholdersManager#getPhaseByLocation(world.bentobox.bentobox.api.user.User)}.
+     * Test method for {@link world.bentobox.aoneblock.AOneBlockPlaceholders#getPhaseByLocation(world.bentobox.bentobox.api.user.User)}.
      */
     @Test
     public void testGetPhaseByLocation() {
@@ -93,7 +96,7 @@ public class PlaceholdersManagerTest {
     }
 
     /**
-     * Test method for {@link world.bentobox.aoneblock.PlaceholdersManager#getCountByLocation(world.bentobox.bentobox.api.user.User)}.
+     * Test method for {@link world.bentobox.aoneblock.AOneBlockPlaceholders#getCountByLocation(world.bentobox.bentobox.api.user.User)}.
      */
     @Test
     public void testGetCountByLocation() {
@@ -106,7 +109,7 @@ public class PlaceholdersManagerTest {
     }
 
     /**
-     * Test method for {@link world.bentobox.aoneblock.PlaceholdersManager#getPhase(world.bentobox.bentobox.api.user.User)}.
+     * Test method for {@link world.bentobox.aoneblock.AOneBlockPlaceholders#getPhase(world.bentobox.bentobox.api.user.User)}.
      */
     @Test
     public void testGetPhase() {
@@ -119,7 +122,7 @@ public class PlaceholdersManagerTest {
     }
 
     /**
-     * Test method for {@link world.bentobox.aoneblock.PlaceholdersManager#getCount(world.bentobox.bentobox.api.user.User)}.
+     * Test method for {@link world.bentobox.aoneblock.AOneBlockPlaceholders#getCount(world.bentobox.bentobox.api.user.User)}.
      */
     @Test
     public void testGetCount() {
@@ -132,7 +135,7 @@ public class PlaceholdersManagerTest {
     }
 
     /**
-     * Test method for {@link world.bentobox.aoneblock.PlaceholdersManager#getNextPhaseByLocation(world.bentobox.bentobox.api.user.User)}.
+     * Test method for {@link world.bentobox.aoneblock.AOneBlockPlaceholders#getNextPhaseByLocation(world.bentobox.bentobox.api.user.User)}.
      */
     @Test
     public void testGetNextPhaseByLocation() {
@@ -145,7 +148,7 @@ public class PlaceholdersManagerTest {
     }
 
     /**
-     * Test method for {@link world.bentobox.aoneblock.PlaceholdersManager#getNextPhase(world.bentobox.bentobox.api.user.User)}.
+     * Test method for {@link world.bentobox.aoneblock.AOneBlockPlaceholders#getNextPhase(world.bentobox.bentobox.api.user.User)}.
      */
     @Test
     public void testGetNextPhase() {
@@ -158,7 +161,7 @@ public class PlaceholdersManagerTest {
     }
 
     /**
-     * Test method for {@link world.bentobox.aoneblock.PlaceholdersManager#getNextPhaseBlocksByLocation(world.bentobox.bentobox.api.user.User)}.
+     * Test method for {@link world.bentobox.aoneblock.AOneBlockPlaceholders#getNextPhaseBlocksByLocation(world.bentobox.bentobox.api.user.User)}.
      */
     @Test
     public void testGetNextPhaseBlocksByLocation() {
@@ -173,7 +176,7 @@ public class PlaceholdersManagerTest {
     }
 
     /**
-     * Test method for {@link world.bentobox.aoneblock.PlaceholdersManager#getNextPhaseBlocks(world.bentobox.bentobox.api.user.User)}.
+     * Test method for {@link world.bentobox.aoneblock.AOneBlockPlaceholders#getNextPhaseBlocks(world.bentobox.bentobox.api.user.User)}.
      */
     @Test
     public void testGetNextPhaseBlocks() {
@@ -188,7 +191,7 @@ public class PlaceholdersManagerTest {
     }
 
     /**
-     * Test method for {@link world.bentobox.aoneblock.PlaceholdersManager#getPercentDoneByLocation(world.bentobox.bentobox.api.user.User)}.
+     * Test method for {@link world.bentobox.aoneblock.AOneBlockPlaceholders#getPercentDoneByLocation(world.bentobox.bentobox.api.user.User)}.
      */
     @Test
     public void testGetPercentDoneByLocation() {
@@ -201,7 +204,7 @@ public class PlaceholdersManagerTest {
     }
 
     /**
-     * Test method for {@link world.bentobox.aoneblock.PlaceholdersManager#getPercentDone(world.bentobox.bentobox.api.user.User)}.
+     * Test method for {@link world.bentobox.aoneblock.AOneBlockPlaceholders#getPercentDone(world.bentobox.bentobox.api.user.User)}.
      */
     @Test
     public void testGetPercentDone() {
@@ -214,7 +217,7 @@ public class PlaceholdersManagerTest {
     }
 
     /**
-     * Test method for {@link world.bentobox.aoneblock.PlaceholdersManager#getDoneScaleByLocation(world.bentobox.bentobox.api.user.User)}.
+     * Test method for {@link world.bentobox.aoneblock.AOneBlockPlaceholders#getDoneScaleByLocation(world.bentobox.bentobox.api.user.User)}.
      */
     @Test
     public void testGetDoneScaleByLocation() {
@@ -227,7 +230,7 @@ public class PlaceholdersManagerTest {
     }
 
     /**
-     * Test method for {@link world.bentobox.aoneblock.PlaceholdersManager#getDoneScale(world.bentobox.bentobox.api.user.User)}.
+     * Test method for {@link world.bentobox.aoneblock.AOneBlockPlaceholders#getDoneScale(world.bentobox.bentobox.api.user.User)}.
      */
     @Test
     public void testGetDoneScale() {

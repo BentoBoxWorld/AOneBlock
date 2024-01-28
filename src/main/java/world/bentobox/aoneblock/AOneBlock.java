@@ -51,7 +51,7 @@ public class AOneBlock extends GameModeAddon {
 	private final Config<Settings> configObject = new Config<>(this, Settings.class);
 	private BlockListener blockListener;
 	private OneBlocksManager oneBlockManager;
-	private PlaceholdersManager phManager;
+    private AOneBlockPlaceholders phManager;
 	private HoloListener holoListener;
 
 	@Override
@@ -105,7 +105,7 @@ public class AOneBlock extends GameModeAddon {
 		registerListener(new JoinLeaveListener(this));
 		registerListener(new InfoListener(this));
 		// Register placeholders
-		registerPlaceholders();
+        phManager = new AOneBlockPlaceholders(this, getPlugin().getPlaceholdersManager());
 
 		// Register request handlers
 		registerRequestHandler(new IslandStatsHandler(this));
@@ -128,37 +128,6 @@ public class AOneBlock extends GameModeAddon {
 			return true;
 		}
 		return false;
-	}
-
-	private void registerPlaceholders() {
-		phManager = new PlaceholdersManager(this);
-		getPlugin().getPlaceholdersManager().registerPlaceholder(this, "visited_island_phase",
-				phManager::getPhaseByLocation);
-		getPlugin().getPlaceholdersManager().registerPlaceholder(this, "visited_island_count",
-				phManager::getCountByLocation);
-		getPlugin().getPlaceholdersManager().registerPlaceholder(this, "my_island_phase", phManager::getPhase);
-		getPlugin().getPlaceholdersManager().registerPlaceholder(this, "my_island_count", phManager::getCount);
-		getPlugin().getPlaceholdersManager().registerPlaceholder(this, "visited_island_next_phase",
-				phManager::getNextPhaseByLocation);
-		getPlugin().getPlaceholdersManager().registerPlaceholder(this, "my_island_next_phase", phManager::getNextPhase);
-		getPlugin().getPlaceholdersManager().registerPlaceholder(this, "my_island_blocks_for_phase",
-				phManager::getPhaseBlocks);
-		getPlugin().getPlaceholdersManager().registerPlaceholder(this, "my_island_blocks_to_next_phase",
-				phManager::getNextPhaseBlocks);
-		getPlugin().getPlaceholdersManager().registerPlaceholder(this, "visited_island_blocks_to_next_phase",
-				phManager::getNextPhaseBlocksByLocation);
-		getPlugin().getPlaceholdersManager().registerPlaceholder(this, "my_island_percent_done",
-				phManager::getPercentDone);
-		getPlugin().getPlaceholdersManager().registerPlaceholder(this, "visited_island_percent_done",
-				phManager::getPercentDoneByLocation);
-		getPlugin().getPlaceholdersManager().registerPlaceholder(this, "my_island_done_scale", phManager::getDoneScale);
-		getPlugin().getPlaceholdersManager().registerPlaceholder(this, "visited_island_done_scale",
-				phManager::getDoneScaleByLocation);
-		// Since 1.10
-		getPlugin().getPlaceholdersManager().registerPlaceholder(this, "visited_island_lifetime_count",
-				phManager::getLifetimeByLocation);
-		getPlugin().getPlaceholdersManager().registerPlaceholder(this, "my_island_lifetime_count",
-				phManager::getLifetime);
 	}
 
 	@Override
@@ -319,7 +288,7 @@ public class AOneBlock extends GameModeAddon {
 	 *
 	 * @return the phManager
 	 */
-	public PlaceholdersManager getPlaceholdersManager() {
+    public AOneBlockPlaceholders getPlaceholdersManager() {
 		return phManager;
 	}
 
