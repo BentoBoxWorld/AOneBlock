@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.Objects;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.World.Environment;
 import org.bukkit.WorldCreator;
@@ -24,6 +25,7 @@ import world.bentobox.aoneblock.listeners.InfoListener;
 import world.bentobox.aoneblock.listeners.ItemsAdderListener;
 import world.bentobox.aoneblock.listeners.JoinLeaveListener;
 import world.bentobox.aoneblock.listeners.NoBlockHandler;
+import world.bentobox.aoneblock.listeners.StartSafetyListener;
 import world.bentobox.aoneblock.oneblocks.OneBlockCustomBlockCreator;
 import world.bentobox.aoneblock.oneblocks.OneBlocksManager;
 import world.bentobox.aoneblock.oneblocks.customblock.ItemsAdderCustomBlock;
@@ -32,6 +34,9 @@ import world.bentobox.aoneblock.requests.LocationStatsHandler;
 import world.bentobox.bentobox.api.addons.GameModeAddon;
 import world.bentobox.bentobox.api.configuration.Config;
 import world.bentobox.bentobox.api.configuration.WorldSettings;
+import world.bentobox.bentobox.api.flags.Flag;
+import world.bentobox.bentobox.api.flags.Flag.Mode;
+import world.bentobox.bentobox.api.flags.Flag.Type;
 import world.bentobox.bentobox.database.objects.Island;
 
 /**
@@ -53,6 +58,14 @@ public class AOneBlock extends GameModeAddon {
 	private OneBlocksManager oneBlockManager;
     private AOneBlockPlaceholders phManager;
 	private HoloListener holoListener;
+	
+	// Flag
+    public final Flag START_SAFETY = new Flag.Builder("START_SAFETY", Material.BAMBOO_BLOCK)
+            .mode(Mode.BASIC)
+            .type(Type.WORLD_SETTING)
+            .listener(new StartSafetyListener(this))
+            .defaultSetting(false)
+            .build();
 
 	@Override
 	public void onLoad() {
@@ -73,10 +86,13 @@ public class AOneBlock extends GameModeAddon {
 			// Register commands
 			playerCommand = new PlayerCommand(this);
 			adminCommand = new AdminCommand(this);
+            // Register flag with BentoBox
+            // Register protection flag with BentoBox
+            getPlugin().getFlagsManager().registerFlag(this, START_SAFETY);
 		}
 	}
 
-	private boolean loadSettings() {
+    private boolean loadSettings() {
 		// Load settings again to get worlds
 		settings = configObject.loadConfigObject();
 		if (settings == null) {
@@ -305,4 +321,18 @@ public class AOneBlock extends GameModeAddon {
 	public boolean hasItemsAdder() {
 		return hasItemsAdder;
 	}
+
+    /**
+     * Set the addon's world. Used only for testing.
+     * @param world world
+     */
+    public void setIslandWorld(World world) {
+        this.islandWorld = world;
+
+    }
+
+    public void setSettings(Settings settings) {
+        this.settings = settings;
+    }
+
 }
