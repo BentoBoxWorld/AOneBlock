@@ -3,6 +3,17 @@
 # the one at http://yaml-online-parser.appspot.com                                        #
 ###########################################################################################
 
+protection:
+  flags:
+    START_SAFETY:
+      name: Starting Safety
+      description: |
+        &b Prevents new players
+        &b from moving for 1 minute
+        &b so they don't fall off.
+      hint: "&c Movement blocked for safety for [number] more seconds!"
+      free-to-move: "&a You are free to move. Be careful!"
+        
 aoneblock:
   commands:
     admin:
