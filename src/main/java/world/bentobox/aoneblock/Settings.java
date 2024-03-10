@@ -120,7 +120,7 @@ public class Settings implements WorldSettings {
     @ConfigComment("Block identification appearance.")
     @ConfigComment("Size of particles. Default is 0.7. Must be greater than 0.")
     @ConfigEntry(path = "world.block-id.particle-size")
-    private Float particleSize = 0.7F;
+    private Double particleSize = 0.7;
     @ConfigComment("Density of particles - Value from 0.1 to 1. Default is 0.5. Smaller values are more dense, higher are less.")
     @ConfigEntry(path = "world.block-id.particle-density")
     private Double particleDensity = 0.5D;
@@ -2097,12 +2097,12 @@ public class Settings implements WorldSettings {
     /**
      * @return the particleSize
      */
-    public Float getParticleSize() {
+    public Double getParticleSize() {
         if (particleSize == null) {
-            particleSize = 0.8F;
+            particleSize = 0.8;
         }
-        if (particleSize < 0F) {
-            particleSize = 0F;
+        if (particleSize < 0.0) {
+            particleSize = 0.0;
         }
         return particleSize;
     }
@@ -2111,7 +2111,7 @@ public class Settings implements WorldSettings {
     /**
      * @param particleSize the particleSize to set
      */
-    public void setParticleSize(Float particleSize) {
+    public void setParticleSize(Double particleSize) {
         this.particleSize = particleSize;
     }
 
