@@ -9,6 +9,7 @@ import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -77,6 +78,7 @@ public class BlockProtectTest {
         
         // Location
         when(location.getWorld()).thenReturn(world);
+        when(location.clone()).thenReturn(location);
         
         // Block
         when(block.getWorld()).thenReturn(world);
@@ -116,7 +118,7 @@ public class BlockProtectTest {
         bp.onBlockDamage(blockDamageEvent);
         verify(addon).inWorld(world);
         verify(im).getIslandAt(location);
-        verify(world).spawnParticle(eq(Particle.REDSTONE), eq(null), eq(5), 
+        verify(world, times(48)).spawnParticle(eq(Particle.REDSTONE), eq(null), eq(5),
                 eq(0.1D), eq(0D), eq(0.1D), eq(1D), any(Particle.DustOptions.class));
     }
     
