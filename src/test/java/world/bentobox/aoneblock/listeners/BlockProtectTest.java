@@ -42,6 +42,7 @@ import org.mockito.Mock;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import world.bentobox.aoneblock.AOneBlock;
+import world.bentobox.aoneblock.Settings;
 import world.bentobox.bentobox.database.objects.Island;
 import world.bentobox.bentobox.managers.IslandsManager;
 
@@ -89,6 +90,9 @@ public class BlockProtectTest {
         when(island.getCenter()).thenReturn(location);
         when(im.getIslandAt(any())).thenReturn(Optional.of(island));
             
+        // Settings
+        Settings settings = new Settings();
+        when(addon.getSettings()).thenReturn(settings);
         // Class under test
         bp = new BlockProtect(addon);
     }
@@ -118,7 +122,7 @@ public class BlockProtectTest {
         bp.onBlockDamage(blockDamageEvent);
         verify(addon).inWorld(world);
         verify(im).getIslandAt(location);
-        verify(world, times(48)).spawnParticle(eq(Particle.REDSTONE), eq(null), eq(5),
+        verify(world, times(80)).spawnParticle(eq(Particle.REDSTONE), eq(null), eq(5),
                 eq(0.1D), eq(0D), eq(0.1D), eq(1D), any(Particle.DustOptions.class));
     }
     
