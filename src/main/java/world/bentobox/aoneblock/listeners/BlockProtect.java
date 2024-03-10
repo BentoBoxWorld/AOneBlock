@@ -65,7 +65,7 @@ public class BlockProtect implements Listener {
                 for (double z = -0.5; z < 1.5; z += addon.getSettings().getParticleDensity()) {
                         location.getWorld().spawnParticle(p, location.clone().add(new Vector(x, y, z)), 5,
                                 0.1, 0, 0.1, 1, new Particle.DustOptions(addon.getSettings().getParticleColor(),
-                                        addon.getSettings().getParticleSize()));
+                                    addon.getSettings().getParticleSize().floatValue()));
 
                 }
             }
