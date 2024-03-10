@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.bukkit.Color;
 import org.bukkit.Difficulty;
 import org.bukkit.GameMode;
 import org.bukkit.block.Biome;
@@ -115,6 +116,18 @@ public class Settings implements WorldSettings {
     @ConfigComment("Used only if the Starting Safety world setting is active.")
     @ConfigEntry(path = "world.starting-safety-duration")
     private int startingSafetyDuration = 10;
+
+    @ConfigComment("Block identification appearance.")
+    @ConfigComment("Size of particles. Default is 0.7. Must be greater than 0.")
+    @ConfigEntry(path = "world.block-id.particle-size")
+    private Float particleSize = 0.7F;
+    @ConfigComment("Density of particles - Value from 0.1 to 1. Default is 0.5. Smaller values are more dense, higher are less.")
+    @ConfigEntry(path = "world.block-id.particle-density")
+    private Double particleDensity = 0.5D;
+    @ConfigComment("Color of particles")
+    @ConfigEntry(path = "world.block-id.particle-color")
+    private Color particleColor = Color.GREEN;
+
 
     @ConfigComment("Clear blocks when spawning mobs.")
     @ConfigComment("Mobs break blocks when they spawn is to prevent players from building a box around the magic block,")
@@ -2079,5 +2092,66 @@ public class Settings implements WorldSettings {
      */
     public void setStartingSafetyDuration(int startingSafetyDuration) {
         this.startingSafetyDuration = startingSafetyDuration;
+    }
+
+    /**
+     * @return the particleSize
+     */
+    public Float getParticleSize() {
+        if (particleSize == null) {
+            particleSize = 0.8F;
+        }
+        if (particleSize < 0F) {
+            particleSize = 0F;
+        }
+        return particleSize;
+    }
+
+
+    /**
+     * @param particleSize the particleSize to set
+     */
+    public void setParticleSize(Float particleSize) {
+        this.particleSize = particleSize;
+    }
+
+    /**
+     * @return the particleColor
+     */
+    public Color getParticleColor() {
+        if (particleColor == null) {
+            particleColor = Color.GREEN;
+        }
+        return particleColor;
+    }
+
+    /**
+     * @param particleColor the particleColor to set
+     */
+    public void setParticleColor(Color particleColor) {
+        this.particleColor = particleColor;
+    }
+
+    /**
+     * @return the particleDensity
+     */
+    public Double getParticleDensity() {
+        if (particleDensity == null) {
+            particleDensity = 0.5;
+        }
+        if (particleDensity < 0.1D) {
+            particleDensity = 0.1D;
+        }
+        if (particleDensity > 1D) {
+            particleDensity = 1D;
+        }
+        return particleDensity;
+    }
+
+    /**
+     * @param particleDensity the particleDensity to set
+     */
+    public void setParticleDensity(Double particleDensity) {
+        this.particleDensity = particleDensity;
     }
 }

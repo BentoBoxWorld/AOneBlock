@@ -1,5 +1,8 @@
 package world.bentobox.aoneblock.listeners;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
 import org.bukkit.Color;
@@ -24,6 +27,10 @@ import world.bentobox.bentobox.database.objects.Island;
 
 public class BlockProtect implements Listener {
 
+    public static final Color GREEN = Color.fromBGR(0, 100, 0);
+    private static final List<Particle> PARTICLES = new ArrayList<>(List.of(Particle.REDSTONE));
+    private Iterator<Particle> particleIterator = Collections.emptyIterator();
+
     private final AOneBlock addon;
 
     /**
@@ -44,8 +51,25 @@ public class BlockProtect implements Listener {
         }
         Block block = e.getBlock();
         Location l = block.getLocation();
-        addon.getIslands().getIslandAt(l).filter(i -> l.equals(i.getCenter())).ifPresent(i ->
-        block.getWorld().spawnParticle(Particle.REDSTONE, l.add(new Vector(0.5, 1.0, 0.5)), 5, 0.1, 0, 0.1, 1, new Particle.DustOptions(Color.fromBGR(0,100,0), 1)));
+        addon.getIslands().getIslandAt(l).map(Island::getCenter).filter(l::equals).ifPresent(this::showSparkles);
+    }
+
+    public void showSparkles(Location location) {
+        if (!particleIterator.hasNext()) {
+            Collections.shuffle(PARTICLES);
+            particleIterator = PARTICLES.iterator();
+        }
+        Particle p = particleIterator.next();
+        for (double x = -0.5; x <= 1.5; x += addon.getSettings().getParticleDensity()) {
+            for (double y = 0.0; y <= 1.5; y += addon.getSettings().getParticleDensity()) {
+                for (double z = -0.5; z < 1.5; z += addon.getSettings().getParticleDensity()) {
+                        location.getWorld().spawnParticle(p, location.clone().add(new Vector(x, y, z)), 5,
+                                0.1, 0, 0.1, 1, new Particle.DustOptions(addon.getSettings().getParticleColor(),
+                                        addon.getSettings().getParticleSize()));
+
+                }
+            }
+        }
     }
 
     /**

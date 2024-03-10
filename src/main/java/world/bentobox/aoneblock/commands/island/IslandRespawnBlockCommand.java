@@ -3,12 +3,12 @@ package world.bentobox.aoneblock.commands.island;
 import java.util.List;
 
 import org.bukkit.Bukkit;
-import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.util.Vector;
 
+import world.bentobox.aoneblock.listeners.BlockProtect;
 import world.bentobox.bentobox.api.commands.CompositeCommand;
 import world.bentobox.bentobox.api.user.User;
 import world.bentobox.bentobox.database.objects.Island;
@@ -20,6 +20,7 @@ import world.bentobox.bentobox.util.Util;
  */
 public class IslandRespawnBlockCommand extends CompositeCommand
 {
+
     /**
      * Instantiates a new Island respawn block command.
      *
@@ -83,32 +84,14 @@ public class IslandRespawnBlockCommand extends CompositeCommand
         }
         else
         {
-            // Spawn 6 particles where block is located.
-            island.getWorld().spawnParticle(Particle.REDSTONE,
-                island.getCenter().add(new Vector(0.5, 1.0, 0.5)),
-                5, 0.1, 0, 0.1, 1,
-                new Particle.DustOptions(Color.fromBGR(0, 100, 0), 1));
-            island.getWorld().spawnParticle(Particle.REDSTONE,
-                island.getCenter().add(new Vector(1.0, 0.5, 0.5)),
-                5, 0.1, 0, 0.1, 1,
-                new Particle.DustOptions(Color.fromBGR(0, 100, 0), 1));
-            island.getWorld().spawnParticle(Particle.REDSTONE,
-                island.getCenter().add(new Vector(0.5, 0.5, 1.0)),
-                5, 0.1, 0, 0.1, 1,
-                new Particle.DustOptions(Color.fromBGR(0, 100, 0), 1));
-            island.getWorld().spawnParticle(Particle.REDSTONE,
-                island.getCenter().add(new Vector(0.5, 0.0, 0.5)),
-                5, 0.1, 0, 0.1, 1,
-                new Particle.DustOptions(Color.fromBGR(0, 100, 0), 1));
-            island.getWorld().spawnParticle(Particle.REDSTONE,
-                island.getCenter().add(new Vector(0.0, 0.5, 0.5)),
-                5, 0.1, 0, 0.1, 1,
-                new Particle.DustOptions(Color.fromBGR(0, 100, 0), 1));
-            island.getWorld().spawnParticle(Particle.REDSTONE,
-                island.getCenter().add(new Vector(0.5, 0.5, 0.0)),
-                5, 0.1, 0, 0.1, 1,
-                new Particle.DustOptions(Color.fromBGR(0, 100, 0), 1));
-
+            for (double x = 0.0; x <= 1.0; x += 0.5) {
+                for (double y = 0.0; y <= 1.0; y += 0.5) {
+                    for (double z = 0.0; z < 1.0; z += 0.5) {
+                        island.getWorld().spawnParticle(Particle.REDSTONE, island.getCenter().add(new Vector(x, y, z)),
+                                5, 0.1, 0, 0.1, 1, new Particle.DustOptions(BlockProtect.GREEN, 1));
+                    }
+                }
+            }
             user.sendMessage("aoneblock.commands.respawn-block.block-exist");
         }
 
