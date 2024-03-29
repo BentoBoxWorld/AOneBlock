@@ -13,7 +13,6 @@ import org.bukkit.Difficulty;
 import org.bukkit.GameMode;
 import org.bukkit.block.Biome;
 import org.bukkit.entity.EntityType;
-import org.bukkit.event.inventory.ClickType;
 
 import com.google.common.base.Enums;
 
@@ -120,9 +119,9 @@ public class Settings implements WorldSettings {
 
     @ConfigComment("Block identification appearance.")
     @ConfigComment("Click type that will make particles appear. Options are:")
-    @ConfigComment("LEFT (default) or RIGHT")
+    @ConfigComment("LEFT (default), RIGHT, or NONE")
     @ConfigEntry(path = "world.block-id.click-type")
-    private String clickType = ClickType.LEFT.name();
+    private String clickType = "LEFT";
 
     @ConfigComment("Size of particles. Default is 0.5. Must be greater than 0.")
     @ConfigEntry(path = "world.block-id.particle-size")
@@ -2165,7 +2164,8 @@ public class Settings implements WorldSettings {
      * @return the clickType
      */
     public String getClickType() {
-        if (clickType == null || (!clickType.equalsIgnoreCase("LEFT") && !clickType.equalsIgnoreCase("RIGHT"))) {
+        if (clickType == null || (!clickType.equalsIgnoreCase("LEFT") && !clickType.equalsIgnoreCase("RIGHT")
+                && !clickType.equalsIgnoreCase("NONE"))) {
             clickType = "LEFT";
         }
         return clickType;

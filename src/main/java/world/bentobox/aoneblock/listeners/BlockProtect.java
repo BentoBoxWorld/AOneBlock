@@ -47,12 +47,14 @@ public class BlockProtect implements Listener {
      */
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onBlockDamage(PlayerInteractEvent e) {
-        if (!addon.inWorld(e.getPlayer().getWorld()) || e.getClickedBlock() == null) {
+        Action action = e.getAction();
+        String clickType = addon.getSettings().getClickType();
+
+        if (clickType.equalsIgnoreCase("NONE") || !addon.inWorld(e.getPlayer().getWorld())
+                || e.getClickedBlock() == null) {
             return;
         }
 
-        Action action = e.getAction();
-        String clickType = addon.getSettings().getClickType();
         if ((action == Action.LEFT_CLICK_BLOCK && clickType.equalsIgnoreCase("LEFT"))
                 || (action == Action.RIGHT_CLICK_BLOCK && clickType.equalsIgnoreCase("RIGHT"))) {
 

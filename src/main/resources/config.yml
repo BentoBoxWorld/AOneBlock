@@ -64,7 +64,7 @@ world:
   block-id:
     # Block identification appearance.
     # Click type that will make particles appear. Options are:
-    # LEFT (default) or RIGHT
+    # LEFT (default), RIGHT, or NONE
     click-type: RIGHT
     # Size of particles. Default is 0.7. Must be greater than 0.
     particle-size: 0.5
