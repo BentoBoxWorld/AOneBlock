@@ -112,18 +112,23 @@ public class Settings implements WorldSettings {
     @ConfigEntry(path = "world.hologram-duration")
     private int hologramDuration = 10;
     
-    @ConfigComment("Duration in seonds that players cannot move when they start a new one block.")
+    @ConfigComment("Duration in seconds that players cannot move when they start a new one block.")
     @ConfigComment("Used only if the Starting Safety world setting is active.")
     @ConfigEntry(path = "world.starting-safety-duration")
     private int startingSafetyDuration = 10;
 
     @ConfigComment("Block identification appearance.")
-    @ConfigComment("Size of particles. Default is 0.7. Must be greater than 0.")
+    @ConfigComment("Click type that will make particles appear. Options are:")
+    @ConfigComment("LEFT (default), RIGHT, or NONE")
+    @ConfigEntry(path = "world.block-id.click-type")
+    private String clickType = "LEFT";
+
+    @ConfigComment("Size of particles. Default is 0.5. Must be greater than 0.")
     @ConfigEntry(path = "world.block-id.particle-size")
-    private Double particleSize = 0.7;
-    @ConfigComment("Density of particles - Value from 0.1 to 1. Default is 0.5. Smaller values are more dense, higher are less.")
+    private Double particleSize = 0.5;
+    @ConfigComment("Density of particles - Value from 0.1 to 1. Default is 0.65. Smaller values are more dense, higher are less.")
     @ConfigEntry(path = "world.block-id.particle-density")
-    private Double particleDensity = 0.5D;
+    private Double particleDensity = 0.65D;
     @ConfigComment("Color of particles")
     @ConfigEntry(path = "world.block-id.particle-color")
     private Color particleColor = Color.GREEN;
@@ -2153,5 +2158,22 @@ public class Settings implements WorldSettings {
      */
     public void setParticleDensity(Double particleDensity) {
         this.particleDensity = particleDensity;
+    }
+
+    /**
+     * @return the clickType
+     */
+    public String getClickType() {
+        if (clickType == null || (!clickType.equalsIgnoreCase("LEFT") && !clickType.equalsIgnoreCase("RIGHT")
+                && !clickType.equalsIgnoreCase("NONE"))) {
+            clickType = "LEFT";
+        }
+        return clickType;
+    }
+    /**
+     * @param clickType the clickType to set
+     */
+    public void setClickType(String clickType) {
+        this.clickType = clickType;
     }
 }
