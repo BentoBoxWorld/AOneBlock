@@ -124,12 +124,12 @@ public class Settings implements WorldSettings {
     @ConfigEntry(path = "world.block-id.click-type")
     private String clickType = ClickType.LEFT.name();
 
-    @ConfigComment("Size of particles. Default is 0.7. Must be greater than 0.")
+    @ConfigComment("Size of particles. Default is 0.5. Must be greater than 0.")
     @ConfigEntry(path = "world.block-id.particle-size")
-    private Double particleSize = 0.7;
-    @ConfigComment("Density of particles - Value from 0.1 to 1. Default is 0.5. Smaller values are more dense, higher are less.")
+    private Double particleSize = 0.5;
+    @ConfigComment("Density of particles - Value from 0.1 to 1. Default is 0.65. Smaller values are more dense, higher are less.")
     @ConfigEntry(path = "world.block-id.particle-density")
-    private Double particleDensity = 0.5D;
+    private Double particleDensity = 0.65D;
     @ConfigComment("Color of particles")
     @ConfigEntry(path = "world.block-id.particle-color")
     private Color particleColor = Color.GREEN;

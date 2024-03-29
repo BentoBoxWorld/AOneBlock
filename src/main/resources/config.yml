@@ -33,7 +33,7 @@ aoneblock:
     set-count-command: setCount
     # How long a player must wait until they can use the setCount command again. In minutes.
     # This is the command that is run from the phases panel.
-    # Added since 1.13.0
+    # Added since 1.13.0.
     set-count-cooldown: 5
     # The command label that allows to check if magic block is present and respawns it if not.
     # By default it is 'respawnBlock check'.
@@ -58,11 +58,29 @@ world:
   # Duration in seconds that phase holograms will exist after being displayed, if used.
   # If set to 0, then holograms will persist until cleared some other way.
   hologram-duration: 10
+  # Duration in seonds that players cannot move when they start a new one block.
+  # Used only if the Starting Safety world setting is active.
+  starting-safety-duration: 10
+  block-id:
+    # Block identification appearance.
+    # Click type that will make particles appear. Options are:
+    # LEFT (default) or RIGHT
+    click-type: RIGHT
+    # Size of particles. Default is 0.7. Must be greater than 0.
+    particle-size: 0.5
+    # Density of particles - Value from 0.1 to 1. Default is 0.5. Smaller values are more dense, higher are less.
+    particle-density: 0.65
+    # Color of particles
+    particle-color:
+      ==: Color
+      ALPHA: 255
+      RED: 0
+      BLUE: 0
+      GREEN: 128
   # Clear blocks when spawning mobs.
   # Mobs break blocks when they spawn is to prevent players from building a box around the magic block,
   # having the mob spawn, and then die by suffocation, i.e., it's a cheat prevention.
-  clear-blocks: true
-  
+  mobs-clear-blocks: true
   spawn-limits:
     # Spawn limits. These override the limits set in bukkit.yml
     # If set to a negative number, the server defaults will be used
@@ -174,34 +192,37 @@ world:
   # Mob white list - these mobs will NOT be removed when logging in or doing /island
   remove-mobs-whitelist:
   - ENDERMAN
-  - WITHER
   - ZOMBIE_VILLAGER
+  - WITHER
   # World flags. These are boolean settings for various flags for this world
   flags:
     CREEPER_DAMAGE: true
     OBSIDIAN_SCOOPING: true
-    PISTON_PUSH: false
     ISLAND_RESPAWN: true
     CREEPER_GRIEFING: false
     VISITOR_KEEP_INVENTORY: false
+    PETS_STAY_AT_HOME: true
+    NATURAL_SPAWNING_OUTSIDE_RANGE: true
+    LIQUIDS_FLOWING_OUT: false
+    REMOVE_MOBS: true
+    ENDER_CHEST: false
+    TREES_GROWING_OUTSIDE_RANGE: false
+    WITHER_DAMAGE: false
+    PISTON_PUSH: false
     COARSE_DIRT_TILLING: true
     ENDERMAN_GRIEFING: true
     CLEAN_SUPER_FLAT: false
     CHEST_DAMAGE: false
     PREVENT_TELEPORT_WHEN_FALLING: false
-    NATURAL_SPAWNING_OUTSIDE_RANGE: true
+    START_SAFETY: false
     ENTER_EXIT_MESSAGES: true
+    ALLOW_MOVE_BOX: true
     ENDERMAN_DEATH_DROP: true
-    LIQUIDS_FLOWING_OUT: false
     OFFLINE_REDSTONE: true
     REMOVE_END_EXIT_ISLAND: true
     OFFLINE_GROWTH: true
-    REMOVE_MOBS: true
-    ENDER_CHEST: false
     ITEM_FRAME_DAMAGE: false
-    TREES_GROWING_OUTSIDE_RANGE: false
     SPAWNER_SPAWN_EGGS: true
-    WITHER_DAMAGE: false
   # These are the default protection settings for new islands.
   # The value is the minimum island rank required allowed to do the action
   # Ranks are the following:
@@ -213,6 +234,7 @@ world:
   #   OWNER     = 1000
   default-island-flags:
     HURT_ANIMALS: 500
+    LOOM: 500
     DRAGON_EGG: 500
     REDSTONE: 500
     BUCKET: 500
@@ -228,6 +250,8 @@ world:
     END_PORTAL: 500
     BREEDING: 500
     HURT_VILLAGERS: 500
+    BOOKSHELF: 500
+    HARVEST: 500
     FROST_WALKER: 500
     TURTLE_EGGS: 500
     COLLECT_LAVA: 500
@@ -240,6 +264,7 @@ world:
     NAME_TAG: 500
     ARMOR_STAND: 500
     CHANGE_SETTINGS: 1000
+    SIGN_EDITING: 500
     TRADING: 0
     EGGS: 500
     ITEM_DROP: 0
@@ -250,15 +275,19 @@ world:
     SCULK_SENSOR: 500
     LECTERN: 500
     SHULKER_BOX: 500
+    GRINDSTONE: 500
     ITEM_PICKUP: 0
     CROP_TRAMPLE: 500
     DROPPER: 500
     BREWING: 500
+    MOVE_BOX: 1000
     TNT_PRIMING: 500
+    PARKOUR_CREATIVE: 500
     COLLECT_WATER: 500
     AXOLOTL_SCOOPING: 500
     BUTTON: 500
     COMPOSTER: 500
+    STONECUTTING: 500
     FIRE_EXTINGUISH: 500
     COMMAND_RANKS: 500
     BEACON: 500
@@ -270,6 +299,7 @@ world:
     HIVE: 500
     ITEM_FRAME: 500
     PLACE_BLOCKS: 500
+    CROP_PLANTING: 500
     CRAFTING: 0
     SHEARING: 500
     ENCHANTING: 0
@@ -281,6 +311,7 @@ world:
     DISPENSER: 500
     SCULK_SHRIEKER: 500
     GATE: 0
+    SMITHING: 500
     EXPERIENCE_PICKUP: 500
     HOPPER: 500
     LEASH: 500
@@ -292,13 +323,16 @@ world:
     POTION_THROWING: 500
     BARREL: 500
     COLLECT_POWDERED_SNOW: 500
+    CARTOGRAPHY: 500
   # These are the default settings for new islands
   default-island-settings:
     PVP_END: false
     PVP_NETHER: false
     LEAF_DECAY: true
+    ENDERMAN_TELEPORT: true
     ANIMAL_NATURAL_SPAWN: true
     MONSTER_NATURAL_SPAWN: true
+    SHULKER_TELEPORT: true
     FIRE_SPREAD: true
     FIRE_BURNING: true
     PVP_OVERWORLD: false
@@ -548,4 +582,3 @@ protection:
 do-not-edit-these-settings:
   # These settings should not be edited
   reset-epoch: 0
-
