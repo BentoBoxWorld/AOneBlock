@@ -112,7 +112,7 @@ public class Settings implements WorldSettings {
     @ConfigEntry(path = "world.hologram-duration")
     private int hologramDuration = 10;
     
-    @ConfigComment("Duration in seonds that players cannot move when they start a new one block.")
+    @ConfigComment("Duration in seconds that players cannot move when they start a new one block.")
     @ConfigComment("Used only if the Starting Safety world setting is active.")
     @ConfigEntry(path = "world.starting-safety-duration")
     private int startingSafetyDuration = 10;

@@ -58,7 +58,7 @@ world:
   # Duration in seconds that phase holograms will exist after being displayed, if used.
   # If set to 0, then holograms will persist until cleared some other way.
   hologram-duration: 10
-  # Duration in seonds that players cannot move when they start a new one block.
+  # Duration in seconds that players cannot move when they start a new one block.
   # Used only if the Starting Safety world setting is active.
   starting-safety-duration: 10
   block-id:
