@@ -15,13 +15,11 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
-import org.bukkit.event.block.BlockDamageEvent;
 import org.bukkit.event.block.BlockPistonExtendEvent;
 import org.bukkit.event.block.BlockPistonRetractEvent;
 import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.EntitySpawnEvent;
-import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.util.Vector;
 
@@ -48,30 +46,13 @@ public class BlockProtect implements Listener {
      * @param e - event
      */
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
-    public void onBlockDamage(BlockDamageEvent e) {
-        if (!addon.inWorld(e.getBlock().getWorld())
-                && addon.getSettings().getClickType().equals(ClickType.LEFT.name())) {
-            return;
-        }
-        Block block = e.getBlock();
-        Location l = block.getLocation();
-        addon.getIslands().getIslandAt(l).map(Island::getCenter).filter(l::equals).ifPresent(this::showSparkles);
-
-    }
-
-    /**
-     * Show particles when block is hit
-     * @param e - event
-     */
-    @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onBlockDamage(PlayerInteractEvent e) {
-        if (!addon.inWorld(e.getPlayer().getWorld())) {
+        if (!addon.inWorld(e.getPlayer().getWorld()) || e.getClickedBlock() == null) {
             return;
         }
 
         Action action = e.getAction();
         String clickType = addon.getSettings().getClickType();
-
         if ((action == Action.LEFT_CLICK_BLOCK && clickType.equalsIgnoreCase("LEFT"))
                 || (action == Action.RIGHT_CLICK_BLOCK && clickType.equalsIgnoreCase("RIGHT"))) {
 
