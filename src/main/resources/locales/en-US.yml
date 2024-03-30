@@ -3,6 +3,17 @@
 # the one at http://yaml-online-parser.appspot.com                                        #
 ###########################################################################################
 
+protection:
+  flags:
+    START_SAFETY:
+      name: Starting Safety
+      description: |
+        &b Prevents new players
+        &b from moving for 1 minute
+        &b so they don't fall off.
+      hint: "&c Movement blocked for safety for [number] more seconds!"
+      free-to-move: "&a You are free to move. Be careful!"
+        
 aoneblock:
   commands:
     admin:
@@ -29,7 +40,7 @@ aoneblock:
       description: show the block count and phase
       info: "&a You are on block &b [number] in the &a [name] phase"
     info:
-      count: "&a Island is on block &b [number]&a in the &b [name] &a phase. Lifetime count &b [lifetime] &a."
+      count: "&a Island is on block &b [number] &a in the &b [name] &a phase. Lifetime count &b [lifetime] &a."
     phases:
       description: show a list of all the phases
       title: "&2 OneBlock Phases"

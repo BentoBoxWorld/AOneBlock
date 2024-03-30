@@ -9,6 +9,7 @@ import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -26,12 +27,13 @@ import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
-import org.bukkit.event.block.BlockDamageEvent;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockPistonExtendEvent;
 import org.bukkit.event.block.BlockPistonRetractEvent;
 import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.EntitySpawnEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.junit.After;
 import org.junit.Before;
@@ -41,6 +43,7 @@ import org.mockito.Mock;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import world.bentobox.aoneblock.AOneBlock;
+import world.bentobox.aoneblock.Settings;
 import world.bentobox.bentobox.database.objects.Island;
 import world.bentobox.bentobox.managers.IslandsManager;
 
@@ -72,11 +75,14 @@ public class BlockProtectTest {
      */
     @Before
     public void setUp() throws Exception {
+
+        when(p.getWorld()).thenReturn(world);
         // In World
         when(addon.inWorld(world)).thenReturn(true);
         
         // Location
         when(location.getWorld()).thenReturn(world);
+        when(location.clone()).thenReturn(location);
         
         // Block
         when(block.getWorld()).thenReturn(world);
@@ -87,6 +93,9 @@ public class BlockProtectTest {
         when(island.getCenter()).thenReturn(location);
         when(im.getIslandAt(any())).thenReturn(Optional.of(island));
             
+        // Settings
+        Settings settings = new Settings();
+        when(addon.getSettings()).thenReturn(settings);
         // Class under test
         bp = new BlockProtect(addon);
     }
@@ -112,11 +121,12 @@ public class BlockProtectTest {
     @Test
     public void testOnBlockDamage() {
         ItemStack item = new ItemStack(Material.DIAMOND_PICKAXE);
-        BlockDamageEvent blockDamageEvent = new BlockDamageEvent(p, block, item, false);
+        PlayerInteractEvent blockDamageEvent = new PlayerInteractEvent(p, Action.LEFT_CLICK_BLOCK, item, block,
+                BlockFace.UP);
         bp.onBlockDamage(blockDamageEvent);
         verify(addon).inWorld(world);
         verify(im).getIslandAt(location);
-        verify(world).spawnParticle(eq(Particle.REDSTONE), eq(null), eq(5), 
+        verify(world, times(48)).spawnParticle(eq(Particle.REDSTONE), eq(null), eq(5),
                 eq(0.1D), eq(0D), eq(0.1D), eq(1D), any(Particle.DustOptions.class));
     }
     
@@ -125,9 +135,10 @@ public class BlockProtectTest {
      */
     @Test
     public void testOnBlockDamageWrongWorld() {
-        when(block.getWorld()).thenReturn(mock(World.class));
+        when(p.getWorld()).thenReturn(mock(World.class));
         ItemStack item = new ItemStack(Material.DIAMOND_PICKAXE);
-        BlockDamageEvent blockDamageEvent = new BlockDamageEvent(p, block, item, false);
+        PlayerInteractEvent blockDamageEvent = new PlayerInteractEvent(p, Action.LEFT_CLICK_BLOCK, item, block,
+                BlockFace.UP);
         bp.onBlockDamage(blockDamageEvent);
         verify(im, never()).getIslandAt(location);
         verify(world, never()).spawnParticle(any(Particle.class), any(Location.class),anyInt(), 
@@ -141,7 +152,8 @@ public class BlockProtectTest {
     public void testOnBlockDamageNotCenterMagicBlock() {
         when(block.getLocation()).thenReturn(mock(Location.class));
         ItemStack item = new ItemStack(Material.DIAMOND_PICKAXE);
-        BlockDamageEvent blockDamageEvent = new BlockDamageEvent(p, block, item, false);
+        PlayerInteractEvent blockDamageEvent = new PlayerInteractEvent(p, Action.LEFT_CLICK_BLOCK, item, block,
+                BlockFace.UP);
         bp.onBlockDamage(blockDamageEvent);
         verify(addon).inWorld(world);
         verify(im).getIslandAt(any(Location.class));

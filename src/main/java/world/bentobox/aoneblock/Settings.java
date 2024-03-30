@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.bukkit.Color;
 import org.bukkit.Difficulty;
 import org.bukkit.GameMode;
 import org.bukkit.block.Biome;
@@ -111,6 +112,28 @@ public class Settings implements WorldSettings {
     @ConfigEntry(path = "world.hologram-duration")
     private int hologramDuration = 10;
     
+    @ConfigComment("Duration in seconds that players cannot move when they start a new one block.")
+    @ConfigComment("Used only if the Starting Safety world setting is active.")
+    @ConfigEntry(path = "world.starting-safety-duration")
+    private int startingSafetyDuration = 10;
+
+    @ConfigComment("Block identification appearance.")
+    @ConfigComment("Click type that will make particles appear. Options are:")
+    @ConfigComment("LEFT (default), RIGHT, or NONE")
+    @ConfigEntry(path = "world.block-id.click-type")
+    private String clickType = "LEFT";
+
+    @ConfigComment("Size of particles. Default is 0.5. Must be greater than 0.")
+    @ConfigEntry(path = "world.block-id.particle-size")
+    private Double particleSize = 0.5;
+    @ConfigComment("Density of particles - Value from 0.1 to 1. Default is 0.65. Smaller values are more dense, higher are less.")
+    @ConfigEntry(path = "world.block-id.particle-density")
+    private Double particleDensity = 0.65D;
+    @ConfigComment("Color of particles")
+    @ConfigEntry(path = "world.block-id.particle-color")
+    private Color particleColor = Color.GREEN;
+
+
     @ConfigComment("Clear blocks when spawning mobs.")
     @ConfigComment("Mobs break blocks when they spawn is to prevent players from building a box around the magic block,")
     @ConfigComment("having the mob spawn, and then die by suffocation, i.e., it's a cheat prevention.")
@@ -2060,5 +2083,97 @@ public class Settings implements WorldSettings {
      */
     public void setClearBlocks(boolean clearBlocks) {
         this.clearBlocks = clearBlocks;
+    }
+
+    /**
+     * @return the startingSafetyDuration
+     */
+    public int getStartingSafetyDuration() {
+        return startingSafetyDuration;
+    }
+
+    /**
+     * @param startingSafetyDuration the startingSafetyDuration to set
+     */
+    public void setStartingSafetyDuration(int startingSafetyDuration) {
+        this.startingSafetyDuration = startingSafetyDuration;
+    }
+
+    /**
+     * @return the particleSize
+     */
+    public Double getParticleSize() {
+        if (particleSize == null) {
+            particleSize = 0.8;
+        }
+        if (particleSize < 0.0) {
+            particleSize = 0.0;
+        }
+        return particleSize;
+    }
+
+
+    /**
+     * @param particleSize the particleSize to set
+     */
+    public void setParticleSize(Double particleSize) {
+        this.particleSize = particleSize;
+    }
+
+    /**
+     * @return the particleColor
+     */
+    public Color getParticleColor() {
+        if (particleColor == null) {
+            particleColor = Color.GREEN;
+        }
+        return particleColor;
+    }
+
+    /**
+     * @param particleColor the particleColor to set
+     */
+    public void setParticleColor(Color particleColor) {
+        this.particleColor = particleColor;
+    }
+
+    /**
+     * @return the particleDensity
+     */
+    public Double getParticleDensity() {
+        if (particleDensity == null) {
+            particleDensity = 0.5;
+        }
+        if (particleDensity < 0.1D) {
+            particleDensity = 0.1D;
+        }
+        if (particleDensity > 1D) {
+            particleDensity = 1D;
+        }
+        return particleDensity;
+    }
+
+    /**
+     * @param particleDensity the particleDensity to set
+     */
+    public void setParticleDensity(Double particleDensity) {
+        this.particleDensity = particleDensity;
+    }
+
+    /**
+     * @return the clickType
+     */
+    public String getClickType() {
+        if (clickType == null || (!clickType.equalsIgnoreCase("LEFT") && !clickType.equalsIgnoreCase("RIGHT")
+                && !clickType.equalsIgnoreCase("NONE"))) {
+            clickType = "LEFT";
+        }
+        return clickType;
+    }
+    /**
+     * @param clickType the clickType to set
+     */
+    public void setClickType(String clickType) {
+        this.clickType = clickType;
     }
 }

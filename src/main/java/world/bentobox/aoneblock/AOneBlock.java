@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.Objects;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.World.Environment;
 import org.bukkit.WorldCreator;
@@ -24,6 +25,7 @@ import world.bentobox.aoneblock.listeners.InfoListener;
 import world.bentobox.aoneblock.listeners.ItemsAdderListener;
 import world.bentobox.aoneblock.listeners.JoinLeaveListener;
 import world.bentobox.aoneblock.listeners.NoBlockHandler;
+import world.bentobox.aoneblock.listeners.StartSafetyListener;
 import world.bentobox.aoneblock.oneblocks.OneBlockCustomBlockCreator;
 import world.bentobox.aoneblock.oneblocks.OneBlocksManager;
 import world.bentobox.aoneblock.oneblocks.customblock.ItemsAdderCustomBlock;
@@ -32,6 +34,9 @@ import world.bentobox.aoneblock.requests.LocationStatsHandler;
 import world.bentobox.bentobox.api.addons.GameModeAddon;
 import world.bentobox.bentobox.api.configuration.Config;
 import world.bentobox.bentobox.api.configuration.WorldSettings;
+import world.bentobox.bentobox.api.flags.Flag;
+import world.bentobox.bentobox.api.flags.Flag.Mode;
+import world.bentobox.bentobox.api.flags.Flag.Type;
 import world.bentobox.bentobox.database.objects.Island;
 
 /**
@@ -51,8 +56,16 @@ public class AOneBlock extends GameModeAddon {
 	private final Config<Settings> configObject = new Config<>(this, Settings.class);
 	private BlockListener blockListener;
 	private OneBlocksManager oneBlockManager;
-	private PlaceholdersManager phManager;
+    private AOneBlockPlaceholders phManager;
 	private HoloListener holoListener;
+	
+	// Flag
+    public final Flag START_SAFETY = new Flag.Builder("START_SAFETY", Material.BAMBOO_BLOCK)
+            .mode(Mode.BASIC)
+            .type(Type.WORLD_SETTING)
+            .listener(new StartSafetyListener(this))
+            .defaultSetting(false)
+            .build();
 
 	@Override
 	public void onLoad() {
@@ -73,10 +86,13 @@ public class AOneBlock extends GameModeAddon {
 			// Register commands
 			playerCommand = new PlayerCommand(this);
 			adminCommand = new AdminCommand(this);
+            // Register flag with BentoBox
+            // Register protection flag with BentoBox
+            getPlugin().getFlagsManager().registerFlag(this, START_SAFETY);
 		}
 	}
 
-	private boolean loadSettings() {
+    private boolean loadSettings() {
 		// Load settings again to get worlds
 		settings = configObject.loadConfigObject();
 		if (settings == null) {
@@ -105,7 +121,7 @@ public class AOneBlock extends GameModeAddon {
 		registerListener(new JoinLeaveListener(this));
 		registerListener(new InfoListener(this));
 		// Register placeholders
-		registerPlaceholders();
+        phManager = new AOneBlockPlaceholders(this, getPlugin().getPlaceholdersManager());
 
 		// Register request handlers
 		registerRequestHandler(new IslandStatsHandler(this));
@@ -128,37 +144,6 @@ public class AOneBlock extends GameModeAddon {
 			return true;
 		}
 		return false;
-	}
-
-	private void registerPlaceholders() {
-		phManager = new PlaceholdersManager(this);
-		getPlugin().getPlaceholdersManager().registerPlaceholder(this, "visited_island_phase",
-				phManager::getPhaseByLocation);
-		getPlugin().getPlaceholdersManager().registerPlaceholder(this, "visited_island_count",
-				phManager::getCountByLocation);
-		getPlugin().getPlaceholdersManager().registerPlaceholder(this, "my_island_phase", phManager::getPhase);
-		getPlugin().getPlaceholdersManager().registerPlaceholder(this, "my_island_count", phManager::getCount);
-		getPlugin().getPlaceholdersManager().registerPlaceholder(this, "visited_island_next_phase",
-				phManager::getNextPhaseByLocation);
-		getPlugin().getPlaceholdersManager().registerPlaceholder(this, "my_island_next_phase", phManager::getNextPhase);
-		getPlugin().getPlaceholdersManager().registerPlaceholder(this, "my_island_blocks_for_phase",
-				phManager::getPhaseBlocks);
-		getPlugin().getPlaceholdersManager().registerPlaceholder(this, "my_island_blocks_to_next_phase",
-				phManager::getNextPhaseBlocks);
-		getPlugin().getPlaceholdersManager().registerPlaceholder(this, "visited_island_blocks_to_next_phase",
-				phManager::getNextPhaseBlocksByLocation);
-		getPlugin().getPlaceholdersManager().registerPlaceholder(this, "my_island_percent_done",
-				phManager::getPercentDone);
-		getPlugin().getPlaceholdersManager().registerPlaceholder(this, "visited_island_percent_done",
-				phManager::getPercentDoneByLocation);
-		getPlugin().getPlaceholdersManager().registerPlaceholder(this, "my_island_done_scale", phManager::getDoneScale);
-		getPlugin().getPlaceholdersManager().registerPlaceholder(this, "visited_island_done_scale",
-				phManager::getDoneScaleByLocation);
-		// Since 1.10
-		getPlugin().getPlaceholdersManager().registerPlaceholder(this, "visited_island_lifetime_count",
-				phManager::getLifetimeByLocation);
-		getPlugin().getPlaceholdersManager().registerPlaceholder(this, "my_island_lifetime_count",
-				phManager::getLifetime);
 	}
 
 	@Override
@@ -319,7 +304,7 @@ public class AOneBlock extends GameModeAddon {
 	 *
 	 * @return the phManager
 	 */
-	public PlaceholdersManager getPlaceholdersManager() {
+    public AOneBlockPlaceholders getPlaceholdersManager() {
 		return phManager;
 	}
 
@@ -336,4 +321,18 @@ public class AOneBlock extends GameModeAddon {
 	public boolean hasItemsAdder() {
 		return hasItemsAdder;
 	}
+
+    /**
+     * Set the addon's world. Used only for testing.
+     * @param world world
+     */
+    public void setIslandWorld(World world) {
+        this.islandWorld = world;
+
+    }
+
+    public void setSettings(Settings settings) {
+        this.settings = settings;
+    }
+
 }
