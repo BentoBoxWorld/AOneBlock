@@ -65,10 +65,10 @@ world:
     # Block identification appearance.
     # Click type that will make particles appear. Options are:
     # LEFT (default), RIGHT, or NONE
-    click-type: RIGHT
-    # Size of particles. Default is 0.7. Must be greater than 0.
+    click-type: LEFT
+    # Size of particles. Default is 0.5. Must be greater than 0.
     particle-size: 0.5
-    # Density of particles - Value from 0.1 to 1. Default is 0.5. Smaller values are more dense, higher are less.
+    # Density of particles - Value from 0.1 to 1. Default is 0.65. Smaller values are more dense, higher are less.
     particle-density: 0.65
     # Color of particles
     particle-color:
@@ -123,6 +123,8 @@ world:
   # Island height - Lowest is 5.
   # It is the y coordinate of the bedrock block in the schem.
   island-height: 80
+  # Disallow team members from having their own islands.
+  disallow-team-member-islands: false
   # Use your own world generator for this world.
   # In this case, the plugin will not generate anything.
   # If used, you must specify the world name and generator in the bukkit.yml file.
@@ -191,9 +193,9 @@ world:
     create-obsidian-platform: false
   # Mob white list - these mobs will NOT be removed when logging in or doing /island
   remove-mobs-whitelist:
-  - ENDERMAN
-  - ZOMBIE_VILLAGER
   - WITHER
+  - ZOMBIE_VILLAGER
+  - ENDERMAN
   # World flags. These are boolean settings for various flags for this world
   flags:
     CREEPER_DAMAGE: true

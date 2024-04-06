@@ -192,6 +192,10 @@ public class Settings implements WorldSettings {
     @ConfigEntry(path = "world.island-height")
     private int islandHeight = 120;
 
+    @ConfigComment("Disallow team members from having their own islands.")
+    @ConfigEntry(path = "world.disallow-team-member-islands")
+    private boolean disallowTeamMemberIslands = false;
+
     @ConfigComment("Use your own world generator for this world.")
     @ConfigComment("In this case, the plugin will not generate anything.")
     @ConfigComment("If used, you must specify the world name and generator in the bukkit.yml file.")
@@ -2175,5 +2179,20 @@ public class Settings implements WorldSettings {
      */
     public void setClickType(String clickType) {
         this.clickType = clickType;
+    }
+
+    /**
+     * @return the disallowTeamMemberIslands
+     */
+    @Override
+    public boolean isDisallowTeamMemberIslands() {
+        return disallowTeamMemberIslands;
+    }
+
+    /**
+     * @param disallowTeamMemberIslands the disallowTeamMemberIslands to set
+     */
+    public void setDisallowTeamMemberIslands(boolean disallowTeamMemberIslands) {
+        this.disallowTeamMemberIslands = disallowTeamMemberIslands;
     }
 }
