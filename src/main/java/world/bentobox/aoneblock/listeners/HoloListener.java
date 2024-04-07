@@ -13,6 +13,7 @@ import org.bukkit.entity.TextDisplay;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.util.Vector;
 import org.eclipse.jdt.annotation.NonNull;
 
 import world.bentobox.aoneblock.AOneBlock;
@@ -50,7 +51,7 @@ public class HoloListener implements Listener {
     }
 
     private TextDisplay createHologram(Island island) {
-        Location pos = island.getCenter().clone().add(0.5, 1.1, 0.5);
+        Location pos = island.getCenter().clone().add(parseVector(addon.getSettings().getOffset()));
         World world = pos.getWorld();
         assert world != null;
 
@@ -61,6 +62,25 @@ public class HoloListener implements Listener {
         cachedHolograms.put(island, newDisplay);
 
         return newDisplay;
+    }
+
+    private static Vector parseVector(String str) {
+        if (str == null) {
+            return new Vector(0.5, 1.1, 0.5);
+        }
+        String[] parts = str.split(",");
+        if (parts.length != 3) {
+            return new Vector(0.5, 1.1, 0.5);
+        }
+
+        try {
+            double x = Double.parseDouble(parts[0].trim());
+            double y = Double.parseDouble(parts[1].trim());
+            double z = Double.parseDouble(parts[2].trim());
+            return new Vector(x, y, z);
+        } catch (NumberFormatException e) {
+            return new Vector(0.5, 1.1, 0.5);
+        }
     }
 
     private void clearIfInitialized(TextDisplay hologram) {
