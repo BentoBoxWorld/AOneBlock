@@ -23,7 +23,6 @@ import world.bentobox.aoneblock.listeners.BlockProtect;
 import world.bentobox.aoneblock.listeners.HoloListener;
 import world.bentobox.aoneblock.listeners.InfoListener;
 import world.bentobox.aoneblock.listeners.ItemsAdderListener;
-import world.bentobox.aoneblock.listeners.JoinLeaveListener;
 import world.bentobox.aoneblock.listeners.NoBlockHandler;
 import world.bentobox.aoneblock.listeners.StartSafetyListener;
 import world.bentobox.aoneblock.oneblocks.OneBlockCustomBlockCreator;
@@ -118,7 +117,6 @@ public class AOneBlock extends GameModeAddon {
 		registerListener(blockListener);
 		registerListener(new NoBlockHandler(this));
 		registerListener(new BlockProtect(this));
-		registerListener(new JoinLeaveListener(this));
 		registerListener(new InfoListener(this));
 		// Register placeholders
         phManager = new AOneBlockPlaceholders(this, getPlugin().getPlaceholdersManager());
@@ -148,17 +146,12 @@ public class AOneBlock extends GameModeAddon {
 
 	@Override
 	public void onDisable() {
-		// save cache
-		blockListener.saveCache();
-
 		// Clear holograms
 		holoListener.clear();
 	}
 
 	@Override
 	public void onReload() {
-		// save cache
-		blockListener.saveCache();
 		if (loadSettings()) {
 			log("Reloaded AOneBlock settings");
 			loadData();
