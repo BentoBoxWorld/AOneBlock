@@ -64,6 +64,8 @@ aoneblock:
     cooldown: "&c Next phase will be available in [number] seconds!"
   placeholders:
     infinite: Infinite
+    block-list-format: |
+      &7- &e [name]
   gui:
     titles:
       phases: '&0&l OneBlock Phases'

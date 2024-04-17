@@ -61,10 +61,12 @@ public class PlaceholdersManagerTest {
         // User
         when(user.getLocation()).thenReturn(location);
         when(user.getTranslation("aoneblock.placeholders.infinite")).thenReturn("Infinite");
+        when(user.getWorld()).thenReturn(world);
         // Addon
         when(addon.getIslands()).thenReturn(im);
         when(addon.getOverWorld()).thenReturn(world);
         when(addon.getOneBlockManager()).thenReturn(obm);
+        when(addon.inWorld(world)).thenReturn(true);
         when(im.getProtectedIslandAt(any())).thenReturn(Optional.of(island));
         when(im.getIsland(world, user)).thenReturn(island);
         obi = new OneBlockIslands("uniqueId");
