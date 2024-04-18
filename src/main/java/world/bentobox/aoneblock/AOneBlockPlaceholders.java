@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 import org.bukkit.Material;
 
 import world.bentobox.aoneblock.dataobjects.OneBlockIslands;
+import world.bentobox.aoneblock.panels.PhasesPanel;
 import world.bentobox.bentobox.api.localization.TextVariables;
 import world.bentobox.bentobox.api.user.User;
 import world.bentobox.bentobox.database.objects.Island;
@@ -79,10 +80,11 @@ public class AOneBlockPlaceholders {
         }
 
         String result = set.stream().map(m -> getMaterialName(user, m))
-                .map(string -> user.getTranslation("aoneblock.placeholders.block-list-format", TextVariables.NAME,
+                .map(string -> user.getTranslation(PhasesPanel.REFERENCE + "blocks", TextVariables.NAME,
                         string))
                 .collect(Collectors.joining());
         // Removing the last newline character or comma if it exists
+        result = result.trim();
         if (result.endsWith("\n") || result.endsWith(",")) {
             result = result.substring(0, result.length() - 1);
         }
