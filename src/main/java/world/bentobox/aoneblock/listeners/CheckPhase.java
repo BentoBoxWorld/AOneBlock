@@ -108,6 +108,10 @@ public class CheckPhase {
 	    return false;
 	}
 
+    if (player == null) {
+        // Minions cannot fulfill requirements
+        return true;
+    }
 	return phase.getRequirements().stream()
 		.anyMatch(r -> checkRequirement(r, User.getInstance(player), i, is, world));
     }
@@ -206,7 +210,8 @@ public class CheckPhase {
 		    .map(l -> ((Level) l).getIslandLevel(addon.getOverWorld(), i.getOwner())).orElse(0L);
 	    double balance = addon.getAddonByName("Bank").map(b -> ((Bank) b).getBankManager().getBalance(i).getValue())
 		    .orElse(0D);
-	    double ecoBalance = addon.getPlugin().getVault()
+        double ecoBalance = player == null ? 0D
+                : addon.getPlugin().getVault()
 		    .map(v -> v.getBalance(User.getInstance(player), addon.getOverWorld())).orElse(0D);
 
 	    return c.replace("[island]", i.getName() == null ? "" : i.getName())
