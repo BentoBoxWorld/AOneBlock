@@ -1,6 +1,5 @@
 package world.bentobox.aoneblock;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.Objects;
 
@@ -66,7 +65,6 @@ public class AOneBlock extends GameModeAddon {
             .listener(new StartSafetyListener(this))
             .defaultSetting(false)
             .build();
-    private long configLastModified;
 
     @Override
     public void onLoad() {
@@ -94,28 +92,16 @@ public class AOneBlock extends GameModeAddon {
     }
 
     private boolean loadSettings() {
-        // Load settings again to get worlds
         settings = configObject.loadConfigObject();
         if (settings == null) {
+            // Settings do not exist so disable
             // Disable
             logError("AOneBlock settings could not load! Addon disabled.");
             setState(State.DISABLED);
             return false;
         } else {
-            // Save the settings
+            // Save the initial settings
             configObject.saveConfigObject(settings);
-        }
-        if (configLastModified == 0) {
-            // Start config.yml monitor
-            // TODO check if this works or not
-            final File configFile = new File(getDataFolder(), "config.yml");
-            configLastModified = configFile.lastModified();
-            Bukkit.getScheduler().runTaskTimer(getPlugin(), () -> {
-                if (configFile.lastModified() != configLastModified) {
-                    configLastModified = configFile.lastModified();
-                    loadSettings();
-                }
-            }, 20L, 20L);
         }
         return true;
     }
@@ -265,6 +251,7 @@ public class AOneBlock extends GameModeAddon {
     public void saveWorldSettings() {
         if (settings != null) {
             configObject.saveConfigObject(settings);
+            super.saveWorldSettings();
         }
     }
 

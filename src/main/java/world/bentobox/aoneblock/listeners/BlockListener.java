@@ -75,11 +75,6 @@ public class BlockListener implements Listener {
     private final Database<OneBlockIslands> handler;
 
     /**
-     * Oneblock cache.
-     */
-    //private final Map<String, OneBlockIslands> cache;
-
-    /**
      * Phase checker class
      */
     private final CheckPhase check;
@@ -93,11 +88,6 @@ public class BlockListener implements Listener {
      * How many blocks ahead it should look.
      */
     public static final int MAX_LOOK_AHEAD = 5;
-
-    /**
-     * How often data is saved.
-     */
-    public static final int SAVE_EVERY = 1;
 
     private final Random random = new Random();
 
@@ -133,7 +123,6 @@ public class BlockListener implements Listener {
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onDeletedIsland(IslandDeleteEvent e) {
         if (addon.inWorld(e.getIsland().getWorld())) {
-            //cache.remove(e.getIsland().getUniqueId());
             handler.deleteID(e.getIsland().getUniqueId());
         }
     }
@@ -238,7 +227,6 @@ public class BlockListener implements Listener {
                 .thenRun(() -> island.getCenter().getBlock().setType(Material.GRASS_BLOCK));
         // Create a database entry
         OneBlockIslands is = new OneBlockIslands(island.getUniqueId());
-        //cache.put(island.getUniqueId(), is);
         handler.saveObjectAsync(is);
         addon.getHoloListener().setUp(island, is, true);
     }
