@@ -89,7 +89,7 @@ public class CheckPhase {
 		replacePlaceholders(player, newPhaseName, phase.getBlockNumber(), i, phase.getStartCommands()),
 		"Commands run for start of " + newPhaseName);
 
-	blockListener.saveIsland(i);
+    blockListener.saveIsland(is);
     }
 
     /**
