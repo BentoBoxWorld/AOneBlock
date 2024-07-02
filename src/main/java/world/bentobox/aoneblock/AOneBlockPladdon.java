@@ -5,8 +5,14 @@ import world.bentobox.bentobox.api.addons.Pladdon;
 
 public class AOneBlockPladdon extends Pladdon {
 
+    private Addon addon;
+
     @Override
     public Addon getAddon() {
-        return new AOneBlock();
+        if (addon == null) {
+            addon = new AOneBlock();
+        }
+
+        return addon;
     }
 }
