@@ -130,6 +130,7 @@ public class AOneBlockTest {
 	 */
 	@Before
 	public void setUp() throws Exception {
+        PowerMockito.mockStatic(Bukkit.class, Mockito.RETURNS_MOCKS);
 		// Set up plugin
 		Whitebox.setInternalState(BentoBox.class, "instance", plugin);
 		when(plugin.getLogger()).thenReturn(Logger.getAnonymousLogger());
@@ -171,7 +172,6 @@ public class AOneBlockTest {
 				.thenAnswer((Answer<String>) invocation -> invocation.getArgument(0, String.class));
 
 		// Server
-		PowerMockito.mockStatic(Bukkit.class);
 		Server server = mock(Server.class);
 		when(Bukkit.getServer()).thenReturn(server);
 		when(Bukkit.getLogger()).thenReturn(Logger.getAnonymousLogger());

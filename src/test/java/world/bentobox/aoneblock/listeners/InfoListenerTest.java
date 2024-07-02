@@ -9,6 +9,7 @@ import static org.mockito.Mockito.when;
 
 import java.util.UUID;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
@@ -19,6 +20,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import world.bentobox.aoneblock.AOneBlock;
@@ -31,12 +34,14 @@ import world.bentobox.bentobox.database.objects.Island;
 import world.bentobox.bentobox.managers.IslandsManager;
 import world.bentobox.bentobox.managers.LocalesManager;
 import world.bentobox.bentobox.managers.PlaceholdersManager;
+import world.bentobox.bentobox.util.Util;
 
 /**
  * @author tastybento
  *
  */
 @RunWith(PowerMockRunner.class)
+@PrepareForTest({ Bukkit.class, Util.class })
 public class InfoListenerTest {
     @Mock
     private BentoBox plugin;
@@ -72,6 +77,7 @@ public class InfoListenerTest {
      */
     @Before
     public void setUp() throws Exception {
+        PowerMockito.mockStatic(Bukkit.class, Mockito.RETURNS_MOCKS);
         when(addon.getPlugin()).thenReturn(plugin);
         when(plugin.getLocalesManager()).thenReturn(lm);
         when(lm.get(toString())).thenAnswer(invocation -> invocation.getArgument(0, String.class));

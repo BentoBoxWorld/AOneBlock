@@ -130,6 +130,7 @@ public class IslandSetCountCommandTest {
 	 */
 	@Before
 	public void setUp() throws Exception {
+        PowerMockito.mockStatic(Bukkit.class, Mockito.RETURNS_MOCKS);
 		// Set up plugin
 		BentoBox plugin = mock(BentoBox.class);
 		Whitebox.setInternalState(BentoBox.class, "instance", plugin);
