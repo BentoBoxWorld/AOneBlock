@@ -2188,7 +2188,6 @@ public class Settings implements WorldSettings {
     /**
      * @return the disallowTeamMemberIslands
      */
-    @Override
     public boolean isDisallowTeamMemberIslands() {
         return disallowTeamMemberIslands;
     }
