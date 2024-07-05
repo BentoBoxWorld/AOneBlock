@@ -1,34 +1,46 @@
 ---
+protection:
+  flags:
+    START_SAFETY:
+      name: Güvenli mod başlatılıyor
+      description: |
+        &b Yeni oyuncuları 1 dakika boyunca kıpırdamasını engeller
+        &b böylece aşağı düşmezler.
+      hint: "&c Haraketler [number] saniye daha güvenlik için engellenmiştir!"
+      free-to-move: "&a Artık kıpırdayabilirsin dikkatli ol!"
 aoneblock:
   commands:
     admin:
       setcount:
-        parameters: "<ad> <sayı>"
+        parameters: "<ad> <sayı> [lifetime]"
         description: oyuncunun blok sayısını ayarla
         set: "&a [name] 'ın sayısı [number] olarak ayarlandı"
-        set-lifetime: "&a [name]'nin yaşam boyu sayısı [number] olarak ayarlandı"
+        set-lifetime: "&a [name]'nin toplam kırılan blok sayısı [number] olarak ayarlandı"
       setchest:
-        parameters: "<faz> <delilik>"
-        description: bakılan sandığı nadir görülen bir evreye koymak
+        parameters: "<aşama> <nadirlik>"
+        description: bakılan sandığı nadir görülen bir evreye koyar
         chest-is-empty: "&c Bu sandık boş, bu yüzden eklenemez"
         unknown-phase: "&c Bilinmeyen aşama. Bunları görmek için sekme-tamamlama özelliğini
           kullanın"
-        unknown-rarity: "& c Bilinmeyen nadirlik. ORTAK, UNCOMMON, NADİR veya EPIC
+        unknown-rarity: "& c Bilinmeyen nadirlik. COMMON, UNCOMMON, RARE veya EPIC
           kullanın"
         look-at-chest: "&c Ayarlamak için dolu bir sandığa bakın"
-        only-single-chest: "& c Yalnızca tek sandık ayarlanabilir"
+        only-single-chest: "&c Yalnızca tek sandık ayarlanabilir"
         success: "&a Sandık aşamaya başarıyla eklendi"
-        failure: "&c Göğüs faza eklenemedi! Hatalar için konsola bakın"
+        failure: "&c Sandık aşamaya eklenemedi! Hatalar için konsola bakın"
       sanity:
-        parameters: "<Faz>"
+        parameters: "<Aşama>"
         description: konsoldaki faz olasılıklarının akıl sağlığını kontrol etmek
         see-console: "&a Rapor için konsola bakın"
     count:
-      description: blok sayısını ve fazını göster
+      description: blok sayısını ve aşamayı göster
       info: "&a [name] aşamasında blok &b [number] üzerindesiniz"
+    info:
+      count: "&a Ada blok sayısı &b [number]  &b [name] &a aşamasında. Toplam kırılan
+        blok &b [lifetime] &a."
     phases:
       description: tüm aşamaların bir listesini göster
-      title: "&2 OneBlock Aşaması"
+      title: "&2 TekBlok Aşaması"
       name-syntax: "&a [name]"
       description-syntax: "&b [number] blokları"
     island:
@@ -37,6 +49,10 @@ aoneblock:
         description: blok sayısını önceden tamamlanmış değere ayarla
         set: "&a Sayım [number] olarak ayarlandı."
         too-high: "&c Ayarlayabileceğiniz maksimum sayı [number]!"
+    respawn-block:
+      description: Kaynak bloğunu kaybolma durumlarında yeniden doğurur
+      block-exist: "&a Kaynak bloğu yerinde senin için işaretledim."
+      block-respawned: "&a Kaynak bloğu yeniden doğdu."
   phase:
     insufficient-level: "&c Ada seviyeniz devam etmek için çok düşük! [number] olmalıdır."
     insufficient-funds: "&c Paranız devam etmek için çok düşük! [number] olmalıdırlar."
@@ -46,7 +62,40 @@ aoneblock:
     cooldown: "&c Bir sonraki aşama [number] saniye içinde hazır olacak!"
   placeholders:
     infinite: Sonsuz
+  gui:
+    titles:
+      phases: "&0&l TekBlok Aşamaları"
+    buttons:
+      previous:
+        name: "&f&l Önceki Sayfa"
+        description: "&7 [number] Sayılı sayfaya geçer"
+      next:
+        name: "&f&l Sıradaki Sayfa "
+        description: "&7 [number] Sayılı sayfaya geçer"
+      phase:
+        name: "&f&l [phase]"
+        description: |-
+          [starting-block]
+          [biome]
+          [bank]
+          [economy]
+          [level]
+          [permission]
+          [blocks]
+        starting-block: "&7 &e [sayı] kadar blok kırdıktan sonra başlar."
+        biome: "&7 Biome: &e [biome]"
+        bank: "&7 Banka hesabında &e $[number] &7 olması gerekli."
+        economy: "&7 Bakiyenizin &e $[number] &7 olması gerekli."
+        level: "&7 &e [sayı] &7 kadar ada seviyeniz olmalı."
+        permission: "&7 `&e[izin]&7` izni gerektirir."
+        blocks-prefix: "&7 Aşamadaki bloklar - "
+        blocks: "&e [name], "
+        wrap-at: '50'
+    tips:
+      click-to-previous: "&e Önceki sayfayı görüntülemek için &7 tıklayın."
+      click-to-next: "&e Sonraki sayfayı görüntülemek için &7 tıklayın."
+      click-to-change: "&e Değiştirmek için &7 tıklayın."
   island:
     starting-hologram: |-
-      &aOneBlock'a Hoş Geldiniz
+      &aTekBlok'a Hoş Geldiniz
       &eBaşlamak için Bu Bloğu Kırın

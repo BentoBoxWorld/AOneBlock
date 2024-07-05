@@ -107,6 +107,10 @@ public class Settings implements WorldSettings {
     @ConfigEntry(path = "world.holograms")
     private boolean useHolograms = true;
 
+    @ConfigComment("Hologram position - the offset to the magic block where holograms will appear")
+    @ConfigEntry(path = "world.hologram-offset")
+    private String offset = "0.5, 1.1, 0.5";
+
     @ConfigComment("Duration in seconds that phase holograms will exist after being displayed, if used.")
     @ConfigComment("If set to 0, then holograms will persist until cleared some other way.")
     @ConfigEntry(path = "world.hologram-duration")
@@ -191,6 +195,10 @@ public class Settings implements WorldSettings {
     @ConfigComment("It is the y coordinate of the bedrock block in the schem.")
     @ConfigEntry(path = "world.island-height")
     private int islandHeight = 120;
+
+    @ConfigComment("Disallow team members from having their own islands.")
+    @ConfigEntry(path = "world.disallow-team-member-islands")
+    private boolean disallowTeamMemberIslands = false;
 
     @ConfigComment("Use your own world generator for this world.")
     @ConfigComment("In this case, the plugin will not generate anything.")
@@ -2175,5 +2183,34 @@ public class Settings implements WorldSettings {
      */
     public void setClickType(String clickType) {
         this.clickType = clickType;
+    }
+
+    /**
+     * @return the disallowTeamMemberIslands
+     */
+    @Override
+    public boolean isDisallowTeamMemberIslands() {
+        return disallowTeamMemberIslands;
+    }
+
+    /**
+     * @param disallowTeamMemberIslands the disallowTeamMemberIslands to set
+     */
+    public void setDisallowTeamMemberIslands(boolean disallowTeamMemberIslands) {
+        this.disallowTeamMemberIslands = disallowTeamMemberIslands;
+    }
+
+    /**
+     * @return the offset
+     */
+    public String getOffset() {
+        return offset;
+    }
+
+    /**
+     * @param offset the offset to set
+     */
+    public void setOffset(String offset) {
+        this.offset = offset;
     }
 }

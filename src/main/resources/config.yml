@@ -55,6 +55,8 @@ world:
   difficulty: NORMAL
   # Display holograms
   holograms: true
+  # Hologram position - the offset to the magic block where holograms will appear
+  hologram-offset: 0.5, 1.1, 0.5
   # Duration in seconds that phase holograms will exist after being displayed, if used.
   # If set to 0, then holograms will persist until cleared some other way.
   hologram-duration: 10
@@ -65,10 +67,10 @@ world:
     # Block identification appearance.
     # Click type that will make particles appear. Options are:
     # LEFT (default), RIGHT, or NONE
-    click-type: RIGHT
-    # Size of particles. Default is 0.7. Must be greater than 0.
+    click-type: LEFT
+    # Size of particles. Default is 0.5. Must be greater than 0.
     particle-size: 0.5
-    # Density of particles - Value from 0.1 to 1. Default is 0.5. Smaller values are more dense, higher are less.
+    # Density of particles - Value from 0.1 to 1. Default is 0.65. Smaller values are more dense, higher are less.
     particle-density: 0.65
     # Color of particles
     particle-color:
@@ -123,6 +125,8 @@ world:
   # Island height - Lowest is 5.
   # It is the y coordinate of the bedrock block in the schem.
   island-height: 80
+  # Disallow team members from having their own islands.
+  disallow-team-member-islands: false
   # Use your own world generator for this world.
   # In this case, the plugin will not generate anything.
   # If used, you must specify the world name and generator in the bukkit.yml file.

@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.event.inventory.ClickType;
@@ -26,6 +27,7 @@ import world.bentobox.aoneblock.dataobjects.OneBlockIslands;
 import world.bentobox.aoneblock.oneblocks.OneBlockPhase;
 import world.bentobox.aoneblock.oneblocks.Requirement;
 import world.bentobox.bank.Bank;
+import world.bentobox.bentobox.BentoBox;
 import world.bentobox.bentobox.api.addons.Addon;
 import world.bentobox.bentobox.api.localization.TextVariables;
 import world.bentobox.bentobox.api.panels.PanelItem;
@@ -36,6 +38,7 @@ import world.bentobox.bentobox.api.panels.reader.ItemTemplateRecord;
 import world.bentobox.bentobox.api.user.User;
 import world.bentobox.bentobox.database.objects.Island;
 import world.bentobox.bentobox.hooks.LangUtilsHook;
+import world.bentobox.bentobox.util.Util;
 import world.bentobox.level.Level;
 
 
@@ -55,6 +58,8 @@ public class PhasesPanel
     private static final String LEVEL = "[level]";
     private static final String PHASE2 = "[phase]";
     private static final String INDEXING = "indexing";
+    private static final String BLOCKS = "[blocks]";
+    public static final String REFERENCE = "aoneblock.gui.buttons.phase.";
 
     // ---------------------------------------------------------------------
     // Section: Constructor
@@ -349,7 +354,7 @@ public class PhasesPanel
                       [level]
                       [permission]
          */
-        final String reference = "aoneblock.gui.buttons.phase.";
+
 
         // Get settings for island.
         PanelItemBuilder builder = new PanelItemBuilder();
@@ -375,7 +380,7 @@ public class PhasesPanel
         }
         else
         {
-            builder.name(this.user.getTranslation(reference + "name",
+            builder.name(this.user.getTranslation(REFERENCE + "name",
                     PHASE2, phase.getPhaseName()));
         }
 
@@ -391,16 +396,16 @@ public class PhasesPanel
         phase.getRequirements().forEach(requirement -> {
             switch (requirement.getType())
             {
-            case ECO -> economyText.append(this.user.getTranslationOrNothing(reference + "economy",
+            case ECO -> economyText.append(this.user.getTranslationOrNothing(REFERENCE + "economy",
                     TextVariables.NUMBER, String.valueOf(requirement.getEco())));
 
-            case BANK -> bankText.append(this.user.getTranslationOrNothing(reference + "bank",
+            case BANK -> bankText.append(this.user.getTranslationOrNothing(REFERENCE + "bank",
                     TextVariables.NUMBER, String.valueOf(requirement.getBank())));
 
-            case LEVEL -> levelText.append(this.user.getTranslationOrNothing(reference + "level",
+            case LEVEL -> levelText.append(this.user.getTranslationOrNothing(REFERENCE + "level",
                     TextVariables.NUMBER, String.valueOf(requirement.getLevel())));
 
-            case PERMISSION -> permissionText.append(this.user.getTranslationOrNothing(reference + "permission",
+            case PERMISSION -> permissionText.append(this.user.getTranslationOrNothing(REFERENCE + "permission",
                     PERMISSION, requirement.getPermission()));
             case COOLDOWN -> {
                 // do nothing
@@ -409,6 +414,29 @@ public class PhasesPanel
 
             }
         });
+
+        // Blocks Text
+        String blocksText = user.getTranslation(REFERENCE + "blocks-prefix") + phase.getBlocks().keySet().stream()
+                .map(m -> getMaterialName(user, m))
+                .map(string -> user.getTranslation(REFERENCE + "blocks", TextVariables.NAME, string))
+                .collect(Collectors.joining());
+        // Removing the last newline character or comma if it exists
+        blocksText = blocksText.trim();
+        if (blocksText.endsWith("\n") || blocksText.endsWith(",")) {
+            blocksText = blocksText.substring(0, blocksText.length() - 1);
+        }
+        // Insert newlines every x characters
+        int wrapAt = 50; // Set default value
+        try {
+            // Attempt to parse the value from getTranslation
+            wrapAt = Integer.valueOf(user.getTranslation(REFERENCE + "wrap-at"));
+
+        } catch (NumberFormatException e) {
+            // If parsing fails, keep default value of 40
+            addon.logError("Warning: Unable to parse 'wrap-at' value, using default of 50.");
+        }
+
+        String formattedText = insertNewlines(blocksText, wrapAt);
 
         if (template.description() != null)
         {
@@ -420,23 +448,24 @@ public class PhasesPanel
                     BANK, bankText.toString(),
                     ECONOMY, economyText.toString(),
                     LEVEL, levelText.toString(),
-                    PERMISSION, permissionText.toString());
+                    PERMISSION, permissionText.toString(), BLOCKS, formattedText);
         }
         else
         {
             // Null description, so we make our own
-            String blockText = this.user.getTranslationOrNothing(reference + "starting-block",
+            String blockText = this.user.getTranslationOrNothing(REFERENCE + "starting-block",
                     TextVariables.NUMBER, phase.getBlockNumber());
-            String biomeText = phase.getPhaseBiome() == null ? "" : this.user.getTranslationOrNothing(reference + "biome",
-                    BIOME, LangUtilsHook.getBiomeName(phase.getPhaseBiome(), this.user));
+            String biomeText = phase.getPhaseBiome() == null ? ""
+                    : this.user.getTranslationOrNothing(REFERENCE + "biome",
+                            BIOME, LangUtilsHook.getBiomeName(phase.getPhaseBiome(), this.user));
 
-            descriptionText = this.user.getTranslationOrNothing(reference + "description",
+            descriptionText = this.user.getTranslationOrNothing(REFERENCE + "description",
                     "[starting-block]", biomeText,
                     BIOME, blockText,
                     BANK, bankText.toString(),
                     ECONOMY, economyText.toString(),
                     LEVEL, levelText.toString(),
-                    PERMISSION, permissionText.toString());
+                    PERMISSION, permissionText.toString(), BLOCKS, formattedText);
         }
 
         // Strip out or replace formating
@@ -517,6 +546,46 @@ public class PhasesPanel
         }
 
         return builder.build();
+    }
+
+    private String getMaterialName(User user, Material m) {
+        return addon.getPlugin().getHooks().getHook("LangUtils").map(hook -> LangUtilsHook.getMaterialName(m, user))
+                .orElse(Util.prettifyText(m.name()));
+    }
+
+    private static String insertNewlines(String input, int interval) {
+        StringBuilder result = new StringBuilder(input.length());
+        int index = 0;
+        char activeColor = 'a';
+        int lastAmpIndex = -2;
+
+        while (index < input.length()) {
+            if (input.charAt(index) == ChatColor.COLOR_CHAR && index < (input.length() - 1)) {
+                lastAmpIndex = index;
+                activeColor = input.charAt(index + 1);
+            }
+            if (input.length() < index + interval) {
+                result.append(input.substring(index));
+                break;
+            }
+
+            // Find the space near the interval to break the line without cutting a word
+            int breakPoint = input.lastIndexOf(' ', index + interval);
+            if (breakPoint <= index) {
+                breakPoint = index + interval; // In case there are no spaces, break at exact interval
+            }
+
+            result.append(input.substring(index, breakPoint)).append('\n');
+            if (lastAmpIndex >= 0) {
+                // Append color code
+                result.append(ChatColor.COLOR_CHAR);
+                result.append(activeColor);
+                result.append(" ");
+            }
+            index = breakPoint + 1; // Move past the last space
+        }
+
+        return result.toString();
     }
 
 

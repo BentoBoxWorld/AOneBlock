@@ -1,11 +1,19 @@
 package world.bentobox.aoneblock;
 
 import java.util.Objects;
+import java.util.Set;
 import java.util.TreeMap;
+import java.util.stream.Collectors;
+
+import org.bukkit.Material;
 
 import world.bentobox.aoneblock.dataobjects.OneBlockIslands;
+import world.bentobox.aoneblock.panels.PhasesPanel;
+import world.bentobox.bentobox.api.localization.TextVariables;
 import world.bentobox.bentobox.api.user.User;
 import world.bentobox.bentobox.database.objects.Island;
+import world.bentobox.bentobox.hooks.LangUtilsHook;
+import world.bentobox.bentobox.util.Util;
 
 public class AOneBlockPlaceholders {
 
@@ -46,6 +54,54 @@ public class AOneBlockPlaceholders {
         // Since 1.10
         placeholdersManager.registerPlaceholder(addon, "visited_island_lifetime_count", this::getLifetimeByLocation);
         placeholdersManager.registerPlaceholder(addon, "my_island_lifetime_count", this::getLifetime);
+
+        placeholdersManager.registerPlaceholder(addon, "visited_island_phase_block_list",
+                this::getPhaseBlocksNamesByLocation);
+        placeholdersManager.registerPlaceholder(addon, "my_island_phase_block_list", this::getPhaseBlocksNames);
+
+    }
+
+    public String getPhaseBlocksNames(User user) {
+        if (user == null || user.getUniqueId() == null)
+            return "";
+        Island i = addon.getIslands().getIsland(addon.getOverWorld(), user);
+        if (i == null) {
+            return "";
+        }
+        return getPhaseBlocksForIsland(user, i);
+    }
+
+    private String getPhaseBlocksForIsland(User user, Island i) {
+        String phaseName = addon.getOneBlocksIsland(i).getPhaseName();
+        Set<Material> set = addon.getOneBlockManager().getPhase(phaseName).map(phase -> phase.getBlocks().keySet())
+                .orElse(null);
+        if (set == null) {
+            return "";
+        }
+
+        String result = set.stream().map(m -> getMaterialName(user, m))
+                .map(string -> user.getTranslation(PhasesPanel.REFERENCE + "blocks", TextVariables.NAME,
+                        string))
+                .collect(Collectors.joining());
+        // Removing the last newline character or comma if it exists
+        result = result.trim();
+        if (result.endsWith("\n") || result.endsWith(",")) {
+            result = result.substring(0, result.length() - 1);
+        }
+
+        return result;
+
+    }
+
+    private String getMaterialName(User user, Material m) {
+        return addon.getPlugin().getHooks().getHook("LangUtils").map(hook -> LangUtilsHook.getMaterialName(m, user))
+                .orElse(Util.prettifyText(m.name()));
+    }
+
+    public String getPhaseBlocksNamesByLocation(User user) {
+        if (user == null || user.getUniqueId() == null || !addon.inWorld(user.getWorld()))
+            return "";
+        return addon.getIslands().getIslandAt(user.getLocation()).map(i -> getPhaseBlocksForIsland(user, i)).orElse("");
     }
 
     /**
@@ -68,7 +124,7 @@ public class AOneBlockPlaceholders {
      * @return String of count
      */
     public String getCountByLocation(User user) {
-	if (user == null || user.getUniqueId() == null)
+        if (user == null || user.getUniqueId() == null || !addon.inWorld(user.getWorld()))
 	    return "";
 	return addon.getIslands().getProtectedIslandAt(Objects.requireNonNull(user.getLocation()))
 		.map(addon::getOneBlocksIsland).map(OneBlockIslands::getBlockNumber).map(String::valueOf).orElse("");
@@ -107,7 +163,7 @@ public class AOneBlockPlaceholders {
      * @return next phase
      */
     public String getNextPhaseByLocation(User user) {
-	if (user == null || user.getUniqueId() == null)
+        if (user == null || user.getUniqueId() == null || !addon.inWorld(user.getWorld()))
 	    return "";
 	return addon.getIslands().getProtectedIslandAt(Objects.requireNonNull(user.getLocation()))
 		.map(addon::getOneBlocksIsland).map(addon.getOneBlockManager()::getNextPhase).orElse("");
@@ -133,7 +189,7 @@ public class AOneBlockPlaceholders {
      * @return string number of blocks
      */
     public String getNextPhaseBlocksByLocation(User user) {
-	if (user == null || user.getUniqueId() == null)
+        if (user == null || user.getUniqueId() == null || !addon.inWorld(user.getWorld()))
 	    return "";
 	return addon.getIslands().getProtectedIslandAt(Objects.requireNonNull(user.getLocation()))
 		.map(addon::getOneBlocksIsland).map(addon.getOneBlockManager()::getNextPhaseBlocks)
@@ -181,7 +237,7 @@ public class AOneBlockPlaceholders {
      * @return string percentage
      */
     public String getPercentDoneByLocation(User user) {
-	if (user == null || user.getUniqueId() == null)
+        if (user == null || user.getUniqueId() == null || !addon.inWorld(user.getWorld()))
 	    return "";
 	return addon.getIslands().getProtectedIslandAt(Objects.requireNonNull(user.getLocation()))
 		.map(addon::getOneBlocksIsland).map(addon.getOneBlockManager()::getPercentageDone)
@@ -212,7 +268,7 @@ public class AOneBlockPlaceholders {
      * @return colored scale
      */
     public String getDoneScaleByLocation(User user) {
-	if (user == null || user.getUniqueId() == null)
+        if (user == null || user.getUniqueId() == null || !addon.inWorld(user.getWorld()))
 	    return "";
 	return addon.getIslands().getProtectedIslandAt(Objects.requireNonNull(user.getLocation()))
 		.map(addon::getOneBlocksIsland).map(addon.getOneBlockManager()::getPercentageDone)
@@ -259,7 +315,7 @@ public class AOneBlockPlaceholders {
      * @return String of Lifetime
      */
     public String getLifetimeByLocation(User user) {
-	if (user == null || user.getUniqueId() == null)
+        if (user == null || user.getUniqueId() == null || !addon.inWorld(user.getWorld()))
 	    return "";
 
 	return this.addon.getIslands().getProtectedIslandAt(Objects.requireNonNull(user.getLocation()))

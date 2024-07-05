@@ -89,6 +89,7 @@ aoneblock:
           [economy]
           [level]
           [permission]
+          [blocks]
         # Replaces text with [starting-block]
         starting-block: "&7 Starts after breaking &e [number] blocks."
         # Replaces text with [biome]
@@ -101,6 +102,10 @@ aoneblock:
         level: "&7 Requires &e [number] &7 island level."
         # Replaces text with [permission]
         permission: "&7 Requires `&e[permission]&7` permission."
+        # Replaces text with [blocks]
+        blocks-prefix: '&7 Blocks in phase - '
+        blocks: '&e [name], '
+        wrap-at: '50'
     tips:
       click-to-previous: "&e Click &7 to view previous page."
       click-to-next: "&e Click &7 to view next page."
