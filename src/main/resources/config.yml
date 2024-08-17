@@ -126,7 +126,7 @@ world:
   # It is the y coordinate of the bedrock block in the schem.
   island-height: 80
   # Disallow team members from having their own islands.
-  disallow-team-member-islands: false
+  disallow-team-member-islands: true
   # Use your own world generator for this world.
   # In this case, the plugin will not generate anything.
   # If used, you must specify the world name and generator in the bukkit.yml file.
