@@ -17,6 +17,10 @@ phases_panel:
       6: phase_button
       7: phase_button
       8: phase_button
+    # In this case, the icon is defined as a TIPPED_ARROW with a color.
+    # CustomPotionColor uses the Decimal description of a Color, just as leather armor does.
+    # All you need to do is take a hex code of a color (like #ff00aa) which represents red, 
+    # green, blue as 2 hex digits each and convert that number into a decimal, using a hex to decimal calculator. 
     3:
       1:
         icon: tipped_arrow{CustomPotionColor:11546150}
