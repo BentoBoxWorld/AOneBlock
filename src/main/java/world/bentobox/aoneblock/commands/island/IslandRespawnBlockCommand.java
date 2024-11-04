@@ -87,7 +87,7 @@ public class IslandRespawnBlockCommand extends CompositeCommand
             for (double x = 0.0; x <= 1.0; x += 0.5) {
                 for (double y = 0.0; y <= 1.0; y += 0.5) {
                     for (double z = 0.0; z < 1.0; z += 0.5) {
-                        island.getWorld().spawnParticle(Particle.REDSTONE, island.getCenter().add(new Vector(x, y, z)),
+                        island.getWorld().spawnParticle(Particle.DUST, island.getCenter().add(new Vector(x, y, z)),
                                 5, 0.1, 0, 0.1, 1, new Particle.DustOptions(BlockProtect.GREEN, 1));
                     }
                 }

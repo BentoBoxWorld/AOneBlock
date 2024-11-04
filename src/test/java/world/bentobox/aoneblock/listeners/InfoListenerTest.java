@@ -1,26 +1,32 @@
 package world.bentobox.aoneblock.listeners;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.atLeast;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.List;
 import java.util.UUID;
 
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Player.Spigot;
 import org.eclipse.jdt.annotation.NonNull;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.powermock.modules.junit4.PowerMockRunner;
 
+import net.md_5.bungee.api.chat.TextComponent;
 import world.bentobox.aoneblock.AOneBlock;
 import world.bentobox.aoneblock.dataobjects.OneBlockIslands;
 import world.bentobox.bentobox.BentoBox;
@@ -64,6 +70,8 @@ public class InfoListenerTest {
     private LocalesManager lm;
     @Mock
     private PlaceholdersManager phm;
+    @Mock
+    private Spigot spigot;
     
     private static final UUID ID = UUID.randomUUID();
 
@@ -82,7 +90,7 @@ public class InfoListenerTest {
         
         // Player
         when(player.getUniqueId()).thenReturn(ID);
-        
+        when(player.spigot()).thenReturn(spigot);
         // Island
         when(addon.getOneBlocksIsland(island)).thenReturn(is);
         when(is.getBlockNumber()).thenReturn(400);
@@ -132,7 +140,15 @@ public class InfoListenerTest {
     public void testOnInfo() {
         IslandInfoEvent e = new IslandInfoEvent(island, ID, false, location, addon);
         il.onInfo(e);
-        verify(player).sendMessage("aoneblock.commands.info.count");
+        checkSpigotMessage("aoneblock.commands.info.count");
+    }
+
+    /**
+     * Check that spigot sent the message
+     * @param message - message to check
+     */
+    public void checkSpigotMessage(String expectedMessage) {
+        checkSpigotMessage(expectedMessage, 1);
     }
     
     /**
@@ -142,7 +158,27 @@ public class InfoListenerTest {
     public void testOnInfoOtherAddon() {
         IslandInfoEvent e = new IslandInfoEvent(island, ID, false, location, mock(Addon.class));
         il.onInfo(e);
-        verify(player, never()).sendMessage("aoneblock.commands.info.count");
+        checkSpigotMessage("aoneblock.commands.info.count", 0);
+    }
+
+    public void checkSpigotMessage(String expectedMessage, int expectedOccurrences) {
+        // Capture the argument passed to spigot().sendMessage(...) if messages are sent
+        ArgumentCaptor<TextComponent> captor = ArgumentCaptor.forClass(TextComponent.class);
+
+        // Verify that sendMessage() was called at least 0 times (capture any sent messages)
+        verify(spigot, atLeast(0)).sendMessage(captor.capture());
+
+        // Get all captured TextComponents
+        List<TextComponent> capturedMessages = captor.getAllValues();
+
+        // Count the number of occurrences of the expectedMessage in the captured messages
+        long actualOccurrences = capturedMessages.stream().map(component -> component.toLegacyText()) // Convert each TextComponent to plain text
+                .filter(messageText -> messageText.contains(expectedMessage)) // Check if the message contains the expected text
+                .count(); // Count how many times the expected message appears
+
+        // Assert that the number of occurrences matches the expectedOccurrences
+        assertEquals("Expected message occurrence mismatch: " + expectedMessage, expectedOccurrences,
+                actualOccurrences);
     }
 
 }
