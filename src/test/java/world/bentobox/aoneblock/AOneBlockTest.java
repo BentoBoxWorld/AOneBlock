@@ -49,6 +49,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.reflect.Whitebox;
 
 import world.bentobox.aoneblock.dataobjects.OneBlockIslands;
+import world.bentobox.aoneblock.mocks.ServerMocks;
 import world.bentobox.bentobox.BentoBox;
 import world.bentobox.bentobox.Settings;
 import world.bentobox.bentobox.api.addons.Addon.State;
@@ -109,6 +110,7 @@ public class AOneBlockTest {
 
 	@After
 	public void tearDown() throws IOException {
+        ServerMocks.unsetBukkitServer();
 		User.clearUsers();
 		Mockito.framework().clearInlineMocks();
 		deleteAll(new File("database"));
@@ -130,6 +132,7 @@ public class AOneBlockTest {
 	 */
 	@Before
 	public void setUp() throws Exception {
+        Server server = ServerMocks.newServer();
 		// Set up plugin
 		Whitebox.setInternalState(BentoBox.class, "instance", plugin);
 		when(plugin.getLogger()).thenReturn(Logger.getAnonymousLogger());
@@ -172,7 +175,6 @@ public class AOneBlockTest {
 
 		// Server
 		PowerMockito.mockStatic(Bukkit.class);
-		Server server = mock(Server.class);
 		when(Bukkit.getServer()).thenReturn(server);
 		when(Bukkit.getLogger()).thenReturn(Logger.getAnonymousLogger());
 		when(Bukkit.getPluginManager()).thenReturn(mock(PluginManager.class));
