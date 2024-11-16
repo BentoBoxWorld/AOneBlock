@@ -57,44 +57,44 @@ public class OneBlockIslands implements DataObject {
      */
     @NonNull
     public String getPhaseName() {
-	return phaseName == null ? "" : phaseName;
+        return phaseName == null ? "" : phaseName;
     }
 
     /**
      * @param phaseName the phaseName to set
      */
     public void setPhaseName(String phaseName) {
-	this.phaseName = phaseName;
+        this.phaseName = phaseName;
     }
 
     public OneBlockIslands(String uniqueId) {
-	this.uniqueId = uniqueId;
+        this.uniqueId = uniqueId;
     }
 
     /**
      * @return the blockNumber
      */
     public int getBlockNumber() {
-	return blockNumber;
+        return blockNumber;
     }
 
     /**
      * @param blockNumber the blockNumber to set
      */
     public void setBlockNumber(int blockNumber) {
-	this.blockNumber = blockNumber;
+        this.blockNumber = blockNumber;
     }
 
     /**
      * Increments the block number
      */
     public void incrementBlockNumber() {
-	// Ensure that lifetime is always at least blockNumber
-	if (this.lifetime < this.blockNumber) {
-	    this.lifetime = this.blockNumber;
-	}
-	this.blockNumber++;
-	this.lifetime++;
+        // Ensure that lifetime is always at least blockNumber
+        if (this.lifetime < this.blockNumber) {
+            this.lifetime = this.blockNumber;
+        }
+        this.blockNumber++;
+        this.lifetime++;
     }
 
     /**
@@ -102,14 +102,14 @@ public class OneBlockIslands implements DataObject {
      */
     @NonNull
     public String getHologram() {
-	return hologram == null ? "" : hologram;
+        return hologram == null ? "" : hologram;
     }
 
     /**
      * @param hologramLine Hologram line
      */
     public void setHologram(String hologramLine) {
-	this.hologram = hologramLine;
+        this.hologram = hologramLine;
     }
 
     /*
@@ -119,7 +119,7 @@ public class OneBlockIslands implements DataObject {
      */
     @Override
     public String getUniqueId() {
-	return uniqueId;
+        return uniqueId;
     }
 
     /*
@@ -131,16 +131,16 @@ public class OneBlockIslands implements DataObject {
      */
     @Override
     public void setUniqueId(String uniqueId) {
-	this.uniqueId = uniqueId;
+        this.uniqueId = uniqueId;
     }
 
     /**
      * @return the queue
      */
     public Queue<OneBlockObject> getQueue() {
-	if (queue == null)
-	    queue = new LinkedList<>();
-	return queue;
+        if (queue == null)
+            queue = new LinkedList<>();
+        return queue;
     }
 
     /**
@@ -150,16 +150,16 @@ public class OneBlockIslands implements DataObject {
      * @return list of upcoming mobs
      */
     public List<EntityType> getNearestMob(int i) {
-	return getQueue().stream().limit(i).filter(obo ->
-	// Include OneBlockObjects that are Entity, or custom block of type
-	// MobCustomBlock
-	obo.isEntity() || (obo.isCustomBlock() && obo.getCustomBlock() instanceof MobCustomBlock)).map(obo -> {
-	    if (obo.isCustomBlock() && obo.getCustomBlock() instanceof MobCustomBlock mb) {
-		return mb.getMob();
-	    }
+        return getQueue().stream().limit(i).filter(obo ->
+        // Include OneBlockObjects that are Entity, or custom block of type
+        // MobCustomBlock
+        obo.isEntity() || (obo.isCustomBlock() && obo.getCustomBlock() instanceof MobCustomBlock)).map(obo -> {
+            if (obo.isCustomBlock() && obo.getCustomBlock() instanceof MobCustomBlock mb) {
+                return mb.getMob();
+            }
 
-	    return obo.getEntityType();
-	}).toList();
+            return obo.getEntityType();
+        }).toList();
     }
 
     /**
@@ -168,7 +168,7 @@ public class OneBlockIslands implements DataObject {
      * @param nextBlock the OneBlockObject to be added
      */
     public void add(OneBlockObject nextBlock) {
-	getQueue().add(nextBlock);
+        getQueue().add(nextBlock);
     }
 
     /**
@@ -182,17 +182,17 @@ public class OneBlockIslands implements DataObject {
      *         empty.
      */
     public OneBlockObject pollAndAdd(OneBlockObject toAdd) {
-	getQueue();
-	OneBlockObject b = queue.poll();
-	queue.add(toAdd);
-	return b;
+        getQueue();
+        OneBlockObject b = queue.poll();
+        queue.add(toAdd);
+        return b;
     }
 
     /**
      * Clear the look ahead queue
      */
     public void clearQueue() {
-	getQueue().clear();
+        getQueue().clear();
     }
 
     /**
@@ -200,31 +200,31 @@ public class OneBlockIslands implements DataObject {
      *         count
      */
     public long getLifetime() {
-	// Ensure that lifetime is always at least blockNumber
-	if (this.lifetime < this.blockNumber) {
-	    this.lifetime = this.blockNumber;
-	}
-	return lifetime;
+        // Ensure that lifetime is always at least blockNumber
+        if (this.lifetime < this.blockNumber) {
+            this.lifetime = this.blockNumber;
+        }
+        return lifetime;
     }
 
     /**
      * @param lifetime lifetime number of blocks broken to set
      */
     public void setLifetime(long lifetime) {
-	this.lifetime = lifetime;
+        this.lifetime = lifetime;
     }
 
     /**
      * @return Timestamp of last phase change
      */
     public long getLastPhaseChangeTime() {
-	return this.lastPhaseChangeTime;
+        return this.lastPhaseChangeTime;
     }
 
     /**
      * @param lastPhaseChangeTime Timestamp of last phase change
      */
     public void setLastPhaseChangeTime(long lastPhaseChangeTime) {
-	this.lastPhaseChangeTime = lastPhaseChangeTime;
+        this.lastPhaseChangeTime = lastPhaseChangeTime;
     }
 }

@@ -9,6 +9,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Display.Billboard;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.TextDisplay;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -99,7 +101,7 @@ public class HoloListener implements Listener {
         String holoLine = oneBlockIsland.getHologram();
 
         // Clear hologram if empty
-        if (holoLine.isEmpty() && optionalHologram.isPresent()) {
+        if (holoLine.isBlank() && optionalHologram.isPresent()) {
             clearIfInitialized(optionalHologram.get());
             return;
         }
@@ -139,6 +141,21 @@ public class HoloListener implements Listener {
         TextDisplay hologram = cachedHolograms.remove(island);
         if (hologram != null) {
             clearIfInitialized(hologram);
+        }
+        // Clear any residual ones that are not cached for some reason
+        clearTextDisplayNearBlock(island);
+    }
+
+    private void clearTextDisplayNearBlock(Island island) {
+        World world = island.getWorld();
+        if (world == null)
+            return;
+        Location pos = island.getCenter().clone().add(parseVector(addon.getSettings().getOffset()));
+        // Search for entities in a small radius (e.g., 1 block around)
+        for (Entity entity : world.getNearbyEntities(pos, 1, 1, 1)) {
+            if (entity.getType() == EntityType.TEXT_DISPLAY) {
+                ((TextDisplay) entity).remove();
+            }
         }
     }
 
