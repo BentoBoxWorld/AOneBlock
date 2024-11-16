@@ -29,7 +29,7 @@ import world.bentobox.bentobox.database.objects.Island;
 public class BlockProtect implements Listener {
 
     public static final Color GREEN = Color.fromBGR(0, 100, 0);
-    private static final List<Particle> PARTICLES = new ArrayList<>(List.of(Particle.REDSTONE));
+    private static final List<Particle> PARTICLES = new ArrayList<>(List.of(Particle.DUST));
     private Iterator<Particle> particleIterator = Collections.emptyIterator();
 
     private final AOneBlock addon;

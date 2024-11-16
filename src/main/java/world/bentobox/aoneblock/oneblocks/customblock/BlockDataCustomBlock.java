@@ -36,7 +36,16 @@ public class BlockDataCustomBlock implements OneBlockCustomBlock {
         try {
             block.setBlockData(Bukkit.createBlockData(blockData));
         } catch (IllegalArgumentException e) {
-            BentoBox.getInstance().logError("Could not set block data " + blockData + " for block " + block.getType());
+            try {
+                // Try and place it
+                String world = "minecraft:" + block.getLocation().getWorld().getName();
+                String x = String.valueOf(block.getLocation().getBlockX());
+                String y = String.valueOf(block.getLocation().getBlockY());
+                String z = String.valueOf(block.getLocation().getBlockZ());
+                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "execute in " + world + " run setblock " + x + " " + y + " " + z + " " + blockData);
+            } catch (Exception e2) {
+                BentoBox.getInstance().logError("Could not set block data " + blockData + " for block " + block.getType());
+            }
         }
     }
 }

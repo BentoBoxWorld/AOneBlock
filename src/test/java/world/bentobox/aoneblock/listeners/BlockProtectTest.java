@@ -126,7 +126,7 @@ public class BlockProtectTest {
         bp.onBlockDamage(blockDamageEvent);
         verify(addon).inWorld(world);
         verify(im).getIslandAt(location);
-        verify(world, times(48)).spawnParticle(eq(Particle.REDSTONE), eq(null), eq(5),
+        verify(world, times(48)).spawnParticle(eq(Particle.DUST), eq(null), eq(5),
                 eq(0.1D), eq(0D), eq(0.1D), eq(1D), any(Particle.DustOptions.class));
     }
     
@@ -202,7 +202,7 @@ public class BlockProtectTest {
     @Test
     public void testOnExplosion() {
         List<Block> blocks = new ArrayList<>();
-        EntityExplodeEvent event = new EntityExplodeEvent(p, location, blocks, 0);
+        EntityExplodeEvent event = new EntityExplodeEvent(p, location, blocks, 0, null);
         bp.onExplosion(event);
         assertTrue(blocks.isEmpty());
         // Add the magic block
@@ -225,14 +225,14 @@ public class BlockProtectTest {
     public void testOnExplosionWrongWorld() {
         when(location.getWorld()).thenReturn(mock(World.class));
         List<Block> blocks = new ArrayList<>();
-        EntityExplodeEvent event = new EntityExplodeEvent(p, location, blocks, 0);
+        EntityExplodeEvent event = new EntityExplodeEvent(p, location, blocks, 0, null);
         blocks.add(block);
         // Block as correct location, but wrong world
         bp.onExplosion(event);
         assertFalse(blocks.isEmpty());
         // Normal blocks remain
         blocks.add(mock(Block.class));
-        event = new EntityExplodeEvent(p, location, blocks, 0);
+        event = new EntityExplodeEvent(p, location, blocks, 0, null);
         bp.onExplosion(event);
         assertFalse(blocks.isEmpty());
     }

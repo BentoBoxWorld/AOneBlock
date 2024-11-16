@@ -14,9 +14,8 @@ import org.bukkit.GameMode;
 import org.bukkit.block.Biome;
 import org.bukkit.entity.EntityType;
 
-import com.google.common.base.Enums;
-
 import world.bentobox.aoneblock.listeners.BlockListener;
+import world.bentobox.bentobox.BentoBox;
 import world.bentobox.bentobox.api.configuration.ConfigComment;
 import world.bentobox.bentobox.api.configuration.ConfigEntry;
 import world.bentobox.bentobox.api.configuration.StoreAt;
@@ -196,9 +195,14 @@ public class Settings implements WorldSettings {
     @ConfigEntry(path = "world.island-height")
     private int islandHeight = 120;
 
+    @ConfigComment("The number of concurrent islands a player can have in the world")
+    @ConfigComment("A value of 0 will use the BentoBox config.yml default")
+    @ConfigEntry(path = "world.concurrent-islands")
+    private int concurrentIslands = 0;
+
     @ConfigComment("Disallow team members from having their own islands.")
     @ConfigEntry(path = "world.disallow-team-member-islands")
-    private boolean disallowTeamMemberIslands = false;
+    private boolean disallowTeamMemberIslands = true;
 
     @ConfigComment("Use your own world generator for this world.")
     @ConfigComment("In this case, the plugin will not generate anything.")
@@ -226,13 +230,13 @@ public class Settings implements WorldSettings {
 
     @ConfigComment("The default biome for the overworld")
     @ConfigEntry(path = "world.default-biome")
-    private Biome defaultBiome = Biome.PLAINS;
+    private Biome defaultBiome;
     @ConfigComment("The default biome for the nether world (this may affect what mobs can spawn)")
     @ConfigEntry(path = "world.default-nether-biome")
-    private Biome defaultNetherBiome = Enums.getIfPresent(Biome.class, "NETHER").or(Enums.getIfPresent(Biome.class, "NETHER_WASTES").or(Biome.BADLANDS));
+    private Biome defaultNetherBiome;
     @ConfigComment("The default biome for the end world (this may affect what mobs can spawn)")
     @ConfigEntry(path = "world.default-end-biome")
-    private Biome defaultEndBiome = Biome.THE_END;
+    private Biome defaultEndBiome;
 
     @ConfigComment("The maximum number of players a player can ban at any one time in this game mode.")
     @ConfigComment("The permission acidisland.ban.maxlimit.X where X is a number can also be used per player")
@@ -1440,7 +1444,7 @@ public class Settings implements WorldSettings {
      * @return default biome
      */
     public Biome getDefaultBiome() {
-        return defaultBiome;
+        return defaultBiome == null ? Biome.PLAINS : defaultBiome;
     }
 
     /**
@@ -1885,7 +1889,7 @@ public class Settings implements WorldSettings {
      * @return the defaultNetherBiome
      */
     public Biome getDefaultNetherBiome() {
-        return defaultNetherBiome;
+        return defaultNetherBiome == null ? Biome.NETHER_WASTES : defaultNetherBiome;
     }
 
     /**
@@ -1899,7 +1903,7 @@ public class Settings implements WorldSettings {
      * @return the defaultEndBiome
      */
     public Biome getDefaultEndBiome() {
-        return defaultEndBiome;
+        return defaultEndBiome == null ? Biome.THE_END : defaultEndBiome;
     }
 
     /**
@@ -2213,4 +2217,23 @@ public class Settings implements WorldSettings {
     public void setOffset(String offset) {
         this.offset = offset;
     }
+
+    /**
+     * @return the concurrentIslands
+     */
+    @Override
+    public int getConcurrentIslands() {
+        if (concurrentIslands <= 0) {
+            return BentoBox.getInstance().getSettings().getIslandNumber();
+        }
+        return concurrentIslands;
+    }
+
+    /**
+     * @param concurrentIslands the concurrentIslands to set
+     */
+    public void setConcurrentIslands(int concurrentIslands) {
+        this.concurrentIslands = concurrentIslands;
+    }
+
 }

@@ -1,7 +1,7 @@
 '7500':
   name: The Nether
   firstBlock: NETHERRACK
-  biome: NETHER
+  biome: NETHER_WASTES
   blocks:
     ANCIENT_DEBRIS: 25
     BASALT: 200
