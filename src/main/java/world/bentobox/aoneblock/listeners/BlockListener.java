@@ -656,7 +656,6 @@ public class BlockListener implements Listener {
         Location spawnLoc = block.getLocation().add(new Vector(0.5D, 1D, 0.5D));
         Entity entity = block.getWorld().spawnEntity(spawnLoc, nextBlock.getEntityType());
         // Make space for entity - this will blot out blocks
-        makeSpace(entity, spawnLoc);
         block.getWorld().playSound(block.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 1F, 2F);
     }
 
@@ -666,109 +665,6 @@ public class BlockListener implements Listener {
      * @param entity Entity that is spawned.
      * @param spawnLocation Location where entity is spawned.
      */
-    private void makeSpace(@NonNull Entity entity, @NonNull Location spawnLocation)
-    {
-        World world = entity.getWorld();
-        List<Block> airBlocks = new ArrayList<>();
-        List<Block> waterBlocks = new ArrayList<>();
-        // Make space for entity based on the entity's size
-        final BoundingBox boundingBox = entity.getBoundingBox();
-        final boolean isWaterProtected = this.addon.getSettings().isWaterMobProtection() &&
-                WATER_ENTITIES.contains(entity.getType());
-
-        for (double y = boundingBox.getMinY(); y <= Math.min(boundingBox.getMaxY(), world.getMaxHeight()); y++)
-        {
-            // Start with middle block.
-            Block block = world.getBlockAt(new Location(world, spawnLocation.getBlockX(), y, spawnLocation.getBlockZ()));
-
-            // Check if block must be replaced with air or water.
-            this.checkBlock(block, boundingBox, isWaterProtected, airBlocks, waterBlocks);
-
-            // If entity requires water protection, then add air block above it. Dolphin protection.
-            if (isWaterProtected)
-            {
-                // Look up only if possible
-                if (y + 1 < world.getMaxHeight())
-                {
-                    airBlocks.add(block.getRelative(BlockFace.UP));
-                }
-            }
-
-            // Process entity width and depth.
-            if (boundingBox.getWidthX() > 1 && boundingBox.getWidthZ() > 1)
-            {
-                // Entities are spawned in the middle of block. So add extra half block to both dimensions.
-                for (double x = boundingBox.getMinX() - 0.5; x < boundingBox.getMaxX() + 0.5; x++)
-                {
-                    for (double z = boundingBox.getMinZ() - 0.5; z < boundingBox.getMaxZ() + 0.5; z++)
-                    {
-                        block = world.getBlockAt(new Location(world,
-                                x,
-                                y,
-                                z));
-
-                        // Check if block should be marked.
-                        this.checkBlock(block, boundingBox, isWaterProtected, airBlocks, waterBlocks);
-                    }
-                }
-            }
-            else if (boundingBox.getWidthX() > 1)
-            {
-                // If entity is just wider, then check the one dimension.
-                for (double x = boundingBox.getMinX() - 0.5; x < boundingBox.getMaxX() + 0.5; x++)
-                {
-                    block = world.getBlockAt(new Location(world,
-                            x,
-                            y,
-                            spawnLocation.getZ()));
-
-                    // Check if block should be marked.
-                    this.checkBlock(block, boundingBox, isWaterProtected, airBlocks, waterBlocks);
-                }
-            }
-            else if (boundingBox.getWidthZ() > 1)
-            {
-                // If entity is just wider, then check the one dimension.
-                for (double z = boundingBox.getMinZ() - 0.5; z < boundingBox.getMaxZ() + 0.5; z++)
-                {
-                    block = world.getBlockAt(new Location(world,
-                            spawnLocation.getX(),
-                            y,
-                            z));
-
-                    // Check if block should be marked.
-                    this.checkBlock(block, boundingBox, isWaterProtected, airBlocks, waterBlocks);
-                }
-            }
-        }
-
-        // Fire event
-        BlockClearEvent event = new BlockClearEvent(entity, airBlocks, waterBlocks);
-        Bukkit.getPluginManager().callEvent(event);
-
-        if (event.isCancelled())
-        {
-            // Event is cancelled. Blocks cannot be removed.
-            return;
-        }
-
-        // Break blocks.
-        airBlocks.forEach(Block::breakNaturally);
-        airBlocks.forEach(b -> b.setType(Material.AIR));
-        waterBlocks.forEach(block -> {
-            if (block.getBlockData() instanceof Waterlogged waterlogged)
-            {
-                // If block was not removed and is waterlogged, then it means it can be just waterlogged.
-                waterlogged.setWaterlogged(true);
-            }
-            else
-            {
-                // Replace block with water.
-                block.setType(Material.WATER);
-            }
-        });
-    }
-
 
     /**
      * This method checks if block bounding box overlaps with entity bounding box and populates lists accordingly.
