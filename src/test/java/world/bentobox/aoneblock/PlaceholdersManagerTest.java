@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -69,6 +70,7 @@ public class PlaceholdersManagerTest {
         when(addon.inWorld(world)).thenReturn(true);
         when(im.getProtectedIslandAt(any())).thenReturn(Optional.of(island));
         when(im.getIsland(world, user)).thenReturn(island);
+        when(im.getIslands(world, user)).thenReturn(List.of(island));
         obi = new OneBlockIslands("uniqueId");
         obi.setPhaseName("first");
         obi.setBlockNumber(1000);
@@ -80,6 +82,8 @@ public class PlaceholdersManagerTest {
         // Settings
         settings = new Settings();
         when(addon.getSettings()).thenReturn(settings);
+        // Island
+        when(island.getOwner()).thenReturn(uuid);
 
         pm = new AOneBlockPlaceholders(addon, phm);
     }
@@ -120,6 +124,7 @@ public class PlaceholdersManagerTest {
         when(user.getUniqueId()).thenReturn(uuid);
         assertEquals("first", pm.getPhase(user));
         when(im.getIsland(world, user)).thenReturn(null);
+        when(im.getIslands(world, user)).thenReturn(List.of());
         assertEquals("", pm.getPhase(user));
     }
 
@@ -133,6 +138,7 @@ public class PlaceholdersManagerTest {
         when(user.getUniqueId()).thenReturn(uuid);
         assertEquals("1000", pm.getCount(user));
         when(im.getIsland(world, user)).thenReturn(null);
+        when(im.getIslands(world, user)).thenReturn(List.of());
         assertEquals("", pm.getCount(user));
     }
 
@@ -159,6 +165,7 @@ public class PlaceholdersManagerTest {
         when(user.getUniqueId()).thenReturn(uuid);
         assertEquals("next_phase", pm.getNextPhase(user));
         when(im.getIsland(world, user)).thenReturn(null);
+        when(im.getIslands(world, user)).thenReturn(List.of());
         assertEquals("", pm.getNextPhase(user));
     }
 
@@ -189,6 +196,7 @@ public class PlaceholdersManagerTest {
         when(obm.getNextPhaseBlocks(any())).thenReturn(-1);
         assertEquals("Infinite", pm.getNextPhaseBlocks(user));
         when(im.getIsland(world, user)).thenReturn(null);
+        when(im.getIslands(world, user)).thenReturn(List.of());
         assertEquals("", pm.getNextPhaseBlocks(user));
     }
 
@@ -215,6 +223,7 @@ public class PlaceholdersManagerTest {
         when(user.getUniqueId()).thenReturn(uuid);
         assertEquals("70%", pm.getPercentDone(user));
         when(im.getIsland(world, user)).thenReturn(null);
+        when(im.getIslands(world, user)).thenReturn(List.of());
         assertEquals("", pm.getPercentDone(user));
     }
 
@@ -241,6 +250,7 @@ public class PlaceholdersManagerTest {
         when(user.getUniqueId()).thenReturn(uuid);
         assertEquals("&a■■■■■&c■■■", pm.getDoneScale(user));
         when(im.getIsland(world, user)).thenReturn(null);
+        when(im.getIslands(world, user)).thenReturn(List.of());
         assertEquals("", pm.getDoneScale(user));
     }
 
