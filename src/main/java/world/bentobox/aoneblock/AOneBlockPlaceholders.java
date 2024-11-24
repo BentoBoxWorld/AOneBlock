@@ -1,6 +1,8 @@
 package world.bentobox.aoneblock;
 
+import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
@@ -20,23 +22,23 @@ public class AOneBlockPlaceholders {
     private static final TreeMap<Double, String> SCALE;
     private static final String INFINITE = "aoneblock.placeholders.infinite";
     static {
-	SCALE = new TreeMap<>();
-	SCALE.put(0D, "&c╍╍╍╍╍╍╍╍");
-	SCALE.put(12.5, "&a╍&c╍╍╍╍╍╍╍");
-	SCALE.put(25.0, "&a╍╍&c╍╍╍╍╍╍");
-	SCALE.put(37.5, "&a╍╍╍&c╍╍╍╍╍");
-	SCALE.put(50D, "&a╍╍╍╍&c╍╍╍╍");
-	SCALE.put(62.5, "&a╍╍╍╍╍&c╍╍╍");
-	SCALE.put(75.0, "&a╍╍╍╍╍╍&c╍╍");
-	SCALE.put(87.5, "&a╍╍╍╍╍╍╍&c╍");
-	SCALE.put(100D, "&a╍╍╍╍╍╍╍╍");
+        SCALE = new TreeMap<>();
+        SCALE.put(0D, "&c╍╍╍╍╍╍╍╍");
+        SCALE.put(12.5, "&a╍&c╍╍╍╍╍╍╍");
+        SCALE.put(25.0, "&a╍╍&c╍╍╍╍╍╍");
+        SCALE.put(37.5, "&a╍╍╍&c╍╍╍╍╍");
+        SCALE.put(50D, "&a╍╍╍╍&c╍╍╍╍");
+        SCALE.put(62.5, "&a╍╍╍╍╍&c╍╍╍");
+        SCALE.put(75.0, "&a╍╍╍╍╍╍&c╍╍");
+        SCALE.put(87.5, "&a╍╍╍╍╍╍╍&c╍");
+        SCALE.put(100D, "&a╍╍╍╍╍╍╍╍");
     }
 
     private final AOneBlock addon;
 
     public AOneBlockPlaceholders(AOneBlock addon,
             world.bentobox.bentobox.managers.PlaceholdersManager placeholdersManager) {
-	this.addon = addon;
+        this.addon = addon;
         placeholdersManager.registerPlaceholder(addon, "visited_island_phase", this::getPhaseByLocation);
         placeholdersManager.registerPlaceholder(addon, "visited_island_count", this::getCountByLocation);
         placeholdersManager.registerPlaceholder(addon, "my_island_phase", this::getPhase);
@@ -61,14 +63,36 @@ public class AOneBlockPlaceholders {
 
     }
 
+    /**
+     * Get the user's island. Will get either the user's active island, or the island they own.
+     * If they own more than one, then one owned island is picked.
+     * @param user user
+     * @return island
+     */
+    private Optional<Island> getUsersIsland(User user) {
+        // Get the active island for the user
+        Island i = addon.getIslands().getIsland(addon.getOverWorld(), user);
+        if (i != null && i.getOwner() != null && user.getUniqueId().equals(i.getOwner())) {
+            // Owner of this island and currently on this island
+            return Optional.ofNullable(i);
+        }
+
+        // Check for other owned islands
+        List<Island> ownedIslands = addon.getIslands().getIslands(addon.getOverWorld(), user).stream()
+                .filter(is -> user.getUniqueId().equals(is.getOwner())).toList();
+        if (ownedIslands.size() == 1) {
+            // Replace with the owned island
+            i = ownedIslands.get(0); // pick one
+        }
+        // Return what we have found
+        return Optional.ofNullable(i);
+
+    }
+
     public String getPhaseBlocksNames(User user) {
         if (user == null || user.getUniqueId() == null)
             return "";
-        Island i = addon.getIslands().getIsland(addon.getOverWorld(), user);
-        if (i == null) {
-            return "";
-        }
-        return getPhaseBlocksForIsland(user, i);
+        return getUsersIsland(user).map(i -> getPhaseBlocksForIsland(user, i)).orElse("");
     }
 
     private String getPhaseBlocksForIsland(User user, Island i) {
@@ -111,10 +135,10 @@ public class AOneBlockPlaceholders {
      * @return Phase name
      */
     public String getPhaseByLocation(User user) {
-	if (user == null || user.getUniqueId() == null)
-	    return "";
-	return addon.getIslands().getProtectedIslandAt(Objects.requireNonNull(user.getLocation()))
-		.map(addon::getOneBlocksIsland).map(OneBlockIslands::getPhaseName).orElse("");
+        if (user == null || user.getUniqueId() == null)
+            return "";
+        return addon.getIslands().getProtectedIslandAt(Objects.requireNonNull(user.getLocation()))
+                .map(addon::getOneBlocksIsland).map(OneBlockIslands::getPhaseName).orElse("");
     }
 
     /**
@@ -125,9 +149,9 @@ public class AOneBlockPlaceholders {
      */
     public String getCountByLocation(User user) {
         if (user == null || user.getUniqueId() == null || !addon.inWorld(user.getWorld()))
-	    return "";
-	return addon.getIslands().getProtectedIslandAt(Objects.requireNonNull(user.getLocation()))
-		.map(addon::getOneBlocksIsland).map(OneBlockIslands::getBlockNumber).map(String::valueOf).orElse("");
+            return "";
+        return addon.getIslands().getProtectedIslandAt(Objects.requireNonNull(user.getLocation()))
+                .map(addon::getOneBlocksIsland).map(OneBlockIslands::getBlockNumber).map(String::valueOf).orElse("");
     }
 
     /**
@@ -137,10 +161,9 @@ public class AOneBlockPlaceholders {
      * @return phase name
      */
     public String getPhase(User user) {
-	if (user == null || user.getUniqueId() == null)
-	    return "";
-	Island i = addon.getIslands().getIsland(addon.getOverWorld(), user);
-	return i == null ? "" : addon.getOneBlocksIsland(i).getPhaseName();
+        if (user == null || user.getUniqueId() == null)
+            return "";
+        return getUsersIsland(user).map(i -> addon.getOneBlocksIsland(i).getPhaseName()).orElse("");
     }
 
     /**
@@ -150,10 +173,9 @@ public class AOneBlockPlaceholders {
      * @return string of block count
      */
     public String getCount(User user) {
-	if (user == null || user.getUniqueId() == null)
-	    return "";
-	Island i = addon.getIslands().getIsland(addon.getOverWorld(), user);
-	return i == null ? "" : String.valueOf(addon.getOneBlocksIsland(i).getBlockNumber());
+        if (user == null || user.getUniqueId() == null)
+            return "";
+        return getUsersIsland(user).map(i -> String.valueOf(addon.getOneBlocksIsland(i).getBlockNumber())).orElse("");
     }
 
     /**
@@ -164,9 +186,9 @@ public class AOneBlockPlaceholders {
      */
     public String getNextPhaseByLocation(User user) {
         if (user == null || user.getUniqueId() == null || !addon.inWorld(user.getWorld()))
-	    return "";
-	return addon.getIslands().getProtectedIslandAt(Objects.requireNonNull(user.getLocation()))
-		.map(addon::getOneBlocksIsland).map(addon.getOneBlockManager()::getNextPhase).orElse("");
+            return "";
+        return addon.getIslands().getProtectedIslandAt(Objects.requireNonNull(user.getLocation()))
+                .map(addon::getOneBlocksIsland).map(addon.getOneBlockManager()::getNextPhase).orElse("");
     }
 
     /**
@@ -176,10 +198,10 @@ public class AOneBlockPlaceholders {
      * @return next island phase
      */
     public String getNextPhase(User user) {
-	if (user == null || user.getUniqueId() == null)
-	    return "";
-	Island i = addon.getIslands().getIsland(addon.getOverWorld(), user);
-	return i == null ? "" : addon.getOneBlockManager().getNextPhase(addon.getOneBlocksIsland(i));
+        if (user == null || user.getUniqueId() == null)
+            return "";
+        return getUsersIsland(user).map(i -> addon.getOneBlockManager().getNextPhase(addon.getOneBlocksIsland(i)))
+                .orElse("");
     }
 
     /**
@@ -190,10 +212,10 @@ public class AOneBlockPlaceholders {
      */
     public String getNextPhaseBlocksByLocation(User user) {
         if (user == null || user.getUniqueId() == null || !addon.inWorld(user.getWorld()))
-	    return "";
-	return addon.getIslands().getProtectedIslandAt(Objects.requireNonNull(user.getLocation()))
-		.map(addon::getOneBlocksIsland).map(addon.getOneBlockManager()::getNextPhaseBlocks)
-		.map(num -> num < 0 ? user.getTranslation(INFINITE) : String.valueOf(num)).orElse("");
+            return "";
+        return addon.getIslands().getProtectedIslandAt(Objects.requireNonNull(user.getLocation()))
+                .map(addon::getOneBlocksIsland).map(addon.getOneBlockManager()::getNextPhaseBlocks)
+                .map(num -> num < 0 ? user.getTranslation(INFINITE) : String.valueOf(num)).orElse("");
     }
 
     /**
@@ -203,14 +225,12 @@ public class AOneBlockPlaceholders {
      * @return string number of blocks
      */
     public String getNextPhaseBlocks(User user) {
-	if (user == null || user.getUniqueId() == null)
-	    return "";
-	Island i = addon.getIslands().getIsland(addon.getOverWorld(), user);
-	if (i == null) {
-	    return "";
-	}
-	int num = addon.getOneBlockManager().getNextPhaseBlocks(addon.getOneBlocksIsland(i));
-	return num < 0 ? user.getTranslation(INFINITE) : String.valueOf(num);
+        if (user == null || user.getUniqueId() == null)
+            return "";
+        return getUsersIsland(user).map(i -> {
+            int num = addon.getOneBlockManager().getNextPhaseBlocks(addon.getOneBlocksIsland(i));
+            return num < 0 ? user.getTranslation(INFINITE) : String.valueOf(num);
+        }).orElse("");
     }
 
     /**
@@ -220,14 +240,12 @@ public class AOneBlockPlaceholders {
      * @return string number of blocks
      */
     public String getPhaseBlocks(User user) {
-	if (user == null || user.getUniqueId() == null)
-	    return "";
-	Island i = addon.getIslands().getIsland(addon.getOverWorld(), user);
-	if (i == null) {
-	    return "";
-	}
-	int num = addon.getOneBlockManager().getPhaseBlocks(addon.getOneBlocksIsland(i));
-	return num < 0 ? user.getTranslation(INFINITE) : String.valueOf(num);
+        if (user == null || user.getUniqueId() == null)
+            return "";
+        return getUsersIsland(user).map(i -> {
+            int num = addon.getOneBlockManager().getPhaseBlocks(addon.getOneBlocksIsland(i));
+            return num < 0 ? user.getTranslation(INFINITE) : String.valueOf(num);
+        }).orElse("");
     }
 
     /**
@@ -238,10 +256,10 @@ public class AOneBlockPlaceholders {
      */
     public String getPercentDoneByLocation(User user) {
         if (user == null || user.getUniqueId() == null || !addon.inWorld(user.getWorld()))
-	    return "";
-	return addon.getIslands().getProtectedIslandAt(Objects.requireNonNull(user.getLocation()))
-		.map(addon::getOneBlocksIsland).map(addon.getOneBlockManager()::getPercentageDone)
-		.map(num -> Math.round(num) + "%").orElse("");
+            return "";
+        return addon.getIslands().getProtectedIslandAt(Objects.requireNonNull(user.getLocation()))
+                .map(addon::getOneBlocksIsland).map(addon.getOneBlockManager()::getPercentageDone)
+                .map(num -> Math.round(num) + "%").orElse("");
     }
 
     /**
@@ -251,14 +269,12 @@ public class AOneBlockPlaceholders {
      * @return string percentage
      */
     public String getPercentDone(User user) {
-	if (user == null || user.getUniqueId() == null)
-	    return "";
-	Island i = addon.getIslands().getIsland(addon.getOverWorld(), user);
-	if (i == null) {
-	    return "";
-	}
-	double num = addon.getOneBlockManager().getPercentageDone(addon.getOneBlocksIsland(i));
-	return Math.round(num) + "%";
+        if (user == null || user.getUniqueId() == null)
+            return "";
+        return getUsersIsland(user).map(i -> {
+            double num = addon.getOneBlockManager().getPercentageDone(addon.getOneBlocksIsland(i));
+            return Math.round(num) + "%";
+        }).orElse("");
     }
 
     /**
@@ -269,11 +285,11 @@ public class AOneBlockPlaceholders {
      */
     public String getDoneScaleByLocation(User user) {
         if (user == null || user.getUniqueId() == null || !addon.inWorld(user.getWorld()))
-	    return "";
-	return addon.getIslands().getProtectedIslandAt(Objects.requireNonNull(user.getLocation()))
-		.map(addon::getOneBlocksIsland).map(addon.getOneBlockManager()::getPercentageDone)
-		.map(num -> SCALE.floorEntry(num).getValue())
-		.map(s -> s.replace("╍", addon.getSettings().getPercentCompleteSymbol())).orElse("");
+            return "";
+        return addon.getIslands().getProtectedIslandAt(Objects.requireNonNull(user.getLocation()))
+                .map(addon::getOneBlocksIsland).map(addon.getOneBlockManager()::getPercentageDone)
+                .map(num -> SCALE.floorEntry(num).getValue())
+                .map(s -> s.replace("╍", addon.getSettings().getPercentCompleteSymbol())).orElse("");
     }
 
     /**
@@ -283,14 +299,12 @@ public class AOneBlockPlaceholders {
      * @return colored scale
      */
     public String getDoneScale(User user) {
-	if (user == null || user.getUniqueId() == null)
-	    return "";
-	Island i = addon.getIslands().getIsland(addon.getOverWorld(), user);
-	if (i == null) {
-	    return "";
-	}
-	double num = addon.getOneBlockManager().getPercentageDone(addon.getOneBlocksIsland(i));
-	return SCALE.floorEntry(num).getValue().replace("╍", addon.getSettings().getPercentCompleteSymbol());
+        if (user == null || user.getUniqueId() == null)
+            return "";
+        return getUsersIsland(user).map(i -> {
+            double num = addon.getOneBlockManager().getPercentageDone(addon.getOneBlocksIsland(i));
+            return SCALE.floorEntry(num).getValue().replace("╍", addon.getSettings().getPercentCompleteSymbol());
+        }).orElse("");
     }
 
     /**
@@ -300,12 +314,11 @@ public class AOneBlockPlaceholders {
      * @return string of Lifetime count
      */
     public String getLifetime(User user) {
-	if (user == null || user.getUniqueId() == null)
-	    return "";
+        if (user == null || user.getUniqueId() == null)
+            return "";
 
-	Island island = this.addon.getIslands().getIsland(this.addon.getOverWorld(), user);
-
-	return island == null ? "" : String.valueOf(this.addon.getOneBlocksIsland(island).getLifetime());
+        return getUsersIsland(user).map(i -> String.valueOf(this.addon.getOneBlocksIsland(i).getLifetime()))
+                .orElse("");
     }
 
     /**
@@ -316,9 +329,9 @@ public class AOneBlockPlaceholders {
      */
     public String getLifetimeByLocation(User user) {
         if (user == null || user.getUniqueId() == null || !addon.inWorld(user.getWorld()))
-	    return "";
+            return "";
 
-	return this.addon.getIslands().getProtectedIslandAt(Objects.requireNonNull(user.getLocation()))
-		.map(this.addon::getOneBlocksIsland).map(OneBlockIslands::getLifetime).map(String::valueOf).orElse("");
+        return this.addon.getIslands().getProtectedIslandAt(Objects.requireNonNull(user.getLocation()))
+                .map(this.addon::getOneBlocksIsland).map(OneBlockIslands::getLifetime).map(String::valueOf).orElse("");
     }
 }
