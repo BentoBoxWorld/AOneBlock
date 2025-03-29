@@ -1,71 +1,94 @@
----
+protection:
+  flags:
+    START_SAFETY:
+      name: Начальная безопасность
+      description: |
+        &b Предотвращает новых игроков
+        &b от переезда на 1 минуту
+        &b Так что они не падают.
+      hint: '&c Движение заблокировано для безопасности для [number] больше секунд!'
+      free-to-move: '&a Вы можете свободно двигаться. '
+    ONEBLOCK_BOSSBAR:
+      name: Boss Bar
+      description: |
+        &b Показывает строку статуса
+        &b Для каждого этапа.
 aoneblock:
+  bossbar:
+    title: Блоки остались
+    status: '&a Фазовые блоки &b [done] &d / &b [total]'
+    color: RED
+    style: SEGMENTED_20
+    not-active: '&c Boss Bar не активен для этого острова'
   commands:
     admin:
       setcount:
-        parameters: "<name> <count> [lifetime]"
+        parameters: <name> <count> [lifetime]
         description: установить количество блоков игрока
-        set: "&a [name] кол-во блоков установлено на [number]"
-        set-lifetime: "&a Счетчик жизни [name] установлен на [number]"
+        set: '&a [name] кол-во блоков установлено на [number]'
+        set-lifetime: '&a Счетчик жизни [name] установлен на [number]'
       setchest:
-        parameters: "<phase> <rarity>"
+        parameters: <phase> <rarity>
         description: положить проверенный сундук в фазу с указанной редкостью
-        chest-is-empty: "&c Этот сундук пуст, поэтому не может быть добавлен"
-        unknown-phase: "&c Неизвестная фаза. Используйте Tab-Complete, чтобы увидеть
-          их"
-        unknown-rarity: "&c Неизвестная редкость. Используйте COMMON, UNCOMMON, RARE
-          или EPIC"
-        look-at-chest: "&c Посмотрите на заполненный сундук, чтобы установить его"
-        only-single-chest: "&c Можно установить только один сундук"
-        success: "&a Сундук успешно добавлен в фазу"
-        failure: "&c Сундук не может быть добавлен в фазу! Смотрите консоль для ошибок"
+        chest-is-empty: '&c Этот сундук пуст, поэтому не может быть добавлен'
+        unknown-phase: '&c Неизвестная фаза. Используйте Tab-Complete, чтобы увидеть их'
+        unknown-rarity: '&c Неизвестная редкость. Используйте COMMON, UNCOMMON, RARE или EPIC'
+        look-at-chest: '&c Посмотрите на заполненный сундук, чтобы установить его'
+        only-single-chest: '&c Можно установить только один сундук'
+        success: '&a Сундук успешно добавлен в фазу'
+        failure: '&c Сундук не может быть добавлен в фазу! Смотрите консоль для ошибок'
       sanity:
-        parameters: "<phase>"
+        parameters: <phase>
         description: отобразить проверку исправности фазовых вероятностей в консоли
-        see-console: "&a Смотрите консоль для отчета"
+        see-console: '&a Смотрите консоль для отчета'
     count:
       description: показать количество блоков и фаз
-      info: "&a Вы находитесь в блоке &b [number] в &a [name] фазе"
+      info: '&a Вы находитесь в блоке &b [number] в &a [name] фазе'
+    info:
+      count: '&a Остров находится на блоке &b [number] &a в фазе &b [number]. '
     phases:
       description: показать список всех фаз
-      title: "&2 Фазы OneBlock"
-      name-syntax: "&a [name]"
-      description-syntax: "&b [number] блоков"
+      title: '&2 Фазы OneBlock'
+      name-syntax: '&a [name]'
+      description-syntax: '&b [number] блоков'
     island:
+      bossbar:
+        description: Переключает фазовую бар босса
+        status_on: '&b Боссбар &a включился'
+        status_off: '&b Боссбар &c выключился'
       setcount:
-        parameters: "<count>"
+        parameters: <count>
         description: установить счетчик блоков на ранее завершенное значение
-        set: "&a Счетчик установлен на [number]."
-        too-high: "&c Максимум, что вы можете установить, это [number]!"
+        set: '&a Счетчик установлен на [number].'
+        too-high: '&c Максимум, что вы можете установить, это [number]!'
     respawn-block:
       description: возрождает магический блок в ситуациях, когда они исчезают
-      block-exist: "&a Блок существует, не требует возрождения. Я отметил это для
-        вас."
-      block-respawned: "& Блок возродился, пожалуйста, не аннулируйте его снова."
+      block-exist: '&a Блок существует, не требует возрождения. Я отметил это для вас.'
+      block-respawned: '& Блок возродился, пожалуйста, не аннулируйте его снова.'
   phase:
-    insufficient-level: "&c Уровень вашего острова слишком низок для продолжения!
-      Должно быть [number]."
-    insufficient-funds: "&c У вас слишком мало средств для продолжения! Они должны
-      быть [number]."
-    insufficient-bank-balance: "&c Баланс банка острова слишком низок для продолжения!
-      Должно быть [number]."
-    insufficient-permission: "&c Вы не можете продолжать, пока не получите разрешение
-      [name]!"
-    cooldown: "&c Следующий этап будет доступен через [number] секунд!"
+    insufficient-level: >-
+      &c Уровень вашего острова слишком низок для продолжения! Должно быть
+      [number].
+    insufficient-funds: '&c У вас слишком мало средств для продолжения! Они должны быть [number].'
+    insufficient-bank-balance: >-
+      &c Баланс банка острова слишком низок для продолжения! Должно быть
+      [number].
+    insufficient-permission: '&c Вы не можете продолжать, пока не получите разрешение [name]!'
+    cooldown: '&c Следующий этап будет доступен через [number] секунд!'
   placeholders:
     infinite: Бесконечный
   gui:
     titles:
-      phases: "&0&l Фазы OneBlock"
+      phases: '&0&l Фазы OneBlock'
     buttons:
       previous:
-        name: "&f&l Предыдущая страница"
-        description: "&7 Перейти на [number] страницы"
+        name: '&f&l Предыдущая страница'
+        description: '&7 Перейти на [number] страницы'
       next:
-        name: "&f&l Следующая страница"
-        description: "&7 Перейти на [number] страницы"
+        name: '&f&l Следующая страница'
+        description: '&7 Перейти на [number] страницы'
       phase:
-        name: "&f&l [phase]"
+        name: '&f&l [phase]'
         description: |-
           [starting-block]
           [biome]
@@ -73,16 +96,19 @@ aoneblock:
           [economy]
           [level]
           [permission]
-        starting-block: "&7 Запускается после разбиения блоков &e [number]."
-        biome: "&7 Биом: &e [biome]"
-        bank: "&7 Требуется &e $[number] &7 на банковском счете."
-        economy: "&7 Требуется &e $[number] &7 в учетной записи игрока."
-        level: "&7 Требуется &e [number] &7 уровня острова."
-        permission: "&7 Требуется разрешение `&e[permission]&7`."
+        starting-block: '&7 Запускается после разбиения блоков &e [number].'
+        biome: '&7 Биом: &e [biome]'
+        bank: '&7 Требуется &e $[number] &7 на банковском счете.'
+        economy: '&7 Требуется &e $[number] &7 в учетной записи игрока.'
+        level: '&7 Требуется &e [number] &7 уровня острова.'
+        permission: '&7 Требуется разрешение `&e[permission]&7`.'
+        blocks-prefix: '&7 Блоки в фазе -'
+        blocks: '&e [name], '
+        wrap-at: '50'
     tips:
-      click-to-previous: "&e Нажмите &7, чтобы просмотреть предыдущую страницу."
-      click-to-next: "&e Нажмите &7 для просмотра следующей страницы."
-      click-to-change: "&e Нажмите &7, чтобы изменить."
+      click-to-previous: '&e Нажмите &7, чтобы просмотреть предыдущую страницу.'
+      click-to-next: '&e Нажмите &7 для просмотра следующей страницы.'
+      click-to-change: '&e Нажмите &7, чтобы изменить.'
   island:
     starting-hologram: |-
       &aДобро пожаловать в AOneBlock

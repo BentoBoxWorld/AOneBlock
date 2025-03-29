@@ -1,66 +1,90 @@
----
+protection:
+  flags:
+    START_SAFETY:
+      name: 開始安全
+      description: |
+        &b 防止新球員
+        &b 從移動1分鐘
+        &b 所以他們不會掉下來。
+      hint: '&c 移動被阻塞，以確保[number]更多秒！'
+      free-to-move: '&a 您可以自由移動。當心！'
+    ONEBLOCK_BOSSBAR:
+      name: 老闆酒吧
+      description: |
+        &b 顯示狀態欄
+        &b 對於每個階段。
 aoneblock:
+  bossbar:
+    title: 剩餘的塊
+    status: '&a 相位塊&b [done] &d / &b [total]'
+    color: RED
+    style: SEGMENTED_20
+    not-active: '&c 老闆酒吧對這個島不活躍'
   commands:
     admin:
       setcount:
-        parameters: "<名稱> <計數>"
+        parameters: <名稱> <計數>
         description: 設置玩家的蓋帽數
         set: a [name]的計數設置為[number]
-        set-lifetime: "&a [name] 的生命週期計數設定為 [number]"
+        set-lifetime: '&a [name] 的生命週期計數設定為 [number]'
       setchest:
-        parameters: "<階段> <稀有>"
+        parameters: <階段> <稀有>
         description: 將所看的箱子放在指定稀有度的階段
-        chest-is-empty: "＆c該箱子為空，因此無法添加"
-        unknown-phase: "＆c未知階段。使用製表符完成功能來查看它們"
-        unknown-rarity: "＆c未知稀有。使用COMMON，UNCOMMON，RARE或EPIC"
-        look-at-chest: "＆c看看裝滿的箱子"
-        only-single-chest: "＆c只能設置單個箱子"
-        success: "&a 箱子成功添加"
-        failure: "＆c 無法將胸部添加到該階段！ 請參閱控制台以獲取錯誤"
+        chest-is-empty: ＆c該箱子為空，因此無法添加
+        unknown-phase: ＆c未知階段。使用製表符完成功能來查看它們
+        unknown-rarity: ＆c未知稀有。使用COMMON，UNCOMMON，RARE或EPIC
+        look-at-chest: ＆c看看裝滿的箱子
+        only-single-chest: ＆c只能設置單個箱子
+        success: '&a 箱子成功添加'
+        failure: ＆c 無法將胸部添加到該階段！ 請參閱控制台以獲取錯誤
       sanity:
-        parameters: "<階段>"
+        parameters: <階段>
         description: 在控制台中顯示相概率的健全性檢查
-        see-console: "＆a請參閱控制台以獲取報告"
+        see-console: ＆a請參閱控制台以獲取報告
     count:
       description: 顯示塊數和相位
-      info: "&a您正在&a[name]]階段中阻止&b[number]"
+      info: '&a您正在&a[name]]階段中阻止&b[number]'
     info:
-      count: "&a 島位於 &b [names] &a 階段的 &b [number]&a 區塊。生命週期計數 &b [lifetime] &a。"
+      count: '&a 島位於 &b [names] &a 階段的 &b [number]&a 區塊。生命週期計數 &b [lifetime] &a。'
     phases:
       description: 顯示所有階段的列表
-      title: "＆2 OneBlock階段"
-      name-syntax: "&a [name]"
-      description-syntax: "&b [number]塊"
+      title: ＆2 OneBlock階段
+      name-syntax: '&a [name]'
+      description-syntax: '&b [number]塊'
     island:
+      bossbar:
+        description: 切換相位欄
+        status_on: '&b Bossbar&a 打開'
+        status_off: '&b Bossbar&c 關閉'
       setcount:
-        parameters: "<計數>"
+        parameters: <計數>
         description: 將區塊計數設定為之前完成的值
-        set: "&a 計數設定為 [number]。"
-        too-high: "&c 您可以設定的最大值是[number]！"
+        set: '&a 計數設定為 [number]。'
+        too-high: '&c 您可以設定的最大值是[number]！'
     respawn-block:
       description: 在魔法塊消失的情況下重生
-      block-exist: "&a 塊存在，不需要重生。我給你標記了。"
-      block-respawned: "&a 塊重生。"
+      block-exist: '&a 塊存在，不需要重生。我給你標記了。'
+      block-respawned: '&a 塊重生。'
   phase:
-    insufficient-level: "&c 你的島嶼等級太低，無法繼續！必須是[number]。"
-    insufficient-funds: "&c 您的資金太低，無法繼續！他們必須是[數字]。"
-    insufficient-bank-balance: "&c 島上銀行餘額太低，無法繼續！必須是[number]。"
-    insufficient-permission: "&c 在獲得 [name] 許可之前，您不能繼續操作！"
-    cooldown: "&c [number] 秒後即可進入下一階段！"
+    insufficient-level: '&c 你的島嶼等級太低，無法繼續！必須是[number]。'
+    insufficient-funds: '&c 您的資金太低，無法繼續！他們必須是[數字]。'
+    insufficient-bank-balance: '&c 島上銀行餘額太低，無法繼續！必須是[number]。'
+    insufficient-permission: '&c 在獲得 [name] 許可之前，您不能繼續操作！'
+    cooldown: '&c [number] 秒後即可進入下一階段！'
   placeholders:
     infinite: 無窮
   gui:
     titles:
-      phases: "&0&l OneBlock 階段"
+      phases: '&0&l OneBlock 階段'
     buttons:
       previous:
-        name: "&f&l 上一頁"
-        description: "&7 切換到[number]頁"
+        name: '&f&l 上一頁'
+        description: '&7 切換到[number]頁'
       next:
-        name: "&f&l 下一頁"
-        description: "&7 切換到[number]頁"
+        name: '&f&l 下一頁'
+        description: '&7 切換到[number]頁'
       phase:
-        name: "&f&l [階段]"
+        name: '&f&l [階段]'
         description: |-
           [starting-block]
           [biome]
@@ -68,16 +92,19 @@ aoneblock:
           [economy]
           [level]
           [permission]
-        starting-block: "&7 在破壞 &e [number] 區塊後開始。"
-        biome: "&7 生物群落：&e [biome]"
-        bank: "&7 需要銀行帳戶中有 &e $[number] &7。"
-        economy: "&7 需要玩家帳號中有 &e $[number] &7。"
-        level: "&7 需要 &e [number] &7 島嶼等級。"
-        permission: "&7 需要 `&e[permission]&7` 權限。"
+        starting-block: '&7 在破壞 &e [number] 區塊後開始。'
+        biome: '&7 生物群落：&e [biome]'
+        bank: '&7 需要銀行帳戶中有 &e $[number] &7。'
+        economy: '&7 需要玩家帳號中有 &e $[number] &7。'
+        level: '&7 需要 &e [number] &7 島嶼等級。'
+        permission: '&7 需要 `&e[permission]&7` 權限。'
+        blocks-prefix: '&7 階段塊 - '
+        blocks: '&e [name], '
+        wrap-at: '50'
     tips:
-      click-to-previous: "&e 點選&7 查看上一頁。"
-      click-to-next: "&e 點選&7 查看下一頁。"
-      click-to-change: "&e 點選 &7 進行更改。"
+      click-to-previous: '&e 點選&7 查看上一頁。'
+      click-to-next: '&e 點選&7 查看下一頁。'
+      click-to-change: '&e 點選 &7 進行更改。'
   island:
     starting-hologram: |-
       &a歡迎來到 AOneBlock

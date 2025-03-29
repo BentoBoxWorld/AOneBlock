@@ -1,52 +1,115 @@
----
+protection:
+  flags:
+    START_SAFETY:
+      name: Khởi đầu an toàn
+      description: |
+        &b Ngăn chặn người chơi mới
+        &b Từ việc di chuyển trong 1 phút
+        &b Vì vậy, họ không rơi ra.
+      hint: '&c Chuyển động bị chặn để an toàn cho [number] thêm giây!'
+      free-to-move: '&a Bạn có thể tự do di chuyển. '
+    ONEBLOCK_BOSSBAR:
+      name: Boss Bar
+      description: |
+        &b Hiển thị một thanh trạng thái
+        &b cho mỗi pha.
 aoneblock:
+  bossbar:
+    title: Khối còn lại
+    status: '&a Khối pha &b [done] &d / &b [total]'
+    color: RED
+    style: SEGMENTED_20
+    not-active: '&c Boss Bar không hoạt động cho hòn đảo này'
   commands:
     admin:
       setcount:
-        parameters: "<tên> <số>"
+        parameters: <tên> <số>
         description: chỉnh số đếm khối của người chơi
-        set: "&a Số đếm khối của [name] được đặt thành [number]"
-        set-lifetime: "&a Bộ đếm thời gian tồn tại của [name] được đặt thành [number]"
+        set: '&a Số đếm khối của [name] được đặt thành [number]'
+        set-lifetime: '&a Bộ đếm thời gian tồn tại của [name] được đặt thành [number]'
       setchest:
-        parameters: "<giai đoạn> <độ hiếm>"
+        parameters: <giai đoạn> <độ hiếm>
         description: thêm rương đang nhìn vào một giai đoạn với độ hiếm được chỉ định
-        chest-is-empty: "&c Rương đó trống nên không thể thêm vào"
-        unknown-phase: "&c Giai đoạn chưa biết. Dùng TAB để xem chúng"
-        unknown-rarity: "&c Độ hiếm chưa biết. Sử dụng COMMON, UNCOMMON, RARE hoặc
-          EPIC"
-        look-at-chest: "&c Nhìn vào một cái rương đầy để đặt nó"
-        only-single-chest: "&c Chỉ có thể đặt các rương đơn"
-        success: "&a Rương được thêm thành công vào giai đoạn"
-        failure: "&c Rương không thể được thêm vào giai đoạn! Xem bảng điều khiển
-          để biết lỗi"
+        chest-is-empty: '&c Rương đó trống nên không thể thêm vào'
+        unknown-phase: '&c Giai đoạn chưa biết. Dùng TAB để xem chúng'
+        unknown-rarity: '&c Độ hiếm chưa biết. Sử dụng COMMON, UNCOMMON, RARE hoặc EPIC'
+        look-at-chest: '&c Nhìn vào một cái rương đầy để đặt nó'
+        only-single-chest: '&c Chỉ có thể đặt các rương đơn'
+        success: '&a Rương được thêm thành công vào giai đoạn'
+        failure: >-
+          &c Rương không thể được thêm vào giai đoạn! Xem bảng điều khiển để
+          biết lỗi
       sanity:
-        parameters: "<giao đoạn>"
-        description: hiển thị kiểm tra sự đúng đắn của xác suất giao đoạn lên bảng
-          điều khiển
-        see-console: "&a Xem bảng điều khiển cho báo cáo"
+        parameters: <giao đoạn>
+        description: >-
+          hiển thị kiểm tra sự đúng đắn của xác suất giao đoạn lên bảng điều
+          khiển
+        see-console: '&a Xem bảng điều khiển cho báo cáo'
     count:
       description: hiển thị số khối và giai đoạn
-      info: "&a Bạn đang ở trên khối &b [number] trong giai đoạn &a [name]"
+      info: '&a Bạn đang ở trên khối &b [number] trong giai đoạn &a [name]'
+    info:
+      count: '&a Đảo nằm trên khối &b [number] &a trong giai đoạn &b [name]. '
     phases:
       description: hiển thị một danh sách tất cả các giai đoạn
-      title: "&2 Giai đoạn OneBlock"
-      name-syntax: "&a [name]"
-      description-syntax: "&b [number] khối"
+      title: '&2 Giai đoạn OneBlock'
+      name-syntax: '&a [name]'
+      description-syntax: '&b [number] khối'
     island:
+      bossbar:
+        description: bật thanh Boss giai đoạn
+        status_on: '&b Bossbar &a bật lên'
+        status_off: '&b Bossbar &c tắt'
       setcount:
-        parameters: "<số lượng>"
+        parameters: <số lượng>
         description: đặt số khối thành giá trị đã hoàn thành trước đó
-        set: "&a Bộ đếm được đặt thành [number]."
-        too-high: "&cMức tối đa bạn có thể đặt là[number]!"
+        set: '&a Bộ đếm được đặt thành [number].'
+        too-high: '&cMức tối đa bạn có thể đặt là[number]!'
+    respawn-block:
+      description: Block ma thuật hồi sinh trong các tình huống khi nó biến mất
+      block-exist: '&a Khối tồn tại, không yêu cầu phản hồi. '
+      block-respawned: '&a Chặn hồi sinh.'
   phase:
     insufficient-level: Cấp đảo của bạn quá thấp để thực thi! Nó phải là [number].
     insufficient-funds: Tài chính của bạn quá thấp để thực thi! Nó phải là [number].
-    insufficient-bank-balance: Ngân hàng đảo của bạn quá thấp để thực thi! Nó phải
-      là [number].
+    insufficient-bank-balance: Ngân hàng đảo của bạn quá thấp để thực thi! Nó phải là [number].
     insufficient-permission: Bạn không thể thực thi tiếp cho đến khi có quyền [name]!
     cooldown: Giai đoạn tiếp theo sẽ có sau [number] giây!
   placeholders:
     infinite: Vô hạn
+  gui:
+    titles:
+      phases: '&0&l Giai đoạn OneBlock'
+    buttons:
+      previous:
+        name: '&f&l Trang trước'
+        description: '&7 Chuyển sang trang [number]'
+      next:
+        name: '&f&l Trang tiếp theo'
+        description: '& Chuyển sang trang [number]'
+      phase:
+        name: '&f&l [phase]'
+        description: |-
+          [starting-block]
+          [biome]
+          [bank]
+          [economy]
+          [level]
+          [permission]
+          [blocks]
+        starting-block: '&7 Bắt đầu sau khi phá vỡ &e [number] khối.'
+        biome: '&7 Biome: &e [biome]'
+        bank: '&7 Yêu cầu 7e $[number] &7 trong tài khoản ngân hàng.'
+        economy: '&7 Yêu cầu &e $[number] &7 trong tài khoản người chơi.'
+        level: '&7 Yêu cầu &e[number] &7 cấp đảo.'
+        permission: '&7 Yêu cầu `&e[permission]&7` quyền.'
+        blocks-prefix: '&7 Khối trong giai đoạn -'
+        blocks: '&e [name], '
+        wrap-at: '50'
+    tips:
+      click-to-previous: '&e Bấm &7 để xem trang trước.'
+      click-to-next: '&e Bấm &7 để xem trang tiếp theo.'
+      click-to-change: '&e Bấm &7 để thay đổi.'
   island:
     starting-hologram: |-
       &aChào mừng đến với OneBlock
