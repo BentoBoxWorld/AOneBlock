@@ -29,6 +29,8 @@ import world.bentobox.bentobox.database.objects.Island;
 
 public class BossBarListener implements Listener {
 
+    private static final String AONEBLOCK_BOSSBAR = "aoneblock.bossbar";
+
     public BossBarListener(AOneBlock addon) {
         super();
         this.addon = addon;
@@ -54,7 +56,7 @@ public class BossBarListener implements Listener {
 
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onFlagChange(FlagSettingChangeEvent e) {
-        if (e.getEditedFlag() == addon.ONEBLOCK_BOSSBAR) {
+        if (e.getEditedFlag() == addon.BOSSBAR) {
             // Show to players on island. If it isn't allowed then this will clean up the boss bar too
             e.getIsland().getPlayersOnIsland().stream().map(Player::getUniqueId)
                     .forEach(uuid -> this.tryToShowBossBar(uuid, e.getIsland()));
@@ -70,7 +72,7 @@ public class BossBarListener implements Listener {
         User user = User.getInstance(uuid);
 
         // Only show if enabled for island
-        if (!island.isAllowed(addon.ONEBLOCK_BOSSBAR)) {
+        if (!island.isAllowed(addon.BOSSBAR)) {
             BossBar removed = islandBossBars.remove(island);
             if (removed != null) {
                 // Remove all players from the boss bar
@@ -79,7 +81,7 @@ public class BossBarListener implements Listener {
             return;
         }
         // Default to showing boss bar unless it is explicitly turned off
-        if (!user.getMetaData("aoneblock.bossbar").map(MetaDataValue::asBoolean).orElse(true)) {
+        if (!user.getMetaData(AONEBLOCK_BOSSBAR).map(MetaDataValue::asBoolean).orElse(true)) {
             // Remove any boss bar from user if they are in the world
             removeBar(user, island);
             // Do not show a boss bar
@@ -170,8 +172,8 @@ public class BossBarListener implements Listener {
      * @param user user to toggle
      */
     public void toggleUser(User user) {
-        boolean newState = !user.getMetaData("aoneblock.bossbar").map(MetaDataValue::asBoolean).orElse(true);
-        user.putMetaData("aoneblock.bossbar", new MetaDataValue(newState));
+        boolean newState = !user.getMetaData(AONEBLOCK_BOSSBAR).map(MetaDataValue::asBoolean).orElse(true);
+        user.putMetaData(AONEBLOCK_BOSSBAR, new MetaDataValue(newState));
         if (newState) {
             // If the player is on an island then show the bar
             addon.getIslands().getIslandAt(user.getLocation()).filter(is -> addon.inWorld(is.getWorld()))

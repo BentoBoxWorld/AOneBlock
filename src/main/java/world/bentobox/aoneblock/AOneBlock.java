@@ -67,7 +67,7 @@ public class AOneBlock extends GameModeAddon {
             .defaultSetting(false)
             .build();
     private BossBarListener bossBar = new BossBarListener(this);
-    public final Flag ONEBLOCK_BOSSBAR = new Flag.Builder("ONEBLOCK_BOSSBAR", Material.DRAGON_HEAD).mode(Mode.BASIC)
+    public final Flag BOSSBAR = new Flag.Builder("BOSSBAR", Material.DRAGON_HEAD).mode(Mode.BASIC)
             .type(Type.SETTING).listener(bossBar).defaultSetting(true).build();
 
 	@Override
@@ -93,7 +93,7 @@ public class AOneBlock extends GameModeAddon {
             // Register protection flag with BentoBox
             getPlugin().getFlagsManager().registerFlag(this, START_SAFETY);
             // Bossbar
-            getPlugin().getFlagsManager().registerFlag(this, this.ONEBLOCK_BOSSBAR);
+            getPlugin().getFlagsManager().registerFlag(this, this.BOSSBAR);
 		}
 	}
 
