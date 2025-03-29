@@ -8,7 +8,6 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.World.Environment;
 import org.bukkit.WorldCreator;
-import org.bukkit.WorldType;
 import org.bukkit.entity.SpawnCategory;
 import org.bukkit.generator.ChunkGenerator;
 import org.eclipse.jdt.annotation.NonNull;
@@ -24,6 +23,7 @@ import world.bentobox.aoneblock.listeners.HoloListener;
 import world.bentobox.aoneblock.listeners.InfoListener;
 import world.bentobox.aoneblock.listeners.ItemsAdderListener;
 import world.bentobox.aoneblock.listeners.JoinLeaveListener;
+import world.bentobox.aoneblock.listeners.BossBarListener;
 import world.bentobox.aoneblock.listeners.NoBlockHandler;
 import world.bentobox.aoneblock.listeners.StartSafetyListener;
 import world.bentobox.aoneblock.oneblocks.OneBlockCustomBlockCreator;
@@ -66,6 +66,9 @@ public class AOneBlock extends GameModeAddon {
             .listener(new StartSafetyListener(this))
             .defaultSetting(false)
             .build();
+    private BossBarListener bossBar = new BossBarListener(this);
+    public final Flag BOSSBAR = new Flag.Builder("BOSSBAR", Material.DRAGON_HEAD).mode(Mode.BASIC)
+            .type(Type.SETTING).listener(bossBar).defaultSetting(true).build();
 
 	@Override
 	public void onLoad() {
@@ -89,6 +92,8 @@ public class AOneBlock extends GameModeAddon {
             // Register flag with BentoBox
             // Register protection flag with BentoBox
             getPlugin().getFlagsManager().registerFlag(this, START_SAFETY);
+            // Bossbar
+            getPlugin().getFlagsManager().registerFlag(this, this.BOSSBAR);
 		}
 	}
 
@@ -120,6 +125,7 @@ public class AOneBlock extends GameModeAddon {
 		registerListener(new BlockProtect(this));
 		registerListener(new JoinLeaveListener(this));
 		registerListener(new InfoListener(this));
+        registerListener(bossBar);
 		// Register placeholders
         phManager = new AOneBlockPlaceholders(this, getPlugin().getPlaceholdersManager());
 
@@ -333,6 +339,13 @@ public class AOneBlock extends GameModeAddon {
 
     public void setSettings(Settings settings) {
         this.settings = settings;
+    }
+
+    /**
+     * @return the bossBar
+     */
+    public BossBarListener getBossBar() {
+        return bossBar;
     }
 
 }

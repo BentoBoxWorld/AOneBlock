@@ -13,8 +13,21 @@ protection:
         &b so they don't fall off.
       hint: "&c Movement blocked for safety for [number] more seconds!"
       free-to-move: "&a You are free to move. Be careful!"
-        
+    ONEBLOCK_BOSSBAR:
+        name: Boss Bar
+        description: |
+          &b Shows a status bar
+          &b for each phase.
 aoneblock:
+  bossbar:
+    title: "Blocks remaining"
+    # status: "&a Phase blocks &b [total]. Blocks left: [todo]"
+    status: "&a Phase blocks &b [done] &d / &b [total]"
+    # RED, WHITE, PINK, BLUE, GREEN, YELLOW, or PURPLE
+    color: RED
+    # SOLID, SEGMENTED_6,  SEGMENTED_10, SEGMENTED_12, SEGMENTED_20
+    style: SOLID
+    not-active: "&c Boss Bar is not active for this island"
   commands:
     admin:
       setcount:
@@ -47,6 +60,10 @@ aoneblock:
       name-syntax: "&a [name]"
       description-syntax: "&b [number] blocks"
     island:
+      bossbar:
+        description: "toggles phase boss bar"
+        status_on: "&b Bossbar turned &a on"
+        status_off: "&b Bossbar turned &c off"
       setcount:
         parameters: "<count>"
         description: "set block count to previously completed value"

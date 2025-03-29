@@ -1,36 +1,116 @@
----
+protection:
+  flags:
+    START_SAFETY:
+      name: Segurança inicial
+      description: |
+        &b Impede novos jogadores
+        &b de se mudar por 1 minuto
+        &b Então eles não caem.
+      hint: '&c Movimento bloqueado por segurança por [número] mais segundos!'
+      free-to-move: '&a Você está livre para se mover. '
+    ONEBLOCK_BOSSBAR:
+      name: Boss Bar
+      description: |
+        &b Mostra uma barra de status
+        &b para cada fase.
 aoneblock:
+  bossbar:
+    title: Bloqueia o restante
+    status: '&a Blocos de fase &b [done] &d / &b [total]'
+    color: RED
+    style: SEGMENTED_20
+    not-active: '&c O Boss Bar não está ativo para esta ilha'
   commands:
     admin:
       setcount:
-        parameters: "<name> <count>"
+        parameters: <name> <count>
         description: definir contagem de blocos do jogador
-        set: "&a [name] contagem definida para [number]"
+        set: '&a [name] contagem definida para [number]'
+        set-lifetime: '&a A contagem de vida útil [name] definida como [number]'
       setchest:
-        parameters: "<phase> <rarity>"
+        parameters: <phase> <rarity>
         description: colocar o baú olhado em uma fase com a raridade especificada
-        chest-is-empty: "&c Esse baú está vazio, então não pode ser adicionado"
-        unknown-phase: "&c Fase desconhecida. Use tab-complete para vê-los"
-        unknown-rarity: "&c Raridade desconhecida. Use COMMON, UNCOMMON, RARE ou EPIC"
-        look-at-chest: "&c Olhe para um baú cheio para configurá-lo"
-        only-single-chest: "&c Apenas baús individuais podem ser ajustados"
-        success: "&a Baú adicionado com sucesso à fase"
-        failure: "&c O Bau não pôde ser adicionado à fase! Veja o console para erros"
+        chest-is-empty: '&c Esse baú está vazio, então não pode ser adicionado'
+        unknown-phase: '&c Fase desconhecida. Use tab-complete para vê-los'
+        unknown-rarity: '&c Raridade desconhecida. Use COMMON, UNCOMMON, RARE ou EPIC'
+        look-at-chest: '&c Olhe para um baú cheio para configurá-lo'
+        only-single-chest: '&c Apenas baús individuais podem ser ajustados'
+        success: '&a Baú adicionado com sucesso à fase'
+        failure: '&c O Bau não pôde ser adicionado à fase! Veja o console para erros'
       sanity:
-        parameters: "<phase>"
-        description: exibir uma verificação de sanidade das probabilidades de fase
-          no console
-        see-console: "&a Veja o console para o relatório"
+        parameters: <phase>
+        description: >-
+          exibir uma verificação de sanidade das probabilidades de fase no
+          console
+        see-console: '&a Veja o console para o relatório'
     count:
       description: mostra a contagem de blocos e a fase
-      info: "&a Você está no bloco &b [number] no &a [name] fase"
+      info: '&a Você está no bloco &b [number] no &a [name] fase'
+    info:
+      count: >-
+        &a A ilha está em bloco &b [number] &a na fase &b [name]. Lifetime count
+        &b [lifetime] &a.
     phases:
       description: mostra uma lista de todas as fases
-      title: "&2 OneBlock Fases"
-      name-syntax: "&a [name]"
-      description-syntax: "&b [number] blocos"
+      title: '&2 OneBlock Fases'
+      name-syntax: '&a [name]'
+      description-syntax: '&b [number] blocos'
     island:
-      setcount: {}
-  phase: {}
-  placeholders: {}
-  island: {}
+      bossbar:
+        description: Alterna o Boss Boss Bar
+        status_on: '&b Bossbar &a ligado'
+        status_off: '&b Bossbar &c desligado'
+      setcount:
+        parameters: <count>
+        description: Defina a contagem de blocos para o valor previamente concluído
+        set: '&a Contagem definida como [number].'
+        too-high: '&c O máximo que você pode definir é [number]!'
+    respawn-block:
+      description: Responda o bloco mágico em situações quando desaparece
+      block-exist: '&a O bloco existe, não exigiu reaparecimento. '
+      block-respawned: '&a Bloquear o reaparecido.'
+  phase:
+    insufficient-level: '&c O nível da sua ilha é muito baixo para prosseguir! '
+    insufficient-funds: '&c Seus fundos são muito baixos para prosseguir! '
+    insufficient-bank-balance: '&c O saldo do banco da ilha é muito baixo para prosseguir! '
+    insufficient-permission: '&c Você não pode proceder mais até obter a permissão [name]!'
+    cooldown: '&c A próxima fase estará disponível em [number] segundos!'
+  placeholders:
+    infinite: Infinito
+  gui:
+    titles:
+      phases: Oneblock Fases
+    buttons:
+      previous:
+        name: '&f&l Página anterior'
+        description: '&7 Mudar para a página [number]'
+      next:
+        name: '&f&l Próxima página'
+        description: '&7 Mudar para a página [number]'
+      phase:
+        name: '&f&l [phase]'
+        description: |-
+          [starting-block]
+          [biome]
+          [bank]
+          [economy]
+          [level]
+          [permission]
+          [blocks]
+        starting-block: '&7 Começa após quebrar &e blocos [number].'
+        biome: '&7 Bioma: [biome]'
+        bank: '&7 Requer &e $ [number] &7 na conta bancária.'
+        economy: '&7 Requer &e $ [number] &7 na conta do jogador.'
+        level: '&7 Requer &e [number] &7 no nível da ilha.'
+        permission: '&7 Requer `&e[permission]&7` permissão.'
+        blocks-prefix: '&7 Blocos em fase -'
+        blocks: '&e [name], '
+        wrap-at: '50'
+    tips:
+      click-to-previous: '&e Clique &7 para visualizar a página anterior.'
+      click-to-next: '&e Clique &7 para visualizar a próxima página.'
+      click-to-change: '&e Clique &7 para alterar.'
+  island:
+    starting-hologram: |-
+      &a Bem -vindo ao AOneBlock
+      &e Quebre este bloco para começar

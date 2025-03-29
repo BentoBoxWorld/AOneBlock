@@ -1,31 +1,116 @@
----
+protection:
+  flags:
+    START_SAFETY:
+      name: Mulai keamanan
+      description: |
+        &b Mencegah pemain baru
+        &b dari bergerak selama 1 menit
+        &b Jadi mereka tidak jatuh.
+      hint: '&c Gerakan diblokir untuk keamanan selama [number] lebih banyak detik!'
+      free-to-move: '&a Anda bebas untuk pindah. '
+    ONEBLOCK_BOSSBAR:
+      name: Bos Bar
+      description: |
+        &b Menunjukkan bilah status
+        &b untuk setiap fase.
 aoneblock:
+  bossbar:
+    title: Blok tersisa
+    status: Blok fase &b [done] &d / &b [total]
+    color: RED
+    style: SEGMENTED_20
+    not-active: '&c Bos Bar tidak aktif untuk pulau ini'
   commands:
     admin:
       setcount:
-        parameters: "<name> <count>"
+        parameters: <name> <count>
         description: atur jumlah blok pemain
-        set: "&a hitungan [name] diatur ke [number]"
+        set: '&a hitungan [name] diatur ke [number]'
+        set-lifetime: '&a Hitungan seumur hidup [name] diatur ke [number]'
       setchest:
-        parameters: "<phase> <rarity>"
+        parameters: <phase> <rarity>
         description: letakkan dada yang tampak dalam fase dengan kelangkaan yang ditentukan
-        chest-is-empty: "&c Peti itu kosong sehingga tidak bisa ditambahkan"
-        unknown-phase: "&c Fase tidak dikenal. Gunakan tab-complete untuk melihatnya"
-        unknown-rarity: "&c Kelangkaan tidak diketahui. Gunakan COMMON, UNCOMMON,
-          RARE atau EPIC"
-        look-at-chest: "&c Lihat peti berisi untuk mengaturnya"
-        only-single-chest: "&c Hanya peti tunggal yang dapat ditetapkan"
-        success: "&a Dada berhasil ditambahkan ke fase"
-        failure: "&c Dada tidak dapat ditambahkan ke fase! Lihat konsol untuk kesalahan"
+        chest-is-empty: '&c Peti itu kosong sehingga tidak bisa ditambahkan'
+        unknown-phase: '&c Fase tidak dikenal. Gunakan tab-complete untuk melihatnya'
+        unknown-rarity: >-
+          &c Kelangkaan tidak diketahui. Gunakan COMMON, UNCOMMON, RARE atau
+          EPIC
+        look-at-chest: '&c Lihat peti berisi untuk mengaturnya'
+        only-single-chest: '&c Hanya peti tunggal yang dapat ditetapkan'
+        success: '&a Dada berhasil ditambahkan ke fase'
+        failure: '&c Dada tidak dapat ditambahkan ke fase! Lihat konsol untuk kesalahan'
       sanity:
-        parameters: "<phase>"
+        parameters: <phase>
         description: menampilkan pemeriksaan kewarasan dari probabilitas fase di konsol
-        see-console: "&a Lihat konsol untuk laporannya"
+        see-console: '&a Lihat konsol untuk laporannya'
     count:
       description: perlihatkan jumlah blok dan fase
-      info: "&a Anda berada di blok &b [number] dalam fase &a [name]"
+      info: '&a Anda berada di blok &b [number] dalam fase &a [name]'
+    info:
+      count: '&a Pulau ada di blok &b [number] &a dalam fase &b [name]. '
     phases:
       description: perlihatkan daftar semua fase
-      title: "&2 Fase OneBlock"
-      name-syntax: "&a [name]"
-      description-syntax: "&b [number] blok"
+      title: '&2 Fase OneBlock'
+      name-syntax: '&a [name]'
+      description-syntax: '&b [number] blok'
+    island:
+      bossbar:
+        description: Mengalogkan Bar Bos Fase
+        status_on: '&b Bos bar &a dihidupkan'
+        status_off: '&b Bos bar &c dimatikan'
+      setcount:
+        parameters: <count>
+        description: Setel jumlah blok ke nilai yang sebelumnya selesai
+        set: '&a Hitung diatur ke [number].'
+        too-high: '&c Maksimum yang dapat Anda atur adalah [number]!'
+    respawn-block:
+      description: respawns blok ajaib dalam situasi saat menghilang
+      block-exist: '&a Blok ada, tidak memerlukan respawning. '
+      block-respawned: '&a Blokir dihidupkan kembali.'
+  phase:
+    insufficient-level: '&c Tingkat pulau Anda terlalu rendah untuk [number]! '
+    insufficient-funds: '&c Dana Anda terlalu rendah untuk [number]! '
+    insufficient-bank-balance: '&c Saldo bank pulau terlalu rendah untuk [number]! '
+    insufficient-permission: >-
+      &c Anda tidak dapat melanjutkan lebih jauh sampai Anda mendapatkan izin
+      [name]!
+    cooldown: Fase berikutnya akan tersedia dalam detik [number]!
+  placeholders:
+    infinite: Tak terbatas
+  gui:
+    titles:
+      phases: OneBlock Phases
+    buttons:
+      previous:
+        name: '&f&l  halaman sebelumnya'
+        description: '&7 Beralih ke halaman [number]'
+      next:
+        name: '&f&l halaman berikutnya'
+        description: '&7 Beralih ke halaman [number]'
+      phase:
+        name: '&f&l [phase]'
+        description: |-
+          [starting-block]
+          [biome]
+          [bank]
+          [economy]
+          [level]
+          [permission]
+          [blocks]
+        starting-block: '&7 Dimulai setelah melanggar &e blok [number].'
+        biome: '&7 Biome: &e [biome]'
+        bank: '&7 Membutuhkan &e $[number] &7 di rekening bank.'
+        economy: '&7 Membutuhkan &e $[number] &7 di akun pemain.'
+        level: '&7 Membutuhkan tingkat pulau &e [number].'
+        permission: '&7 Membutuhkan izin &e `[permission]`.'
+        blocks-prefix: '&7 Blok dalam fase -'
+        blocks: '&e [name], '
+        wrap-at: '50'
+    tips:
+      click-to-previous: '&e Klik &7 untuk melihat halaman sebelumnya.'
+      click-to-next: '&e Klik &7 untuk melihat halaman berikutnya.'
+      click-to-change: '&e Klik &7 untuk berubah.'
+  island:
+    starting-hologram: |-
+      &a Selamat datang di AONEBLOCK
+      &e Hancurkan blok ini untuk memulai

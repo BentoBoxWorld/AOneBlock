@@ -1,32 +1,116 @@
----
+protection:
+  flags:
+    START_SAFETY:
+      name: Avvio della sicurezza
+      description: |
+        &b Impedisce nuovi giocatori
+        &b dal muoversi per 1 minuto
+        &b Quindi non cadono.
+      hint: '&c Movimento bloccato per sicurezza per [number] più secondi!'
+      free-to-move: '&a Sei libero di muoverti. '
+    ONEBLOCK_BOSSBAR:
+      name: Boss Bar
+      description: |
+        &b Mostra una barra di stato
+        &b per ogni fase.
 aoneblock:
+  bossbar:
+    title: Blocca i restanti
+    status: '&a Blocchi di fase &b [done] &d / &b [total]'
+    color: RED
+    style: SEGMENTED_20
+    not-active: '&c Boss Bar non è attivo per quest''isola'
   commands:
     admin:
       setcount:
-        parameters: "<nome> <conto>"
+        parameters: <nome> <conto>
         description: imposta il conteggio dei blocchi del giocatore
-        set: "&a il conteggio di [name] impostato su [number]"
+        set: '&a il conteggio di [name] impostato su [number]'
+        set-lifetime: '&a Il conteggio della vita di [name] è impostato su [number]'
       setchest:
-        parameters: "<phase> <rarity>"
+        parameters: <phase> <rarity>
         description: mettere il torace osservato in una fase con la rarità specificata
-        chest-is-empty: "&c Quella cassa è vuota quindi non può essere aggiunta"
-        unknown-phase: "&c Fase sconosciuta. Usa tab-complete per vederli"
-        unknown-rarity: "&c Rarità sconosciuta. Utilizzare COMMON, UNCOMMON, RARE
-          o EPIC"
-        look-at-chest: "&c Guarda una cassa piena per impostarla"
-        only-single-chest: "&c Possono essere impostati solo singoli forzieri"
-        success: "&a Una cassa aggiunta correttamente alla fase"
-        failure: "&c Chest non può essere aggiunto alla fase! Vedi console per errori"
+        chest-is-empty: '&c Quella cassa è vuota quindi non può essere aggiunta'
+        unknown-phase: '&c Fase sconosciuta. Usa tab-complete per vederli'
+        unknown-rarity: '&c Rarità sconosciuta. Utilizzare COMMON, UNCOMMON, RARE o EPIC'
+        look-at-chest: '&c Guarda una cassa piena per impostarla'
+        only-single-chest: '&c Possono essere impostati solo singoli forzieri'
+        success: '&a Una cassa aggiunta correttamente alla fase'
+        failure: '&c Chest non può essere aggiunto alla fase! Vedi console per errori'
       sanity:
-        parameters: "<Fase>"
-        description: visualizzare un controllo di integrità delle probabilità di fase
-          nella console
-        see-console: "&a Vedi la console per il rapporto"
+        parameters: <Fase>
+        description: >-
+          visualizzare un controllo di integrità delle probabilità di fase nella
+          console
+        see-console: '&a Vedi la console per il rapporto'
     count:
       description: mostra il conteggio dei blocchi e la fase
-      info: "&a Sei sul blocco &b [number] nella fase &a [name]"
+      info: '&a Sei sul blocco &b [number] nella fase &a [name]'
+    info:
+      count: >-
+        &a L'isola è in blocco &b [number] &a nella fase &b [name] &a. Lifetime
+        count &b [lifetime] &a.
     phases:
       description: mostra un elenco di tutte le fasi
-      title: "&2 Fasi OneBlock"
-      name-syntax: "&a [name]"
-      description-syntax: "&b [number] blocchi"
+      title: '&2 Fasi OneBlock'
+      name-syntax: '&a [name]'
+      description-syntax: '&b [number] blocchi'
+    island:
+      bossbar:
+        description: barra boss di fase di levetta
+        status_on: '&b Bossbar si è &a acceso'
+        status_off: '&b Bossbar si è &c spento'
+      setcount:
+        parameters: <count>
+        description: Imposta il conteggio dei blocchi sul valore precedentemente completato
+        set: '&a Contare impostato su [number].'
+        too-high: '&c Il massimo che puoi impostare è [number]!'
+    respawn-block:
+      description: Respira il blocco magico in situazioni quando scompare
+      block-exist: '&a Il blocco esiste, non ha richiesto il rigenerazione. '
+      block-respawned: '&a Blocco rigenerato.'
+  phase:
+    insufficient-level: 'Il tuo livello dell''isola è troppo basso per procedere! '
+    insufficient-funds: '& c i tuoi fondi sono troppo bassi per procedere!  Devono essere [number].'
+    insufficient-bank-balance: '&c The island bank balance is too low to proceed! It must be [number].'
+    insufficient-permission: '&c You can proceed no further until you obtain the [name] permission!'
+    cooldown: '&c Next phase will be available in [number] seconds!'
+  placeholders:
+    infinite: Infinito
+  gui:
+    titles:
+      phases: '&0&l fasi di un blocco'
+    buttons:
+      previous:
+        name: '& l pagina precedente'
+        description: '&7 Passa alla pagina [number]'
+      next:
+        name: '&f&l Pagina successiva'
+        description: '&7 Passa alla pagina [number]'
+      phase:
+        name: '&f&l [phase]'
+        description: |-
+          [starting-block]
+          [biome]
+          [bank]
+          [economy]
+          [level]
+          [permission]
+          [blocks]
+        starting-block: '&7 Inizia dopo aver rotto i blocchi &e [number].'
+        biome: '&7 Biome: &e [biome]'
+        bank: '&7 Richiede &e $ [number] &7 nel conto bancario.'
+        economy: '&7 Richiede &e $ [number] &7 nell''account giocatore.'
+        level: '&7 Richiede il livello &e [number] &7 dell''isola.'
+        permission: '&7 Richiede il permesso &e`[permission]`.'
+        blocks-prefix: '&7 Blocchi in fase -'
+        blocks: '&e [name], '
+        wrap-at: '50'
+    tips:
+      click-to-previous: '&e Fare clic &7 per visualizzare la pagina precedente.'
+      click-to-next: '&e Fare clic &7 per visualizzare la pagina successiva.'
+      click-to-change: '&e Fai clic &7 per cambiare.'
+  island:
+    starting-hologram: |-
+      &a Benvenuti in Aoneblock
+      &e Rompere questo blocco per iniziare
