@@ -1,74 +1,100 @@
----
+protection:
+  flags:
+    START_SAFETY:
+      name: Sécurité de démarrage
+      description: |
+        &b Empêche les nouveaux joueurs
+        &b de déménager pendant 1 minute
+        &b Alors ils ne tombent pas.
+      hint: '&c Mouvement bloqué pour la sécurité pendant [number] plus de secondes!'
+      free-to-move: '&a Vous êtes libre de bouger. '
+    ONEBLOCK_BOSSBAR:
+      name: Barre de boss
+      description: |
+        &b Affiche une barre d'état
+        pour chaque phase.
 aoneblock:
+  bossbar:
+    title: Blocs restants
+    status: '&a Blocs de phase &b [done] &d / &b [total]'
+    color: RED
+    style: SEGMENTED_20
+    not-active: '&c Boss Bar n''est pas actif pour cette île'
   commands:
     admin:
       setcount:
-        parameters: "<nom> <nombre> [DuréeDeVie]"
+        parameters: <nom> <nombre> [DuréeDeVie]
         description: Définir le nombre de blocks du joueur
-        set: "&a Le compte de [name] est défini sur [number]."
-        set-lifetime: "&a La durée de vie de [name] est de [number]"
+        set: '&a Le compte de [name] est défini sur [number].'
+        set-lifetime: '&a La durée de vie de [name] est de [number]'
       setchest:
-        parameters: "<phase> <rareté>"
+        parameters: <phase> <rareté>
         description: mettre le coffre regardé dans une phase avec la rareté spécifiée
-        chest-is-empty: "&c Ce coffre est vide donc il ne peut pas être ajouté"
-        unknown-phase: "&c Phase inconnue. Utilisez tab-complete pour les voir"
-        unknown-rarity: "&c Rareté inconnue. Utilisez COMMON, UNCOMMON, RARE ou EPIC"
-        look-at-chest: "&c Regardez un coffre rempli pour le placer"
-        only-single-chest: "&c Seuls les coffres simples peuvent être définis"
-        success: "&a Le coffre a été ajouté avec succès à la phase"
-        failure: "&c Le coffre n'a pas pu être ajouté à la phase! Voir la console
-          pour les erreurs"
+        chest-is-empty: '&c Ce coffre est vide donc il ne peut pas être ajouté'
+        unknown-phase: '&c Phase inconnue. Utilisez tab-complete pour les voir'
+        unknown-rarity: '&c Rareté inconnue. Utilisez COMMON, UNCOMMON, RARE ou EPIC'
+        look-at-chest: '&c Regardez un coffre rempli pour le placer'
+        only-single-chest: '&c Seuls les coffres simples peuvent être définis'
+        success: '&a Le coffre a été ajouté avec succès à la phase'
+        failure: >-
+          &c Le coffre n'a pas pu être ajouté à la phase! Voir la console pour
+          les erreurs
       sanity:
-        parameters: "<phase>"
-        description: afficher un contrôle d'intégrité des probabilités de phase dans
-          la console
-        see-console: "&a Voir la console pour le rapport"
+        parameters: <phase>
+        description: >-
+          afficher un contrôle d'intégrité des probabilités de phase dans la
+          console
+        see-console: '&a Voir la console pour le rapport'
     count:
       description: afficher le nombre de blocs et la phase
-      info: "&a Vous êtes sur le bloc &b [number] dans la phase &a [name]"
+      info: '&a Vous êtes sur le bloc &b [number] dans la phase &a [name]'
     info:
-      count: "&a L'île est sur le bloc &b [number]&a dans la phase &b [name] &a. Nombre
-        de durée de vie &b [lifetime] &a."
+      count: >-
+        &a L'île est sur le bloc &b [number]&a dans la phase &b [name] &a.
+        Nombre de durée de vie &b [lifetime] &a.
     phases:
       description: afficher une liste de toutes les phases
-      title: "&2 Phases OneBlock"
-      name-syntax: "&a [name]"
-      description-syntax: "&b [number] blocs"
+      title: '&2 Phases OneBlock'
+      name-syntax: '&a [name]'
+      description-syntax: '&b [number] blocs'
     island:
+      bossbar:
+        description: bascule la barre de boss de phase
+        status_on: '&b Bossbar a &a activé'
+        status_off: '&b Bossbar &a désactivé'
       setcount:
-        parameters: "<compte>"
+        parameters: <compte>
         description: définir le nombre de blocs à la valeur précédemment terminée
-        set: "&a Nombre défini sur [number]."
-        too-high: "&c Le maximum que vous pouvez définir est [number] !"
+        set: '&a Nombre défini sur [number].'
+        too-high: "&c Le maximum que vous pouvez définir est [number]\_!"
     respawn-block:
       description: réapparaît le bloc magique dans les situations où il disparaît
-      block-exist: "&un bloc existe, n'a pas nécessité de réapparition. Je l'ai noté
-        pour toi."
-      block-respawned: "&un bloc réapparu."
+      block-exist: >-
+        &un bloc existe, n'a pas nécessité de réapparition. Je l'ai noté pour
+        toi.
+      block-respawned: '&un bloc réapparu.'
   phase:
-    insufficient-level: Ton niveau d'île est trop bas ! Il doit être de [number] au
-      minimum.
-    insufficient-funds: Tu n'as pas les fonds nécessaire ! Tu dois au moins avoir
+    insufficient-level: Ton niveau d'île est trop bas ! Il doit être de [number] au minimum.
+    insufficient-funds: Tu n'as pas les fonds nécessaire ! Tu dois au moins avoir [number].
+    insufficient-bank-balance: >-
+      Ta banque d'île n'a pas les fonds nécessaire ! Vous devez au moins avoir
       [number].
-    insufficient-bank-balance: Ta banque d'île n'a pas les fonds nécessaire ! Vous
-      devez au moins avoir [number].
-    insufficient-permission: "&c Vous ne pouvez pas continuer jusqu'à ce que vous
-      obteniez l'autorisation de [name] !"
-    cooldown: "&c La prochaine étape sera disponible dans [number] secondes!"
+    insufficient-permission: "&c Vous ne pouvez pas continuer jusqu'à ce que vous obteniez l'autorisation de [name]\_!"
+    cooldown: '&c La prochaine étape sera disponible dans [number] secondes!'
   placeholders:
     infinite: Infini
   gui:
     titles:
-      phases: "&0&l Phases OneBlock"
+      phases: '&0&l Phases OneBlock'
     buttons:
       previous:
-        name: "&f&l Page Précédente"
-        description: "&7 Aller à la page [number]"
+        name: '&f&l Page Précédente'
+        description: '&7 Aller à la page [number]'
       next:
-        name: "&f&l Page Suivante"
-        description: "&7 Aller à la page [number]"
+        name: '&f&l Page Suivante'
+        description: '&7 Aller à la page [number]'
       phase:
-        name: "&f&l [phase]"
+        name: '& l [phase]'
         description: |-
           [starting-block]
           [biome]
@@ -76,16 +102,19 @@ aoneblock:
           [economy]
           [level]
           [permission]
-        starting-block: "&7 Commence après avoir détruit &e [number] blocs."
-        biome: "&7 Biome : &e [biome]"
-        bank: "&7 Requiert &e $[number] &7 dans ta banque."
-        economy: "&7 Requiert &e $[number] &7 dans ton solde."
-        level: "&7 Requiert &e [number] &7 niveaux d'île."
-        permission: "&7 Requiert la permission : `&e[permission]&7` ."
+        starting-block: '&7 Commence après avoir détruit &e [number] blocs.'
+        biome: "&7 Biome\_: &e [biome]"
+        bank: '&7 Requiert &e $[number] &7 dans ta banque.'
+        economy: '&7 Requiert &e $[number] &7 dans ton solde.'
+        level: '&7 Requiert &e [number] &7 niveaux d''île.'
+        permission: '&7 Requiert la permission : `&e[permission]&7` .'
+        blocks-prefix: '&7 Blocs en phase -'
+        blocks: '&e [name],'
+        wrap-at: '50'
     tips:
-      click-to-previous: "&e Click &7 pour voir la page précédente."
-      click-to-next: "&e Click &7 pour voir la page suivante."
-      click-to-change: "&e Click &7 pour changer."
+      click-to-previous: '&e Click &7 pour voir la page précédente.'
+      click-to-next: '&e Click &7 pour voir la page suivante.'
+      click-to-change: '&e Click &7 pour changer.'
   island:
     starting-hologram: |-
       &aBienvenue sur AOneBlock

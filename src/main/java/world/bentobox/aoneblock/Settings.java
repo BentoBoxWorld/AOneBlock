@@ -72,6 +72,11 @@ public class Settings implements WorldSettings {
     @ConfigEntry(path = "aoneblock.command.set-count-command", since = "1.10.0")
     private String setCountCommand = "setCount";
 
+    @ConfigComment("The command label that toggers the progress bar.")
+    @ConfigComment("By default it is 'bossbar'.")
+    @ConfigEntry(path = "aoneblock.command.bossbar-command", since = "1.19.0")
+    private String bossBarCommand = "bossbar";
+
     @ConfigComment("How long a player must wait until they can use the setCount command again. In minutes.")
     @ConfigComment("This is the command that is run from the phases panel.")
     @ConfigEntry(path = "aoneblock.command.set-count-cooldown", since = "1.13.0")
@@ -2234,6 +2239,17 @@ public class Settings implements WorldSettings {
      */
     public void setConcurrentIslands(int concurrentIslands) {
         this.concurrentIslands = concurrentIslands;
+    }
+
+    public String getBossBarCommand() {
+        return bossBarCommand;
+    }
+
+    /**
+     * @param bossBarCommand the bossBarCommand to set
+     */
+    public void setBossBarCommand(String bossBarCommand) {
+        this.bossBarCommand = bossBarCommand;
     }
 
 }

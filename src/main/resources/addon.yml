@@ -50,6 +50,9 @@ permissions:
   aoneblock.island:
     description: Allow use of '/ob' command - the main island command
     default: TRUE
+  aoneblock.island.bossbar:
+      description: Allow use of '/ob bossbar' command - toggle the bossbar
+      default: FALSE
   aoneblock.island.home:
     description: Allow use of '/ob go' command - teleport you to your island
     default: TRUE
