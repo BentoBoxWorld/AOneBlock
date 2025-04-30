@@ -363,6 +363,9 @@ public class BlockListener implements Listener {
             return;
         }
 
+        // Increment the block number
+        is.incrementBlockNumber();
+
         // Break the block
         if (e instanceof BlockBreakEvent) {
             this.breakBlock(player, block, nextBlock, i);
@@ -381,8 +384,6 @@ public class BlockListener implements Listener {
             Bukkit.getPluginManager().callEvent(new MagicBlockEvent(i, null, null, block, nextBlock.getMaterial()));
         }
 
-        // Increment the block number
-        is.incrementBlockNumber();
     }
 
     private OneBlockPhase handleGoto(OneBlockIslands is, int gotoBlock) {

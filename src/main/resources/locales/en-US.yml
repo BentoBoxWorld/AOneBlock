@@ -22,6 +22,7 @@ aoneblock:
   bossbar:
     title: "Blocks remaining"
     # status: "&a Phase blocks &b [total]. Blocks left: [todo]"
+    # status: "&a [phase-name] : [percent-done]"
     status: "&a Phase blocks &b [done] &d / &b [total]"
     # RED, WHITE, PINK, BLUE, GREEN, YELLOW, or PURPLE
     color: RED

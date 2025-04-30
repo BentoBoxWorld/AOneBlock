@@ -117,7 +117,9 @@ public class BossBarListener implements Listener {
         int phaseBlocks = addon.getOneBlockManager().getPhaseBlocks(obi);
         int done = phaseBlocks - numBlocksToGo;
         String translation = user.getTranslationOrNothing("aoneblock.bossbar.status", "[togo]",
-                String.valueOf(numBlocksToGo), "[total]", String.valueOf(phaseBlocks), "[done]", String.valueOf(done));
+                String.valueOf(numBlocksToGo), "[total]", String.valueOf(phaseBlocks), "[done]", String.valueOf(done),
+                "[phase-name]", obi.getPhaseName(), "[percent-done]",
+                Math.round(addon.getOneBlockManager().getPercentageDone(obi)) + "%");
         bar.setTitle(translation);
         // Add to user if they don't have it already
         Player player = Bukkit.getPlayer(uuid);
