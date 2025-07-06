@@ -1,0 +1,46 @@
+'14500':
+  name: Jagged Peaks
+  icon: DIORITE
+  firstBlock: STONE
+  biome: JAGGED_PEAKS
+  fixedBlocks:
+    '0': STONE
+    '1': DIORITE
+    '2': ANDESITE
+    '3': GRANITE
+    '4': PACKED_ICE
+    '5': SNOW_BLOCK
+  blocks:
+    COBBLESTONE: 100
+    STONE: 300
+    DIORITE: 200
+    SNOW_BLOCK: 150
+    COBBLED_DEEPSLATE: 50
+    COPPER_ORE: 20
+    DIAMOND_ORE: 10
+    ICE: 100
+    GOLD_ORE: 30
+    ANDESITE: 200
+    GRANITE: 200
+    PACKED_ICE: 100
+    SNOW: 150
+    EMERALD_ORE: 20
+    INFESTED_STONE: 10
+    CHEST: 50
+  mobs:
+    GOAT: 100
+    BAT: 50
+    SHEEP: 50
+    CREEPER: 50
+    SKELETON: 50
+    SLIME: 50
+    SPIDER: 50
+    ZOMBIE: 55
+    ENDERMAN: 5
+    WITCH: 3
+    ZOMBIE_VILLAGER: 3
+    POLAR_BEAR: 5
+  holograms:
+    '0': '&fHigh altitude ahead!'
+  start-commands: []
+  end-commands: []
