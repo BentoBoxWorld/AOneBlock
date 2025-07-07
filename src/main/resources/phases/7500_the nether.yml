@@ -26,6 +26,7 @@
     GLOWSTONE: 100
     MAGMA_BLOCK: 75
     GOLD_BLOCK: 10
+    DRIED_GHAST: 25
   mobs:
     PIGLIN: 300
     HOGLIN: 100
