@@ -72,7 +72,7 @@ public class HoloListener implements Listener {
             return;
         }
 
-        if (newIsland) {
+        if (newIsland && island.getOwner() != null) {
             String startingText = User.getInstance(island.getOwner())
                 .getTranslation("aoneblock.island.starting-hologram");
             is.setHologram(startingText == null ? "" : startingText);
@@ -150,7 +150,7 @@ public class HoloListener implements Listener {
      * @param island the island whose hologram should be deleted
      */
     private void removeHologramAt(@NonNull Island island) {
-        if (island.getWorld() == null || island.getCenter() == null) {
+        if (island.getWorld() == null) {
             return;
         }
         cleanupHologram(getHologramLocation(island));
