@@ -95,7 +95,6 @@ public class HoloListenerTest {
     @Before
     public void setUp() throws Exception {
         // Set up plugin
-        BentoBox plugin = mock(BentoBox.class);
         Whitebox.setInternalState(BentoBox.class, "instance", plugin);
         // Settings
         settings = new Settings();
@@ -143,11 +142,8 @@ public class HoloListenerTest {
         hl = new HoloListener(addon);
     }
 
-    /**
-     * @throws java.lang.Exception
-     */
     @After
-    public void tearDown() throws Exception {
+    public void tearDown()  {
         User.clearUsers();
     }
 
