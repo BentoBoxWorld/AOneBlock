@@ -24,11 +24,11 @@ The user command is `/ob`. The admin command is `/oba`.
 
 Q: What phases are there?
 
-A: There are 12 phases: Plains, Underground, Winter, Ocean, Jungle, Swamp, Dungeon, Desert, The Nether, Plenty, Desolation, Deep Dark, and The End. Each phase features a set of blocks, chests, items, and mobs appropriate for the setting.
+A: There are 18 phases: Plains, Underground, Winter, Ocean, Jungle, Swamp, Dungeon, Desert, The Nether, Plenty, Desolation, Deep Dark, The End, Lush Caves, Dripstone Caves, Mangrove Swamp, Meadow, Cherry Grove, and Jagged Peaks. Each phase features a set of blocks, chests, items, and mobs appropriate for the setting.
 
 Q: How many blocks are there in the phases?
 
-A: There are currently 12 thousand blocks!
+A: There are currently 15 thousand blocks!
 
 Q: What happens after the last phase?
 
@@ -44,7 +44,7 @@ A: You can't catch them all, but it *is* an infinite block!
 
 Q: Why do certain blocks spawn more frequently than others?
 
-A: They just do! It's random. You can set the relative probability in the config files in the phases folder. Admins can also set certain blocks to appear at certain times no matter what. Look out for the sponge for example!
+A: They just do! It's random(ish). You can set the relative probability in the config files in the phases folder. Admins can also set certain blocks to appear at certain times no matter what. Look out for the sponge for example!
 
 Q. How do I know which is the magic block?
 
