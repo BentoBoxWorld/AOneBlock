@@ -72,7 +72,7 @@ public class HoloListener implements Listener {
             return;
         }
 
-        if (newIsland && island.getOwner() != null) {
+        if (newIsland) {
             String startingText = User.getInstance(island.getOwner())
                 .getTranslation("aoneblock.island.starting-hologram");
             is.setHologram(startingText == null ? "" : startingText);
@@ -104,7 +104,6 @@ public class HoloListener implements Listener {
         if (!addon.getSettings().isUseHolograms() || text.isBlank()) {
             return;
         }
-
         removeHologramAt(island);
         Location pos = getHologramLocation(island);
         createHologram(pos, text);
