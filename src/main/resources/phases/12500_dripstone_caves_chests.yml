@@ -1,0 +1,248 @@
+'12500':
+  chests:
+    '1':
+      contents:
+        4:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:pointed_dripstone
+          count: 1
+          schema_version: 1
+        22:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:dripstone_block
+          count: 1
+          schema_version: 1
+        12:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:iron_ingot
+          count: 4
+          schema_version: 1
+        13:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:bread
+          count: 4
+          schema_version: 1
+        14:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:coal
+          count: 4
+          schema_version: 1
+      rarity: COMMON
+    '2':
+      contents:
+        0:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:pointed_dripstone
+          count: 1
+          schema_version: 1
+        18:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:pointed_dripstone
+          count: 1
+          schema_version: 1
+        4:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:dripstone_block
+          count: 1
+          schema_version: 1
+        22:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:dripstone_block
+          count: 1
+          schema_version: 1
+        8:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:pointed_dripstone
+          count: 1
+          schema_version: 1
+        26:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:pointed_dripstone
+          count: 1
+          schema_version: 1
+        11:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:dripstone_block
+          count: 1
+          schema_version: 1
+        13:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:bread
+          count: 3
+          schema_version: 1
+        15:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:gold_ingot
+          count: 4
+          schema_version: 1
+      rarity: UNCOMMON
+    '3':
+      contents:
+        1:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:copper_ingot
+          count: 1
+          schema_version: 1
+        2:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:copper_ingot
+          count: 1
+          schema_version: 1
+        3:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:copper_ingot
+          count: 1
+          schema_version: 1
+        20:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:pointed_dripstone
+          count: 1
+          schema_version: 1
+        5:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:copper_ingot
+          count: 1
+          schema_version: 1
+        6:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:copper_ingot
+          count: 1
+          schema_version: 1
+        22:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:coal
+          count: 3
+          schema_version: 1
+        7:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:copper_ingot
+          count: 1
+          schema_version: 1
+        24:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:pointed_dripstone
+          count: 1
+          schema_version: 1
+        11:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:dripstone_block
+          count: 1
+          schema_version: 1
+        15:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:dripstone_block
+          count: 1
+          schema_version: 1
+      rarity: UNCOMMON
+    '4':
+      contents:
+        1:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:pointed_dripstone
+          count: 1
+          schema_version: 1
+        2:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:pointed_dripstone
+          count: 1
+          schema_version: 1
+        3:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:pointed_dripstone
+          count: 1
+          schema_version: 1
+        5:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:pointed_dripstone
+          count: 1
+          schema_version: 1
+        6:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:pointed_dripstone
+          count: 1
+          schema_version: 1
+        7:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:pointed_dripstone
+          count: 1
+          schema_version: 1
+        10:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:gold_ingot
+          count: 1
+          schema_version: 1
+        11:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:gold_ingot
+          count: 1
+          schema_version: 1
+        12:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:gold_ingot
+          count: 1
+          schema_version: 1
+        14:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:gold_ingot
+          count: 1
+          schema_version: 1
+        15:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:gold_ingot
+          count: 1
+          schema_version: 1
+        16:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:gold_ingot
+          count: 1
+          schema_version: 1
+        20:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:bucket
+          count: 1
+          schema_version: 1
+        24:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:bucket
+          count: 1
+          schema_version: 1
+      rarity: RARE

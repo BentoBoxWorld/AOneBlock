@@ -1,0 +1,47 @@
+'13000':
+  name: Mangrove Swamp
+  icon: MANGROVE_LOG
+  firstBlock: MANGROVE_LOG
+  biome: MANGROVE_SWAMP
+  fixedBlocks:
+    '0': MANGROVE_LOG
+    '1': MUD
+    '2': MANGROVE_ROOTS
+    '3': MANGROVE_LEAVES
+    '4': MANGROVE_PROPAGULE
+    '5': ROOTED_DIRT
+  blocks:
+    MANGROVE_PROPAGULE: 50
+    CHEST: 60
+    SAND: 50
+    MUD: 200
+    MANGROVE_PLANKS: 200
+    DIRT: 300
+    MANGROVE_ROOTS: 100
+    MANGROVE_LEAVES: 100
+    COBBLESTONE: 100
+    STONE: 200
+    MANGROVE_LOG: 300
+    VINE: 80
+    ROOTED_DIRT: 100
+  mobs:
+    FROG: 100
+    CREEPER: 50
+    SKELETON: 50
+    SLIME: 50
+    SPIDER: 50
+    ZOMBIE: 55
+    ENDERMAN: 5
+    WITCH: 3
+    ZOMBIE_VILLAGER: 3
+    SHEEP: 110
+    CHICKEN: 100
+    PIG: 100
+    COW: 80
+    GLOW_SQUID: 5
+    BAT: 5
+    TROPICAL_FISH: 5
+  holograms:
+    '0': '&2The waters here are murky...'
+  start-commands: []
+  end-commands: []

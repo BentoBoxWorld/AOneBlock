@@ -1,0 +1,54 @@
+'13500':
+  name: Meadow
+  icon: DANDELION
+  firstBlock: GRASS_BLOCK
+  biome: MEADOW
+  fixedBlocks:
+    '0': GRASS_BLOCK
+    '1': TALL_GRASS
+    '2': DANDELION
+    '3': POPPY
+    '4': OXEYE_DAISY
+    '5': LILY_PAD
+  blocks:
+    COBBLESTONE: 100
+    BIRCH_LOG: 100
+    OAK_LOG: 100
+    OAK_LEAVES: 50
+    BIRCH_LEAVES: 50
+    BEE_NEST: 20
+    STONE: 100
+    EMERALD_ORE: 10
+    INFESTED_STONE: 10
+    CHEST: 40
+    DIORITE: 50
+    OXEYE_DAISY: 80
+    GRASS_BLOCK: 300
+    HAY_BLOCK: 100
+    LILY_PAD: 50
+    DIRT: 200
+    ANDESITE: 50
+    DANDELION: 100
+    GRANITE: 50
+    WHITE_WOOL: 80
+    TALL_GRASS: 200
+    POPPY: 80
+  mobs:
+    BAT: 5
+    BEE: 80
+    SHEEP: 100
+    GLOW_SQUID: 2
+    CREEPER: 50
+    SKELETON: 50
+    SLIME: 50
+    SPIDER: 50
+    ZOMBIE: 55
+    ENDERMAN: 5
+    WITCH: 3
+    ZOMBIE_VILLAGER: 3
+    RABBIT: 40
+    DONKEY: 40
+  holograms:
+    '0': '&dA peaceful meadow!'
+  start-commands: []
+  end-commands: []

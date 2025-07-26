@@ -56,7 +56,7 @@ public class BossBarListener implements Listener {
 
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onFlagChange(FlagSettingChangeEvent e) {
-        if (e.getEditedFlag() == addon.BOSSBAR) {
+        if (e.getEditedFlag() == addon.ONEBLOCK_BOSSBAR) {
             // Show to players on island. If it isn't allowed then this will clean up the boss bar too
             e.getIsland().getPlayersOnIsland().stream().map(Player::getUniqueId)
                     .forEach(uuid -> this.tryToShowBossBar(uuid, e.getIsland()));
@@ -72,7 +72,7 @@ public class BossBarListener implements Listener {
         User user = User.getInstance(uuid);
 
         // Only show if enabled for island
-        if (!island.isAllowed(addon.BOSSBAR)) {
+        if (!island.isAllowed(addon.ONEBLOCK_BOSSBAR)) {
             BossBar removed = islandBossBars.remove(island);
             if (removed != null) {
                 // Remove all players from the boss bar
