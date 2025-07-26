@@ -35,5 +35,8 @@ public class PlayerCommand extends DefaultPlayerCommand {
         new IslandRespawnBlockCommand(this,
             settings.getRespawnBlockCommand().split(" ")[0],
             settings.getRespawnBlockCommand().split(" "));
+        // Boss bar
+        new IslandBossBarCommand(this, settings.getBossBarCommand().split(" ")[0],
+                settings.getBossBarCommand().split(" "));
     }
 }

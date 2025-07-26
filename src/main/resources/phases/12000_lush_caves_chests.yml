@@ -1,0 +1,422 @@
+'12000':
+  chests:
+    '1':
+      contents:
+        0:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:azalea
+          count: 1
+          schema_version: 1
+        16:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:glow_berries
+          count: 1
+          schema_version: 1
+        18:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:azalea
+          count: 1
+          schema_version: 1
+        8:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:azalea
+          count: 1
+          schema_version: 1
+        10:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:glow_berries
+          count: 1
+          schema_version: 1
+        26:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:azalea
+          count: 1
+          schema_version: 1
+        11:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:glow_berries
+          count: 1
+          schema_version: 1
+        12:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:glow_berries
+          count: 1
+          schema_version: 1
+        13:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:glow_berries
+          count: 1
+          schema_version: 1
+        14:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:glow_berries
+          count: 1
+          schema_version: 1
+        15:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:glow_berries
+          count: 1
+          schema_version: 1
+      rarity: COMMON
+    '2':
+      contents:
+        3:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:torch
+          count: 1
+          schema_version: 1
+        5:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:torch
+          count: 1
+          schema_version: 1
+        21:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:iron_ingot
+          count: 1
+          schema_version: 1
+        23:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:iron_ingot
+          count: 1
+          schema_version: 1
+        11:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:torch
+          count: 1
+          schema_version: 1
+        12:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:moss_carpet
+          count: 1
+          schema_version: 1
+        13:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:torch
+          count: 1
+          schema_version: 1
+        14:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:moss_carpet
+          count: 1
+          schema_version: 1
+        15:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:torch
+          count: 1
+          schema_version: 1
+      rarity: COMMON
+    '3':
+      contents:
+        16:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:oak_planks
+          count: 1
+          schema_version: 1
+        1:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:coal_block
+          count: 1
+          schema_version: 1
+        19:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:bread
+          count: 1
+          schema_version: 1
+        4:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:azalea
+          count: 1
+          schema_version: 1
+        22:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:torch
+          count: 1
+          schema_version: 1
+        24:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:glow_berries
+          count: 1
+          schema_version: 1
+        11:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:experience_bottle
+          count: 1
+          schema_version: 1
+        14:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:iron_ingot
+          count: 1
+          schema_version: 1
+      rarity: UNCOMMON
+    '4':
+      contents:
+        0:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:moss_carpet
+          count: 1
+          schema_version: 1
+        1:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:azalea
+          count: 1
+          schema_version: 1
+        2:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:moss_carpet
+          count: 1
+          schema_version: 1
+        3:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:moss_carpet
+          count: 1
+          schema_version: 1
+        4:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:moss_carpet
+          count: 1
+          schema_version: 1
+        5:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:moss_carpet
+          count: 1
+          schema_version: 1
+        6:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:moss_carpet
+          count: 1
+          schema_version: 1
+        7:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:azalea
+          count: 1
+          schema_version: 1
+        8:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:moss_carpet
+          count: 1
+          schema_version: 1
+        12:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:emerald_block
+          count: 1
+          schema_version: 1
+        13:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:emerald_block
+          count: 1
+          schema_version: 1
+        14:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:emerald_block
+          count: 1
+          schema_version: 1
+        18:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:moss_carpet
+          count: 1
+          schema_version: 1
+        19:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:azalea
+          count: 1
+          schema_version: 1
+        20:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:moss_carpet
+          count: 1
+          schema_version: 1
+        21:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:moss_carpet
+          count: 1
+          schema_version: 1
+        22:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:moss_carpet
+          count: 1
+          schema_version: 1
+        23:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:moss_carpet
+          count: 1
+          schema_version: 1
+        24:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:moss_carpet
+          count: 1
+          schema_version: 1
+        25:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:azalea
+          count: 1
+          schema_version: 1
+        26:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:moss_carpet
+          count: 1
+          schema_version: 1
+      rarity: RARE
+    '5':
+      contents:
+        2:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:moss_carpet
+          count: 1
+          schema_version: 1
+        3:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:moss_carpet
+          count: 1
+          schema_version: 1
+        4:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:moss_carpet
+          count: 1
+          schema_version: 1
+        5:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:moss_carpet
+          count: 1
+          schema_version: 1
+        6:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:moss_carpet
+          count: 1
+          schema_version: 1
+        11:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:experience_bottle
+          count: 1
+          schema_version: 1
+        12:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:experience_bottle
+          count: 1
+          schema_version: 1
+        13:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:experience_bottle
+          count: 1
+          schema_version: 1
+        14:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:experience_bottle
+          count: 1
+          schema_version: 1
+        15:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:experience_bottle
+          count: 1
+          schema_version: 1
+        20:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:glow_berries
+          count: 1
+          schema_version: 1
+        21:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:glow_berries
+          count: 1
+          schema_version: 1
+        22:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:glow_berries
+          count: 1
+          schema_version: 1
+        23:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:glow_berries
+          count: 1
+          schema_version: 1
+        24:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:glow_berries
+          count: 1
+          schema_version: 1
+      rarity: RARE
+    '6':
+      contents:
+        12:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:glow_berries
+          count: 1
+          schema_version: 1
+        13:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:axolotl_bucket
+          count: 1
+          schema_version: 1
+        14:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:glow_berries
+          count: 1
+          schema_version: 1
+      rarity: EPIC

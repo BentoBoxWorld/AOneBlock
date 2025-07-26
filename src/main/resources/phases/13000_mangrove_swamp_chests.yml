@@ -1,0 +1,263 @@
+'13000':
+  chests:
+    '1':
+      contents:
+        21:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:mud
+          count: 1
+          schema_version: 1
+        22:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:muddy_mangrove_roots
+          count: 1
+          schema_version: 1
+        23:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:mud
+          count: 1
+          schema_version: 1
+        12:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:muddy_mangrove_roots
+          count: 1
+          schema_version: 1
+        13:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:mangrove_propagule
+          count: 1
+          schema_version: 1
+        14:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:muddy_mangrove_roots
+          count: 1
+          schema_version: 1
+      rarity: COMMON
+    '2':
+      contents:
+        3:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:torch
+          count: 1
+          schema_version: 1
+        4:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:torch
+          count: 1
+          schema_version: 1
+        5:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:torch
+          count: 1
+          schema_version: 1
+        21:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:mud
+          count: 1
+          schema_version: 1
+        22:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:muddy_mangrove_roots
+          count: 1
+          schema_version: 1
+        23:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:mud
+          count: 1
+          schema_version: 1
+        12:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:muddy_mangrove_roots
+          count: 1
+          schema_version: 1
+        13:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:bread
+          count: 3
+          schema_version: 1
+        14:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:muddy_mangrove_roots
+          count: 1
+          schema_version: 1
+      rarity: COMMON
+    '3':
+      contents:
+        16:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:lead
+          count: 1
+          schema_version: 1
+        1:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:mangrove_propagule
+          count: 1
+          schema_version: 1
+        3:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:torch
+          count: 1
+          schema_version: 1
+        19:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:bread
+          count: 3
+          schema_version: 1
+        5:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:torch
+          count: 1
+          schema_version: 1
+        24:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:mud
+          count: 1
+          schema_version: 1
+        25:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:mud
+          count: 1
+          schema_version: 1
+        26:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:mud
+          count: 1
+          schema_version: 1
+        12:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:muddy_mangrove_roots
+          count: 1
+          schema_version: 1
+        14:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:muddy_mangrove_roots
+          count: 1
+          schema_version: 1
+      rarity: COMMON
+    '4':
+      contents:
+        4:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:lead
+          count: 1
+          schema_version: 1
+        21:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:mud
+          count: 1
+          schema_version: 1
+        22:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:muddy_mangrove_roots
+          count: 1
+          schema_version: 1
+        23:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:mud
+          count: 1
+          schema_version: 1
+        12:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:muddy_mangrove_roots
+          count: 1
+          schema_version: 1
+        13:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:frog_spawn_egg
+          count: 1
+          schema_version: 1
+        14:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:muddy_mangrove_roots
+          count: 1
+          schema_version: 1
+      rarity: UNCOMMON
+    '5':
+      contents:
+        3:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:mangrove_propagule
+          count: 1
+          schema_version: 1
+        4:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:muddy_mangrove_roots
+          count: 1
+          schema_version: 1
+        5:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:mangrove_propagule
+          count: 1
+          schema_version: 1
+        21:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:mud
+          count: 1
+          schema_version: 1
+        22:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:muddy_mangrove_roots
+          count: 1
+          schema_version: 1
+        23:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:mud
+          count: 1
+          schema_version: 1
+        12:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:muddy_mangrove_roots
+          count: 1
+          schema_version: 1
+        13:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:compass
+          count: 1
+          schema_version: 1
+        14:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:muddy_mangrove_roots
+          count: 1
+          schema_version: 1
+      rarity: RARE

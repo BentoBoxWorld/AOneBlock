@@ -1,0 +1,43 @@
+'12000':
+  name: Lush Caves
+  icon: MOSS_BLOCK
+  firstBlock: MOSS_BLOCK
+  biome: LUSH_CAVES
+  fixedBlocks:
+    '0': MOSS_BLOCK
+    '1': MOSS_CARPET
+    '2': AZALEA
+    '3': AZALEA_LEAVES
+    '4': MOSSY_COBBLESTONE
+    '5': SPORE_BLOSSOM
+  blocks:
+    CHEST: 60
+    GLOW_LICHEN: 50
+    CAVE_VINES_PLANT: 60
+    AZALEA_LEAVES: 80
+    SPORE_BLOSSOM: 40
+    MOSSY_COBBLESTONE: 150
+    STONE: 500
+    MOSSY_STONE_BRICKS: 100
+    CAVE_VINES: 60
+    MOSS_BLOCK: 300
+    MOSS_CARPET: 200
+    AZALEA: 100
+    ROOTED_DIRT: 100
+  mobs:
+    AXOLOTL: 20
+    BAT: 150
+    GLOW_SQUID: 20
+    CREEPER: 50
+    SKELETON: 50
+    SLIME: 50
+    SPIDER: 50
+    ZOMBIE: 55
+    ENDERMAN: 5
+    WITCH: 3
+    ZOMBIE_VILLAGER: 3
+    TROPICAL_FISH: 20
+  holograms:
+    '0': '&aWelcome to the Lush Caves!'
+  start-commands: []
+  end-commands: []

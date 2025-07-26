@@ -1,0 +1,42 @@
+'14000':
+  name: Cherry Grove
+  icon: CHERRY_LOG
+  firstBlock: CHERRY_LOG
+  biome: CHERRY_GROVE
+  fixedBlocks:
+    '0': CHERRY_LOG
+    '1': CHERRY_LEAVES
+    '2': PINK_PETALS
+    '3': CHERRY_SAPLING
+    '4': PINK_TULIP
+    '5': WHITE_TULIP
+  blocks:
+    CHEST: 60
+    DIRT: 100
+    STONE: 100
+    CHERRY_LEAVES: 200
+    PINK_PETALS: 100
+    CHERRY_LOG: 300
+    GRASS_BLOCK: 100
+  mobs:
+    WOLF: 50
+    RABBIT: 40
+    DONKEY: 40
+    PIG: 5
+    FOX: 50
+    CHICKEN: 80
+    BEE: 80
+    SHEEP: 80
+    GLOW_SQUID: 2
+    CREEPER: 50
+    SKELETON: 50
+    SLIME: 50
+    SPIDER: 50
+    ZOMBIE: 55
+    ENDERMAN: 5
+    WITCH: 3
+    ZOMBIE_VILLAGER: 3
+  holograms:
+    '0': '&dBlossom in bloom!'
+  start-commands: []
+  end-commands: []

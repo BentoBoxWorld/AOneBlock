@@ -1,0 +1,40 @@
+'12500':
+  name: Dripstone Caves
+  icon: DRIPSTONE_BLOCK
+  firstBlock: DRIPSTONE_BLOCK
+  biome: DRIPSTONE_CAVES
+  fixedBlocks:
+    '0': DRIPSTONE_BLOCK
+    '1': POINTED_DRIPSTONE
+    '2': TUFF
+    '3': CALCITE
+    '4': ANDESITE
+    '5': DIORITE
+  blocks:
+    CHEST: 60
+    DRIPSTONE_BLOCK: 200
+    ANDESITE: 100
+    COBBLESTONE: 100
+    COPPER_ORE: 100
+    CALCITE: 150
+    STONE: 500
+    GRANITE: 100
+    DIORITE: 100
+    POINTED_DRIPSTONE: 200
+    TUFF: 150
+  mobs:
+    BAT: 200
+    GLOW_SQUID: 20
+    CREEPER: 50
+    SKELETON: 50
+    SLIME: 50
+    SPIDER: 50
+    ZOMBIE: 55
+    ENDERMAN: 5
+    WITCH: 3
+    ZOMBIE_VILLAGER: 3
+    DROWNED: 40
+  holograms:
+    '0': '&bProceed with caution!'
+  start-commands: []
+  end-commands: []

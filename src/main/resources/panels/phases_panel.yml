@@ -23,7 +23,7 @@ phases_panel:
     # green, blue as 2 hex digits each and convert that number into a decimal, using a hex to decimal calculator. 
     3:
       1:
-        icon: tipped_arrow{CustomPotionColor:11546150}
+        icon: tipped_arrow[potion_contents={custom_color:11546150}]
         title: aoneblock.gui.buttons.previous.name
         description: aoneblock.gui.buttons.previous.description
         data:
@@ -41,7 +41,7 @@ phases_panel:
       7: phase_button
       8: phase_button
       9:
-        icon: tipped_arrow{CustomPotionColor:8439583}
+        icon: tipped_arrow[potion_contents={custom_color:8439583}]
         title: aoneblock.gui.buttons.next.name
         description: aoneblock.gui.buttons.next.description
         data:

@@ -37,6 +37,9 @@ public class MobCustomBlock implements OneBlockCustomBlock {
 
     public static Optional<MobCustomBlock> fromMap(Map<?, ?> map) {
         String entityTypeValue = Objects.toString(map.get("mob"), null);
+        if (entityTypeValue == null) {
+            return Optional.empty();
+        }
         String underlyingBlockValue = Objects.toString(map.get("underlying-block"), null);
 
         EntityType entityType = maybeEntity(entityTypeValue);

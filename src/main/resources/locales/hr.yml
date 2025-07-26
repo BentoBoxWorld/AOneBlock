@@ -1,70 +1,96 @@
----
+protection:
+  flags:
+    START_SAFETY:
+      name: Pokretanje sigurnosti
+      description: |
+        &b Sprječava nove igrače
+        &b od kretanja u 1 minutu
+        &b Tako da ne padaju.
+      hint: '&c Kretanje je blokirano zbog sigurnosti za [number] više sekundi!'
+      free-to-move: '&a Slobodno se krećete. '
+    ONEBLOCK_BOSSBAR:
+      name: Boss bar
+      description: |
+        &b Prikazuje traku statusa
+        &b za svaku fazu.
 aoneblock:
+  bossbar:
+    title: Preostali blokovi
+    status: '&a Fazni blokovi &b [done] &d / &b [total]'
+    color: RED
+    style: SEGMENTED_20
+    not-active: '&c Boss bar nije aktivan za ovaj otok'
   commands:
     admin:
       setcount:
-        parameters: "<ime> <broj>"
+        parameters: <ime> <broj>
         description: postavljanje broja blokova igrača
-        set: "&a broj [name] postavljen je na [number]"
-        set-lifetime: "&broj životnog vijeka [name] postavljen na [number]"
+        set: '&a broj [name] postavljen je na [number]'
+        set-lifetime: '&broj životnog vijeka [name] postavljen na [number]'
       setchest:
-        parameters: "<phase> <rarity>"
+        parameters: <phase> <rarity>
         description: stavite pregledani sanduk u fazu s specificiranom rijetkošću
-        chest-is-empty: "&c Taj je škrinja prazna pa se ne može dodati"
-        unknown-phase: "&c Nepoznata faza. Da biste ih vidjeli, upotrijebite karticu"
-        unknown-rarity: "&c Nepoznata rijetkost. Koristite COMMON, UNCOMMON, RARE
-          ili EPIC"
-        look-at-chest: "&c Pogledajte napunjen škrinju da ga postavite"
-        only-single-chest: "&c Mogu se postaviti samo pojedinačne škrinje"
-        success: "&a Komoda uspješno dodana u fazu"
-        failure: "&c Grudište se nije moglo dodati u fazu! Pogledajte konzolu za pogreške"
+        chest-is-empty: '&c Taj je škrinja prazna pa se ne može dodati'
+        unknown-phase: '&c Nepoznata faza. Da biste ih vidjeli, upotrijebite karticu'
+        unknown-rarity: '&c Nepoznata rijetkost. Koristite COMMON, UNCOMMON, RARE ili EPIC'
+        look-at-chest: '&c Pogledajte napunjen škrinju da ga postavite'
+        only-single-chest: '&c Mogu se postaviti samo pojedinačne škrinje'
+        success: '&a Komoda uspješno dodana u fazu'
+        failure: >-
+          &c Grudište se nije moglo dodati u fazu! Pogledajte konzolu za
+          pogreške
       sanity:
-        parameters: "<Faza>"
+        parameters: <Faza>
         description: prikazati provjeru ispravnosti faznih vjerojatnosti u konzoli
-        see-console: "&a Pogledajte konzolu za izvješće"
+        see-console: '&a Pogledajte konzolu za izvješće'
     count:
       description: prikazuju broj i fazu bloka
-      info: "&a Nalazite se na bloku &b [number] u fazi &a [name]"
+      info: '&a Nalazite se na bloku &b [number] u fazi &a [name]'
     info:
-      count: "&a Otok je u bloku &b [number]&a u &b [name] &a fazi. Životni vijek
-        &b [lifetime] &a."
+      count: >-
+        &a Otok je u bloku &b [number]&a u &b [name] &a fazi. Životni vijek &b
+        [lifetime] &a.
     phases:
       description: prikažite popis svih faza
-      title: "&2 OneBlock Faze"
-      name-syntax: "&a [name]"
-      description-syntax: "&b [number] blokova"
+      title: '&2 OneBlock Faze'
+      name-syntax: '&a [name]'
+      description-syntax: '&b [number] blokova'
     island:
+      bossbar:
+        description: prebacuje fazni boss bar
+        status_on: '&b Bossbar se &a uključio'
+        status_off: '&b Bossbar se &a isključio'
       setcount:
-        parameters: "<count>"
+        parameters: <count>
         description: postaviti broj blokova na prethodno dovršenu vrijednost
-        set: "&a Brojanje postavljeno na [number]."
-        too-high: "&c Maksimalno što možete postaviti je [number]!"
+        set: '&a Brojanje postavljeno na [number].'
+        too-high: '&c Maksimalno što možete postaviti je [number]!'
     respawn-block:
       description: ponovno rađa magični blok u situacijama kada nestane
-      block-exist: "&a blok postoji, nije zahtijevao ponovno stvaranje. Označila sam
-        za tebe."
-      block-respawned: "&a blok se ponovno pojavio."
+      block-exist: >-
+        &a blok postoji, nije zahtijevao ponovno stvaranje. Označila sam za
+        tebe.
+      block-respawned: '&a blok se ponovno pojavio.'
   phase:
-    insufficient-level: "&c Vaša razina otoka je preniska za nastavak! Mora biti [number]."
-    insufficient-funds: "&c Vaša su sredstva premala za nastavak! Moraju biti [number]."
-    insufficient-bank-balance: "&c Stanje otočne banke je premalo za nastavak! Mora
-      biti [number]."
-    insufficient-permission: "&c Ne možete nastaviti dok ne dobijete dopuštenje [name]!"
-    cooldown: "&c Sljedeća faza bit će dostupna za [number] sekundi!"
+    insufficient-level: '&c Vaša razina otoka je preniska za nastavak! Mora biti [number].'
+    insufficient-funds: '&c Vaša su sredstva premala za nastavak! Moraju biti [number].'
+    insufficient-bank-balance: '&c Stanje otočne banke je premalo za nastavak! Mora biti [number].'
+    insufficient-permission: '&c Ne možete nastaviti dok ne dobijete dopuštenje [name]!'
+    cooldown: '&c Sljedeća faza bit će dostupna za [number] sekundi!'
   placeholders:
     infinite: Beskonačno
   gui:
     titles:
-      phases: "&0&l OneBlock faze"
+      phases: '&0&l OneBlock faze'
     buttons:
       previous:
-        name: "&f&l Prethodna stranica"
-        description: "&7 Prijeđi na stranicu [number]."
+        name: '&f&l Prethodna stranica'
+        description: '&7 Prijeđi na stranicu [number].'
       next:
-        name: "&f&l Sljedeća stranica"
-        description: "&7 Prijeđi na stranicu [number]."
+        name: '&f&l Sljedeća stranica'
+        description: '&7 Prijeđi na stranicu [number].'
       phase:
-        name: "&f&l [phase]"
+        name: '&f&l [phase]'
         description: |-
           [starting-block]
           [biome]
@@ -72,16 +98,19 @@ aoneblock:
           [economy]
           [level]
           [permission]
-        starting-block: "&7 Počinje nakon razbijanja &e [number] blokova."
-        biome: "&7 Biome: &e [biome]"
-        bank: "&7 Zahtijeva &e $[number] &7 na bankovnom računu."
-        economy: "&7 Zahtijeva &e $[number] &7 na računu igrača."
-        level: "&7 Zahtijeva &e [number] &7 razinu otoka."
-        permission: "&7 Zahtijeva dozvolu `&e[permission]&7`."
+        starting-block: '&7 Počinje nakon razbijanja &e [number] blokova.'
+        biome: '&7 Biome: &e [biome]'
+        bank: '&7 Zahtijeva &e $[number] &7 na bankovnom računu.'
+        economy: '&7 Zahtijeva &e $[number] &7 na računu igrača.'
+        level: '&7 Zahtijeva &e [number] &7 razinu otoka.'
+        permission: '&7 Zahtijeva dozvolu `&e[permission]&7`.'
+        blocks-prefix: '&7 Blokovi u fazi -'
+        blocks: '&e [name], '
+        wrap-at: '50'
     tips:
-      click-to-previous: "&e Kliknite &7 za pregled prethodne stranice."
-      click-to-next: "&e Kliknite &7 za pregled sljedeće stranice."
-      click-to-change: "&e Kliknite &7 za promjenu."
+      click-to-previous: '&e Kliknite &7 za pregled prethodne stranice.'
+      click-to-next: '&e Kliknite &7 za pregled sljedeće stranice.'
+      click-to-change: '&e Kliknite &7 za promjenu.'
   island:
     starting-hologram: |-
       &aDobro došli u AOneBlock
