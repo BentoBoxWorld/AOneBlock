@@ -28,7 +28,7 @@ public class IslandBossBarCommand extends CompositeCommand {
     public boolean execute(User user, String label, List<String> args) {
         addon.getBossBar().toggleUser(user);
         getIslands().getIslandAt(user.getLocation()).ifPresent(i -> {
-            if (!i.isAllowed(addon.BOSSBAR)) {
+            if (!i.isAllowed(addon.ONEBLOCK_BOSSBAR)) {
                 user.sendMessage("aoneblock.bossbar.not-active");
             }
         });
