@@ -455,6 +455,10 @@ public class BlockListener implements Listener {
                 block.setBlockData(leaves);
             } else if (block.getState() instanceof BrushableBlock bb) {
                 LootTable lt = switch (bb.getBlock().getBiome().getKey().getKey()) {
+                case "DESERT" -> LootTables.DESERT_PYRAMID_ARCHAEOLOGY.getLootTable();
+                case "FROZEN_OCEAN" -> LootTables.OCEAN_RUIN_COLD_ARCHAEOLOGY.getLootTable();
+                case "OCEAN" -> LootTables.OCEAN_RUIN_COLD_ARCHAEOLOGY.getLootTable();
+                case "WARM_OCEAN" -> LootTables.OCEAN_RUIN_WARM_ARCHAEOLOGY.getLootTable();
                 default -> {
                     if (random.nextDouble() < 0.8) {
                         yield LootTables.TRAIL_RUINS_ARCHAEOLOGY_COMMON.getLootTable();
@@ -463,10 +467,6 @@ public class BlockListener implements Listener {
                         yield LootTables.TRAIL_RUINS_ARCHAEOLOGY_RARE.getLootTable();
                     }
                 }
-                case "DESERT" -> LootTables.DESERT_PYRAMID_ARCHAEOLOGY.getLootTable();
-                case "FROZEN_OCEAN" -> LootTables.OCEAN_RUIN_COLD_ARCHAEOLOGY.getLootTable();
-                case "OCEAN" -> LootTables.OCEAN_RUIN_COLD_ARCHAEOLOGY.getLootTable();
-                case "WARM_OCEAN" -> LootTables.OCEAN_RUIN_WARM_ARCHAEOLOGY.getLootTable();
                 };
                 bb.setLootTable(lt);
                 bb.update();
