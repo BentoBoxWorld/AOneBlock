@@ -161,7 +161,7 @@ public class AOneBlock extends GameModeAddon {
 
         // Clear holograms
         if (holoListener != null) {
-            holoListener.clear();
+            holoListener.onDisable();
         }
     }
 
