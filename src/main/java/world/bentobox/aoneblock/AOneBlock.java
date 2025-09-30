@@ -38,6 +38,7 @@ import world.bentobox.bentobox.api.flags.Flag;
 import world.bentobox.bentobox.api.flags.Flag.Mode;
 import world.bentobox.bentobox.api.flags.Flag.Type;
 import world.bentobox.bentobox.database.objects.Island;
+import world.bentobox.bentobox.managers.RanksManager;
 
 /**
  * Main OneBlock class - provides an island minigame in the sky
@@ -46,29 +47,57 @@ import world.bentobox.bentobox.database.objects.Island;
  */
 public class AOneBlock extends GameModeAddon {
 
+    /** Suffix for the nether world */
     private static final String NETHER = "_nether";
+    /** Suffix for the end world */
     private static final String THE_END = "_the_end";
+    /** Whether ItemsAdder is present on the server */
     private boolean hasItemsAdder = false;
 
-    // Settings
+    /** The addon settings */
     private Settings settings;
+    /** The custom chunk generator for OneBlock worlds */
     private ChunkGeneratorWorld chunkGenerator;
+    /** The configuration object for settings */
     private final Config<Settings> configObject = new Config<>(this, Settings.class);
+    /** The listener for block-related events */
     private BlockListener blockListener;
+    /** The manager for OneBlock phases and blocks */
     private OneBlocksManager oneBlockManager;
+    /** The placeholder manager for AOneBlock */
     private AOneBlockPlaceholders phManager;
+    /** The listener for hologram-related events */
     private HoloListener holoListener;
 
-    // Flag
+    /**
+     * Flag to enable or disable start safety for players.
+     */
     public final Flag START_SAFETY = new Flag.Builder("START_SAFETY", Material.BAMBOO_BLOCK)
             .mode(Mode.BASIC)
             .type(Type.WORLD_SETTING)
             .listener(new StartSafetyListener(this))
             .defaultSetting(false)
             .build();
+    /** The listener for the boss bar */
     private BossBarListener bossBar = new BossBarListener(this);
-    public final Flag ONEBLOCK_BOSSBAR = new Flag.Builder("ONEBLOCK_BOSSBAR", Material.DRAGON_HEAD).mode(Mode.BASIC)
-            .type(Type.SETTING).listener(bossBar).defaultSetting(true).build();
+    /**
+     * Flag to enable or disable the OneBlock boss bar.
+     */
+    public final Flag ONEBLOCK_BOSSBAR = new Flag.Builder("ONEBLOCK_BOSSBAR", Material.DRAGON_HEAD)
+            .mode(Mode.BASIC)
+            .type(Type.SETTING)
+            .listener(bossBar)
+            .defaultSetting(true)
+            .build();
+    
+    /**
+     * Flag to set who can break the magic block.
+     */
+    public final Flag MAGIC_BLOCK = new Flag.Builder("MAGIC_BLOCK", Material.GRASS_BLOCK)
+            .mode(Mode.BASIC)
+            .type(Type.PROTECTION)
+            .defaultRank(RanksManager.COOP_RANK)
+            .build();
 
     @Override
     public void onLoad() {
@@ -94,9 +123,15 @@ public class AOneBlock extends GameModeAddon {
             getPlugin().getFlagsManager().registerFlag(this, START_SAFETY);
             // Bossbar
             getPlugin().getFlagsManager().registerFlag(this, this.ONEBLOCK_BOSSBAR);
+            // Magic Block protection
+            getPlugin().getFlagsManager().registerFlag(this, this.MAGIC_BLOCK);
         }
     }
 
+    /**
+     * Loads the settings from the config file.
+     * @return true if settings were loaded successfully, false otherwise.
+     */
     private boolean loadSettings() {
         // Load settings again to get worlds
         settings = configObject.loadConfigObject();
@@ -114,11 +149,14 @@ public class AOneBlock extends GameModeAddon {
 
     @Override
     public void onEnable() {
+        // Initialize the OneBlock manager
         oneBlockManager = new OneBlocksManager(this);
+        // Load phase data
         if (loadData()) {
             // Failed to load - don't register anything
             return;
         }
+        // Initialize and register listeners
         blockListener = new BlockListener(this);
         registerListener(blockListener);
         registerListener(new NoBlockHandler(this));
@@ -138,12 +176,15 @@ public class AOneBlock extends GameModeAddon {
         registerListener(holoListener);
     }
 
-    // Load phase data
+    /**
+     * Load phase data from oneblock.yml.
+     * @return true if there was an error, false otherwise.
+     */
     public boolean loadData() {
         try {
             oneBlockManager.loadPhases();
         } catch (IOException e) {
-            // Disable
+            // Disable the addon if phase data cannot be loaded
             logError("AOneBlock settings could not load (oneblock.yml error)! Addon disabled.");
             logError(e.getMessage());
             setState(State.DISABLED);
@@ -169,6 +210,7 @@ public class AOneBlock extends GameModeAddon {
     public void onReload() {
         // save cache
         blockListener.saveCache();
+        // Reload settings and phase data
         if (loadSettings()) {
             log("Reloaded AOneBlock settings");
             loadData();
@@ -223,6 +265,7 @@ public class AOneBlock extends GameModeAddon {
         worldName2 = env.equals(World.Environment.NETHER) ? worldName2 + NETHER : worldName2;
         worldName2 = env.equals(World.Environment.THE_END) ? worldName2 + THE_END : worldName2;
         WorldCreator wc = WorldCreator.name(worldName2).environment(env);
+        // Use custom generator if configured, otherwise default
         World w = settings.isUseOwnGenerator() ? wc.createWorld() : wc.generator(chunkGenerator2).createWorld();
         // Set spawn rates
         if (w != null) {
@@ -232,6 +275,10 @@ public class AOneBlock extends GameModeAddon {
 
     }
 
+    /**
+     * Sets the spawn rates for a given world based on the addon's settings.
+     * @param w The world to set spawn rates for.
+     */
     private void setSpawnRates(World w) {
         if (getSettings().getSpawnLimitMonsters() > 0) {
             w.setSpawnLimit(SpawnCategory.MONSTER, getSettings().getSpawnLimitMonsters());
@@ -298,6 +345,9 @@ public class AOneBlock extends GameModeAddon {
         return blockListener.getIsland(Objects.requireNonNull(i));
     }
 
+    /**
+     * @return The OneBlock manager.
+     */
     public OneBlocksManager getOneBlockManager() {
         return oneBlockManager;
     }
@@ -341,6 +391,10 @@ public class AOneBlock extends GameModeAddon {
 
     }
 
+    /**
+     * Sets the addon's settings. Used only for testing.
+     * @param settings The settings to set.
+     */
     public void setSettings(Settings settings) {
         this.settings = settings;
     }
