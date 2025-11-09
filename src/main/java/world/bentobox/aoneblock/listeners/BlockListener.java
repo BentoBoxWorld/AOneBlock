@@ -20,9 +20,7 @@ import org.bukkit.World;
 import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.block.BrushableBlock;
 import org.bukkit.block.Chest;
-import org.bukkit.block.SuspiciousSand;
 import org.bukkit.block.data.Brushable;
 import org.bukkit.block.data.type.Leaves;
 import org.bukkit.entity.Entity;
@@ -37,16 +35,14 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockFromToEvent;
 import org.bukkit.event.entity.EntityInteractEvent;
 import org.bukkit.event.entity.EntitySpawnEvent;
+import org.bukkit.event.entity.ItemSpawnEvent;
 import org.bukkit.event.player.PlayerBucketFillEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.loot.LootTables;
 import org.bukkit.util.Vector;
 import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jdt.annotation.Nullable;
-
-import com.bgsoftware.wildstacker.api.loot.LootTable;
 
 import world.bentobox.aoneblock.AOneBlock;
 import world.bentobox.aoneblock.dataobjects.OneBlockIslands;
@@ -108,8 +104,6 @@ public class BlockListener implements Listener {
      * How often data is saved.
      */
     public static final int SAVE_EVERY = 50;
-
-    private final Random random = new Random();
 
     // Loot for suspicious blocks
     private static final Map<Material, Double> LOOT;
@@ -247,38 +241,61 @@ public class BlockListener implements Listener {
          }
      }
 
+     
      /**
-      * Drop items at the top of the block.
-      * 
-      * @param event EntitySpawnEvent object.
+      * This handler listens for items spawning.
+      * If an item spawns exactly at an island's center block,
+      * it cancels the spawn and re-drops the item 1 block higher
+      * (at the center of that block) to stack it neatly.
       */
      @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
-     public void onItemStackSpawn(EntitySpawnEvent event) {
+     public void onItemSpawn(ItemSpawnEvent event) {
+         // --- Guard Clauses: Exit early if conditions aren't met ---
+
+         // 1. Check if the "drop on top" feature is enabled.
          if (!this.addon.getSettings().isDropOnTop()) {
-             // Do nothing as item spawning is not interested in this case.
+             // Feature is disabled, so we don't need to do anything.
              return;
          }
 
-         if (!EntityType.ITEM.equals(event.getEntityType())) {
-             // We are interested only in dropped item entities.
+         // Get the spawn location once.
+         Location spawnLocation = event.getLocation();
+
+         // 2. Check if the spawn is happening in a world managed by the addon.
+         if (!this.addon.inWorld(spawnLocation.getWorld())) {
+             // Not a relevant world, ignore this event.
              return;
          }
 
-         if (!this.addon.inWorld(event.getLocation().getWorld())) {
-             // Not correct world
-             return;
-         }
+         // Find an island at the spawn location.
+         Optional<Island> optionalIsland = this.addon.getIslands().getIslandAt(spawnLocation)
+                 // Chained to the Optional: Filter the island.
+                 // Only keep it if the block the item spawned in
+                 // is *exactly* the island's center.
+                 .filter(island -> {
+                     // .getBlock().getLocation() converts a precise location 
+                     // (e.g., 10.2, 64.5, 12.8) to its block's location (10.0, 64.0, 12.0).
+                     Location blockLocation = spawnLocation.getBlock().getLocation();
+                     return blockLocation.equals(island.getCenter());
+                 });
 
-         Entity entity = event.getEntity();
-         Location location = event.getLocation();
-
-         Optional<Island> optionalIsland = this.addon.getIslands().getIslandAt(location)
-                 .filter(island -> location.getBlock().getLocation().equals(island.getCenter()));
-
+         // If we found an island AND it passed the filter (spawned at center)...
          if (optionalIsland.isPresent()) {
-             // Teleport entity to the top of magic block.
-             entity.teleport(optionalIsland.get().getCenter().add(0.5, 1, 0.5));
-             entity.setVelocity(new Vector(0, 0, 0));
+             // 1. Cancel the original item spawn.
+             event.setCancelled(true);
+
+             // 2. Get the island and the item stack that was supposed to spawn.
+             Island island = optionalIsland.get();
+             // We use event.getEntity() which is guaranteed to be an Item.
+             ItemStack itemStack = event.getEntity().getItemStack();
+
+             // 3. Calculate the new, clean drop location.
+             // .add(0.5, 1, 0.5) moves it to the center of the block (0.5)
+             // and one block up (1.0) so it sits on top.
+             Location newDropLocation = island.getCenter().add(0.5, 1, 0.5);
+
+             // 4. Drop the item stack at the new location.
+             spawnLocation.getWorld().dropItem(newDropLocation, itemStack);
          }
      }
 
@@ -607,7 +624,6 @@ public class BlockListener implements Listener {
 
      }
      
-    @SuppressWarnings("deprecation")
     @EventHandler
      public void onPlayerInteract(PlayerInteractEvent e) {
        if (e.getAction() != Action.RIGHT_CLICK_BLOCK) return;
