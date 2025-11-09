@@ -6,12 +6,12 @@
 protection:
   flags:
     MAGIC_BLOCK:
-	  name: Magic Block Protection
-	  description: |
-		&b Rank that can break the magic
-		&b block if they can break blocks.
-	  hint: &c Your rank cannot break the magic block!
-	START_SAFETY:
+      name: Magic Block Protection
+      description: |
+        &b Rank that can break the magic
+        &b block if they can break blocks.
+      hint: "&c Your rank cannot break the magic block!"
+    START_SAFETY:
       name: Starting Safety
       description: |
         &b Prevents new players
