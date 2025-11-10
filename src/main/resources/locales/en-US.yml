@@ -46,7 +46,7 @@ aoneblock:
   actionbar:
     status: "&a Phase: &b [phase-name] &d | &a Blocks: &b [done] &d / &b [total] &d | &a Progression: &b [percent-done]"
     not-active: "&c Action Bar is not active for this island"
- commands:
+  commands:
     admin:
       setcount:
         parameters: "<name> <count> [lifetime]"
