@@ -1,5 +1,6 @@
 package world.bentobox.aoneblock.mocks;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.notNull;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.doReturn;
@@ -24,6 +25,7 @@ import org.eclipse.jdt.annotation.NonNull;
 
 public final class ServerMocks {
 
+    @SuppressWarnings({ "deprecation", "unchecked" })
     public static @NonNull Server newServer() {
         Server mock = mock(Server.class);
 
@@ -66,7 +68,8 @@ public final class ServerMocks {
                     doReturn(key).when(keyed).getKey();
                     return keyed;
                 });
-            }).when(registry).get(notNull());
+             // Cast the registry mock to explicitly define the generic type for the 'get' method resolution.
+            }).when((Registry<Keyed>) registry).get(any(NamespacedKey.class));
             return registry;
         })).when(mock).getRegistry(notNull());
 

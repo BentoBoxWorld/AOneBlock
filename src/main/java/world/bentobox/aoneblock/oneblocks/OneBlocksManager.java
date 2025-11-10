@@ -19,7 +19,7 @@ import java.util.TreeMap;
 import java.util.jar.JarFile;
 import java.util.stream.Collectors;
 
-import org.apache.commons.lang.math.NumberUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Registry;
@@ -260,7 +260,7 @@ public class OneBlocksManager {
         Map<Integer, OneBlockObject> result = new HashMap<>();
 
         for (String key : firstBlocksConfig.getKeys(false)) {
-            if (!NumberUtils.isNumber(key)) {
+            if (!NumberUtils.isCreatable(key)) {
                 addon.logError("Fixed block key must be an integer. " + key);
                 continue;
             }
@@ -335,7 +335,7 @@ public class OneBlocksManager {
             return;
         Map<Integer, String> result = new HashMap<>();
         for (String key : fb.getKeys(false)) {
-            if (!NumberUtils.isNumber(key)) {
+            if (!NumberUtils.isCreatable(key)) {
                 addon.logError("Fixed block key must be an integer. " + key);
                 continue;
             }

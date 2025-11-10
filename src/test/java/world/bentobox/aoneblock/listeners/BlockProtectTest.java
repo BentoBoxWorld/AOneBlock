@@ -20,6 +20,7 @@ import java.util.Optional;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Particle;
+import org.bukkit.Server;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -39,11 +40,13 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockbukkit.mockbukkit.MockBukkit;
 import org.mockito.Mock;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import world.bentobox.aoneblock.AOneBlock;
 import world.bentobox.aoneblock.Settings;
+import world.bentobox.aoneblock.mocks.ServerMocks;
 import world.bentobox.bentobox.database.objects.Island;
 import world.bentobox.bentobox.managers.IslandsManager;
 
@@ -75,6 +78,8 @@ public class BlockProtectTest {
      */
     @Before
     public void setUp() throws Exception {
+        
+        Server server = MockBukkit.mock();
 
         when(p.getWorld()).thenReturn(world);
         // In World
@@ -105,6 +110,7 @@ public class BlockProtectTest {
      */
     @After
     public void tearDown() throws Exception {
+        MockBukkit.unmock();
     }
 
     /**
