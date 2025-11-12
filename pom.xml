@@ -64,7 +64,7 @@
         <!-- Do not change unless you want different name for local builds. -->
         <build.number>-LOCAL</build.number>
         <!-- This allows to change between versions. -->
-        <build.version>1.20.1</build.version>
+        <build.version>1.21.0</build.version>
         <!-- SonarCloud -->
         <sonar.projectKey>BentoBoxWorld_AOneBlock</sonar.projectKey>
         <sonar.organization>bentobox-world</sonar.organization>
@@ -123,8 +123,12 @@
 
     <repositories>
         <repository>
-            <id>spigot-repo</id>
-            <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots</url>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
+        <repository>
+          <id>papermc</id>
+          <url>https://repo.papermc.io/repository/maven-public/</url>
         </repository>
         <repository>
             <id>minecraft-repo</id>
@@ -153,18 +157,17 @@
     </repositories>
 
     <dependencies>
-        <!-- Spigot API -->
         <dependency>
-            <groupId>org.spigotmc</groupId>
-            <artifactId>spigot-api</artifactId>
-            <version>${spigot.version}</version>
-            <scope>provided</scope>
-        </dependency>
+            <groupId>com.github.MockBukkit</groupId>
+            <artifactId>MockBukkit</artifactId>
+            <version>v1.21-SNAPSHOT</version>
+            <scope>test</scope>
+         </dependency>
         <dependency>
-            <groupId>org.spigotmc</groupId>
-            <artifactId>plugin-annotations</artifactId>
-            <version>1.2.3-SNAPSHOT</version>
-            <scope>compile</scope>
+          <groupId>io.papermc.paper</groupId>
+          <artifactId>paper-api</artifactId>
+          <version>1.21.10-R0.1-SNAPSHOT</version>
+          <scope>provided</scope>
         </dependency>
         <!-- Apache Commons Text -->
         <dependency>
@@ -223,7 +226,6 @@
             <version>${items-adder.version}</version>
             <scope>provided</scope>
         </dependency>
-
     </dependencies>
 
     <build>
@@ -292,7 +294,6 @@
                 <version>3.0.0-M5</version>
                 <configuration>
                     <argLine>
-                        ${argLine}
                         --add-opens java.base/java.lang=ALL-UNNAMED
                         --add-opens java.base/java.math=ALL-UNNAMED
                         --add-opens java.base/java.io=ALL-UNNAMED

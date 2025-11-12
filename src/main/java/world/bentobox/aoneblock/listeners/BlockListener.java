@@ -27,6 +27,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
+import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -56,14 +57,16 @@ import world.bentobox.bentobox.BentoBox;
 import world.bentobox.bentobox.api.events.island.IslandCreatedEvent;
 import world.bentobox.bentobox.api.events.island.IslandDeleteEvent;
 import world.bentobox.bentobox.api.events.island.IslandResettedEvent;
+import world.bentobox.bentobox.api.flags.FlagListener;
 import world.bentobox.bentobox.database.Database;
 import world.bentobox.bentobox.database.objects.Island;
 import world.bentobox.bentobox.util.Util;
 
 /**
+ * This listener handles all the core logic for the OneBlock block, including breaking, phase changes, and entity spawning.
  * @author tastybento
  */
-public class BlockListener implements Listener {
+public class BlockListener extends FlagListener implements Listener {
 
     /**
      * Main addon class.
@@ -76,36 +79,36 @@ public class BlockListener implements Listener {
     private final OneBlocksManager oneBlocksManager;
 
     /**
-     * Oneblock data database
+     * Oneblock data database handler.
      */
     private final Database<OneBlockIslands> handler;
 
     /**
-     * Oneblock cache.
+     * In-memory cache for OneBlock island data to reduce database lookups.
      */
     private final Map<String, OneBlockIslands> cache;
 
     /**
-     * Phase checker class
+     * Helper class to check phase requirements.
      */
     private final CheckPhase check;
 
     /**
-     * Sound player
+     * Helper class to play warning sounds for upcoming mobs.
      */
     private final WarningSounder warningSounder;
 
     /**
-     * How many blocks ahead it should look.
+     * How many blocks ahead the queue should look when populating.
      */
     public static final int MAX_LOOK_AHEAD = 5;
 
     /**
-     * How often data is saved.
+     * How often island data is saved to the database (in blocks broken).
      */
     public static final int SAVE_EVERY = 50;
-
-    // Loot for suspicious blocks
+    
+    /** Loot table for suspicious blocks. Maps item to its probability. */
     private static final Map<Material, Double> LOOT;
     static {
         Map<Material, Double> loot = new HashMap<>();
@@ -142,7 +145,8 @@ public class BlockListener implements Listener {
     }
 
     /**
-     * @param addon - OneBlock
+     * Constructs the BlockListener.
+     * @param addon - The AOneBlock addon instance.
      */
      public BlockListener(@NonNull AOneBlock addon) {
          this.addon = addon;
@@ -154,7 +158,7 @@ public class BlockListener implements Listener {
      }
 
      /**
-      * Save the island cache
+      * Saves all island data from the cache to the database asynchronously.
       */
      public void saveCache() {
          cache.values().forEach(handler::saveObjectAsync);
@@ -164,6 +168,10 @@ public class BlockListener implements Listener {
      // Section: Listeners
      // ---------------------------------------------------------------------
 
+     /**
+      * Sets up a new OneBlock island when a BentoBox island is created.
+      * @param e The IslandCreatedEvent.
+      */
      @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
      public void onNewIsland(IslandCreatedEvent e) {
          if (addon.inWorld(e.getIsland().getWorld())) {
@@ -171,6 +179,10 @@ public class BlockListener implements Listener {
          }
      }
 
+     /**
+      * Resets a OneBlock island when a BentoBox island is reset.
+      * @param e The IslandResettedEvent.
+      */
      @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
      public void onNewIsland(IslandResettedEvent e) {
          if (addon.inWorld(e.getIsland().getWorld())) {
@@ -178,6 +190,10 @@ public class BlockListener implements Listener {
          }
      }
 
+     /**
+      * Removes OneBlock data when a BentoBox island is deleted.
+      * @param e The IslandDeleteEvent.
+      */
      @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
      public void onDeletedIsland(IslandDeleteEvent e) {
          if (addon.inWorld(e.getIsland().getWorld())) {
@@ -201,6 +217,10 @@ public class BlockListener implements Listener {
          e.setCancelled(addon.getIslands().getIslandAt(l).filter(i -> l.equals(i.getCenter())).isPresent());
      }
 
+     /**
+      * Handles the breaking of the magic block by a player.
+      * @param e The BlockBreakEvent.
+      */
      @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
      public void onBlockBreak(final BlockBreakEvent e) {
          if (!addon.inWorld(e.getBlock().getWorld())) {
@@ -303,6 +323,10 @@ public class BlockListener implements Listener {
      // Section: Processing methods
      // ---------------------------------------------------------------------
 
+     /**
+      * Sets up the initial state for a new OneBlock island.
+      * @param island The island to set up.
+      */
      private void setUp(@NonNull Island island) {
          // Set the bedrock to the initial block
          Util.getChunkAtAsync(Objects.requireNonNull(island.getCenter()))
@@ -315,20 +339,26 @@ public class BlockListener implements Listener {
      }
 
      /**
-      * Main block processing method that handles the magic block mechanics.
+      * Main magic block processing method that handles the magic block mechanics.
       * This includes phase changes, block spawning, and event handling.
       *
       * @param e - event causing the processing
-      * @param i - island where it's happening
+      * @param island - island where it's happening
       * @param player - player who broke the block or who is involved - may be null
       * @param world - world where the block is being broken
       */
-     private void process(@NonNull Cancellable e, @NonNull Island i, @Nullable Player player, @NonNull World world) {
-         Block block = Objects.requireNonNull(i.getCenter()).toVector().toLocation(world).getBlock();
-         OneBlockIslands is = getIsland(i);
+     private void process(@NonNull Cancellable e, @NonNull Island island, @Nullable Player player, @NonNull World world) {
+         // Check if the player has authority to break the magic block
+         if (!checkIsland((@NonNull Event) e, player, island.getCenter(), addon.MAGIC_BLOCK)) {
+             // Not allowed
+             return;
+         }
+         
+         Block block = Objects.requireNonNull(island.getCenter()).toVector().toLocation(world).getBlock();
+         OneBlockIslands is = getIsland(island);
 
          // Process phase changes and requirements
-         ProcessPhaseResult phaseResult = processPhase(e, i, is, player, world, block);
+         ProcessPhaseResult phaseResult = processPhase(e, island, is, player, world, block);
          if (e.isCancelled()) {
              return;
          }
@@ -337,12 +367,18 @@ public class BlockListener implements Listener {
          initializeQueue(is, phaseResult.phase, phaseResult.isCurrPhaseNew);
 
          // Process hologram and warning sounds
-         processHologramAndWarnings(i, is, phaseResult.phase, block);
+         processHologramAndWarnings(island, is, phaseResult.phase, block);
 
          // Process the next block
-         processNextBlock(e, i, player, block, is, phaseResult);
+         processNextBlock(e, island, player, block, is, phaseResult);
      }
 
+     /**
+      * A record to hold the result of phase processing.
+      * @param phase The current phase.
+      * @param isCurrPhaseNew Whether the current phase is new.
+      * @param blockNumber The block number within the current phase.
+      */
      private record ProcessPhaseResult(OneBlockPhase phase, boolean isCurrPhaseNew, int blockNumber) {}
 
      /**
@@ -370,12 +406,14 @@ public class BlockListener implements Listener {
 
          boolean isCurrPhaseNew = !is.getPhaseName().equalsIgnoreCase(currPhaseName);
          if (isCurrPhaseNew) {
+             // Check if the player meets the requirements for the new phase.
              if (check.phaseRequirementsFail(player, i, is, phase, world)) {
                  e.setCancelled(true);
                  return new ProcessPhaseResult(phase, true, 0);
              }
              handleNewPhase(player, i, is, phase, block, prevPhaseName);
          } else if (is.getBlockNumber() % SAVE_EVERY == 0) {
+             // Periodically save the island's progress.
              saveIsland(i);
          }
 
@@ -498,7 +536,7 @@ public class BlockListener implements Listener {
      }
 
      /**
-      * Handles different types of block breaking events.
+      * Handles different types of block breaking events (player, bucket, entity).
       *
       * @param e - event being processed
       * @param i - island instance
@@ -517,7 +555,7 @@ public class BlockListener implements Listener {
      }
 
      /**
-      * Handles bucket fill events including block spawning and event firing.
+      * Handles bucket fill events on the magic block.
       *
       * @param player - player filling bucket
       * @param i - island instance
@@ -560,6 +598,11 @@ public class BlockListener implements Listener {
          return oneBlocksManager.getPhase(gotoBlock);
      }
 
+     /**
+      * Sets the biome in a small radius around the given block.
+      * @param block The center block.
+      * @param biome The biome to set.
+      */
      private void setBiome(@NonNull Block block, @Nullable Biome biome) {
          if (biome == null) {
              return;
@@ -603,6 +646,11 @@ public class BlockListener implements Listener {
          .callEvent(new MagicBlockEvent(island, player.getUniqueId(), tool, block, nextBlock.getMaterial()));
      }
 
+     /**
+      * Spawns the next block in the sequence, handling custom blocks and block data.
+      * @param nextBlock The object representing the block to spawn.
+      * @param block The block in the world to be replaced.
+      */
      private void spawnBlock(@NonNull OneBlockObject nextBlock, @NonNull Block block) {
          if (nextBlock.isCustomBlock()) {
              nextBlock.getCustomBlock().execute(addon, block);
@@ -624,6 +672,11 @@ public class BlockListener implements Listener {
 
      }
      
+    /**
+     * Handles player interaction with suspicious blocks (sand/gravel) using a brush.
+     * This is currently for debugging purposes.
+     * @param e The PlayerInteractEvent.
+     */
     @EventHandler
      public void onPlayerInteract(PlayerInteractEvent e) {
        if (e.getAction() != Action.RIGHT_CLICK_BLOCK) return;
@@ -632,12 +685,18 @@ public class BlockListener implements Listener {
        if (e.getClickedBlock().getType() != Material.SUSPICIOUS_GRAVEL &&
            e.getClickedBlock().getType() != Material.SUSPICIOUS_SAND) return;
        if (e.getPlayer().getInventory().getItemInMainHand().getType() != Material.BRUSH) return;
+       // TODO FINISH THIS!!!
        BentoBox.getInstance().logDebug("Brushing " + e.getClickedBlock());
        if (e.getClickedBlock() != null && e.getClickedBlock().getBlockData() instanceof Brushable bb) {      
                BentoBox.getInstance().logDebug("item is brushable "  + bb.getDusted());      
        }
      }
      
+     /**
+      * Gets a random loot item from the loot table based on probabilities.
+      * @param random The random number generator.
+      * @return A random Material from the loot table.
+      */
      private static Material getRandomLoot(Random random) {
          double roll = random.nextDouble();
          double cumulative = 0.0;
@@ -654,6 +713,11 @@ public class BlockListener implements Listener {
          return materials.get(random.nextInt(materials.size()));
      }
 
+     /**
+      * Spawns an entity at the magic block location.
+      * @param nextBlock The object containing entity information.
+      * @param block The magic block.
+      */
      private void spawnEntity(@NonNull OneBlockObject nextBlock, @NonNull Block block) {
          if (block.isEmpty())
              block.setType(Material.STONE);
@@ -666,6 +730,11 @@ public class BlockListener implements Listener {
          block.getWorld().playSound(block.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 1F, 2F);
      }
 
+     /**
+      * Fills a chest with items and adds particle effects based on rarity.
+      * @param nextBlock The object containing chest information.
+      * @param block The chest block.
+      */
      private void fillChest(@NonNull OneBlockObject nextBlock, @NonNull Block block) {
          Chest chest = (Chest) block.getState();
          nextBlock.getChest().forEach(chest.getBlockInventory()::setItem);
@@ -708,6 +777,12 @@ public class BlockListener implements Listener {
          return handler.loadObjects();
      }
 
+     /**
+      * Loads an island's OneBlock data from the database into the cache.
+      * If it doesn't exist, a new object is created.
+      * @param uniqueId The unique ID of the island.
+      * @return The OneBlockIslands data object.
+      */
      @NonNull
      private OneBlockIslands loadIsland(@NonNull String uniqueId) {
          if (handler.objectExists(uniqueId)) {
