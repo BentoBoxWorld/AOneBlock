@@ -24,6 +24,14 @@ protection:
         description: |
           &b Shows a status bar
           &b for each phase.
+
+  ONEBLOCK_ACTIONBAR:
+    name: Action Bar
+    description: |
+      &b Shows a status
+      &b for each phase
+      &b in the Action Bar.
+
 aoneblock:
   bossbar:
     title: "Blocks remaining"
@@ -35,6 +43,9 @@ aoneblock:
     # SOLID, SEGMENTED_6,  SEGMENTED_10, SEGMENTED_12, SEGMENTED_20
     style: SOLID
     not-active: "&c Boss Bar is not active for this island"
+  actionbar:
+    status: "&a Phase: &b [phase-name] &d | &a Blocks: &b [done] &d / &b [total] &d | &a Progression: &b [percent-done]"
+    not-active: "&c Action Bar is not active for this island"
   commands:
     admin:
       setcount:
@@ -71,6 +82,10 @@ aoneblock:
         description: "toggles phase boss bar"
         status_on: "&b Bossbar turned &a on"
         status_off: "&b Bossbar turned &c off"
+      actionbar:
+        description: "toggles phase action bar"
+        status_on: "&b Action Bar turned &a on"
+        status_off: "&b Action Bar turned &c off"
       setcount:
         parameters: "<count>"
         description: "set block count to previously completed value"

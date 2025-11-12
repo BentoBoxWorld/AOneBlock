@@ -68,6 +68,7 @@ public class NoBlockHandlerTest {
         
         // Location
         when(location.getWorld()).thenReturn(world);
+        when(location.clone()).thenReturn(location);
         
         // Block
         when(location.getBlock()).thenReturn(block);
@@ -106,7 +107,7 @@ public class NoBlockHandlerTest {
      */
     @Test
     public void testOnRespawnSolidBlock() {
-	PlayerRespawnEvent event = new PlayerRespawnEvent(p, location, false, false, RespawnReason.DEATH);
+	PlayerRespawnEvent event = new PlayerRespawnEvent(p, location, false, false, false, RespawnReason.DEATH);
 	nbh.onRespawn(event);
 	verify(block, never()).setType(any(Material.class));
 
@@ -118,7 +119,7 @@ public class NoBlockHandlerTest {
     @Test
     public void testOnRespawnAirBlock() {
         when(block.isEmpty()).thenReturn(true);
-        PlayerRespawnEvent event = new PlayerRespawnEvent(p, location, false, false, RespawnReason.DEATH);
+        PlayerRespawnEvent event = new PlayerRespawnEvent(p, location, false, false, false, RespawnReason.DEATH);
         nbh.onRespawn(event);
         verify(block).setType(any(Material.class));
         
@@ -131,7 +132,7 @@ public class NoBlockHandlerTest {
     public void testOnRespawnAirBlockWrongWorld() {
         when(aob.inWorld(world)).thenReturn(false);
         when(block.isEmpty()).thenReturn(true);
-        PlayerRespawnEvent event = new PlayerRespawnEvent(p, location, false, false, RespawnReason.DEATH);
+        PlayerRespawnEvent event = new PlayerRespawnEvent(p, location, false, false, true, RespawnReason.DEATH);
         nbh.onRespawn(event);
         verify(block, never()).setType(any(Material.class));
         
@@ -144,7 +145,7 @@ public class NoBlockHandlerTest {
     public void testOnRespawnAirBlockNoIsland() {
         when(im.getIsland(world, ID)).thenReturn(null);
         when(block.isEmpty()).thenReturn(true);
-        PlayerRespawnEvent event = new PlayerRespawnEvent(p, location, false, false, RespawnReason.DEATH);
+        PlayerRespawnEvent event = new PlayerRespawnEvent(p, location, false, false, false, RespawnReason.DEATH);
         nbh.onRespawn(event);
         verify(block, never()).setType(any(Material.class));
         

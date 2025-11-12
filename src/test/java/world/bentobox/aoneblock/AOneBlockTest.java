@@ -7,7 +7,9 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.RETURNS_MOCKS;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.mockitoSession;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -40,6 +42,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockbukkit.mockbukkit.MockBukkit;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.stubbing.Answer;
@@ -110,7 +113,7 @@ public class AOneBlockTest {
 
 	@After
 	public void tearDown() throws IOException {
-        ServerMocks.unsetBukkitServer();
+	    MockBukkit.unmock();
 		User.clearUsers();
 		Mockito.framework().clearInlineMocks();
 		deleteAll(new File("database"));
@@ -132,7 +135,8 @@ public class AOneBlockTest {
 	 */
 	@Before
 	public void setUp() throws Exception {
-        Server server = ServerMocks.newServer();
+	    PowerMockito.mockStatic(Bukkit.class, Mockito.RETURNS_MOCKS);
+        Server server = MockBukkit.mock();
 		// Set up plugin
 		Whitebox.setInternalState(BentoBox.class, "instance", plugin);
 		when(plugin.getLogger()).thenReturn(Logger.getAnonymousLogger());
@@ -174,7 +178,7 @@ public class AOneBlockTest {
 				.thenAnswer((Answer<String>) invocation -> invocation.getArgument(0, String.class));
 
 		// Server
-		PowerMockito.mockStatic(Bukkit.class);
+		PowerMockito.mockStatic(Bukkit.class, RETURNS_MOCKS);
 		when(Bukkit.getServer()).thenReturn(server);
 		when(Bukkit.getLogger()).thenReturn(Logger.getAnonymousLogger());
 		when(Bukkit.getPluginManager()).thenReturn(mock(PluginManager.class));

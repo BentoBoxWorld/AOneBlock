@@ -89,7 +89,15 @@ public class AOneBlock extends GameModeAddon {
             .listener(bossBar)
             .defaultSetting(true)
             .build();
-    
+    /**
+     * Flag to enable or disable the OneBlock action bar.
+     */
+    public final Flag ONEBLOCK_ACTIONBAR = new Flag.Builder("ONEBLOCK_ACTIONBAR", Material.IRON_BARS)
+            .mode(Mode.BASIC)
+            .type(Type.SETTING)
+            .listener(bossBar)
+            .defaultSetting(true)
+            .build();    
     /**
      * Flag to set who can break the magic block.
      */

@@ -17,6 +17,9 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.eclipse.jdt.annotation.NonNull;
 
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import world.bentobox.aoneblock.AOneBlock;
 import world.bentobox.aoneblock.dataobjects.OneBlockIslands;
 import world.bentobox.aoneblock.events.MagicBlockEvent;
@@ -30,6 +33,12 @@ import world.bentobox.bentobox.database.objects.Island;
 public class BossBarListener implements Listener {
 
     private static final String AONEBLOCK_BOSSBAR = "aoneblock.bossbar";
+    private static final String AONEBLOCK_ACTIONBAR = "aoneblock.actionbar";
+
+    private static final LegacyComponentSerializer LEGACY_SERIALIZER = LegacyComponentSerializer.builder()
+            .character('&')
+            .hexColors() // Enables support for modern hex codes (e.g., &#FF0000) alongside legacy codes.
+            .build();
 
     public BossBarListener(AOneBlock addon) {
         super();
@@ -45,12 +54,14 @@ public class BossBarListener implements Listener {
     public void onBreakBlockEvent(MagicBlockEvent e) {
         // Update boss bar
         tryToShowBossBar(e.getPlayerUUID(), e.getIsland());
+        tryToShowActionBar(e.getPlayerUUID(), e.getIsland());
     }
 
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onEnterIsland(IslandEnterEvent event) {
         if (addon.inWorld(event.getIsland().getWorld())) {
             tryToShowBossBar(event.getPlayerUUID(), event.getIsland());
+            tryToShowActionBar(event.getPlayerUUID(), event.getIsland());
         }
     }
 
@@ -59,10 +70,56 @@ public class BossBarListener implements Listener {
         if (e.getEditedFlag() == addon.ONEBLOCK_BOSSBAR) {
             // Show to players on island. If it isn't allowed then this will clean up the boss bar too
             e.getIsland().getPlayersOnIsland().stream().map(Player::getUniqueId)
-                    .forEach(uuid -> this.tryToShowBossBar(uuid, e.getIsland()));
+            .forEach(uuid -> {
+                tryToShowBossBar(uuid, e.getIsland());
+                tryToShowActionBar(uuid, e.getIsland());
+            });
         }
     }
 
+    /**
+     * Converts a string containing Bukkit color codes ('&') into an Adventure Component.
+     *
+     * @param legacyString The string with Bukkit color and format codes.
+     * @return The resulting Adventure Component.
+     */
+    public static Component bukkitToAdventure(String legacyString) {
+        if (legacyString == null) {
+            return Component.empty();
+        }
+        return LEGACY_SERIALIZER.deserialize(legacyString);
+    }
+
+    private void tryToShowActionBar(UUID uuid, Island island) {
+        User user = User.getInstance(uuid);
+        Player player = Bukkit.getPlayer(uuid);
+
+        // Only show if enabled for island
+        if (!island.isAllowed(addon.ONEBLOCK_ACTIONBAR)) {
+            return;
+        }
+        // Default to showing boss bar unless it is explicitly turned off
+        if (!user.getMetaData(AONEBLOCK_ACTIONBAR).map(MetaDataValue::asBoolean).orElse(true)) {
+            // Remove any boss bar from user if they are in the world
+            removeBar(user, island);
+            // Do not show a boss bar
+            return;
+        }        
+        // Get the progress
+        @NonNull
+        OneBlockIslands obi = addon.getOneBlocksIsland(island);
+
+        // --- Create the Action Bar Component ---
+        int numBlocksToGo = addon.getOneBlockManager().getNextPhaseBlocks(obi);
+        int phaseBlocks = addon.getOneBlockManager().getPhaseBlocks(obi);
+        int done = phaseBlocks - numBlocksToGo;
+        String translation = user.getTranslationOrNothing("aoneblock.actionbar.status", "[togo]",
+                String.valueOf(numBlocksToGo), "[total]", String.valueOf(phaseBlocks), "[done]", String.valueOf(done),
+                "[phase-name]", obi.getPhaseName(), "[percent-done]",
+                Math.round(addon.getOneBlockManager().getPercentageDone(obi)) + "%");
+        // Send
+        player.sendActionBar(bukkitToAdventure(translation));
+    }
     /**
      * Try to show the bossbar to the player
      * @param uuid player's UUID
@@ -128,7 +185,6 @@ public class BossBarListener implements Listener {
         }
         // Save the boss bar for later reference (e.g., when updating or removing)
         islandBossBars.put(island, bar);
-
     }
 
     private void removeBar(User user, Island island) {
@@ -159,7 +215,7 @@ public class BossBarListener implements Listener {
             return;
         }
         addon.getIslands().getIslandAt(e.getPlayer().getLocation())
-                .ifPresent(is -> this.tryToShowBossBar(e.getPlayer().getUniqueId(), is));
+        .ifPresent(is -> this.tryToShowBossBar(e.getPlayer().getUniqueId(), is));
     }
 
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
@@ -179,7 +235,7 @@ public class BossBarListener implements Listener {
         if (newState) {
             // If the player is on an island then show the bar
             addon.getIslands().getIslandAt(user.getLocation()).filter(is -> addon.inWorld(is.getWorld()))
-                    .ifPresent(is -> this.tryToShowBossBar(user.getUniqueId(), is));
+            .ifPresent(is -> this.tryToShowBossBar(user.getUniqueId(), is));
             user.sendMessage("aoneblock.commands.island.bossbar.status_on");
         } else {
             // Remove player from any boss bars. Adding happens automatically
