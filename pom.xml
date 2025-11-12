@@ -54,7 +54,6 @@
         <!-- Non-minecraft related dependencies -->
         <powermock.version>2.0.9</powermock.version>
         <!-- More visible way how to change dependency versions -->
-        <spigot.version>1.21.3-R0.1-SNAPSHOT</spigot.version>
         <bentobox.version>2.7.1-SNAPSHOT</bentobox.version>
         <items-adder.version>4.0.10</items-adder.version>
         <level.version>2.6.2</level.version>
@@ -64,7 +63,7 @@
         <!-- Do not change unless you want different name for local builds. -->
         <build.number>-LOCAL</build.number>
         <!-- This allows to change between versions. -->
-        <build.version>1.21.0</build.version>
+        <build.version>1.21.1</build.version>
         <!-- SonarCloud -->
         <sonar.projectKey>BentoBoxWorld_AOneBlock</sonar.projectKey>
         <sonar.organization>bentobox-world</sonar.organization>
