@@ -1,18 +1,22 @@
 package world.bentobox.aoneblock.listeners;
 
-import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.NavigableMap;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Random;
+import java.util.TreeMap;
 import java.util.concurrent.CompletableFuture;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.Tag;
@@ -20,7 +24,10 @@ import org.bukkit.World;
 import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.block.BlockState;
+import org.bukkit.block.BrushableBlock;
 import org.bukkit.block.Chest;
+import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.Brushable;
 import org.bukkit.block.data.type.Leaves;
 import org.bukkit.entity.Entity;
@@ -41,6 +48,8 @@ import org.bukkit.event.player.PlayerBucketFillEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.loot.LootContext;
+import org.bukkit.loot.LootTable;
 import org.bukkit.util.Vector;
 import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jdt.annotation.Nullable;
@@ -107,713 +116,754 @@ public class BlockListener extends FlagListener implements Listener {
      * How often island data is saved to the database (in blocks broken).
      */
     public static final int SAVE_EVERY = 50;
-    
-    /** Loot table for suspicious blocks. Maps item to its probability. */
-    private static final Map<Material, Double> LOOT;
-    static {
-        Map<Material, Double> loot = new HashMap<>();
-        loot.put(Material.BLUE_DYE, 0.044);
-        loot.put(Material.BRICK, 0.044);
-        loot.put( Material.BROWN_CANDLE, 0.044);
-        loot.put(Material.EMERALD, 0.044);
-        loot.put(Material.GREEN_CANDLE, 0.044);
-        loot.put(Material.LIGHT_BLUE_DYE, 0.044);
-        loot.put(Material.ORANGE_DYE, 0.044);
-        loot.put(Material.PURPLE_CANDLE, 0.044);
-        loot.put(Material.RED_CANDLE, 0.044);
-        loot.put(Material.WHEAT, 0.044);
-        loot.put(Material.WOODEN_HOE, 0.044);
-        loot.put(Material.YELLOW_DYE, 0.044);
-        loot.put(Material.BEETROOT_SEEDS, 0.022);
-        loot.put(Material.BLUE_STAINED_GLASS_PANE, 0.022);
-        loot.put(Material.COAL, 0.022);
-        loot.put(Material.DEAD_BUSH, 0.022);
-        loot.put(Material.FLOWER_POT, 0.022);
-        loot.put(Material.LEAD, 0.022);
-        loot.put(Material.LIGHT_BLUE_STAINED_GLASS_PANE, 0.022);
-        loot.put(Material.MAGENTA_STAINED_GLASS_PANE, 0.022);
-        loot.put(Material.OAK_HANGING_SIGN, 0.022);
-        loot.put(Material.PINK_STAINED_GLASS_PANE, 0.022);
-        loot.put(Material.PURPLE_STAINED_GLASS_PANE, 0.022);
-        loot.put(Material.RED_STAINED_GLASS_PANE, 0.022);
-        loot.put(Material.SPRUCE_HANGING_SIGN, 0.022);
-        loot.put(Material.STRING, 0.022);
-        loot.put(Material.WHEAT_SEEDS, 0.022);
-        loot.put(Material.YELLOW_STAINED_GLASS_PANE, 0.022);
-        loot.put(Material.GOLD_NUGGET, 0.022);
-        LOOT = loot;
-    }
 
+    /*
+     * Loot tables for suspicious blocks
+     */
+    private static final NavigableMap<Integer, String> SUSPICIOUS_LOOT;
+    static {
+        TreeMap<Integer, String> sl = new TreeMap<>();
+        sl.put(5,"archaeology/desert_pyramid");
+        sl.put(10, "archaeology/desert_well");
+        sl.put(15, "archaeology/ocean_ruin_cold");
+        sl.put(20, "archaeology/ocean_ruin_warm");
+        sl.put(25,  "archaeology/trail_ruins_common");
+        sl.put(26,  "archaeology/trail_ruins_rare");
+        SUSPICIOUS_LOOT = Collections.unmodifiableNavigableMap(sl);
+    }  
+
+    private static final Random RAND = new Random();
+    
     /**
      * Constructs the BlockListener.
      * @param addon - The AOneBlock addon instance.
      */
-     public BlockListener(@NonNull AOneBlock addon) {
-         this.addon = addon;
-         handler = new Database<>(addon, OneBlockIslands.class);
-         cache = new HashMap<>();
-         oneBlocksManager = addon.getOneBlockManager();
-         check = new CheckPhase(addon, this);
-         warningSounder = new WarningSounder(addon);
-     }
+    public BlockListener(@NonNull AOneBlock addon) {
+        this.addon = addon;
+        handler = new Database<>(addon, OneBlockIslands.class);
+        cache = new HashMap<>();
+        oneBlocksManager = addon.getOneBlockManager();
+        check = new CheckPhase(addon, this);
+        warningSounder = new WarningSounder(addon);
+    }
 
-     /**
-      * Saves all island data from the cache to the database asynchronously.
-      */
-     public void saveCache() {
-         cache.values().forEach(handler::saveObjectAsync);
-     }
+    /**
+     * Saves all island data from the cache to the database asynchronously.
+     */
+    public void saveCache() {
+        cache.values().forEach(handler::saveObjectAsync);
+    }
 
-     // ---------------------------------------------------------------------
-     // Section: Listeners
-     // ---------------------------------------------------------------------
+    // ---------------------------------------------------------------------
+    // Section: Listeners
+    // ---------------------------------------------------------------------
 
-     /**
-      * Sets up a new OneBlock island when a BentoBox island is created.
-      * @param e The IslandCreatedEvent.
-      */
-     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
-     public void onNewIsland(IslandCreatedEvent e) {
-         if (addon.inWorld(e.getIsland().getWorld())) {
-             setUp(e.getIsland());
-         }
-     }
+    /**
+     * Sets up a new OneBlock island when a BentoBox island is created.
+     * @param e The IslandCreatedEvent.
+     */
+    @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
+    public void onNewIsland(IslandCreatedEvent e) {
+        if (addon.inWorld(e.getIsland().getWorld())) {
+            setUp(e.getIsland());
+        }
+    }
 
-     /**
-      * Resets a OneBlock island when a BentoBox island is reset.
-      * @param e The IslandResettedEvent.
-      */
-     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
-     public void onNewIsland(IslandResettedEvent e) {
-         if (addon.inWorld(e.getIsland().getWorld())) {
-             setUp(e.getIsland());
-         }
-     }
+    /**
+     * Resets a OneBlock island when a BentoBox island is reset.
+     * @param e The IslandResettedEvent.
+     */
+    @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
+    public void onNewIsland(IslandResettedEvent e) {
+        if (addon.inWorld(e.getIsland().getWorld())) {
+            setUp(e.getIsland());
+        }
+    }
 
-     /**
-      * Removes OneBlock data when a BentoBox island is deleted.
-      * @param e The IslandDeleteEvent.
-      */
-     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
-     public void onDeletedIsland(IslandDeleteEvent e) {
-         if (addon.inWorld(e.getIsland().getWorld())) {
-             cache.remove(e.getIsland().getUniqueId());
-             handler.deleteID(e.getIsland().getUniqueId());
-         }
-     }
+    /**
+     * Removes OneBlock data when a BentoBox island is deleted.
+     * @param e The IslandDeleteEvent.
+     */
+    @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
+    public void onDeletedIsland(IslandDeleteEvent e) {
+        if (addon.inWorld(e.getIsland().getWorld())) {
+            cache.remove(e.getIsland().getUniqueId());
+            handler.deleteID(e.getIsland().getUniqueId());
+        }
+    }
 
-     /**
-      * Prevents liquids flowing into magic block
-      * 
-      * @param e BlockFromToEvent
-      */
-     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
-     public void onBlockFromTo(final BlockFromToEvent e) {
-         if (!addon.inWorld(e.getBlock().getWorld())) {
-             return;
-         }
-         Location l = e.getToBlock().getLocation();
-         // Cannot flow to center block
-         e.setCancelled(addon.getIslands().getIslandAt(l).filter(i -> l.equals(i.getCenter())).isPresent());
-     }
+    /**
+     * Prevents liquids flowing into magic block
+     * 
+     * @param e BlockFromToEvent
+     */
+    @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
+    public void onBlockFromTo(final BlockFromToEvent e) {
+        if (!addon.inWorld(e.getBlock().getWorld())) {
+            return;
+        }
+        Location l = e.getToBlock().getLocation();
+        // Cannot flow to center block
+        e.setCancelled(addon.getIslands().getIslandAt(l).filter(i -> l.equals(i.getCenter())).isPresent());
+    }
 
-     /**
-      * Handles the breaking of the magic block by a player.
-      * @param e The BlockBreakEvent.
-      */
-     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
-     public void onBlockBreak(final BlockBreakEvent e) {
-         if (!addon.inWorld(e.getBlock().getWorld())) {
-             return;
-         }
-         Location l = e.getBlock().getLocation();
-         addon.getIslands().getIslandAt(l).filter(i -> l.equals(i.getCenter()))
-         .ifPresent(i -> process(e, i, e.getPlayer(), e.getPlayer().getWorld()));
-     }
+    /**
+     * Handles the breaking of the magic block by a player.
+     * @param e The BlockBreakEvent.
+     */
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    public void onBlockBreak(final BlockBreakEvent e) {
+        if (!addon.inWorld(e.getBlock().getWorld())) {
+            return;
+        }
+        Location l = e.getBlock().getLocation();
+        addon.getIslands().getIslandAt(l).filter(i -> l.equals(i.getCenter()))
+        .ifPresent(i -> process(e, i, e.getPlayer(), e.getPlayer().getWorld()));
+    }
 
-     /**
-      * Handles JetsMinions. These are special armor stands. Requires Minions 6.9.3
-      * or later
-      *
-      * @param e - event
-      */
-     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
-     public void onBlockBreakByMinion(final EntityInteractEvent e) {
-         if (!addon.inWorld(e.getBlock().getWorld()) || !e.getEntityType().equals(EntityType.ARMOR_STAND)) {
-             return;
-         }
-         Location l = e.getBlock().getLocation();
-         addon.getIslands().getIslandAt(l).filter(i -> l.equals(i.getCenter()))
-         .ifPresent(i -> process(e, i, null, e.getBlock().getWorld()));
-     }
+    /**
+     * Handles JetsMinions. These are special armor stands. Requires Minions 6.9.3
+     * or later
+     *
+     * @param e - event
+     */
+    @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
+    public void onBlockBreakByMinion(final EntityInteractEvent e) {
+        if (!addon.inWorld(e.getBlock().getWorld()) || !e.getEntityType().equals(EntityType.ARMOR_STAND)) {
+            return;
+        }
+        Location l = e.getBlock().getLocation();
+        addon.getIslands().getIslandAt(l).filter(i -> l.equals(i.getCenter()))
+        .ifPresent(i -> process(e, i, null, e.getBlock().getWorld()));
+    }
 
-     /**
-      * Check for water grabbing
-      *
-      * @param e - event (note that you cannot register PlayerBucketEvent)
-      */
-     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
-     public void onBlockBreak(final PlayerBucketFillEvent e) {
-         if (addon.inWorld(e.getBlock().getWorld())) {
-             Location l = e.getBlock().getLocation();
-             addon.getIslands().getIslandAt(l).filter(i -> l.equals(i.getCenter()))
-             .ifPresent(i -> process(e, i, e.getPlayer(), e.getPlayer().getWorld()));
-         }
-     }
+    /**
+     * Check for water grabbing
+     *
+     * @param e - event (note that you cannot register PlayerBucketEvent)
+     */
+    @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
+    public void onBlockBreak(final PlayerBucketFillEvent e) {
+        if (addon.inWorld(e.getBlock().getWorld())) {
+            Location l = e.getBlock().getLocation();
+            addon.getIslands().getIslandAt(l).filter(i -> l.equals(i.getCenter()))
+            .ifPresent(i -> process(e, i, e.getPlayer(), e.getPlayer().getWorld()));
+        }
+    }
 
-     
-     /**
-      * This handler listens for items spawning.
-      * If an item spawns exactly at an island's center block,
-      * it cancels the spawn and re-drops the item 1 block higher
-      * (at the center of that block) to stack it neatly.
-      */
-     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
-     public void onItemSpawn(ItemSpawnEvent event) {
-         // --- Guard Clauses: Exit early if conditions aren't met ---
 
-         // 1. Check if the "drop on top" feature is enabled.
-         if (!this.addon.getSettings().isDropOnTop()) {
-             // Feature is disabled, so we don't need to do anything.
-             return;
-         }
+    /**
+     * This handler listens for items spawning.
+     * If an item spawns exactly at an island's center block,
+     * it cancels the spawn and re-drops the item 1 block higher
+     * (at the center of that block) to stack it neatly.
+     */
+    @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
+    public void onItemSpawn(ItemSpawnEvent event) {
+        // --- Guard Clauses: Exit early if conditions aren't met ---
 
-         // Get the spawn location once.
-         Location spawnLocation = event.getLocation();
+        // 1. Check if the "drop on top" feature is enabled.
+        if (!this.addon.getSettings().isDropOnTop()) {
+            // Feature is disabled, so we don't need to do anything.
+            return;
+        }
 
-         // 2. Check if the spawn is happening in a world managed by the addon.
-         if (!this.addon.inWorld(spawnLocation.getWorld())) {
-             // Not a relevant world, ignore this event.
-             return;
-         }
+        // Get the spawn location once.
+        Location spawnLocation = event.getLocation();
 
-         // Find an island at the spawn location.
-         Optional<Island> optionalIsland = this.addon.getIslands().getIslandAt(spawnLocation)
-                 // Chained to the Optional: Filter the island.
-                 // Only keep it if the block the item spawned in
-                 // is *exactly* the island's center.
-                 .filter(island -> {
-                     // .getBlock().getLocation() converts a precise location 
-                     // (e.g., 10.2, 64.5, 12.8) to its block's location (10.0, 64.0, 12.0).
-                     Location blockLocation = spawnLocation.getBlock().getLocation();
-                     return blockLocation.equals(island.getCenter());
-                 });
+        // 2. Check if the spawn is happening in a world managed by the addon.
+        if (!this.addon.inWorld(spawnLocation.getWorld())) {
+            // Not a relevant world, ignore this event.
+            return;
+        }
 
-         // If we found an island AND it passed the filter (spawned at center)...
-         if (optionalIsland.isPresent()) {
-             // 1. Cancel the original item spawn.
-             event.setCancelled(true);
+        // Find an island at the spawn location.
+        Optional<Island> optionalIsland = this.addon.getIslands().getIslandAt(spawnLocation)
+                // Chained to the Optional: Filter the island.
+                // Only keep it if the block the item spawned in
+                // is *exactly* the island's center.
+                .filter(island -> {
+                    // .getBlock().getLocation() converts a precise location 
+                    // (e.g., 10.2, 64.5, 12.8) to its block's location (10.0, 64.0, 12.0).
+                    Location blockLocation = spawnLocation.getBlock().getLocation();
+                    return blockLocation.equals(island.getCenter());
+                });
 
-             // 2. Get the island and the item stack that was supposed to spawn.
-             Island island = optionalIsland.get();
-             // We use event.getEntity() which is guaranteed to be an Item.
-             ItemStack itemStack = event.getEntity().getItemStack();
+        // If we found an island AND it passed the filter (spawned at center)...
+        if (optionalIsland.isPresent()) {
+            // 1. Cancel the original item spawn.
+            event.setCancelled(true);
 
-             // 3. Calculate the new, clean drop location.
-             // .add(0.5, 1, 0.5) moves it to the center of the block (0.5)
-             // and one block up (1.0) so it sits on top.
-             Location newDropLocation = island.getCenter().add(0.5, 1, 0.5);
+            // 2. Get the island and the item stack that was supposed to spawn.
+            Island island = optionalIsland.get();
+            // We use event.getEntity() which is guaranteed to be an Item.
+            ItemStack itemStack = event.getEntity().getItemStack();
 
-             // 4. Drop the item stack at the new location.
-             spawnLocation.getWorld().dropItem(newDropLocation, itemStack);
-         }
-     }
+            // 3. Calculate the new, clean drop location.
+            // .add(0.5, 1, 0.5) moves it to the center of the block (0.5)
+            // and one block up (1.0) so it sits on top.
+            Location newDropLocation = island.getCenter().add(0.5, 1, 0.5);
 
-     // ---------------------------------------------------------------------
-     // Section: Processing methods
-     // ---------------------------------------------------------------------
+            // 4. Drop the item stack at the new location.
+            spawnLocation.getWorld().dropItem(newDropLocation, itemStack);
+        }
+    }
 
-     /**
-      * Sets up the initial state for a new OneBlock island.
-      * @param island The island to set up.
-      */
-     private void setUp(@NonNull Island island) {
-         // Set the bedrock to the initial block
-         Util.getChunkAtAsync(Objects.requireNonNull(island.getCenter()))
-         .thenRun(() -> island.getCenter().getBlock().setType(Material.GRASS_BLOCK));
-         // Create a database entry
-         OneBlockIslands is = new OneBlockIslands(island.getUniqueId());
-         cache.put(island.getUniqueId(), is);
-         handler.saveObjectAsync(is);
-         addon.getHoloListener().setUp(island, is, true);
-     }
+    // ---------------------------------------------------------------------
+    // Section: Processing methods
+    // ---------------------------------------------------------------------
 
-     /**
-      * Main magic block processing method that handles the magic block mechanics.
-      * This includes phase changes, block spawning, and event handling.
-      *
-      * @param e - event causing the processing
-      * @param island - island where it's happening
-      * @param player - player who broke the block or who is involved - may be null
-      * @param world - world where the block is being broken
-      */
-     private void process(@NonNull Cancellable e, @NonNull Island island, @Nullable Player player, @NonNull World world) {
-         // Check if the player has authority to break the magic block
-         if (!checkIsland((@NonNull Event) e, player, island.getCenter(), addon.MAGIC_BLOCK)) {
-             // Not allowed
-             return;
-         }
-         
-         Block block = Objects.requireNonNull(island.getCenter()).toVector().toLocation(world).getBlock();
-         OneBlockIslands is = getIsland(island);
+    /**
+     * Sets up the initial state for a new OneBlock island.
+     * @param island The island to set up.
+     */
+    private void setUp(@NonNull Island island) {
+        // Set the bedrock to the initial block
+        Util.getChunkAtAsync(Objects.requireNonNull(island.getCenter()))
+        .thenRun(() -> island.getCenter().getBlock().setType(Material.GRASS_BLOCK));
+        // Create a database entry
+        OneBlockIslands is = new OneBlockIslands(island.getUniqueId());
+        cache.put(island.getUniqueId(), is);
+        handler.saveObjectAsync(is);
+        addon.getHoloListener().setUp(island, is, true);
+    }
 
-         // Process phase changes and requirements
-         ProcessPhaseResult phaseResult = processPhase(e, island, is, player, world, block);
-         if (e.isCancelled()) {
-             return;
-         }
+    /**
+     * Main magic block processing method that handles the magic block mechanics.
+     * This includes phase changes, block spawning, and event handling.
+     *
+     * @param e - event causing the processing
+     * @param island - island where it's happening
+     * @param player - player who broke the block or who is involved - may be null
+     * @param world - world where the block is being broken
+     */
+    private void process(@NonNull Cancellable e, @NonNull Island island, @Nullable Player player, @NonNull World world) {
+        // Check if the player has authority to break the magic block
+        if (!checkIsland((@NonNull Event) e, player, island.getCenter(), addon.MAGIC_BLOCK)) {
+            // Not allowed
+            return;
+        }
 
-         // Initialize queue if needed
-         initializeQueue(is, phaseResult.phase, phaseResult.isCurrPhaseNew);
+        Block block = Objects.requireNonNull(island.getCenter()).toVector().toLocation(world).getBlock();
+        OneBlockIslands is = getIsland(island);
 
-         // Process hologram and warning sounds
-         processHologramAndWarnings(island, is, phaseResult.phase, block);
+        // Process phase changes and requirements
+        ProcessPhaseResult phaseResult = processPhase(e, island, is, player, world, block);
+        if (e.isCancelled()) {
+            return;
+        }
 
-         // Process the next block
-         processNextBlock(e, island, player, block, is, phaseResult);
-     }
+        // Initialize queue if needed
+        initializeQueue(is, phaseResult.phase, phaseResult.isCurrPhaseNew);
 
-     /**
-      * A record to hold the result of phase processing.
-      * @param phase The current phase.
-      * @param isCurrPhaseNew Whether the current phase is new.
-      * @param blockNumber The block number within the current phase.
-      */
-     private record ProcessPhaseResult(OneBlockPhase phase, boolean isCurrPhaseNew, int blockNumber) {}
+        // Process hologram and warning sounds
+        processHologramAndWarnings(island, is, phaseResult.phase, block);
 
-     /**
-      * Processes phase changes and requirements for the magic block.
-      * Returns a record containing phase info, whether it's a new phase, and block number.
-      *
-      * @param e - event being processed
-      * @param i - island instance
-      * @param is - oneblock island data
-      * @param player - player involved
-      * @param world - world where processing occurs
-      * @param block - block being processed
-      * @return ProcessPhaseResult containing phase details
-      */
-     private ProcessPhaseResult processPhase(Cancellable e, Island i, OneBlockIslands is, Player player, World world, Block block) {
-         OneBlockPhase phase = oneBlocksManager.getPhase(is.getBlockNumber());
-         String prevPhaseName = is.getPhaseName();
+        // Process the next block
+        processNextBlock(e, island, player, block, is, phaseResult);
+    }
 
-         if (Objects.requireNonNull(phase).getGotoBlock() != null) {
-             phase = handleGoto(is, phase.getGotoBlock());
-         }
+    /**
+     * A record to hold the result of phase processing.
+     * @param phase The current phase.
+     * @param isCurrPhaseNew Whether the current phase is new.
+     * @param blockNumber The block number within the current phase.
+     */
+    private record ProcessPhaseResult(OneBlockPhase phase, boolean isCurrPhaseNew, int blockNumber) {}
 
-         String currPhaseName = phase.getPhaseName() == null ? "" : phase.getPhaseName();
-         handlePhaseChange(is, phase, currPhaseName);
+    /**
+     * Processes phase changes and requirements for the magic block.
+     * Returns a record containing phase info, whether it's a new phase, and block number.
+     *
+     * @param e - event being processed
+     * @param i - island instance
+     * @param is - oneblock island data
+     * @param player - player involved
+     * @param world - world where processing occurs
+     * @param block - block being processed
+     * @return ProcessPhaseResult containing phase details
+     */
+    private ProcessPhaseResult processPhase(Cancellable e, Island i, OneBlockIslands is, Player player, World world, Block block) {
+        OneBlockPhase phase = oneBlocksManager.getPhase(is.getBlockNumber());
+        String prevPhaseName = is.getPhaseName();
 
-         boolean isCurrPhaseNew = !is.getPhaseName().equalsIgnoreCase(currPhaseName);
-         if (isCurrPhaseNew) {
-             // Check if the player meets the requirements for the new phase.
-             if (check.phaseRequirementsFail(player, i, is, phase, world)) {
-                 e.setCancelled(true);
-                 return new ProcessPhaseResult(phase, true, 0);
-             }
-             handleNewPhase(player, i, is, phase, block, prevPhaseName);
-         } else if (is.getBlockNumber() % SAVE_EVERY == 0) {
-             // Periodically save the island's progress.
-             saveIsland(i);
-         }
+        if (Objects.requireNonNull(phase).getGotoBlock() != null) {
+            phase = handleGoto(is, phase.getGotoBlock());
+        }
 
-         int materialBlocksInQueue = (int) is.getQueue().stream()
-                 .filter(obo -> obo.isMaterial() || obo.isCustomBlock())
-                 .count();
-         int blockNumber = is.getBlockNumber() - (phase.getBlockNumberValue() - 1) + materialBlocksInQueue;
+        String currPhaseName = phase.getPhaseName() == null ? "" : phase.getPhaseName();
+        handlePhaseChange(is, phase, currPhaseName);
 
-         return new ProcessPhaseResult(phase, isCurrPhaseNew, blockNumber);
-     }
+        boolean isCurrPhaseNew = !is.getPhaseName().equalsIgnoreCase(currPhaseName);
+        if (isCurrPhaseNew) {
+            // Check if the player meets the requirements for the new phase.
+            if (check.phaseRequirementsFail(player, i, is, phase, world)) {
+                e.setCancelled(true);
+                return new ProcessPhaseResult(phase, true, 0);
+            }
+            handleNewPhase(player, i, is, phase, block, prevPhaseName);
+        } else if (is.getBlockNumber() % SAVE_EVERY == 0) {
+            // Periodically save the island's progress.
+            saveIsland(i);
+        }
 
-     /**
-      * Handles the initialization of a new phase including biome setting and event firing.
-      *
-      * @param player - player triggering the phase change
-      * @param i - island instance
-      * @param is - oneblock island data
-      * @param phase - new phase being entered
-      * @param block - block being processed
-      * @param prevPhaseName - name of the previous phase
-      */
-     private void handleNewPhase(Player player, Island i, OneBlockIslands is, OneBlockPhase phase, Block block, String prevPhaseName) {
-         check.setNewPhase(player, i, is, phase);
-         is.clearQueue();
-         setBiome(block, phase.getPhaseBiome());
-         Bukkit.getPluginManager().callEvent(new MagicBlockPhaseEvent(i, 
-                 player == null ? null : player.getUniqueId(),
-                         block, phase.getPhaseName(), prevPhaseName, is.getBlockNumber()));
-     }
+        int materialBlocksInQueue = (int) is.getQueue().stream()
+                .filter(obo -> obo.isMaterial() || obo.isCustomBlock())
+                .count();
+        int blockNumber = is.getBlockNumber() - (phase.getBlockNumberValue() - 1) + materialBlocksInQueue;
 
-     /**
-      * Handles phase transition mechanics including setting timestamps for phase changes.
-      *
-      * @param is - oneblock island data
-      * @param phase - current phase
-      * @param currPhaseName - name of current phase
-      */
-     private void handlePhaseChange(OneBlockIslands is, OneBlockPhase phase, String currPhaseName) {
-         OneBlockPhase nextPhase = oneBlocksManager.getPhase(is.getBlockNumber() + 1);
-         if (Objects.requireNonNull(nextPhase).getGotoBlock() != null) {
-             nextPhase = oneBlocksManager.getPhase(nextPhase.getGotoBlock());
-         }
-         String nextPhaseName = nextPhase == null || nextPhase.getPhaseName() == null ? "" : nextPhase.getPhaseName();
-         if (!currPhaseName.equalsIgnoreCase(nextPhaseName)) {
-             is.setLastPhaseChangeTime(System.currentTimeMillis());
-         }
-     }
+        return new ProcessPhaseResult(phase, isCurrPhaseNew, blockNumber);
+    }
 
-     /**
-      * Initializes the block queue for a phase with upcoming blocks.
-      *
-      * @param is - oneblock island data
-      * @param phase - current phase
-      * @param isCurrPhaseNew - whether this is a new phase
-      */
-     private void initializeQueue(OneBlockIslands is, OneBlockPhase phase, boolean isCurrPhaseNew) {
-         if (is.getQueue().isEmpty() || isCurrPhaseNew) {
-             for (int j = 0; j < MAX_LOOK_AHEAD; j++) {
-                 is.add(phase.getNextBlock(addon, j));
-             }
-         }
-     }
+    /**
+     * Handles the initialization of a new phase including biome setting and event firing.
+     *
+     * @param player - player triggering the phase change
+     * @param i - island instance
+     * @param is - oneblock island data
+     * @param phase - new phase being entered
+     * @param block - block being processed
+     * @param prevPhaseName - name of the previous phase
+     */
+    private void handleNewPhase(Player player, Island i, OneBlockIslands is, OneBlockPhase phase, Block block, String prevPhaseName) {
+        check.setNewPhase(player, i, is, phase);
+        is.clearQueue();
+        setBiome(block, phase.getPhaseBiome());
+        Bukkit.getPluginManager().callEvent(new MagicBlockPhaseEvent(i, 
+                player == null ? null : player.getUniqueId(),
+                        block, phase.getPhaseName(), prevPhaseName, is.getBlockNumber()));
+    }
 
-     /**
-      * Updates holograms and plays warning sounds if configured.
-      *
-      * @param i - island instance
-      * @param is - oneblock island data
-      * @param phase - current phase
-      * @param block - block being processed
-      */
-     private void processHologramAndWarnings(Island i, OneBlockIslands is, OneBlockPhase phase, Block block) {
-         addon.getHoloListener().process(i, is, phase);
-         if (addon.getSettings().getMobWarning() > 0) {
-             warningSounder.play(is, block);
-         }
-     }
+    /**
+     * Handles phase transition mechanics including setting timestamps for phase changes.
+     *
+     * @param is - oneblock island data
+     * @param phase - current phase
+     * @param currPhaseName - name of current phase
+     */
+    private void handlePhaseChange(OneBlockIslands is, OneBlockPhase phase, String currPhaseName) {
+        OneBlockPhase nextPhase = oneBlocksManager.getPhase(is.getBlockNumber() + 1);
+        if (Objects.requireNonNull(nextPhase).getGotoBlock() != null) {
+            nextPhase = oneBlocksManager.getPhase(nextPhase.getGotoBlock());
+        }
+        String nextPhaseName = nextPhase == null || nextPhase.getPhaseName() == null ? "" : nextPhase.getPhaseName();
+        if (!currPhaseName.equalsIgnoreCase(nextPhaseName)) {
+            is.setLastPhaseChangeTime(System.currentTimeMillis());
+        }
+    }
 
-     /**
-      * Processes the next block in the sequence, handling entities and block changes.
-      *
-      * @param e - event being processed
-      * @param i - island instance
-      * @param player - player involved
-      * @param block - block being processed
-      * @param is - oneblock island data
-      * @param phaseResult - result from phase processing
-      */
-     private void processNextBlock(Cancellable e, Island i, Player player, Block block, OneBlockIslands is, ProcessPhaseResult phaseResult) {
-         OneBlockObject nextBlock = (phaseResult.isCurrPhaseNew && phaseResult.phase.getFirstBlock() != null) 
-                 ? phaseResult.phase.getFirstBlock()
-                         : is.pollAndAdd(phaseResult.phase.getNextBlock(addon, phaseResult.blockNumber));
+    /**
+     * Initializes the block queue for a phase with upcoming blocks.
+     *
+     * @param is - oneblock island data
+     * @param phase - current phase
+     * @param isCurrPhaseNew - whether this is a new phase
+     */
+    private void initializeQueue(OneBlockIslands is, OneBlockPhase phase, boolean isCurrPhaseNew) {
+        if (is.getQueue().isEmpty() || isCurrPhaseNew) {
+            for (int j = 0; j < MAX_LOOK_AHEAD; j++) {
+                is.add(phase.getNextBlock(addon, j));
+            }
+        }
+    }
 
-         if (nextBlock.isEntity()) {
-             handleEntitySpawn(e, i, player, block, nextBlock);
-             return;
-         }
+    /**
+     * Updates holograms and plays warning sounds if configured.
+     *
+     * @param i - island instance
+     * @param is - oneblock island data
+     * @param phase - current phase
+     * @param block - block being processed
+     */
+    private void processHologramAndWarnings(Island i, OneBlockIslands is, OneBlockPhase phase, Block block) {
+        addon.getHoloListener().process(i, is, phase);
+        if (addon.getSettings().getMobWarning() > 0) {
+            warningSounder.play(is, block);
+        }
+    }
 
-         is.incrementBlockNumber();
-         handleBlockBreak(e, i, player, block, nextBlock);
-     }
+    /**
+     * Processes the next block in the sequence, handling entities and block changes.
+     *
+     * @param e - event being processed
+     * @param i - island instance
+     * @param player - player involved
+     * @param block - block being processed
+     * @param is - oneblock island data
+     * @param phaseResult - result from phase processing
+     */
+    private void processNextBlock(Cancellable e, Island i, Player player, Block block, OneBlockIslands is, ProcessPhaseResult phaseResult) {
+        OneBlockObject nextBlock = (phaseResult.isCurrPhaseNew && phaseResult.phase.getFirstBlock() != null) 
+                ? phaseResult.phase.getFirstBlock()
+                        : is.pollAndAdd(phaseResult.phase.getNextBlock(addon, phaseResult.blockNumber));
 
-     /**
-      * Handles entity spawning for entity-type blocks.
-      *
-      * @param e - event being processed
-      * @param i - island instance
-      * @param player - player involved
-      * @param block - block where entity will spawn
-      * @param nextBlock - next block object containing entity info
-      */
-     private void handleEntitySpawn(Cancellable e, Island i, Player player, Block block, OneBlockObject nextBlock) {
-         if (!(e instanceof EntitySpawnEvent)) {
-             e.setCancelled(true);
-         }
-         spawnEntity(nextBlock, block);
-         Bukkit.getPluginManager().callEvent(new MagicBlockEntityEvent(i,
-                 player == null ? null : player.getUniqueId(), 
-                         block, nextBlock.getEntityType()));
-     }
+        if (nextBlock.isEntity()) {
+            handleEntitySpawn(e, i, player, block, nextBlock);
+            return;
+        }
 
-     /**
-      * Handles different types of block breaking events (player, bucket, entity).
-      *
-      * @param e - event being processed
-      * @param i - island instance
-      * @param player - player involved
-      * @param block - block being broken
-      * @param nextBlock - next block to spawn
-      */
-     private void handleBlockBreak(Cancellable e, Island i, Player player, Block block, OneBlockObject nextBlock) {
-         if (e instanceof BlockBreakEvent) {
-             breakBlock(player, block, nextBlock, i);
-         } else if (e instanceof PlayerBucketFillEvent) {
-             handleBucketFill(player, i, block, nextBlock);
-         } else if (e instanceof EntitySpawnEvent || e instanceof EntityInteractEvent) {
-             handleEntityBreak(i, block, nextBlock, e instanceof EntityInteractEvent);
-         }
-     }
+        is.incrementBlockNumber();
+        handleBlockBreak(e, i, player, block, nextBlock);
+    }
 
-     /**
-      * Handles bucket fill events on the magic block.
-      *
-      * @param player - player filling bucket
-      * @param i - island instance
-      * @param block - block being processed
-      * @param nextBlock - next block to spawn
-      */
-     private void handleBucketFill(Player player, Island i, Block block, OneBlockObject nextBlock) {
-         Bukkit.getScheduler().runTask(addon.getPlugin(), () -> spawnBlock(nextBlock, block));
-         ItemStack tool = Objects.requireNonNull(player).getInventory().getItemInMainHand();
-         Bukkit.getPluginManager().callEvent(new MagicBlockEvent(i, player.getUniqueId(), tool, block, nextBlock.getMaterial()));
-     }
+    /**
+     * Handles entity spawning for entity-type blocks.
+     *
+     * @param e - event being processed
+     * @param i - island instance
+     * @param player - player involved
+     * @param block - block where entity will spawn
+     * @param nextBlock - next block object containing entity info
+     */
+    private void handleEntitySpawn(Cancellable e, Island i, Player player, Block block, OneBlockObject nextBlock) {
+        if (!(e instanceof EntitySpawnEvent)) {
+            e.setCancelled(true);
+        }
+        spawnEntity(nextBlock, block);
+        Bukkit.getPluginManager().callEvent(new MagicBlockEntityEvent(i,
+                player == null ? null : player.getUniqueId(), 
+                        block, nextBlock.getEntityType()));
+    }
 
-     /**
-      * Handles entity-related block breaking including minion interactions.
-      *
-      * @param i - island instance
-      * @param block - block being broken
-      * @param nextBlock - next block to spawn
-      * @param isMinion - whether the breaker is a minion
-      */
-     private void handleEntityBreak(Island i, Block block, OneBlockObject nextBlock, boolean isMinion) {
-         Bukkit.getScheduler().runTask(addon.getPlugin(), () -> spawnBlock(nextBlock, block));
-         if (isMinion) {
-             Bukkit.getPluginManager().callEvent(new MagicBlockEvent(i, null, null, block, nextBlock.getMaterial()));
-         }
-     }
+    /**
+     * Handles different types of block breaking events (player, bucket, entity).
+     *
+     * @param e - event being processed
+     * @param i - island instance
+     * @param player - player involved
+     * @param block - block being broken
+     * @param nextBlock - next block to spawn
+     */
+    private void handleBlockBreak(Cancellable e, Island i, Player player, Block block, OneBlockObject nextBlock) {
+        if (e instanceof BlockBreakEvent) {
+            breakBlock(player, block, nextBlock, i);
+        } else if (e instanceof PlayerBucketFillEvent) {
+            handleBucketFill(player, i, block, nextBlock);
+        } else if (e instanceof EntitySpawnEvent || e instanceof EntityInteractEvent) {
+            handleEntityBreak(i, block, nextBlock, e instanceof EntityInteractEvent);
+        }
+    }
 
-     /**
-      * Handles goto block mechanics, updating block numbers and lifetime.
-      *
-      * @param is - oneblock island data
-      * @param gotoBlock - target block number
-      * @return OneBlockPhase for the target block
-      */
-     private OneBlockPhase handleGoto(OneBlockIslands is, int gotoBlock) {
-         // Store lifetime
-         is.setLifetime(is.getLifetime() + gotoBlock);
-         // Set current block
-         is.setBlockNumber(gotoBlock);
-         return oneBlocksManager.getPhase(gotoBlock);
-     }
+    /**
+     * Handles bucket fill events on the magic block.
+     *
+     * @param player - player filling bucket
+     * @param i - island instance
+     * @param block - block being processed
+     * @param nextBlock - next block to spawn
+     */
+    private void handleBucketFill(Player player, Island i, Block block, OneBlockObject nextBlock) {
+        Bukkit.getScheduler().runTask(addon.getPlugin(), () -> spawnBlock(nextBlock, block));
+        ItemStack tool = Objects.requireNonNull(player).getInventory().getItemInMainHand();
+        Bukkit.getPluginManager().callEvent(new MagicBlockEvent(i, player.getUniqueId(), tool, block, nextBlock.getMaterial()));
+    }
 
-     /**
-      * Sets the biome in a small radius around the given block.
-      * @param block The center block.
-      * @param biome The biome to set.
-      */
-     private void setBiome(@NonNull Block block, @Nullable Biome biome) {
-         if (biome == null) {
-             return;
-         }
-         for (int x = -4; x <= 4; x++) {
-             for (int z = -4; z <= 4; z++) {
-                 for (int y = -4; y <= 4; y++) {
-                     block.getWorld().setBiome(block.getX() + x, block.getY() + y, block.getZ() + z, biome);
-                 }
-             }
-         }
-     }
+    /**
+     * Handles entity-related block breaking including minion interactions.
+     *
+     * @param i - island instance
+     * @param block - block being broken
+     * @param nextBlock - next block to spawn
+     * @param isMinion - whether the breaker is a minion
+     */
+    private void handleEntityBreak(Island i, Block block, OneBlockObject nextBlock, boolean isMinion) {
+        Bukkit.getScheduler().runTask(addon.getPlugin(), () -> spawnBlock(nextBlock, block));
+        if (isMinion) {
+            Bukkit.getPluginManager().callEvent(new MagicBlockEvent(i, null, null, block, nextBlock.getMaterial()));
+        }
+    }
 
-     /**
-      * This method is called when block is removed, and next must be spawned. It
-      * also teleports player above the magic block, to avoid falling in void.
-      * 
-      * @param player    Player who breaks the block.
-      * @param block     Block that was broken.
-      * @param nextBlock Next Block that will be summoned.
-      * @param island    Island where player is located.
-      */
-     private void breakBlock(@Nullable Player player, Block block, @NonNull OneBlockObject nextBlock,
-             @NonNull Island island) {
-         ItemStack tool = Objects.requireNonNull(player).getInventory().getItemInMainHand();
+    /**
+     * Handles goto block mechanics, updating block numbers and lifetime.
+     *
+     * @param is - oneblock island data
+     * @param gotoBlock - target block number
+     * @return OneBlockPhase for the target block
+     */
+    private OneBlockPhase handleGoto(OneBlockIslands is, int gotoBlock) {
+        // Store lifetime
+        is.setLifetime(is.getLifetime() + gotoBlock);
+        // Set current block
+        is.setBlockNumber(gotoBlock);
+        return oneBlocksManager.getPhase(gotoBlock);
+    }
 
-         // Break normally and lift the player up so they don't fall
-         Bukkit.getScheduler().runTask(addon.getPlugin(), () -> this.spawnBlock(nextBlock, block));
+    /**
+     * Sets the biome in a small radius around the given block.
+     * @param block The center block.
+     * @param biome The biome to set.
+     */
+    private void setBiome(@NonNull Block block, @Nullable Biome biome) {
+        if (biome == null) {
+            return;
+        }
+        for (int x = -4; x <= 4; x++) {
+            for (int z = -4; z <= 4; z++) {
+                for (int y = -4; y <= 4; y++) {
+                    block.getWorld().setBiome(block.getX() + x, block.getY() + y, block.getZ() + z, biome);
+                }
+            }
+        }
+    }
 
-         if (player.getLocation().getBlock().equals(block)) {
-             double delta = 1 - (player.getLocation().getY() - block.getY());
-             player.teleport(player.getLocation().add(new Vector(0, delta, 0)));
-             player.setVelocity(new Vector(0, 0, 0));
-         } else if (player.getLocation().getBlock().equals(block.getRelative(BlockFace.UP))) {
-             player.teleport(player.getLocation());
-             player.setVelocity(new Vector(0, 0, 0));
-         }
+    /**
+     * This method is called when block is removed, and next must be spawned. It
+     * also teleports player above the magic block, to avoid falling in void.
+     * 
+     * @param player    Player who breaks the block.
+     * @param block     Block that was broken.
+     * @param nextBlock Next Block that will be summoned.
+     * @param island    Island where player is located.
+     */
+    private void breakBlock(@Nullable Player player, Block block, @NonNull OneBlockObject nextBlock,
+            @NonNull Island island) {
+        ItemStack tool = Objects.requireNonNull(player).getInventory().getItemInMainHand();
 
-         // Fire event
-         Bukkit.getPluginManager()
-         .callEvent(new MagicBlockEvent(island, player.getUniqueId(), tool, block, nextBlock.getMaterial()));
-     }
+        // Break normally and lift the player up so they don't fall
+        Bukkit.getScheduler().runTask(addon.getPlugin(), () -> this.spawnBlock(nextBlock, block));
 
-     /**
-      * Spawns the next block in the sequence, handling custom blocks and block data.
-      * @param nextBlock The object representing the block to spawn.
-      * @param block The block in the world to be replaced.
-      */
-     private void spawnBlock(@NonNull OneBlockObject nextBlock, @NonNull Block block) {
-         if (nextBlock.isCustomBlock()) {
-             nextBlock.getCustomBlock().execute(addon, block);
-         } else {
-             @NonNull
-             Material type = nextBlock.getMaterial();
-             // Place new block with no physics
-             block.setType(type, false);
-             // Fill the chest
-             if (type.equals(Material.CHEST) && nextBlock.getChest() != null) {
-                 fillChest(nextBlock, block);
-                 return;
-             } else if (Tag.LEAVES.isTagged(type)) {
-                 Leaves leaves = (Leaves) block.getState().getBlockData();
-                 leaves.setPersistent(true);
-                 block.setBlockData(leaves);
-             }
-         }
+        if (player.getLocation().getBlock().equals(block)) {
+            double delta = 1 - (player.getLocation().getY() - block.getY());
+            player.teleport(player.getLocation().add(new Vector(0, delta, 0)));
+            player.setVelocity(new Vector(0, 0, 0));
+        } else if (player.getLocation().getBlock().equals(block.getRelative(BlockFace.UP))) {
+            player.teleport(player.getLocation());
+            player.setVelocity(new Vector(0, 0, 0));
+        }
 
-     }
-     
+        // Fire event
+        Bukkit.getPluginManager()
+        .callEvent(new MagicBlockEvent(island, player.getUniqueId(), tool, block, nextBlock.getMaterial()));
+    }
+
+    /**
+     * Spawns the next block in the sequence, handling custom blocks and block data.
+     * @param nextBlock The object representing the block to spawn.
+     * @param block The block in the world to be replaced.
+     */
+    private void spawnBlock(@NonNull OneBlockObject nextBlock, @NonNull Block block) {
+        if (nextBlock.isCustomBlock()) {
+            nextBlock.getCustomBlock().execute(addon, block);
+        } else {
+            Material type = nextBlock.getMaterial();
+            // Place new block with no physics
+            block.setType(type, false);
+            // Fill the chest
+            if (type.equals(Material.CHEST) && nextBlock.getChest() != null) {
+                fillChest(nextBlock, block);
+                return;
+            } else if (Tag.LEAVES.isTagged(type)) {
+                Leaves leaves = (Leaves) block.getState().getBlockData();
+                leaves.setPersistent(true);
+                block.setBlockData(leaves);
+            } else if (type == Material.SUSPICIOUS_GRAVEL || type == Material.SUSPICIOUS_SAND) {
+                // Create the default block data
+                BlockData blockData = type.createBlockData();
+
+                // Set the block data in the world *without* physics
+                //    This is safer than setType for block entities.
+                block.setBlockData(blockData, false);
+
+                // Now, get the state of the block we just placed
+                BlockState state = block.getState();
+
+                // Check and cast to BrushableBlock
+                if (state instanceof BrushableBlock suspiciousBlock) {
+
+                    // Define the loot table
+                    int totalWeight = SUSPICIOUS_LOOT.lastKey(); 
+                    // Generate random number in the range [0, 13]
+                    int randomValue = RAND.nextInt(totalWeight);
+                    String loot = SUSPICIOUS_LOOT.higherEntry(randomValue).getValue();
+                    NamespacedKey lootTableKey = new NamespacedKey("minecraft", loot);
+                    LootTable lootTable = Bukkit.getLootTable(lootTableKey);
+
+                    if (lootTable != null) {
+                        // Set the loot table
+                        suspiciousBlock.setLootTable(lootTable);
+
+                        // Update the state in the world.
+                        suspiciousBlock.update(true, false); 
+                    } else {
+                        BentoBox.getInstance().logWarning("Could not find loot table: " + lootTableKey);
+                    }
+                }
+            }
+        }
+
+    }
+
     /**
      * Handles player interaction with suspicious blocks (sand/gravel) using a brush.
      * This is currently for debugging purposes.
      * @param e The PlayerInteractEvent.
      */
     @EventHandler
-     public void onPlayerInteract(PlayerInteractEvent e) {
-       if (e.getAction() != Action.RIGHT_CLICK_BLOCK) return;
-       if (e.getHand() != EquipmentSlot.HAND) return;
-       if (e.getClickedBlock() == null) return;
-       if (e.getClickedBlock().getType() != Material.SUSPICIOUS_GRAVEL &&
-           e.getClickedBlock().getType() != Material.SUSPICIOUS_SAND) return;
-       if (e.getPlayer().getInventory().getItemInMainHand().getType() != Material.BRUSH) return;
-       // TODO FINISH THIS!!!
-       BentoBox.getInstance().logDebug("Brushing " + e.getClickedBlock());
-       if (e.getClickedBlock() != null && e.getClickedBlock().getBlockData() instanceof Brushable bb) {      
-               BentoBox.getInstance().logDebug("item is brushable "  + bb.getDusted());      
-       }
-     }
-     
-     /**
-      * Gets a random loot item from the loot table based on probabilities.
-      * @param random The random number generator.
-      * @return A random Material from the loot table.
-      */
-     private static Material getRandomLoot(Random random) {
-         double roll = random.nextDouble();
-         double cumulative = 0.0;
+    public void onPlayerInteract(PlayerInteractEvent e) {
+        // Check if this is a magic block
+        if (!addon.inWorld(e.getPlayer().getWorld())) {
+            return;
+        }
+        if (e.getAction() != Action.RIGHT_CLICK_BLOCK) return;
+        if (e.getHand() != EquipmentSlot.HAND) return;
+        Block block = e.getClickedBlock();
+        if (block == null) return;
+        if (block.getType() != Material.SUSPICIOUS_GRAVEL &&
+                block.getType() != Material.SUSPICIOUS_SAND) return;
+        if (e.getPlayer().getInventory().getItemInMainHand().getType() != Material.BRUSH) return;
+        // Check for magic block
+        if (addon.getIslands().getIslandAt(block.getLocation()).filter(i -> i.getCenter().equals(block.getLocation())).isEmpty()) {
+            return;
+        }
 
-         for (Map.Entry<Material, Double> entry : LOOT.entrySet()) {
-             cumulative += entry.getValue();
-             if (roll <= cumulative) {
-                 return entry.getKey();
-             }
-         }
+        if (block != null && block.getBlockData() instanceof Brushable bb) {
+            int dusted = bb.getDusted() + 1;
+            if (dusted > bb.getMaximumDusted()) {
+                /// === Brushing is FINISHED! ===
+                Location loc = block.getLocation().add(0.5, 0.5, 0.5); // Center of block
+                World world = block.getWorld();
 
-         // Fallback in case of rounding errors
-         List<Material> materials = new ArrayList<>(LOOT.keySet());
-         return materials.get(random.nextInt(materials.size()));
-     }
+                // Get the loot from the BlockState
+                BlockState state = block.getState();
+                if (state instanceof BrushableBlock suspiciousBlock) {
+                    LootTable lootTable = suspiciousBlock.getLootTable();
 
-     /**
-      * Spawns an entity at the magic block location.
-      * @param nextBlock The object containing entity information.
-      * @param block The magic block.
-      */
-     private void spawnEntity(@NonNull OneBlockObject nextBlock, @NonNull Block block) {
-         if (block.isEmpty())
-             block.setType(Material.STONE);
-         Location spawnLoc = block.getLocation().add(new Vector(0.5D, 1D, 0.5D));
-         Entity entity = block.getWorld().spawnEntity(spawnLoc, nextBlock.getEntityType());
-         // Make space for entity - this will blot out blocks
-         if (addon.getSettings().isClearBlocks()) {
-             new MakeSpace(addon).makeSpace(entity, spawnLoc);
-         }
-         block.getWorld().playSound(block.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 1F, 2F);
-     }
+                    if (lootTable != null) {
+                        // Build a LootContext
+                        LootContext context = new LootContext.Builder(loc).lootedEntity(e.getPlayer()).killer(e.getPlayer()).build();
+                        // Generate and spawn the loot
+                        Collection<ItemStack> items = lootTable.populateLoot(new Random(), context);
+                        for (ItemStack item : items) {
+                            world.dropItemNaturally(loc, item);
+                        }
+                    }
+                }
 
-     /**
-      * Fills a chest with items and adds particle effects based on rarity.
-      * @param nextBlock The object containing chest information.
-      * @param block The chest block.
-      */
-     private void fillChest(@NonNull OneBlockObject nextBlock, @NonNull Block block) {
-         Chest chest = (Chest) block.getState();
-         nextBlock.getChest().forEach(chest.getBlockInventory()::setItem);
-         Color color = Color.fromBGR(0, 255, 255); // yellow
-         switch (nextBlock.getRarity()) {
-         case EPIC:
-             color = Color.fromBGR(255, 0, 255); // magenta
-             break;
-         case RARE:
-             color = Color.fromBGR(255, 255, 255); // cyan
-             break;
-         case UNCOMMON:
-             // Yellow
-             break;
-         default:
-             // No sparkles for regular chests
-             return;
-         }
-         block.getWorld().spawnParticle(Particle.DUST, block.getLocation().add(new Vector(0.5, 1.0, 0.5)), 50, 0.5,
-                 0, 0.5, 1, new Particle.DustOptions(color, 1));
-     }
+                // Determine break sound
+                Sound breakSound = (block.getType() == Material.SUSPICIOUS_GRAVEL) 
+                        ? Sound.BLOCK_SUSPICIOUS_GRAVEL_BREAK
+                                : Sound.BLOCK_SUSPICIOUS_SAND_BREAK;
 
-     /**
-      * Get the one block island data
-      *
-      * @param i - island
-      * @return one block island
-      */
-     @NonNull
-     public OneBlockIslands getIsland(@NonNull Island i) {
-         return cache.containsKey(i.getUniqueId()) ? cache.get(i.getUniqueId()) : loadIsland(i.getUniqueId());
-     }
+                // Break block and play sound
+                world.playSound(loc, breakSound, 1.0f, 1.0f);
+                block.setType(Material.AIR);
 
-     /**
-      * Get all the OneBlockIslands from the Database
-      * 
-      * @return list of oneblock islands
-      */
-     public List<OneBlockIslands> getAllIslands() {
-         return handler.loadObjects();
-     }
+                // Fire break block event
+                Bukkit.getPluginManager().callEvent(new BlockBreakEvent(block, e.getPlayer()));
 
-     /**
-      * Loads an island's OneBlock data from the database into the cache.
-      * If it doesn't exist, a new object is created.
-      * @param uniqueId The unique ID of the island.
-      * @return The OneBlockIslands data object.
-      */
-     @NonNull
-     private OneBlockIslands loadIsland(@NonNull String uniqueId) {
-         if (handler.objectExists(uniqueId)) {
-             OneBlockIslands island = handler.loadObject(uniqueId);
-             if (island != null) {
-                 // Add to cache
-                 cache.put(island.getUniqueId(), island);
-                 return island;
-             }
-         }
-         return cache.computeIfAbsent(uniqueId, OneBlockIslands::new);
-     }
+                // 6. Damage the brush
+                // This method correctly handles Unbreaking and breaks the item if durability hits 0
+                e.getPlayer().getInventory().getItemInMainHand().damage(1, e.getPlayer());
 
-     /**
-      * @return the oneBlocksManager
-      */
-     public OneBlocksManager getOneBlocksManager() {
-         return oneBlocksManager;
-     }
+            } else {
+                // Brush some more
+                bb.setDusted(dusted);
+                block.setBlockData(bb);
+            }
+        }
+    }
 
-     /**
-      * Saves the island progress to the database async
-      *
-      * @param island - island
-      * @return CompletableFuture - true if saved or not in cache, false if save
-      *         failed
-      */
-     public CompletableFuture<Boolean> saveIsland(@NonNull Island island) {
-         if (cache.containsKey(island.getUniqueId())) {
-             return handler.saveObjectAsync(cache.get(island.getUniqueId()));
-         }
-         return CompletableFuture.completedFuture(true);
-     }
+    /**
+     * Spawns an entity at the magic block location.
+     * @param nextBlock The object containing entity information.
+     * @param block The magic block.
+     */
+    private void spawnEntity(@NonNull OneBlockObject nextBlock, @NonNull Block block) {
+        if (block.isEmpty())
+            block.setType(Material.STONE);
+        Location spawnLoc = block.getLocation().add(new Vector(0.5D, 1D, 0.5D));
+        Entity entity = block.getWorld().spawnEntity(spawnLoc, nextBlock.getEntityType());
+        // Make space for entity - this will blot out blocks
+        if (addon.getSettings().isClearBlocks()) {
+            new MakeSpace(addon).makeSpace(entity, spawnLoc);
+        }
+        block.getWorld().playSound(block.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 1F, 2F);
+    }
+
+    /**
+     * Fills a chest with items and adds particle effects based on rarity.
+     * @param nextBlock The object containing chest information.
+     * @param block The chest block.
+     */
+    private void fillChest(@NonNull OneBlockObject nextBlock, @NonNull Block block) {
+        Chest chest = (Chest) block.getState();
+        nextBlock.getChest().forEach(chest.getBlockInventory()::setItem);
+        Color color = Color.fromBGR(0, 255, 255); // yellow
+        switch (nextBlock.getRarity()) {
+        case EPIC:
+            color = Color.fromBGR(255, 0, 255); // magenta
+            break;
+        case RARE:
+            color = Color.fromBGR(255, 255, 255); // cyan
+            break;
+        case UNCOMMON:
+            // Yellow
+            break;
+        default:
+            // No sparkles for regular chests
+            return;
+        }
+        block.getWorld().spawnParticle(Particle.DUST, block.getLocation().add(new Vector(0.5, 1.0, 0.5)), 50, 0.5,
+                0, 0.5, 1, new Particle.DustOptions(color, 1));
+    }
+
+    /**
+     * Get the one block island data
+     *
+     * @param i - island
+     * @return one block island
+     */
+    @NonNull
+    public OneBlockIslands getIsland(@NonNull Island i) {
+        return cache.containsKey(i.getUniqueId()) ? cache.get(i.getUniqueId()) : loadIsland(i.getUniqueId());
+    }
+
+    /**
+     * Get all the OneBlockIslands from the Database
+     * 
+     * @return list of oneblock islands
+     */
+    public List<OneBlockIslands> getAllIslands() {
+        return handler.loadObjects();
+    }
+
+    /**
+     * Loads an island's OneBlock data from the database into the cache.
+     * If it doesn't exist, a new object is created.
+     * @param uniqueId The unique ID of the island.
+     * @return The OneBlockIslands data object.
+     */
+    @NonNull
+    private OneBlockIslands loadIsland(@NonNull String uniqueId) {
+        if (handler.objectExists(uniqueId)) {
+            OneBlockIslands island = handler.loadObject(uniqueId);
+            if (island != null) {
+                // Add to cache
+                cache.put(island.getUniqueId(), island);
+                return island;
+            }
+        }
+        return cache.computeIfAbsent(uniqueId, OneBlockIslands::new);
+    }
+
+    /**
+     * @return the oneBlocksManager
+     */
+    public OneBlocksManager getOneBlocksManager() {
+        return oneBlocksManager;
+    }
+
+    /**
+     * Saves the island progress to the database async
+     *
+     * @param island - island
+     * @return CompletableFuture - true if saved or not in cache, false if save
+     *         failed
+     */
+    public CompletableFuture<Boolean> saveIsland(@NonNull Island island) {
+        if (cache.containsKey(island.getUniqueId())) {
+            return handler.saveObjectAsync(cache.get(island.getUniqueId()));
+        }
+        return CompletableFuture.completedFuture(true);
+    }
 }
