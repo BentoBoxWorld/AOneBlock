@@ -21,22 +21,31 @@ public class PlayerCommand extends DefaultPlayerCommand {
 
         // Count
         new IslandCountCommand(this,
-            settings.getCountCommand().split(" ")[0],
-            settings.getCountCommand().split(" "));
+                settings.getCountCommand().split(" ")[0],
+                settings.getCountCommand().split(" "));
         // Phase list
         new IslandPhasesCommand(this,
-            settings.getPhasesCommand().split(" ")[0],
-            settings.getPhasesCommand().split(" "));
+                settings.getPhasesCommand().split(" ")[0],
+                settings.getPhasesCommand().split(" "));
         // Set Count
         new IslandSetCountCommand(this,
-            settings.getSetCountCommand().split(" ")[0],
-            settings.getSetCountCommand().split(" "));
+                settings.getSetCountCommand().split(" ")[0],
+                settings.getSetCountCommand().split(" "));
         // Force block respawn
         new IslandRespawnBlockCommand(this,
-            settings.getRespawnBlockCommand().split(" ")[0],
-            settings.getRespawnBlockCommand().split(" "));
+                settings.getRespawnBlockCommand().split(" ")[0],
+                settings.getRespawnBlockCommand().split(" "));
+       
+        // Action bar
+        if (settings.isActionBar()) {
+            new IslandActionBarCommand(this, settings.getActionBarCommand().split(" ")[0],
+                    settings.getActionBarCommand().split(" "));
+        }
+        
         // Boss bar
-        new IslandBossBarCommand(this, settings.getBossBarCommand().split(" ")[0],
-                settings.getBossBarCommand().split(" "));
+        if (settings.isBossBar()) {
+            new IslandBossBarCommand(this, settings.getBossBarCommand().split(" ")[0],
+                    settings.getBossBarCommand().split(" "));
+        }
     }
 }

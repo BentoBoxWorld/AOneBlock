@@ -130,7 +130,13 @@ public class AOneBlock extends GameModeAddon {
             // Register protection flag with BentoBox
             getPlugin().getFlagsManager().registerFlag(this, START_SAFETY);
             // Bossbar
-            getPlugin().getFlagsManager().registerFlag(this, this.ONEBLOCK_BOSSBAR);
+            if (getSettings().isBossBar()) {
+                getPlugin().getFlagsManager().registerFlag(this, this.ONEBLOCK_BOSSBAR);
+            }
+            // Actionbar
+            if (getSettings().isActionBar()) {
+                getPlugin().getFlagsManager().registerFlag(this, this.ONEBLOCK_ACTIONBAR);
+            }
             // Magic Block protection
             getPlugin().getFlagsManager().registerFlag(this, this.MAGIC_BLOCK);
         }
@@ -171,7 +177,9 @@ public class AOneBlock extends GameModeAddon {
         registerListener(new BlockProtect(this));
         registerListener(new JoinLeaveListener(this));
         registerListener(new InfoListener(this));
-        registerListener(bossBar);
+        if (getSettings().isBossBar() && getSettings().isActionBar()) {
+            registerListener(bossBar);
+        }
         // Register placeholders
         phManager = new AOneBlockPlaceholders(this, getPlugin().getPlaceholdersManager());
 
