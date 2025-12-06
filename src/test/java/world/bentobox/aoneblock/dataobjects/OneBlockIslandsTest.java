@@ -1,29 +1,28 @@
 package world.bentobox.aoneblock.dataobjects;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
 import java.util.Queue;
 import java.util.UUID;
 
 import org.bukkit.entity.EntityType;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
+import world.bentobox.aoneblock.CommonTestSetup;
 import world.bentobox.aoneblock.oneblocks.OneBlockObject;
 
 /**
  * @author tastybento
  *
  */
-@RunWith(PowerMockRunner.class)
-public class OneBlockIslandsTest {
+public class OneBlockIslandsTest extends CommonTestSetup {
     
     private OneBlockIslands obi;
     private String id;
@@ -31,8 +30,10 @@ public class OneBlockIslandsTest {
     /**
      * @throws java.lang.Exception
      */
-    @Before
+    @Override
+    @BeforeEach
     public void setUp() throws Exception {
+        super.setUp();
         id = UUID.randomUUID().toString();
         obi = new OneBlockIslands(id);
     }
@@ -40,8 +41,10 @@ public class OneBlockIslandsTest {
     /**
      * @throws java.lang.Exception
      */
-    @After
+    @Override
+    @AfterEach
     public void tearDown() throws Exception {
+        super.tearDown();
     }
 
     /**

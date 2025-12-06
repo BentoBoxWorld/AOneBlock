@@ -1,12 +1,10 @@
 package world.bentobox.aoneblock.oneblocks;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -15,56 +13,39 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.Comparator;
 import java.util.List;
 import java.util.NavigableMap;
 import java.util.jar.JarEntry;
 import java.util.jar.JarOutputStream;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.UnsafeValues;
 import org.bukkit.block.Biome;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.inventory.ItemFactory;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jdt.annotation.Nullable;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Ignore;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
-import org.powermock.reflect.Whitebox;
 
 import world.bentobox.aoneblock.AOneBlock;
+import world.bentobox.aoneblock.CommonTestSetup;
 import world.bentobox.aoneblock.dataobjects.OneBlockIslands;
-import world.bentobox.bentobox.BentoBox;
 import world.bentobox.bentobox.api.addons.AddonDescription;
-import world.bentobox.bentobox.api.user.User;
 import world.bentobox.bentobox.managers.AddonsManager;
 
 /**
  * @author tastybento
  *
  */
-@RunWith(PowerMockRunner.class)
-@PrepareForTest({ Bukkit.class, BentoBox.class, User.class })
-public class OneBlocksManagerTest3 {
+public class OneBlocksManagerTest3 extends CommonTestSetup {
 
 	private static File jFile;
 	private static YamlConfiguration oneBlocks;
-	@Mock
-	private BentoBox plugin;
 	private AOneBlock addon;
 	@Mock
 	private AddonsManager am;
@@ -73,7 +54,7 @@ public class OneBlocksManagerTest3 {
 	@Mock
 	private @NonNull OneBlockIslands obi;
 
-	@BeforeClass
+	@BeforeAll
 	public static void beforeClass() throws IOException, InvalidConfigurationException {
 		// Make the addon jar
 		jFile = new File("addon.jar");
@@ -119,10 +100,10 @@ public class OneBlocksManagerTest3 {
 	/**
 	 * @throws java.lang.Exception
 	 */
-	@Before
+	@Override
+	@BeforeEach
 	public void setUp() throws Exception {
-		// Set up plugin
-		Whitebox.setInternalState(BentoBox.class, "instance", plugin);
+	    super.setUp();
 		// Addon
 		addon = new AOneBlock();
 		File dataFolder = new File("addons/AOneBlock");
@@ -131,19 +112,8 @@ public class OneBlocksManagerTest3 {
 		AddonDescription desc = new AddonDescription.Builder("bentobox", "AOneBlock", "1.3").description("test")
 				.authors("tastybento").build();
 		addon.setDescription(desc);
-		// addon.setSettings(new Settings());
 		// Addons manager
 		when(plugin.getAddonsManager()).thenReturn(am);
-
-		// Bukkit
-		PowerMockito.mockStatic(Bukkit.class);
-		ItemMeta meta = mock(ItemMeta.class);
-		ItemFactory itemFactory = mock(ItemFactory.class);
-		when(itemFactory.getItemMeta(any())).thenReturn(meta);
-		when(Bukkit.getItemFactory()).thenReturn(itemFactory);
-		UnsafeValues unsafe = mock(UnsafeValues.class);
-		when(unsafe.getDataVersion()).thenReturn(777);
-		when(Bukkit.getUnsafe()).thenReturn(unsafe);
 
 		// Phase
 		obPhase = new OneBlockPhase("0");
@@ -155,12 +125,14 @@ public class OneBlocksManagerTest3 {
 	/**
 	 * @throws java.lang.Exception
 	 */
-	@After
+	@Override
+	@AfterEach
 	public void tearDown() throws Exception {
+	    super.tearDown();
 		deleteAll(new File("database"));
 	}
 
-	@AfterClass
+	@AfterAll
 	public static void cleanUp() throws Exception {
 
 		new File("addon.jar").delete();
@@ -168,12 +140,6 @@ public class OneBlocksManagerTest3 {
 
 		deleteAll(new File("addons"));
 		deleteAll(new File("phases"));
-	}
-
-	private static void deleteAll(File file) throws IOException {
-		if (file.exists()) {
-			Files.walk(file.toPath()).sorted(Comparator.reverseOrder()).map(Path::toFile).forEach(File::delete);
-		}
 	}
 
 	/**
@@ -257,7 +223,7 @@ public class OneBlocksManagerTest3 {
 	 * @throws IOException
 	 * @throws NumberFormatException
 	 */
-	@Ignore("Not saving")
+	@Disabled("Not saving")
 	@Test
 	public void testSaveOneBlockConfig() throws NumberFormatException, IOException, InvalidConfigurationException {
 		// testLoadPhases();
@@ -307,7 +273,7 @@ public class OneBlocksManagerTest3 {
 	 * @throws IOException
 	 */
 	@Test
-	@Ignore
+	@Disabled
 	public void testInitBlock() throws IOException {
 		System.out.println(oneBlocks);
 		obm.initBlock("0", obPhase, oneBlocks);
