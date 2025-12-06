@@ -1,75 +1,52 @@
 package world.bentobox.aoneblock.listeners;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.mockito.ArgumentMatchers.any;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.atLeast;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
 import java.util.UUID;
 
-import org.bukkit.Location;
-import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Player.Spigot;
 import org.eclipse.jdt.annotation.NonNull;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.powermock.modules.junit4.PowerMockRunner;
 
 import net.md_5.bungee.api.chat.TextComponent;
 import world.bentobox.aoneblock.AOneBlock;
+import world.bentobox.aoneblock.CommonTestSetup;
 import world.bentobox.aoneblock.dataobjects.OneBlockIslands;
-import world.bentobox.bentobox.BentoBox;
 import world.bentobox.bentobox.api.addons.Addon;
 import world.bentobox.bentobox.api.events.island.IslandInfoEvent;
 import world.bentobox.bentobox.api.user.User;
-import world.bentobox.bentobox.database.objects.Island;
-import world.bentobox.bentobox.managers.IslandsManager;
-import world.bentobox.bentobox.managers.LocalesManager;
-import world.bentobox.bentobox.managers.PlaceholdersManager;
 
 /**
  * @author tastybento
  *
  */
-@RunWith(PowerMockRunner.class)
-public class InfoListenerTest {
-    @Mock
-    private BentoBox plugin;
+public class InfoListenerTest extends CommonTestSetup {
     @Mock
     private AOneBlock addon;
     @Mock
-    private Player p;
-    
-    @Mock
     private BlockListener bl;
     @Mock
-    private Location location;
-    @Mock
-    private IslandsManager im;
-    @Mock
-    private Island island;
-    @Mock
     private Player player;
-    @Mock
-    private World world;
     private InfoListener il;
     @Mock
     private @NonNull OneBlockIslands is;
+    /*
     @Mock
     private LocalesManager lm;
     @Mock
     private PlaceholdersManager phm;
+    */
     @Mock
     private Spigot spigot;
     
@@ -78,14 +55,16 @@ public class InfoListenerTest {
     /**
      * @throws java.lang.Exception
      */
-    @Before
+    @Override
+    @BeforeEach
     public void setUp() throws Exception {
+        super.setUp();
         when(addon.getPlugin()).thenReturn(plugin);
-        when(plugin.getLocalesManager()).thenReturn(lm);
-        when(lm.get(toString())).thenAnswer(invocation -> invocation.getArgument(0, String.class));
-        when(phm.replacePlaceholders(any(), any())).thenAnswer(invocation -> invocation.getArgument(1, String.class));
+        //when(plugin.getLocalesManager()).thenReturn(lm);
+        //when(lm.get(toString())).thenAnswer(invocation -> invocation.getArgument(0, String.class));
+        //when(phm.replacePlaceholders(any(), any())).thenAnswer(invocation -> invocation.getArgument(1, String.class));
 
-        when(plugin.getPlaceholdersManager()).thenReturn(phm);
+        //when(plugin.getPlaceholdersManager()).thenReturn(phm);
         User.setPlugin(plugin);
         
         // Player
@@ -99,7 +78,7 @@ public class InfoListenerTest {
             
         when(addon.getOverWorld()).thenReturn(world);
         // Player
-        when(p.getUniqueId()).thenReturn(ID);
+        when(mockPlayer.getUniqueId()).thenReturn(ID);
         User.getInstance(player);
         
         // Island
@@ -118,10 +97,10 @@ public class InfoListenerTest {
     /**
      * @throws java.lang.Exception - exception
      */
-    @After
+    @Override
+    @AfterEach
     public void tearDown() throws Exception {
-        User.clearUsers();
-        Mockito.framework().clearInlineMocks();
+        super.tearDown();
     }
 
 
@@ -177,8 +156,8 @@ public class InfoListenerTest {
                 .count(); // Count how many times the expected message appears
 
         // Assert that the number of occurrences matches the expectedOccurrences
-        assertEquals("Expected message occurrence mismatch: " + expectedMessage, expectedOccurrences,
-                actualOccurrences);
+        assertEquals(expectedOccurrences,
+                actualOccurrences, "Expected message occurrence mismatch: " + expectedMessage);
     }
 
 }

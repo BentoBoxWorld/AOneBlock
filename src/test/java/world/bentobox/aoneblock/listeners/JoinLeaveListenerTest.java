@@ -1,6 +1,6 @@
 package world.bentobox.aoneblock.listeners;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.never;
@@ -10,56 +10,40 @@ import static org.mockito.Mockito.when;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
-import org.bukkit.Location;
-import org.bukkit.World;
-import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.util.Vector;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
-import org.powermock.modules.junit4.PowerMockRunner;
 
 import world.bentobox.aoneblock.AOneBlock;
-import world.bentobox.bentobox.database.objects.Island;
-import world.bentobox.bentobox.managers.IslandsManager;
+import world.bentobox.aoneblock.CommonTestSetup;
 
 /**
  * @author tastybento
  */
-@RunWith(PowerMockRunner.class)
-public class JoinLeaveListenerTest {
+public class JoinLeaveListenerTest extends CommonTestSetup {
     
     @Mock
     private AOneBlock aob;
-    @Mock
-    private Player p;
-    
     private JoinLeaveListener jll;
     @Mock
     private BlockListener bl;
-    @Mock
-    private Location location;
-    @Mock
-    private IslandsManager im;
-    @Mock
-    private Island island;
-    @Mock
-    private World world;
     
     private static final UUID ID = UUID.randomUUID();
     private static final Vector VECTOR = new Vector(123,120,456);
     /**
      * @throws java.lang.Exception
      */
-    @Before
+    @Override
+    @BeforeEach
     public void setUp() throws Exception {
+        super.setUp();
         
         when(aob.getOverWorld()).thenReturn(world);
         // Player
-        when(p.getUniqueId()).thenReturn(ID);
+        when(mockPlayer.getUniqueId()).thenReturn(ID);
         
         // Island
         when(island.getCenter()).thenReturn(location);
@@ -80,8 +64,10 @@ public class JoinLeaveListenerTest {
     /**
      * @throws java.lang.Exception
      */
-    @After
+    @Override
+    @AfterEach
     public void tearDown() throws Exception {
+        super.tearDown();
     }
 
     /**
@@ -97,7 +83,7 @@ public class JoinLeaveListenerTest {
      */
     @Test
     public void testOnPlayerQuit() {
-        PlayerQuitEvent event = new PlayerQuitEvent(p, "nothing");
+        PlayerQuitEvent event = new PlayerQuitEvent(mockPlayer, "nothing");
         jll.onPlayerQuit(event);
         verify(aob,never()).logError(anyString());
         verify(bl).saveIsland(island);
@@ -109,7 +95,7 @@ public class JoinLeaveListenerTest {
     @Test
     public void testOnPlayerQuitNoIsland() {
         when(im.getIsland(world, ID)).thenReturn(null);
-        PlayerQuitEvent event = new PlayerQuitEvent(p, "nothing");
+        PlayerQuitEvent event = new PlayerQuitEvent(mockPlayer, "nothing");
         jll.onPlayerQuit(event);
         verify(aob,never()).logError(anyString());
         verify(bl, never()).saveIsland(island);
@@ -121,7 +107,7 @@ public class JoinLeaveListenerTest {
     @Test
     public void testOnPlayerQuitSaveError() {
         when(bl.saveIsland(any())).thenReturn(CompletableFuture.completedFuture(Boolean.FALSE));
-        PlayerQuitEvent event = new PlayerQuitEvent(p, "nothing");
+        PlayerQuitEvent event = new PlayerQuitEvent(mockPlayer, "nothing");
         jll.onPlayerQuit(event);
         verify(aob).logError(anyString());
         verify(bl).saveIsland(island);

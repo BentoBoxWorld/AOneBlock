@@ -1,64 +1,44 @@
 package world.bentobox.aoneblock;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
-import org.bukkit.Location;
-import org.bukkit.World;
 import org.eclipse.jdt.annotation.NonNull;
-import org.eclipse.jdt.annotation.Nullable;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
-import org.powermock.modules.junit4.PowerMockRunner;
 
 import world.bentobox.aoneblock.dataobjects.OneBlockIslands;
 import world.bentobox.aoneblock.oneblocks.OneBlocksManager;
 import world.bentobox.bentobox.api.user.User;
-import world.bentobox.bentobox.database.objects.Island;
-import world.bentobox.bentobox.managers.IslandsManager;
-import world.bentobox.bentobox.managers.PlaceholdersManager;
 
 /**
  * @author tastybento
  *
  */
-@RunWith(PowerMockRunner.class)
-public class PlaceholdersManagerTest {
+public class PlaceholdersManagerTest extends CommonTestSetup {
     @Mock
     private AOneBlock addon;
     @Mock
     private User user;
 
-    private UUID uuid = UUID.randomUUID();
-
     private AOneBlockPlaceholders pm;
-    @Mock
-    private IslandsManager im;
-    @Mock
-    private Island island;
-    @Mock
-    private @Nullable Location location;
     private @NonNull OneBlockIslands obi;
-    @Mock
-    private World world;
     @Mock
     private OneBlocksManager obm;
     private Settings settings;
-    @Mock
-    private PlaceholdersManager phm;
 
     /**
      * @throws java.lang.Exception
      */
-    @Before
+    @Override
+    @BeforeEach
     public void setUp() throws Exception {
+        super.setUp();
         // User
         when(user.getLocation()).thenReturn(location);
         when(user.getTranslation("aoneblock.placeholders.infinite")).thenReturn("Infinite");

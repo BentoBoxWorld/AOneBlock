@@ -1,6 +1,6 @@
 package world.bentobox.aoneblock.listeners;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyDouble;
 import static org.mockito.ArgumentMatchers.anyInt;
@@ -16,75 +16,43 @@ import static org.mockito.Mockito.when;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
-import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.TextDisplay;
-import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.util.Vector;
 import org.eclipse.jdt.annotation.NonNull;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
-import org.powermock.reflect.Whitebox;
 
 import world.bentobox.aoneblock.AOneBlock;
+import world.bentobox.aoneblock.CommonTestSetup;
 import world.bentobox.aoneblock.Settings;
 import world.bentobox.aoneblock.dataobjects.OneBlockIslands;
 import world.bentobox.aoneblock.oneblocks.OneBlockPhase;
-import world.bentobox.bentobox.BentoBox;
 import world.bentobox.bentobox.api.events.island.IslandDeleteEvent;
 import world.bentobox.bentobox.api.user.User;
-import world.bentobox.bentobox.database.objects.Island;
-import world.bentobox.bentobox.managers.LocalesManager;
-import world.bentobox.bentobox.managers.PlaceholdersManager;
 import world.bentobox.bentobox.util.Util;
 
 /**
  * @author tastybento
  *
  */
-@RunWith(PowerMockRunner.class)
-@PrepareForTest({ Bukkit.class, BentoBox.class, User.class, Util.class })
-public class HoloListenerTest {
-    @Mock
-    private BentoBox plugin;
+public class HoloListenerTest extends CommonTestSetup {
     @Mock
     AOneBlock addon;
     private HoloListener hl;
-    @Mock
-    private Island island;
-    private UUID uuid = UUID.randomUUID();
-    @Mock
-    private Location location;
-    @Mock
-    private World world;
     @Mock
     private TextDisplay hologram;
     private Settings settings;
     @Mock
     private @NonNull OneBlockIslands is;
-    @Mock
-    private Player player;
-    @Mock
-    private LocalesManager lm;
-    @Mock
-    private PlaceholdersManager pm;
-    @Mock
-    private BukkitScheduler scheduler;
     @Mock
     private @NonNull OneBlockPhase phase;
 
@@ -92,10 +60,10 @@ public class HoloListenerTest {
     /**
      * @throws java.lang.Exception
      */
-    @Before
+    @Override
+    @BeforeEach
     public void setUp() throws Exception {
-        // Set up plugin
-        Whitebox.setInternalState(BentoBox.class, "instance", plugin);
+        super.setUp();
         // Settings
         settings = new Settings();
         when(addon.getSettings()).thenReturn(settings);
@@ -115,9 +83,8 @@ public class HoloListenerTest {
         when(location.clone()).thenReturn(location);
         when(location.add(any(Vector.class))).thenReturn(location);
         // Chunks
-        PowerMockito.mockStatic(Util.class, Mockito.RETURNS_MOCKS);
         CompletableFuture<Chunk> future = CompletableFuture.completedFuture(null);
-        when(Util.getChunkAtAsync(location)).thenReturn(future); // Load the chunk immediately
+        mockedUtil.when(() -> Util.getChunkAtAsync(location)).thenReturn(future); // Load the chunk immediately
         
         Player nonHolo = mock(Player.class);
         
@@ -127,24 +94,18 @@ public class HoloListenerTest {
         when(world.getNearbyEntities(any(Location.class), anyDouble(), anyDouble(), anyDouble())).thenReturn(entities);
         
         // Player and translations
-        when(player.getUniqueId()).thenReturn(uuid);
-        User.getInstance(player);
+        when(mockPlayer.getUniqueId()).thenReturn(uuid);
+        User.getInstance(mockPlayer);
         User.setPlugin(plugin);
-        
-        when(plugin.getLocalesManager()).thenReturn(lm);
-        when(plugin.getPlaceholdersManager()).thenReturn(pm);
-        
-        // Bukkit
-        PowerMockito.mockStatic(Bukkit.class, Mockito.RETURNS_MOCKS);
-        when(Bukkit.getScheduler()).thenReturn(scheduler);
         
         // DUT
         hl = new HoloListener(addon);
     }
 
-    @After
-    public void tearDown()  {
-        User.clearUsers();
+    @Override
+    @AfterEach
+    public void tearDown()throws Exception {
+        super.tearDown();
     }
 
     /**
@@ -183,7 +144,7 @@ public class HoloListenerTest {
     public void testSetUpNoHolograms() {
         settings.setUseHolograms(false);
         hl.setUp(island, is, true);
-        verify(scheduler, never()).runTaskLater(isNull(), any(Runnable.class), anyLong());
+        verify(sch, never()).runTaskLater(isNull(), any(Runnable.class), anyLong());
     }
     
     /**
@@ -193,7 +154,7 @@ public class HoloListenerTest {
     public void testSetUpNoScheduling() {
         settings.setHologramDuration(0);
         hl.setUp(island, is, true);
-        verify(scheduler, never()).runTaskLater(isNull(), any(Runnable.class), anyLong());
+        verify(sch, never()).runTaskLater(isNull(), any(Runnable.class), anyLong());
     }
     
     /**
@@ -202,8 +163,8 @@ public class HoloListenerTest {
     @Test
     public void testSetUpNewIsland() {
         hl.setUp(island, is, true);
-        verify(is).setHologram("");
-        verify(scheduler).runTaskLater(isNull(), any(Runnable.class), anyLong());
+        verify(is).setHologram("aoneblock.island.starting-hologram");
+        verify(sch).runTaskLater(isNull(), any(Runnable.class), anyLong());
     }
     
     /**
@@ -213,7 +174,7 @@ public class HoloListenerTest {
     public void testSetUpNotNewIsland() {
         hl.setUp(island, is, false);
         verify(is, never()).setHologram(anyString());
-        verify(scheduler).runTaskLater(isNull(), any(Runnable.class), anyLong());
+        verify(sch).runTaskLater(isNull(), any(Runnable.class), anyLong());
     }
 
 
@@ -225,7 +186,7 @@ public class HoloListenerTest {
         when(phase.getHologramLine(anyInt())).thenReturn(null);
         when(is.getHologram()).thenReturn(""); // Return blank
         hl.process(island, is, phase);
-        verify(scheduler, never()).runTaskLater(isNull(), any(Runnable.class), anyLong());
+        verify(sch, never()).runTaskLater(isNull(), any(Runnable.class), anyLong());
     }
     
     /**
@@ -235,7 +196,7 @@ public class HoloListenerTest {
     public void testProcess() {
         when(phase.getHologramLine(anyInt())).thenReturn("my Holo");
         hl.process(island, is, phase);
-        verify(scheduler).runTaskLater(isNull(), any(Runnable.class), anyLong());
+        verify(sch).runTaskLater(isNull(), any(Runnable.class), anyLong());
     }
 
 }
