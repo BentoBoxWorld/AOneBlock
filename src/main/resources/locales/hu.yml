@@ -1,20 +1,32 @@
 protection:
   flags:
+    MAGIC_BLOCK:
+      name: Mágikus Blokk Védelem
+      description: |-
+        &b Rang, amely képes
+        &b szétrombolni a mágikus
+        &b blokkot, ha tud blokkokat
+        &b rombolni.
+      hint: "&c A rangod nem törheti szét a mágikus blokkot!"
     START_SAFETY:
-      name: Induló biztonság
-      description: |
+      name: Kezdő Biztonság
+      description: |-
         &b Megakadályozza az új játékosokat
-        &b 1 percig mozogva
-        &b Tehát nem esnek le.
-      hint: >-
-        &c A mozgás blokkolva a biztonság érdekében, a [number] több
-        másodpercre!
-      free-to-move: '&a Szabadon mozoghatsz. '
+        &b a mozgásban 1 percig,
+        &b hogy ne essenek le.
+      hint: "&c Mozgás blokkolva biztonsági okokból még [number] másodpercig!"
+      free-to-move: "&a Szabadon mozoghatsz. Légy óvatos!"
     ONEBLOCK_BOSSBAR:
-      name: Főnök
-      description: |
-        &b Mutat egy állapotsorot
-        &b minden fázisra.
+        name: Boss Bar
+        description: |-
+          &b Állapotjelző sávot
+          &b mutat minden fázishoz.
+  ONEBLOCK_ACTIONBAR:
+    name: Műveleti Sáv (Action Bar)
+    description: |-
+      &b Állapotot mutat
+      &b minden fázishoz
+      &b a Műveleti Sávban.
 aoneblock:
   bossbar:
     title: Blokkok maradtak

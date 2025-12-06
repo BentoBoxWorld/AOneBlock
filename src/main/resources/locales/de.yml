@@ -1,18 +1,31 @@
 protection:
   flags:
+    MAGIC_BLOCK:
+      name: Schutz des Magischen Blocks
+      description: |-
+        &b Rang, der den magischen
+        &b Block zerstören kann, falls
+        &b Blöcke zerstört werden können.
+      hint: "&c Dein Rang kann den magischen Block nicht zerstören!"
     START_SAFETY:
-      name: Sicherheit beginnen
-      description: |
-        &b verhindert neue Spieler
-        &b vor dem Umzug für 1 Minute
-        &b damit sie nicht abfallen.
-      hint: '&c Bewegung für die Sicherheit für [number] mehr Sekunden!'
-      free-to-move: '&a Sie können sich frei bewegen. '
+      name: Start-Sicherheit
+      description: |-
+        &b Verhindert, dass neue Spieler
+        &b sich 1 Minute lang bewegen,
+        &b damit sie nicht herunterfallen.
+      hint: "&c Bewegung aus Sicherheitsgründen für [number] weitere Sekunden blockiert!"
+      free-to-move: "&a Du kannst dich frei bewegen. Sei vorsichtig!"
     ONEBLOCK_BOSSBAR:
-      name: Boss Bar
-      description: |
-        &b Zeigt eine Statusleiste
-        &b für jede Phase.
+        name: Boss-Balken
+        description: |-
+          &b Zeigt eine Statusleiste
+          &b für jede Phase.
+  ONEBLOCK_ACTIONBAR:
+    name: Action-Leiste
+    description: |-
+      &b Zeigt einen Status
+      &b für jede Phase
+      &b in der Action-Leiste.
 aoneblock:
   bossbar:
     title: Verbleibende Blöcke

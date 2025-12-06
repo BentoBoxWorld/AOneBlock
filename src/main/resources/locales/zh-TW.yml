@@ -1,18 +1,30 @@
 protection:
   flags:
+    MAGIC_BLOCK:
+      name: 魔法方塊保護
+      description: |-
+        &b 如果玩家可以破壞方塊，
+        &b 則該等級可以破壞
+        &b 魔法方塊。
+      hint: "&c 您的等級無法破壞魔法方塊！"
     START_SAFETY:
-      name: 開始安全
-      description: |
-        &b 防止新球員
-        &b 從移動1分鐘
-        &b 所以他們不會掉下來。
-      hint: '&c 移動被阻塞，以確保[number]更多秒！'
-      free-to-move: '&a 您可以自由移動。當心！'
+      name: 初始安全保護
+      description: |-
+        &b 阻止新玩家在1分鐘內
+        &b 移動，以防他們跌落。
+      hint: "&c 出於安全考慮，移動已被阻止 [number] 秒！"
+      free-to-move: "&a 您可以自由移動了。請小心！"
     ONEBLOCK_BOSSBAR:
-      name: 老闆酒吧
-      description: |
-        &b 顯示狀態欄
-        &b 對於每個階段。
+        name: Boss 血條
+        description: |-
+          &b 為每個階段
+          &b 顯示一個狀態條。
+  ONEBLOCK_ACTIONBAR:
+    name: 動作欄
+    description: |-
+      &b 在動作欄中
+      &b 顯示每個階段
+      &b 的狀態。
 aoneblock:
   bossbar:
     title: 剩餘的塊

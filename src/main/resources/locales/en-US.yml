@@ -7,13 +7,13 @@ protection:
   flags:
     MAGIC_BLOCK:
       name: Magic Block Protection
-      description: |
+      description: |-
         &b Rank that can break the magic
         &b block if they can break blocks.
       hint: "&c Your rank cannot break the magic block!"
     START_SAFETY:
       name: Starting Safety
-      description: |
+      description: |-
         &b Prevents new players
         &b from moving for 1 minute
         &b so they don't fall off.
@@ -21,13 +21,12 @@ protection:
       free-to-move: "&a You are free to move. Be careful!"
     ONEBLOCK_BOSSBAR:
         name: Boss Bar
-        description: |
+        description: |-
           &b Shows a status bar
           &b for each phase.
-
   ONEBLOCK_ACTIONBAR:
     name: Action Bar
-    description: |
+    description: |-
       &b Shows a status
       &b for each phase
       &b in the Action Bar.

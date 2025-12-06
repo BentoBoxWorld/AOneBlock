@@ -1,18 +1,31 @@
 protection:
   flags:
+    MAGIC_BLOCK:
+      name: Ochrana Kouzelného Bloku
+      description: |-
+        &b Hodnost, která může rozbít
+        &b kouzelný blok, pokud
+        &b dokáže rozbíjet bloky.
+      hint: "&c Vaše hodnost nemůže rozbít kouzelný blok!"
     START_SAFETY:
-      name: Počáteční bezpečnost
-      description: |
-        &b Zabraňuje novým hráčům
-        &b from moving for 1 minute
-        &b takže nespadnou.
-      hint: '&c pohyb zablokován pro bezpečnost po [number] více sekund!'
-      free-to-move: '&a Můžete se volně pohybovat. '
+      name: Počáteční Bezpečnost
+      description: |-
+        &b Zabrání novým hráčům
+        &b v pohybu po dobu 1 minuty,
+        &b aby nespadli.
+      hint: "&c Pohyb zablokován kvůli bezpečnosti na [number] sekund!"
+      free-to-move: "&a Můžete se volně pohybovat. Buďte opatrní!"
     ONEBLOCK_BOSSBAR:
-      name: Boss Bar
-      description: |
-        &b Ukazuje stavový řádek
-        &b pro každou fázi.
+        name: Boss Bar
+        description: |-
+          &b Zobrazuje stavový panel
+          &b pro každou fázi.
+  ONEBLOCK_ACTIONBAR:
+    name: Action Bar
+    description: |-
+      &b Zobrazuje stav
+      &b pro každou fázi
+      &b v Action Baru.
 aoneblock:
   bossbar:
     title: Bloky zbývající

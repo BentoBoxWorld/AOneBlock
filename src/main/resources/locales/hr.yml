@@ -1,18 +1,31 @@
 protection:
   flags:
+    MAGIC_BLOCK:
+      name: Zaštita Magičnog Bloka
+      description: |-
+        &b Rang koji može razbiti
+        &b magični blok, ako
+        &b može razbiti blokove.
+      hint: "&c Vaš rang ne može razbiti magični blok!"
     START_SAFETY:
-      name: Pokretanje sigurnosti
-      description: |
+      name: Početna Sigurnost
+      description: |-
         &b Sprječava nove igrače
-        &b od kretanja u 1 minutu
-        &b Tako da ne padaju.
-      hint: '&c Kretanje je blokirano zbog sigurnosti za [number] više sekundi!'
-      free-to-move: '&a Slobodno se krećete. '
+        &b da se kreću 1 minutu
+        &b da ne padnu.
+      hint: "&c Kretanje je blokirano iz sigurnosnih razloga još [number] sekundi!"
+      free-to-move: "&a Slobodni ste za kretanje. Budite oprezni!"
     ONEBLOCK_BOSSBAR:
-      name: Boss bar
-      description: |
-        &b Prikazuje traku statusa
-        &b za svaku fazu.
+        name: Boss Traka
+        description: |-
+          &b Prikazuje statusnu traku
+          &b za svaku fazu.
+  ONEBLOCK_ACTIONBAR:
+    name: Traka Akcije
+    description: |-
+      &b Prikazuje status
+      &b za svaku fazu
+      &b u Traci Akcije.
 aoneblock:
   bossbar:
     title: Preostali blokovi
