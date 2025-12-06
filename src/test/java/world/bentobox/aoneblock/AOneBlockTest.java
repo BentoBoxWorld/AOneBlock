@@ -267,6 +267,7 @@ public class AOneBlockTest {
 	 */
 	@Test
 	public void testOnReload() {
+	    addon.onLoad();
 		addon.onEnable();
 		addon.onReload();
 		// Check that config.yml file has been saved
@@ -313,6 +314,7 @@ public class AOneBlockTest {
 	 */
 	@Test
 	public void testGetOneBlocksIsland() {
+	    addon.onLoad();
 		addon.onEnable();
 		@NonNull
 		OneBlockIslands i = addon.getOneBlocksIsland(island);

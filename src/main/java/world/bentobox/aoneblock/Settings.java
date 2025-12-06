@@ -37,59 +37,72 @@ public class Settings implements WorldSettings {
     /* Commands */
     @ConfigComment("Player command. What command users will run to access their island.")
     @ConfigComment("To define alias, just separate commands with white space.")
-    @ConfigEntry(path = "aoneblock.command.island", since = "1.3.0")
+    @ConfigEntry(path = "aoneblock.command.island") //, since = "1.3.0")
     private String playerCommandAliases = "ob oneblock";
 
     @ConfigComment("The admin command.")
     @ConfigComment("To define alias, just separate commands with white space.")
-    @ConfigEntry(path = "aoneblock.command.admin", since = "1.3.0")
+    @ConfigEntry(path = "aoneblock.command.admin") // , since = "1.3.0")
     private String adminCommandAliases = "oba obadmin";
 
     @ConfigComment("The default action for new player command call.")
     @ConfigComment("Sub-command of main player command that will be run on first player command call.")
     @ConfigComment("By default it is sub-command 'create'.")
-    @ConfigEntry(path = "aoneblock.command.new-player-action", since = "1.2.0")
+    @ConfigEntry(path = "aoneblock.command.new-player-action") // , since = "1.2.0")
     private String defaultNewPlayerAction = "create";
 
     @ConfigComment("The default action for player command.")
     @ConfigComment("Sub-command of main player command that will be run on each player command call.")
     @ConfigComment("By default it is sub-command 'go'.")
-    @ConfigEntry(path = "aoneblock.command.default-action", since = "1.2.0")
+    @ConfigEntry(path = "aoneblock.command.default-action") // , since = "1.2.0")
     private String defaultPlayerAction = "go";
 
     @ConfigComment("The command label that shows current phase progress.")
     @ConfigComment("By default it is 'count'.")
-    @ConfigEntry(path = "aoneblock.command.count-command", since = "1.10.0")
+    @ConfigEntry(path = "aoneblock.command.count-command") // , since = "1.10.0")
     private String countCommand = "count";
 
     @ConfigComment("The command label that opens phases GUI.")
     @ConfigComment("By default it is 'phases'.")
-    @ConfigEntry(path = "aoneblock.command.phases-command", since = "1.10.0")
+    @ConfigEntry(path = "aoneblock.command.phases-command") // , since = "1.10.0")
     private String phasesCommand = "phases";
 
     @ConfigComment("The command label that allows to change island phase.")
     @ConfigComment("By default it is 'setCount'.")
-    @ConfigEntry(path = "aoneblock.command.set-count-command", since = "1.10.0")
+    @ConfigEntry(path = "aoneblock.command.set-count-command") // , since = "1.10.0")
     private String setCountCommand = "setCount";
 
-    @ConfigComment("The command label that toggers the progress bar.")
+    @ConfigComment("Enables the bossbar and its command to show progress.")
+    @ConfigEntry(path = "aoneblock.command.bossbar", since = "1.21.2")
+    private boolean bossBar = true;
+    
+    @ConfigComment("The command label that toggles the progress bar.")
     @ConfigComment("By default it is 'bossbar'.")
-    @ConfigEntry(path = "aoneblock.command.bossbar-command", since = "1.19.0")
+    @ConfigEntry(path = "aoneblock.command.bossbar-command") // , since = "1.19.0")
     private String bossBarCommand = "bossbar";
+    
+    @ConfigComment("Enables the action bar and its command to show progress.")
+    @ConfigEntry(path = "aoneblock.command.actionbar", since = "1.21.2")
+    private boolean actionBar = true;
+    
+    @ConfigComment("The command label that toggles the action bar progress.")
+    @ConfigComment("By default it is 'actionbar'.")
+    @ConfigEntry(path = "aoneblock.command.actionbar-command", since = "1.21.2")
+    private String actionBarCommand = "actionbar";
 
     @ConfigComment("How long a player must wait until they can use the setCount command again. In minutes.")
     @ConfigComment("This is the command that is run from the phases panel.")
-    @ConfigEntry(path = "aoneblock.command.set-count-cooldown", since = "1.13.0")
+    @ConfigEntry(path = "aoneblock.command.set-count-cooldown") // , since = "1.13.0")
     private int setCountCooldown = 5;
 
     @ConfigComment("The command label that allows to check if magic block is present and respawns it if not.")
     @ConfigComment("By default it is 'respawnBlock check'.")
-    @ConfigEntry(path = "aoneblock.command.respawn-block-command", since = "1.10.0")
+    @ConfigEntry(path = "aoneblock.command.respawn-block-command") // , since = "1.10.0")
     private String respawnBlockCommand = "respawnBlock check";
 
     @ConfigComment("Placeholder customization")
     @ConfigComment("Symbol for the percentage completed scale bar")
-    @ConfigEntry(path = "aoneblock.placeholders.scale-symbol", since = "1.9.0")
+    @ConfigEntry(path = "aoneblock.placeholders.scale-symbol") // , since = "1.9.0")
     private String percentCompleteSymbol = "■";
 
     /*      WORLD       */
@@ -150,21 +163,21 @@ public class Settings implements WorldSettings {
 
     @ConfigComment("Spawn limits. These override the limits set in bukkit.yml")
     @ConfigComment("If set to a negative number, the server defaults will be used")
-    @ConfigEntry(path = "world.spawn-limits.monsters", since = "1.11.2")
+    @ConfigEntry(path = "world.spawn-limits.monsters") // , since = "1.11.2")
     private int spawnLimitMonsters = -1;
-    @ConfigEntry(path = "world.spawn-limits.animals", since = "1.11.2")
+    @ConfigEntry(path = "world.spawn-limits.animals") // , since = "1.11.2")
     private int spawnLimitAnimals = -1;
-    @ConfigEntry(path = "world.spawn-limits.water-animals", since = "1.11.2")
+    @ConfigEntry(path = "world.spawn-limits.water-animals") // , since = "1.11.2")
     private int spawnLimitWaterAnimals = -1;
-    @ConfigEntry(path = "world.spawn-limits.ambient", since = "1.11.2")
+    @ConfigEntry(path = "world.spawn-limits.ambient") // , since = "1.11.2")
     private int spawnLimitAmbient = -1;
     @ConfigComment("Setting to 0 will disable animal spawns, but this is not recommended. Minecraft default is 400.")
     @ConfigComment("A negative value uses the server default")
-    @ConfigEntry(path = "world.spawn-limits.ticks-per-animal-spawns", since = "1.11.2")
+    @ConfigEntry(path = "world.spawn-limits.ticks-per-animal-spawns") // , since = "1.11.2")
     private int ticksPerAnimalSpawns = -1;
     @ConfigComment("Setting to 0 will disable monster spawns, but this is not recommended. Minecraft default is 400.")
     @ConfigComment("A negative value uses the server default")
-    @ConfigEntry(path = "world.spawn-limits.ticks-per-monster-spawns", since = "1.11.2")
+    @ConfigEntry(path = "world.spawn-limits.ticks-per-monster-spawns") // , since = "1.11.2")
     private int ticksPerMonsterSpawns = -1;
 
     @ConfigComment("Radius of island in blocks. (So distance between islands is twice this)")
@@ -280,7 +293,7 @@ public class Settings implements WorldSettings {
     @ConfigComment("Option will simulate vanilla portal mechanics that links portals together")
     @ConfigComment("or creates a new portal, if there is not a portal in that dimension.")
     @ConfigComment("This option requires `allow-nether=true` in server.properties.")
-    @ConfigEntry(path = "world.nether.create-and-link-portals", since = "1.16")
+    @ConfigEntry(path = "world.nether.create-and-link-portals") // , since = "1.16")
     private boolean makeNetherPortals = false;
 
     // End
@@ -297,7 +310,7 @@ public class Settings implements WorldSettings {
     @ConfigComment("This option indicates if obsidian platform in the end should be generated")
     @ConfigComment("when player enters the end world.")
     @ConfigComment("This option requires `allow-end=true` in bukkit.yml.")
-    @ConfigEntry(path = "world.end.create-obsidian-platform", since = "1.16")
+    @ConfigEntry(path = "world.end.create-obsidian-platform") // , since = "1.16")
     private boolean makeEndPortals = false;
 
     @ConfigComment("Mob white list - these mobs will NOT be removed when logging in or doing /island")
@@ -327,7 +340,7 @@ public class Settings implements WorldSettings {
 
     @ConfigComment("These settings/flags are hidden from users")
     @ConfigComment("Ops can toggle hiding in-game using SHIFT-LEFT-CLICK on flags in settings")
-    @ConfigEntry(path = "world.hidden-flags", since = "1.4.1")
+    @ConfigEntry(path = "world.hidden-flags") // , since = "1.4.1")
     private List<String> hiddenFlags = new ArrayList<>();
 
     @ConfigComment("Visitor banned commands - Visitors to islands cannot use these commands in this world")
@@ -336,7 +349,7 @@ public class Settings implements WorldSettings {
 
     @ConfigComment("Falling banned commands - players cannot use these commands when falling")
     @ConfigComment("if the PREVENT_TELEPORT_WHEN_FALLING world setting flag is active")
-    @ConfigEntry(path = "world.falling-banned-commands", since = "1.8.0")
+    @ConfigEntry(path = "world.falling-banned-commands") // , since = "1.8.0")
     private List<String> fallingBannedCommands = new ArrayList<>();
 
     // ---------------------------------------------
@@ -344,7 +357,7 @@ public class Settings implements WorldSettings {
     /*      ISLAND      */
     @ConfigComment("Drop broken blocks on top of magic block")
     @ConfigComment("If you want Jobs or other plugins to recognize magic block breaking this must be false")
-    @ConfigEntry(path = "island.drop-on-top", since = "1.3.0")
+    @ConfigEntry(path = "island.drop-on-top") // , since = "1.3.0")
     private boolean dropOnTop = true;
 
     @ConfigComment("Magic block mob warning")
@@ -365,13 +378,13 @@ public class Settings implements WorldSettings {
     @ConfigComment("Default maximum number of coop rank members per island")
     @ConfigComment("Players can have the aoneblock.coop.maxsize.<number> permission to be bigger but")
     @ConfigComment("permission size cannot be less than the default below. ")
-    @ConfigEntry(path = "island.max-coop-size", since = "1.13.0")
+    @ConfigEntry(path = "island.max-coop-size") // , since = "1.13.0")
     private int maxCoopSize = 4;
 
     @ConfigComment("Default maximum number of trusted rank members per island")
     @ConfigComment("Players can have the aoneblock.trust.maxsize.<number> permission to be bigger but")
     @ConfigComment("permission size cannot be less than the default below. ")
-    @ConfigEntry(path = "island.max-trusted-size", since = "1.13.0")
+    @ConfigEntry(path = "island.max-trusted-size") // , since = "1.13.0")
     private int maxTrustSize = 4;
 
     @ConfigComment("Default maximum number of homes a player can have. Min = 1")
@@ -413,15 +426,15 @@ public class Settings implements WorldSettings {
     private boolean onJoinResetInventory = true;
 
     @ConfigComment("Reset health - if true, the player's health will be reset.")
-    @ConfigEntry(path = "island.reset.on-join.health", since = "1.8.0")
+    @ConfigEntry(path = "island.reset.on-join.health") // , since = "1.8.0")
     private boolean onJoinResetHealth = true;
 
     @ConfigComment("Reset hunger - if true, the player's hunger will be reset.")
-    @ConfigEntry(path = "island.reset.on-join.hunger", since = "1.8.0")
+    @ConfigEntry(path = "island.reset.on-join.hunger") // , since = "1.8.0")
     private boolean onJoinResetHunger = true;
 
     @ConfigComment("Reset experience points - if true, the player's experience will be reset.")
-    @ConfigEntry(path = "island.reset.on-join.exp", since = "1.8.0")
+    @ConfigEntry(path = "island.reset.on-join.exp") // , since = "1.8.0")
     private boolean onJoinResetXP = true;
 
 
@@ -443,15 +456,15 @@ public class Settings implements WorldSettings {
     private boolean onLeaveResetInventory = false;
 
     @ConfigComment("Reset health - if true, the player's health will be reset.")
-    @ConfigEntry(path = "island.reset.on-leave.health", since = "1.8.0")
+    @ConfigEntry(path = "island.reset.on-leave.health") // , since = "1.8.0")
     private boolean onLeaveResetHealth = false;
 
     @ConfigComment("Reset hunger - if true, the player's hunger will be reset.")
-    @ConfigEntry(path = "island.reset.on-leave.hunger", since = "1.8.0")
+    @ConfigEntry(path = "island.reset.on-leave.hunger") // , since = "1.8.0")
     private boolean onLeaveResetHunger = false;
 
     @ConfigComment("Reset experience - if true, the player's experience will be reset.")
-    @ConfigEntry(path = "island.reset.on-leave.exp", since = "1.8.0")
+    @ConfigEntry(path = "island.reset.on-leave.exp") // , since = "1.8.0")
     private boolean onLeaveResetXP = false;
 
     @ConfigComment("Reset Ender Chest - if true, the player's Ender Chest will be cleared.")
@@ -473,13 +486,13 @@ public class Settings implements WorldSettings {
     @ConfigComment("  * Island creation can be resource-intensive, please consider the options below to help mitigate")
     @ConfigComment("    the potential issues, especially if you expect a lot of players to connect to your server")
     @ConfigComment("    in a limited period of time.")
-    @ConfigEntry(path = "island.create-island-on-first-login.enable", since = "1.9.0")
+    @ConfigEntry(path = "island.create-island-on-first-login.enable") // , since = "1.9.0")
     private boolean createIslandOnFirstLoginEnabled;
 
     @ConfigComment("Time in seconds after the player logged in, before his island gets created.")
     @ConfigComment("If set to 0 or less, the island will be created directly upon the player's login.")
     @ConfigComment("It is recommended to keep this value under a minute's time.")
-    @ConfigEntry(path = "island.create-island-on-first-login.delay", since = "1.9.0")
+    @ConfigEntry(path = "island.create-island-on-first-login.delay") // , since = "1.9.0")
     private int createIslandOnFirstLoginDelay = 5;
 
     @ConfigComment("Toggles whether the island creation should be aborted if the player logged off while the")
@@ -492,19 +505,19 @@ public class Settings implements WorldSettings {
     @ConfigComment("  * If the island creation started before the player logged off, it will continue.")
     @ConfigComment("If set to false, the player's island will be created even if he went offline in the meantime.")
     @ConfigComment("Note this option has no effect if the delay (see the option above) is set to 0 or less.")
-    @ConfigEntry(path = "island.create-island-on-first-login.abort-on-logout", since = "1.9.0")
+    @ConfigEntry(path = "island.create-island-on-first-login.abort-on-logout") // , since = "1.9.0")
     private boolean createIslandOnFirstLoginAbortOnLogout = true;
 
     @ConfigComment("Toggles whether the player should be teleported automatically to his island when it is created.")
     @ConfigComment("If set to false, the player will be told his island is ready but will have to teleport to his island using the command.")
-    @ConfigEntry(path = "island.teleport-player-to-island-when-created", since = "1.10.0")
+    @ConfigEntry(path = "island.teleport-player-to-island-when-created") // , since = "1.10.0")
     private boolean teleportPlayerToIslandUponIslandCreation = true;
 
     @ConfigComment("Create Nether or End islands if they are missing when a player goes through a portal.")
     @ConfigComment("Nether and End islands are usually pasted when a player makes their island, but if they are")
     @ConfigComment("missing for some reason, you can switch this on.")
     @ConfigComment("Note that bedrock removal glitches can exploit this option.")
-    @ConfigEntry(path = "island.create-missing-nether-end-islands", since = "1.10.0")
+    @ConfigEntry(path = "island.create-missing-nether-end-islands") // , since = "1.10.0")
     private boolean pasteMissingIslands = false;
 
     // Commands
@@ -518,7 +531,7 @@ public class Settings implements WorldSettings {
     @ConfigComment("Here are some examples of valid commands to execute:")
     @ConfigComment("   * \"[SUDO] bbox version\"")
     @ConfigComment("   * \"obadmin deaths set [player] 0\"")
-    @ConfigEntry(path = "island.commands.on-join", since = "1.8.0")
+    @ConfigEntry(path = "island.commands.on-join") // , since = "1.8.0")
     private List<String> onJoinCommands = new ArrayList<>();
 
     @ConfigComment("List of commands to run when a player leaves an island, resets his island or gets kicked from it.")
@@ -533,7 +546,7 @@ public class Settings implements WorldSettings {
     @ConfigComment("   * 'obadmin deaths set [player] 0'")
     @ConfigComment("")
     @ConfigComment("Note that player-executed commands might not work, as these commands can be run with said player being offline.")
-    @ConfigEntry(path = "island.commands.on-leave", since = "1.8.0")
+    @ConfigEntry(path = "island.commands.on-leave") // , since = "1.8.0")
     private List<String> onLeaveCommands = new ArrayList<>();
 
     @ConfigComment("List of commands that should be executed when the player respawns after death if Flags.ISLAND_RESPAWN is true.")
@@ -548,7 +561,7 @@ public class Settings implements WorldSettings {
     @ConfigComment("   * 'obadmin deaths set [player] 0'")
     @ConfigComment("")
     @ConfigComment("Note that player-executed commands might not work, as these commands can be run with said player being offline.")
-    @ConfigEntry(path = "island.commands.on-respawn", since = "1.14.0")
+    @ConfigEntry(path = "island.commands.on-respawn") // , since = "1.14.0")
     private List<String> onRespawnCommands = new ArrayList<>();
 
     // Sethome
@@ -578,7 +591,7 @@ public class Settings implements WorldSettings {
     private boolean teamJoinDeathReset = true;
 
     @ConfigComment("Reset player death count when they start a new island or reset an island")
-    @ConfigEntry(path = "island.deaths.reset-on-new-island", since = "1.6.0")
+    @ConfigEntry(path = "island.deaths.reset-on-new-island") // , since = "1.6.0")
     private boolean deathsResetOnNewIsland = true;
 
     // ---------------------------------------------
@@ -591,7 +604,7 @@ public class Settings implements WorldSettings {
 
     @ConfigComment("AOneBlock blocked mobs.")
     @ConfigComment("List of mobs that should not spawn in AOneBlock.")
-    @ConfigEntry(path = "protection.block-mobs", since = "1.2.0")
+    @ConfigEntry(path = "protection.block-mobs") // , since = "1.2.0")
     private List<String> mobLimitSettings = new ArrayList<>();
 
 
@@ -2250,6 +2263,48 @@ public class Settings implements WorldSettings {
      */
     public void setBossBarCommand(String bossBarCommand) {
         this.bossBarCommand = bossBarCommand;
+    }
+
+    /**
+     * @return the bossBar
+     */
+    public boolean isBossBar() {
+        return bossBar;
+    }
+
+    /**
+     * @param bossBar the bossBar to set
+     */
+    public void setBossBar(boolean bossBar) {
+        this.bossBar = bossBar;
+    }
+
+    /**
+     * @return the actionBar
+     */
+    public boolean isActionBar() {
+        return actionBar;
+    }
+
+    /**
+     * @param actionBar the actionBar to set
+     */
+    public void setActionBar(boolean actionBar) {
+        this.actionBar = actionBar;
+    }
+
+    /**
+     * @return the actionBarCommand
+     */
+    public String getActionBarCommand() {
+        return actionBarCommand;
+    }
+
+    /**
+     * @param actionBarCommand the actionBarCommand to set
+     */
+    public void setActionBarCommand(String actionBarCommand) {
+        this.actionBarCommand = actionBarCommand;
     }
 
 }
