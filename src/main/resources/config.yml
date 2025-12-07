@@ -9,39 +9,39 @@ aoneblock:
     admin: obadmin oneblockadmin oba
     # The default action for new player command call.
     # Sub-command of main player command that will be run on first player command call.
-    # By default it is sub-command 'create'.
+    # By default, it is sub-command 'create'.
     new-player-action: create
     # The default action for player command.
     # Sub-command of main player command that will be run on each player command call.
-    # By default it is sub-command 'go'.
+    # By default, it is sub-command 'go'.
     default-action: go
     # The command label that shows current phase progress.
-    # By default it is 'count'.
+    # By default, it is 'count'.
     count-command: count
     # The command label that opens phases GUI.
-    # By default it is 'phases'.
+    # By default, it is 'phases'.
     phases-command: phases
     # The command label that allows to change island phase.
-    # By default it is 'setCount'.
+    # By default, it is 'setCount'.
     set-count-command: setCount
     # Enables the bossbar and its command to show progress.
     # Added since 1.21.2.
     bossbar: true
     # The command label that toggles the progress bar.
-    # By default it is 'bossbar'.
+    # By default, it is 'bossbar'.
     bossbar-command: bossbar
     # Enables the action bar and its command to show progress.
     # Added since 1.21.2.
     actionbar: true
     # The command label that toggles the action bar progress.
-    # By default it is 'actionbar'.
+    # By default, it is 'actionbar'.
     # Added since 1.21.2.
     actionbar-command: actionbar
     # How long a player must wait until they can use the setCount command again. In minutes.
     # This is the command that is run from the phases panel.
     set-count-cooldown: 5
     # The command label that allows to check if magic block is present and respawns it if not.
-    # By default it is 'respawnBlock check'.
+    # By default, it is 'respawnBlock check'.
     respawn-block-command: respawnBlock check
   placeholders:
     # Placeholder customization
@@ -73,7 +73,7 @@ world:
     click-type: LEFT
     # Size of particles. Default is 0.5. Must be greater than 0.
     particle-size: 0.5
-    # Density of particles - Value from 0.1 to 1. Default is 0.65. Smaller values are more dense, higher are less.
+    # Density of particles - Value from 0.1 to 1. Default is 0.65. Smaller values are denser, higher are less.
     particle-density: 0.65
     # Color of particles
     particle-color:
@@ -132,7 +132,7 @@ world:
   # If used, you must specify the world name and generator in the bukkit.yml file.
   # See https://bukkit.gamepedia.com/Bukkit.yml#.2AOPTIONAL.2A_worlds
   use-own-generator: false
-  # Sea height (don't changes this mid-game unless you delete the world)
+  # Sea height (don't change this mid-game unless you delete the world)
   # Minimum is 0
   # If sea height is less than about 10, then players will drop right through it
   # if it exists.
@@ -159,7 +159,7 @@ world:
     # the nether will not occur. Other plugins may still enable portal usage.
     # Note: Some default challenges will not be possible if there is no nether.
     # Note that with a standard nether all players arrive at the same portal and entering a
-    # portal will return them back to their islands.
+    # portal will return them to their islands.
     generate: true
     # Islands in Nether. Change to false for standard vanilla nether.
     # Note that there is currently no magic block in the Nether
@@ -226,7 +226,7 @@ world:
     ITEM_FRAME_DAMAGE: false
     SPAWNER_SPAWN_EGGS: true
   # These are the default protection settings for new islands.
-  # The value is the minimum island rank required allowed to do the action
+  # The value is the minimum island rank required to do the action
   # Ranks are the following:
   #   VISITOR   = 0
   #   COOP      = 200
@@ -448,7 +448,7 @@ island:
     # Warning:
     #   * If you are running multiple gamemodes on your server, and all of them have
     #     this feature enabled, an island in all the gamemodes will be created simultaneously.
-    #     However, it is impossible to know on which island the player will be teleported to afterwards.
+    #     However, it is impossible to know on which island the player will be teleported to afterward.
     #   * Island creation can be resource-intensive, please consider the options below to help mitigate
     #     the potential issues, especially if you expect a lot of players to connect to your server
     #     in a limited period of time.

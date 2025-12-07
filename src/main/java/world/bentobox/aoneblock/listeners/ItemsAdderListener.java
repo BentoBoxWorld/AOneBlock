@@ -7,7 +7,7 @@ import dev.lone.itemsadder.api.Events.ItemsAdderLoadDataEvent;
 import world.bentobox.aoneblock.AOneBlock;
 
 /**
- * Handles ItemsAdderLoadDataEvent which fired when ItemsAdder loaded it's data or reload it's data
+ * Handles ItemsAdderLoadDataEvent which fired when ItemsAdder loaded its data or reload its data
  *
  * @author Teenkung123
  */

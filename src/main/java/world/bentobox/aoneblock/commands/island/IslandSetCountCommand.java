@@ -67,11 +67,11 @@ public class IslandSetCountCommand extends CompositeCommand {
         }
         // Get value
         // Get new range
-        if (!Util.isInteger(args.get(0), true) || Integer.parseInt(args.get(0)) < 0) {
-            user.sendMessage("general.errors.must-be-positive-number", TextVariables.NUMBER, args.get(0));
+        if (!Util.isInteger(args.getFirst(), true) || Integer.parseInt(args.getFirst()) < 0) {
+            user.sendMessage("general.errors.must-be-positive-number", TextVariables.NUMBER, args.getFirst());
             return false;
         }
-        int count = Integer.parseInt(args.get(0));
+        int count = Integer.parseInt(args.getFirst());
         // Check the value is lower than played so far
         @NonNull
         OneBlockIslands i = addon.getBlockListener().getIsland(island);

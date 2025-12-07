@@ -105,7 +105,7 @@ public class BlockProtectTest extends CommonTestSetup {
     }
 
     /**
-     * Test method for {@link world.bentobox.aoneblock.listeners.BlockProtect#onBlockDamage(org.bukkit.event.block.BlockDamageEvent)}.
+     * Test method for {@link world.bentobox.aoneblock.listeners.BlockProtect#onBlockDamage(PlayerInteractEvent)}.
      */
     @Test
     public void testOnBlockDamage() {
@@ -120,7 +120,7 @@ public class BlockProtectTest extends CommonTestSetup {
     }
     
     /**
-     * Test method for {@link world.bentobox.aoneblock.listeners.BlockProtect#onBlockDamage(org.bukkit.event.block.BlockDamageEvent)}.
+     * Test method for {@link world.bentobox.aoneblock.listeners.BlockProtect#onBlockDamage(PlayerInteractEvent)}.
      */
     @Test
     public void testOnBlockDamageWrongWorld() {
@@ -135,7 +135,7 @@ public class BlockProtectTest extends CommonTestSetup {
     }
     
     /**
-     * Test method for {@link world.bentobox.aoneblock.listeners.BlockProtect#onBlockDamage(org.bukkit.event.block.BlockDamageEvent)}.
+     * Test method for {@link world.bentobox.aoneblock.listeners.BlockProtect#onBlockDamage(PlayerInteractEvent)}.
      */
     @Test
     public void testOnBlockDamageNotCenterMagicBlock() {

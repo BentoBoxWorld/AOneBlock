@@ -79,7 +79,7 @@ public class AOneBlock extends GameModeAddon {
             .defaultSetting(false)
             .build();
     /** The listener for the boss bar */
-    private BossBarListener bossBar = new BossBarListener(this);
+    private final BossBarListener bossBar = new BossBarListener(this);
     /**
      * Flag to enable or disable the OneBlock boss bar.
      */

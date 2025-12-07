@@ -716,7 +716,7 @@ public class BlockListener extends FlagListener implements Listener {
             return;
         }
 
-        if (block != null && block.getBlockData() instanceof Brushable bb) {
+        if (block.getBlockData() instanceof Brushable bb) {
             int dusted = bb.getDusted() + 1;
             if (dusted > bb.getMaximumDusted()) {
                 /// === Brushing is FINISHED! ===

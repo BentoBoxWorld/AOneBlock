@@ -54,7 +54,6 @@ public class CheckPhaseTest extends CommonTestSetup {
     private OneBlocksManager obm;
     private Island island;
     private CheckPhase bl;
-    private User user;
     @Mock
     private PlaceholdersManager phm;
     @Mock
@@ -87,7 +86,7 @@ public class CheckPhaseTest extends CommonTestSetup {
         when(mockPlayer.isOnline()).thenReturn(true);
         when(mockPlayer.getWorld()).thenReturn(world);
         User.setPlugin(plugin);
-        user = User.getInstance(mockPlayer);
+        User user = User.getInstance(mockPlayer);
 
         // Island
         island = new Island();

@@ -428,7 +428,7 @@ public class PhasesPanel
         int wrapAt = 50; // Set default value
         try {
             // Attempt to parse the value from getTranslation
-            wrapAt = Integer.valueOf(user.getTranslation(REFERENCE + "wrap-at"));
+            wrapAt = Integer.parseInt(user.getTranslation(REFERENCE + "wrap-at"));
 
         } catch (NumberFormatException e) {
             // If parsing fails, keep default value of 40
@@ -574,7 +574,7 @@ public class PhasesPanel
                 breakPoint = index + interval; // In case there are no spaces, break at exact interval
             }
 
-            result.append(input.substring(index, breakPoint)).append('\n');
+            result.append(input, index, breakPoint).append('\n');
             if (lastAmpIndex >= 0) {
                 // Append color code
                 result.append(ChatColor.COLOR_CHAR);
