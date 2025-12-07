@@ -19,11 +19,11 @@ import world.bentobox.aoneblock.dataobjects.OneBlockIslands;
 import world.bentobox.aoneblock.generators.ChunkGeneratorWorld;
 import world.bentobox.aoneblock.listeners.BlockListener;
 import world.bentobox.aoneblock.listeners.BlockProtect;
+import world.bentobox.aoneblock.listeners.BossBarListener;
 import world.bentobox.aoneblock.listeners.HoloListener;
 import world.bentobox.aoneblock.listeners.InfoListener;
 import world.bentobox.aoneblock.listeners.ItemsAdderListener;
 import world.bentobox.aoneblock.listeners.JoinLeaveListener;
-import world.bentobox.aoneblock.listeners.BossBarListener;
 import world.bentobox.aoneblock.listeners.NoBlockHandler;
 import world.bentobox.aoneblock.listeners.StartSafetyListener;
 import world.bentobox.aoneblock.oneblocks.OneBlockCustomBlockCreator;
@@ -79,7 +79,7 @@ public class AOneBlock extends GameModeAddon {
             .defaultSetting(false)
             .build();
     /** The listener for the boss bar */
-    private BossBarListener bossBar = new BossBarListener(this);
+    private final BossBarListener bossBar = new BossBarListener(this);
     /**
      * Flag to enable or disable the OneBlock boss bar.
      */
@@ -130,7 +130,13 @@ public class AOneBlock extends GameModeAddon {
             // Register protection flag with BentoBox
             getPlugin().getFlagsManager().registerFlag(this, START_SAFETY);
             // Bossbar
-            getPlugin().getFlagsManager().registerFlag(this, this.ONEBLOCK_BOSSBAR);
+            if (getSettings().isBossBar()) {
+                getPlugin().getFlagsManager().registerFlag(this, this.ONEBLOCK_BOSSBAR);
+            }
+            // Actionbar
+            if (getSettings().isActionBar()) {
+                getPlugin().getFlagsManager().registerFlag(this, this.ONEBLOCK_ACTIONBAR);
+            }
             // Magic Block protection
             getPlugin().getFlagsManager().registerFlag(this, this.MAGIC_BLOCK);
         }
@@ -171,7 +177,9 @@ public class AOneBlock extends GameModeAddon {
         registerListener(new BlockProtect(this));
         registerListener(new JoinLeaveListener(this));
         registerListener(new InfoListener(this));
-        registerListener(bossBar);
+        if (getSettings().isBossBar() && getSettings().isActionBar()) {
+            registerListener(bossBar);
+        }
         // Register placeholders
         phManager = new AOneBlockPlaceholders(this, getPlugin().getPlaceholdersManager());
 

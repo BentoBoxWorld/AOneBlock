@@ -1,10 +1,9 @@
 package world.bentobox.aoneblock.listeners;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -13,101 +12,55 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.UUID;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Difficulty;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
-import org.bukkit.World;
 import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerMoveEvent;
-import org.bukkit.scheduler.BukkitScheduler;
 import org.eclipse.jdt.annotation.NonNull;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.stubbing.Answer;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
-import org.powermock.reflect.Whitebox;
 
 import world.bentobox.aoneblock.AOneBlock;
+import world.bentobox.aoneblock.CommonTestSetup;
 import world.bentobox.aoneblock.Settings;
-import world.bentobox.bentobox.BentoBox;
 import world.bentobox.bentobox.api.configuration.WorldSettings;
 import world.bentobox.bentobox.api.events.island.IslandCreatedEvent;
 import world.bentobox.bentobox.api.events.island.IslandResetEvent;
 import world.bentobox.bentobox.api.flags.Flag;
-import world.bentobox.bentobox.api.user.Notifier;
 import world.bentobox.bentobox.api.user.User;
-import world.bentobox.bentobox.database.objects.Island;
-import world.bentobox.bentobox.managers.IslandWorldManager;
-import world.bentobox.bentobox.managers.LocalesManager;
-import world.bentobox.bentobox.managers.PlaceholdersManager;
 
 /**
  * @author tastybento
  */
-@RunWith(PowerMockRunner.class)
-@PrepareForTest({ Bukkit.class, BentoBox.class })
-public class StartSafetyListenerTest {
+public class StartSafetyListenerTest extends CommonTestSetup {
 
-    private AOneBlock addon;
     private StartSafetyListener ssl;
-    @Mock
-    private Island island;
-    private UUID uuid = UUID.randomUUID();
-    @Mock
-    private Location location;
     @Mock
     private Location location2;
     @Mock
-    private World world;
-    @Mock
-    private BentoBox plugin;
-    @Mock
-    private IslandWorldManager iwm;
-    @Mock
     private Flag flag;
 
-    private @NonNull WSettings ws = new WSettings();
-    @Mock
-    private BukkitScheduler scheduler;
-    @Mock
-    private Player player;
-    @Mock
-    private LocalesManager lm;
-    @Mock
-    private PlaceholdersManager phm;
-    @Mock
-    private Notifier notifier;
-
+    private final @NonNull WSettings ws = new WSettings();
     /**
      * @throws java.lang.Exception
      */
-    @Before
+    @Override
+    @BeforeEach
     public void setUp() throws Exception {
+        super.setUp();
 
-        PowerMockito.mockStatic(Bukkit.class, Mockito.RETURNS_MOCKS);
-        when(Bukkit.getScheduler()).thenReturn(scheduler);
-
-        // Set up plugin
-        Whitebox.setInternalState(BentoBox.class, "instance", plugin);
-
-        addon = new AOneBlock();
+        AOneBlock addon = new AOneBlock();
         addon.setIslandWorld(world);
         addon.setSettings(new Settings());
 
         // Player
-        when(player.getUniqueId()).thenReturn(uuid);
-        when(player.getWorld()).thenReturn(world);
-        User.getInstance(player);
+        when(mockPlayer.getUniqueId()).thenReturn(uuid);
+        when(mockPlayer.getWorld()).thenReturn(world);
+        User.getInstance(mockPlayer);
 
         when(world.getName()).thenReturn("world");
 
@@ -115,22 +68,11 @@ public class StartSafetyListenerTest {
 
         when(iwm.inWorld(world)).thenReturn(true);
         when(iwm.getWorldSettings(world)).thenReturn(ws);
-        when(plugin.getIWM()).thenReturn(iwm);
 
         when(location.getWorld()).thenReturn(world);
         when(location2.getWorld()).thenReturn(world);
         when(island.getWorld()).thenReturn(world);
         when(island.getCenter()).thenReturn(location);
-
-        when(plugin.getNotifier()).thenReturn(notifier);
-
-        // Placeholders
-        when(phm.replacePlaceholders(any(), anyString()))
-                .thenAnswer((Answer<String>) invocation -> invocation.getArgument(1, String.class));
-
-        // BentoBox
-        when(plugin.getLocalesManager()).thenReturn(lm);
-        when(plugin.getPlaceholdersManager()).thenReturn(phm);
 
         when(location2.getX()).thenReturn(0.5D);
 
@@ -142,9 +84,10 @@ public class StartSafetyListenerTest {
     /**
      * @throws java.lang.Exception
      */
-    @After
+    @Override
+    @AfterEach
     public void tearDown() throws Exception {
-        User.clearUsers();
+        super.tearDown();
     }
 
     /**
@@ -162,7 +105,7 @@ public class StartSafetyListenerTest {
     public void testOnNewIsland() {
         IslandCreatedEvent e = new IslandCreatedEvent(island, uuid, false, location);
         ssl.onNewIsland(e);
-        verify(scheduler).runTaskLater(eq(plugin), any(Runnable.class), anyLong());
+        verify(sch).runTaskLater(eq(plugin), any(Runnable.class), anyLong());
     }
 
     /**
@@ -172,7 +115,7 @@ public class StartSafetyListenerTest {
     public void testOnResetIsland() {
         IslandResetEvent e = new IslandResetEvent(island, uuid, false, location, null, island);
         ssl.onResetIsland(e);
-        verify(scheduler).runTaskLater(eq(plugin), any(Runnable.class), anyLong());
+        verify(sch).runTaskLater(eq(plugin), any(Runnable.class), anyLong());
 
     }
 
@@ -182,18 +125,18 @@ public class StartSafetyListenerTest {
     @Test
     public void testOnPlayerMove() {
         testOnResetIsland();
-        PlayerMoveEvent e = new PlayerMoveEvent(player, location, location2);
+        PlayerMoveEvent e = new PlayerMoveEvent(mockPlayer, location, location2);
         ssl.onPlayerMove(e);
         // No movement
         assertEquals(0D, e.getTo().getX(), 0D);
         assertEquals(0D, e.getTo().getZ(), 0D);
-        verify(player).isSneaking();
+        verify(mockPlayer).isSneaking();
 
     }
 
     class WSettings implements WorldSettings {
 
-        private Map<String, Boolean> flags = new HashMap<>();
+        private final Map<String, Boolean> flags = new HashMap<>();
 
         @Override
         public GameMode getDefaultGameMode() {

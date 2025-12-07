@@ -1,8 +1,8 @@
 package world.bentobox.aoneblock.listeners;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyDouble;
 import static org.mockito.ArgumentMatchers.anyInt;
@@ -20,14 +20,12 @@ import java.util.Optional;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Particle;
-import org.bukkit.Server;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockPistonExtendEvent;
 import org.bukkit.event.block.BlockPistonRetractEvent;
@@ -36,51 +34,36 @@ import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.EntitySpawnEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockbukkit.mockbukkit.MockBukkit;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
-import org.powermock.modules.junit4.PowerMockRunner;
 
 import world.bentobox.aoneblock.AOneBlock;
+import world.bentobox.aoneblock.CommonTestSetup;
 import world.bentobox.aoneblock.Settings;
-import world.bentobox.bentobox.database.objects.Island;
-import world.bentobox.bentobox.managers.IslandsManager;
 
 /**
  * @author tastybento
  *
  */
-@RunWith(PowerMockRunner.class)
-public class BlockProtectTest {
+public class BlockProtectTest extends CommonTestSetup {
     
     private BlockProtect bp;
     @Mock
     AOneBlock addon;
     @Mock
-    private Player p;
-    @Mock
     private Block block;
-    @Mock
-    private World world;
-    @Mock
-    private Location location;
-    @Mock
-    private IslandsManager im;
-    @Mock
-    private Island island;
 
     /**
      * @throws java.lang.Exception
      */
-    @Before
+    @Override
+    @BeforeEach
     public void setUp() throws Exception {
-        
-        Server server = MockBukkit.mock();
-
-        when(p.getWorld()).thenReturn(world);
+        super.setUp();
+ 
+        when(mockPlayer.getWorld()).thenReturn(world);
         // In World
         when(addon.inWorld(world)).thenReturn(true);
         
@@ -107,9 +90,10 @@ public class BlockProtectTest {
     /**
      * @throws java.lang.Exception
      */
-    @After
+    @Override
+    @AfterEach
     public void tearDown() throws Exception {
-        MockBukkit.unmock();
+        super.tearDown();
     }
 
     /**
@@ -121,12 +105,12 @@ public class BlockProtectTest {
     }
 
     /**
-     * Test method for {@link world.bentobox.aoneblock.listeners.BlockProtect#onBlockDamage(org.bukkit.event.block.BlockDamageEvent)}.
+     * Test method for {@link world.bentobox.aoneblock.listeners.BlockProtect#onBlockDamage(PlayerInteractEvent)}.
      */
     @Test
     public void testOnBlockDamage() {
         ItemStack item = new ItemStack(Material.DIAMOND_PICKAXE);
-        PlayerInteractEvent blockDamageEvent = new PlayerInteractEvent(p, Action.LEFT_CLICK_BLOCK, item, block,
+        PlayerInteractEvent blockDamageEvent = new PlayerInteractEvent(mockPlayer, Action.LEFT_CLICK_BLOCK, item, block,
                 BlockFace.UP);
         bp.onBlockDamage(blockDamageEvent);
         verify(addon).inWorld(world);
@@ -136,13 +120,13 @@ public class BlockProtectTest {
     }
     
     /**
-     * Test method for {@link world.bentobox.aoneblock.listeners.BlockProtect#onBlockDamage(org.bukkit.event.block.BlockDamageEvent)}.
+     * Test method for {@link world.bentobox.aoneblock.listeners.BlockProtect#onBlockDamage(PlayerInteractEvent)}.
      */
     @Test
     public void testOnBlockDamageWrongWorld() {
-        when(p.getWorld()).thenReturn(mock(World.class));
+        when(mockPlayer.getWorld()).thenReturn(mock(World.class));
         ItemStack item = new ItemStack(Material.DIAMOND_PICKAXE);
-        PlayerInteractEvent blockDamageEvent = new PlayerInteractEvent(p, Action.LEFT_CLICK_BLOCK, item, block,
+        PlayerInteractEvent blockDamageEvent = new PlayerInteractEvent(mockPlayer, Action.LEFT_CLICK_BLOCK, item, block,
                 BlockFace.UP);
         bp.onBlockDamage(blockDamageEvent);
         verify(im, never()).getIslandAt(location);
@@ -151,13 +135,13 @@ public class BlockProtectTest {
     }
     
     /**
-     * Test method for {@link world.bentobox.aoneblock.listeners.BlockProtect#onBlockDamage(org.bukkit.event.block.BlockDamageEvent)}.
+     * Test method for {@link world.bentobox.aoneblock.listeners.BlockProtect#onBlockDamage(PlayerInteractEvent)}.
      */
     @Test
     public void testOnBlockDamageNotCenterMagicBlock() {
         when(block.getLocation()).thenReturn(mock(Location.class));
         ItemStack item = new ItemStack(Material.DIAMOND_PICKAXE);
-        PlayerInteractEvent blockDamageEvent = new PlayerInteractEvent(p, Action.LEFT_CLICK_BLOCK, item, block,
+        PlayerInteractEvent blockDamageEvent = new PlayerInteractEvent(mockPlayer, Action.LEFT_CLICK_BLOCK, item, block,
                 BlockFace.UP);
         bp.onBlockDamage(blockDamageEvent);
         verify(addon).inWorld(world);
@@ -172,7 +156,7 @@ public class BlockProtectTest {
     @Test
     public void testOnBlockChange() {
         BlockData blockData = mock(BlockData.class);
-        EntityChangeBlockEvent event = new EntityChangeBlockEvent(p, block, blockData);
+        EntityChangeBlockEvent event = new EntityChangeBlockEvent(mockPlayer, block, blockData);
         bp.onBlockChange(event);
         assertTrue(event.isCancelled());
     }
@@ -184,7 +168,7 @@ public class BlockProtectTest {
     public void testOnBlockChangeWrongWorld() {
         when(block.getWorld()).thenReturn(mock(World.class));
         BlockData blockData = mock(BlockData.class);
-        EntityChangeBlockEvent event = new EntityChangeBlockEvent(p, block, blockData);
+        EntityChangeBlockEvent event = new EntityChangeBlockEvent(mockPlayer, block, blockData);
         bp.onBlockChange(event);
         assertFalse(event.isCancelled());
     }
@@ -196,7 +180,7 @@ public class BlockProtectTest {
     public void testOnBlockChangeNotMagicBlock() {
         when(block.getLocation()).thenReturn(mock(Location.class));
         BlockData blockData = mock(BlockData.class);
-        EntityChangeBlockEvent event = new EntityChangeBlockEvent(p, block, blockData);
+        EntityChangeBlockEvent event = new EntityChangeBlockEvent(mockPlayer, block, blockData);
         bp.onBlockChange(event);
         assertFalse(event.isCancelled());
     }
@@ -207,7 +191,7 @@ public class BlockProtectTest {
     @Test
     public void testOnExplosion() {
         List<Block> blocks = new ArrayList<>();
-        EntityExplodeEvent event = new EntityExplodeEvent(p, location, blocks, 0, null);
+        EntityExplodeEvent event = new EntityExplodeEvent(mockPlayer, location, blocks, 0, null);
         bp.onExplosion(event);
         assertTrue(blocks.isEmpty());
         // Add the magic block
@@ -230,14 +214,14 @@ public class BlockProtectTest {
     public void testOnExplosionWrongWorld() {
         when(location.getWorld()).thenReturn(mock(World.class));
         List<Block> blocks = new ArrayList<>();
-        EntityExplodeEvent event = new EntityExplodeEvent(p, location, blocks, 0, null);
+        EntityExplodeEvent event = new EntityExplodeEvent(mockPlayer, location, blocks, 0, null);
         blocks.add(block);
         // Block as correct location, but wrong world
         bp.onExplosion(event);
         assertFalse(blocks.isEmpty());
         // Normal blocks remain
         blocks.add(mock(Block.class));
-        event = new EntityExplodeEvent(p, location, blocks, 0, null);
+        event = new EntityExplodeEvent(mockPlayer, location, blocks, 0, null);
         bp.onExplosion(event);
         assertFalse(blocks.isEmpty());
     }

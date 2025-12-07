@@ -1,92 +1,63 @@
 package world.bentobox.aoneblock.listeners;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import java.beans.IntrospectionException;
 import java.io.File;
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.Comparator;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockFromToEvent;
 import org.eclipse.jdt.annotation.NonNull;
-import org.eclipse.jdt.annotation.Nullable;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
+import org.mockito.MockedStatic;
 import org.mockito.Mockito;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
-import org.powermock.reflect.Whitebox;
 
 import world.bentobox.aoneblock.AOneBlock;
+import world.bentobox.aoneblock.CommonTestSetup;
 import world.bentobox.aoneblock.dataobjects.OneBlockIslands;
 import world.bentobox.aoneblock.oneblocks.OneBlockPhase;
 import world.bentobox.aoneblock.oneblocks.OneBlocksManager;
 import world.bentobox.bank.Bank;
 import world.bentobox.bank.BankManager;
 import world.bentobox.bank.data.Money;
-import world.bentobox.bentobox.BentoBox;
 import world.bentobox.bentobox.Settings;
 import world.bentobox.bentobox.api.user.User;
 import world.bentobox.bentobox.database.AbstractDatabaseHandler;
 import world.bentobox.bentobox.database.DatabaseSetup;
-import world.bentobox.bentobox.database.DatabaseSetup.DatabaseType;
 import world.bentobox.bentobox.database.objects.Island;
-import world.bentobox.bentobox.managers.IslandsManager;
 import world.bentobox.bentobox.managers.PlayersManager;
-import world.bentobox.bentobox.util.Util;
 import world.bentobox.level.Level;
 
 /**
  * @author tastybento
  *
  */
-@RunWith(PowerMockRunner.class)
-@PrepareForTest({Bukkit.class, BentoBox.class, DatabaseSetup.class, Util.class})
-public class BlockListenerTest {
+public class BlockListenerTest extends CommonTestSetup {
 
     // Class under test
     private BlockListener bl;
 
     @Mock
-    BentoBox plugin;
-    @Mock
     AOneBlock addon;
-    private static AbstractDatabaseHandler<Object> h;
     @Mock
     private Settings pluginSettings;
 
-    private User user;
-    @Mock
-    private World world;
     @Mock
     private OneBlocksManager obm;
 
     private Island island;
-
-    @Mock
-    private @Nullable Player player;
 
     @Mock
     private PlayersManager pm;
@@ -94,42 +65,26 @@ public class BlockListenerTest {
     private Bank bank;
     @Mock
     private Level level;
-    @Mock
-    private Location location;
-    @Mock
-    private IslandsManager im;
 
     private @NonNull OneBlockIslands is;
 
     private @NonNull OneBlockPhase phase;
 
-    @SuppressWarnings("unchecked")
-    @BeforeClass
-    public static void beforeClass() throws IllegalAccessException, InvocationTargetException, IntrospectionException {
-        // This has to be done beforeClass otherwise the tests will interfere with each other
-        h = mock(AbstractDatabaseHandler.class);
-        // Database
-        PowerMockito.mockStatic(DatabaseSetup.class);
-        DatabaseSetup dbSetup = mock(DatabaseSetup.class);
-        when(DatabaseSetup.getDatabase()).thenReturn(dbSetup);
-        when(dbSetup.getHandler(any())).thenReturn(h);
-        when(h.saveObject(any())).thenReturn(CompletableFuture.completedFuture(true));
-    }
-
     /**
      * @throws java.lang.Exception
      */
-    @Before
+    @SuppressWarnings("unchecked")
+    @BeforeEach
     public void setUp() throws Exception {
-        tearDown();
-        // Set up plugin
-        Whitebox.setInternalState(BentoBox.class, "instance", plugin);
-
-        PowerMockito.mockStatic(Bukkit.class, Mockito.RETURNS_MOCKS);
-        // The database type has to be created one line before the thenReturn() to work!
-        DatabaseType value = DatabaseType.JSON;
-        when(plugin.getSettings()).thenReturn(pluginSettings);
-        when(pluginSettings.getDatabaseType()).thenReturn(value);
+        super.setUp();
+        // This has to be done beforeClass otherwise the tests will interfere with each other
+        AbstractDatabaseHandler<Object> h = mock(AbstractDatabaseHandler.class);
+        // Database
+        MockedStatic<DatabaseSetup> mockDb = Mockito.mockStatic(DatabaseSetup.class);
+        DatabaseSetup dbSetup = mock(DatabaseSetup.class);
+        mockDb.when(DatabaseSetup::getDatabase).thenReturn(dbSetup);
+        when(dbSetup.getHandler(any())).thenReturn(h);
+        when(h.saveObject(any())).thenReturn(CompletableFuture.completedFuture(true));
 
         // Addon
         when(addon.getPlugin()).thenReturn(plugin);
@@ -140,12 +95,12 @@ public class BlockListenerTest {
         when(addon.inWorld(world)).thenReturn(true);
 
         // Player
-        when(player.getUniqueId()).thenReturn(UUID.randomUUID());
-        when(player.getName()).thenReturn("tastybento");
-        when(player.isOnline()).thenReturn(true);
-        when(player.getWorld()).thenReturn(world);
+        when(mockPlayer.getUniqueId()).thenReturn(UUID.randomUUID());
+        when(mockPlayer.getName()).thenReturn("tastybento");
+        when(mockPlayer.isOnline()).thenReturn(true);
+        when(mockPlayer.getWorld()).thenReturn(world);
         User.setPlugin(plugin);
-        user = User.getInstance(player);
+        User user = User.getInstance(mockPlayer);
 
         // Island
         island = new Island();
@@ -176,20 +131,11 @@ public class BlockListenerTest {
     /**
      * @throws java.lang.Exception - exception
      */
-    @After
+    @Override
+    @AfterEach
     public void tearDown() throws Exception {
+        super.tearDown();
         deleteAll(new File("database"));
-        User.clearUsers();
-        Mockito.framework().clearInlineMocks();
-    }
-
-    private static void deleteAll(File file) throws IOException {
-        if (file.exists()) {
-            Files.walk(file.toPath())
-            .sorted(Comparator.reverseOrder())
-            .map(Path::toFile)
-            .forEach(File::delete);
-        }
     }
 
     /**

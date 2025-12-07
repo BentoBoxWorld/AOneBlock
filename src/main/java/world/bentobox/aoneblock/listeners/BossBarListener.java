@@ -18,7 +18,6 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.eclipse.jdt.annotation.NonNull;
 
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import world.bentobox.aoneblock.AOneBlock;
 import world.bentobox.aoneblock.dataobjects.OneBlockIslands;
@@ -33,7 +32,7 @@ import world.bentobox.bentobox.database.objects.Island;
 public class BossBarListener implements Listener {
 
     private static final String AONEBLOCK_BOSSBAR = "aoneblock.bossbar";
-    private static final String AONEBLOCK_ACTIONBAR = "aoneblock.actionbar";
+    public static final String AONEBLOCK_ACTIONBAR = "aoneblock.actionbar";
 
     private static final LegacyComponentSerializer LEGACY_SERIALIZER = LegacyComponentSerializer.builder()
             .character('&')
@@ -45,7 +44,7 @@ public class BossBarListener implements Listener {
         this.addon = addon;
     }
 
-    private AOneBlock addon;
+    private final AOneBlock addon;
 
     // Store a boss bar for each player (using their UUID)
     private final Map<Island, BossBar> islandBossBars = new HashMap<>();
@@ -98,11 +97,9 @@ public class BossBarListener implements Listener {
         if (!island.isAllowed(addon.ONEBLOCK_ACTIONBAR)) {
             return;
         }
-        // Default to showing boss bar unless it is explicitly turned off
+        // Default to showing action bar unless it is explicitly turned off
         if (!user.getMetaData(AONEBLOCK_ACTIONBAR).map(MetaDataValue::asBoolean).orElse(true)) {
-            // Remove any boss bar from user if they are in the world
-            removeBar(user, island);
-            // Do not show a boss bar
+            // Do not show an action bar
             return;
         }        
         // Get the progress
@@ -221,7 +218,7 @@ public class BossBarListener implements Listener {
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onQuit(PlayerQuitEvent e) {
         // Clean up boss bars
-        islandBossBars.values().stream().forEach(bb -> bb.removePlayer(e.getPlayer()));
+        islandBossBars.values().forEach(bb -> bb.removePlayer(e.getPlayer()));
         islandBossBars.values().removeIf(bb -> bb.getPlayers().isEmpty());
     }
 

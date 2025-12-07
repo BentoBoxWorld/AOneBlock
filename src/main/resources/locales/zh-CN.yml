@@ -1,18 +1,30 @@
 protection:
   flags:
+    MAGIC_BLOCK:
+      name: 魔法方块保护
+      description: |-
+        &b 如果玩家可以破坏方块，
+        &b 则该等级可以破坏
+        &b 魔法方块。
+      hint: "&c 您的等级无法破坏魔法方块！"
     START_SAFETY:
-      name: 开始安全
-      description: |
-        &b 防止新球员
-        &b 从移动1分钟
-        &b 所以他们不会掉下来。
-      hint: '&c 移动被阻塞，以确保[number]更多秒！'
-      free-to-move: '&a 您可以自由移动。'
+      name: 初始安全保护
+      description: |-
+        &b 阻止新玩家在1分钟内
+        &b 移动，以防他们跌落。
+      hint: "&c 出于安全考虑，移动已被阻止 [number] 秒！"
+      free-to-move: "&a 您可以自由移动了。请小心！"
     ONEBLOCK_BOSSBAR:
-      name: 老板酒吧
-      description: |
-        &b 显示状态栏
-        &b 对于每个阶段。
+        name: Boss 血条
+        description: |-
+          &b 为每个阶段
+          &b 显示一个状态条。
+  ONEBLOCK_ACTIONBAR:
+    name: 动作栏
+    description: |-
+      &b 在动作栏中
+      &b 显示每个阶段
+      &b 的状态。
 aoneblock:
   bossbar:
     title: 剩余的块

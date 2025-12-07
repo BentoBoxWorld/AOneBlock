@@ -572,7 +572,7 @@ public class OneBlocksManager {
     }
 
     /**
-     * Get phase by name. Name should have any spaces converted to underscores. Case
+     * Get phase by name. Name should have any spaces converted to underscores. Case-
      * insensitive.
      *
      * @param name - name to search
@@ -859,7 +859,7 @@ public class OneBlocksManager {
     }
 
     /**
-     * Get all the probs for each phases and log to console
+     * Get all the probs for each phase and log to console
      */
     public void getAllProbs() {
         blockProbs.values().forEach(this::getProbs);

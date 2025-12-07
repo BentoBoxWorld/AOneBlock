@@ -1,18 +1,31 @@
 protection:
   flags:
+    MAGIC_BLOCK:
+      name: Bảo Vệ Khối Ma Thuật
+      description: |-
+        &b Xếp hạng có thể phá
+        &b khối ma thuật nếu họ
+        &b có thể phá khối.
+      hint: "&c Xếp hạng của bạn không thể phá khối ma thuật!"
     START_SAFETY:
-      name: Khởi đầu an toàn
-      description: |
-        &b Ngăn chặn người chơi mới
-        &b Từ việc di chuyển trong 1 phút
-        &b Vì vậy, họ không rơi ra.
-      hint: '&c Chuyển động bị chặn để an toàn cho [number] thêm giây!'
-      free-to-move: '&a Bạn có thể tự do di chuyển. '
+      name: An Toàn Khởi Đầu
+      description: |-
+        &b Ngăn người chơi mới
+        &b di chuyển trong 1 phút
+        &b để họ không bị rơi.
+      hint: "&c Di chuyển bị chặn vì lý do an toàn trong [number] giây nữa!"
+      free-to-move: "&a Bạn được phép di chuyển tự do. Hãy cẩn thận!"
     ONEBLOCK_BOSSBAR:
-      name: Boss Bar
-      description: |
-        &b Hiển thị một thanh trạng thái
-        &b cho mỗi pha.
+        name: Thanh Boss
+        description: |-
+          &b Hiển thị thanh trạng thái
+          &b cho mỗi giai đoạn.
+  ONEBLOCK_ACTIONBAR:
+    name: Thanh Hành Động (Action Bar)
+    description: |-
+      &b Hiển thị trạng thái
+      &b cho mỗi giai đoạn
+      &b trên Thanh Hành Động.
 aoneblock:
   bossbar:
     title: Khối còn lại

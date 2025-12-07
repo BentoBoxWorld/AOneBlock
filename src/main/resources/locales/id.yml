@@ -1,18 +1,31 @@
 protection:
   flags:
+    MAGIC_BLOCK:
+      name: Perlindungan Blok Ajaib
+      description: |-
+        &b Pangkat yang dapat
+        &b menghancurkan blok ajaib
+        &b jika mereka dapat menghancurkan blok.
+      hint: "&c Pangkatmu tidak dapat menghancurkan blok ajaib!"
     START_SAFETY:
-      name: Mulai keamanan
-      description: |
+      name: Keamanan Awal
+      description: |-
         &b Mencegah pemain baru
-        &b dari bergerak selama 1 menit
-        &b Jadi mereka tidak jatuh.
-      hint: '&c Gerakan diblokir untuk keamanan selama [number] lebih banyak detik!'
-      free-to-move: '&a Anda bebas untuk pindah. '
+        &b bergerak selama 1 menit
+        &b agar mereka tidak jatuh.
+      hint: "&c Pergerakan diblokir untuk keselamatan selama [number] detik lagi!"
+      free-to-move: "&a Anda bebas bergerak. Hati-hati!"
     ONEBLOCK_BOSSBAR:
-      name: Bos Bar
-      description: |
-        &b Menunjukkan bilah status
-        &b untuk setiap fase.
+        name: Boss Bar
+        description: |-
+          &b Menampilkan bilah status
+          &b untuk setiap fase.
+  ONEBLOCK_ACTIONBAR:
+    name: Action Bar
+    description: |-
+      &b Menampilkan status
+      &b untuk setiap fase
+      &b di Action Bar.
 aoneblock:
   bossbar:
     title: Blok tersisa

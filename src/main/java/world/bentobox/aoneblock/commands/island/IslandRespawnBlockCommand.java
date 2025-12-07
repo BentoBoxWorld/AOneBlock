@@ -1,6 +1,7 @@
 package world.bentobox.aoneblock.commands.island;
 
 import java.util.List;
+import java.util.Objects;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -67,14 +68,10 @@ public class IslandRespawnBlockCommand extends CompositeCommand
     public boolean execute(User user, String label, List<String> args)
     {
         Island island = this.getIslands().getIsland(this.getWorld(), user);
-
-        if (island == null)
-        {
-            // Hmm, lost island so fast. Well, no, just idea null-pointer check bypass.
-            user.sendMessage("general.errors.no-island");
-        }
-        else if (Material.BEDROCK.equals(island.getCenter().getBlock().getType()) ||
-            Material.AIR.equals(island.getCenter().getBlock().getType()))
+        Objects.requireNonNull(island);
+        
+        if (island.getCenter().getBlock().getType() == Material.BEDROCK ||
+                island.getCenter().getBlock().getType() == Material.AIR)
         {
             // Trigger manual block break event.
             Bukkit.getServer().getPluginManager().callEvent(

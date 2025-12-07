@@ -1,18 +1,31 @@
 protection:
   flags:
+    MAGIC_BLOCK:
+      name: Proteção de Bloco Mágico
+      description: |-
+        &b Rank que pode quebrar o
+        &b bloco mágico se puder
+        &b quebrar blocos.
+      hint: "&c Seu rank não pode quebrar o bloco mágico!"
     START_SAFETY:
-      name: Segurança inicial
-      description: |
-        &b Impede novos jogadores
-        &b de se mudar por 1 minuto
-        &b Então eles não caem.
-      hint: '&c Movimento bloqueado por segurança por [número] mais segundos!'
-      free-to-move: '&a Você está livre para se mover. '
+      name: Segurança Inicial
+      description: |-
+        &b Impede que novos jogadores
+        &b se movam por 1 minuto
+        &b para que não caiam.
+      hint: "&c Movimento bloqueado por segurança por mais [number] segundos!"
+      free-to-move: "&a Você está livre para se mover. Tenha cuidado!"
     ONEBLOCK_BOSSBAR:
-      name: Boss Bar
-      description: |
-        &b Mostra uma barra de status
-        &b para cada fase.
+        name: Boss Bar
+        description: |-
+          &b Mostra uma barra de status
+          &b para cada fase.
+  ONEBLOCK_ACTIONBAR:
+    name: Action Bar
+    description: |-
+      &b Mostra um status
+      &b para cada fase
+      &b na Action Bar.
 aoneblock:
   bossbar:
     title: Bloqueia o restante

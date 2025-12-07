@@ -1,18 +1,31 @@
 protection:
   flags:
+    MAGIC_BLOCK:
+      name: 魔法ブロック保護
+      description: |-
+        &b ブロックを破壊できる場合、
+        &b 魔法ブロックを破壊できる
+        &b ランク。
+      hint: "&c あなたのランクでは魔法ブロックを破壊できません！"
     START_SAFETY:
-      name: 安全性の開始
-      description: |
-        &b 新しいプレイヤーを防ぎます
-        &b 1分間移動することから
-        &b だから彼らは落ちません。
-      hint: '&c [number]のために安全のために動きがブロックされました。'
-      free-to-move: '&a あなたは自由に動くことができます。'
+      name: 開始時の安全対策
+      description: |-
+        &b 新しいプレイヤーが
+        &b 1分間移動するのを防ぎ、
+        &b 落下を防ぎます。
+      hint: "&c 安全のため、あと [number] 秒間移動がブロックされています！"
+      free-to-move: "&a 自由に動けます。注意してください！"
     ONEBLOCK_BOSSBAR:
-      name: ボスバー
-      description: |
-        &b ステータスバーを表示します
-        &b 各フェーズについて。
+        name: ボスバー
+        description: |-
+          &b 各フェーズの
+          &b ステータスバーを表示します。
+  ONEBLOCK_ACTIONBAR:
+    name: アクションバー
+    description: |-
+      &b 各フェーズの
+      &b ステータスを
+      &b アクションバーに表示します。
 aoneblock:
   bossbar:
     title: 残りのブロック

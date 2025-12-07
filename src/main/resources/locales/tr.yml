@@ -1,17 +1,31 @@
 protection:
   flags:
+    MAGIC_BLOCK:
+      name: Büyülü Blok Koruması
+      description: |-
+        &b Blokları kırabilirlerse
+        &b büyülü bloğu kırabilecek
+        &b rütbe.
+      hint: "&c Rütbeniz büyülü bloğu kıramaz!"
     START_SAFETY:
-      name: Güvenli mod başlatılıyor
-      description: |
-        &b Yeni oyuncuları 1 dakika boyunca kıpırdamasını engeller
-        &b böylece aşağı düşmezler.
-      hint: '&c Haraketler [number] saniye daha güvenlik için engellenmiştir!'
-      free-to-move: '&a Artık kıpırdayabilirsin dikkatli ol!'
+      name: Başlangıç Güvenliği
+      description: |-
+        &b Yeni oyuncuların 1 dakika
+        &b boyunca hareket etmesini
+        &b engelleyerek düşmelerini önler.
+      hint: "&c Güvenlik için hareket [number] saniye daha engellendi!"
+      free-to-move: "&a Serbestçe hareket edebilirsiniz. Dikkatli olun!"
     ONEBLOCK_BOSSBAR:
-      name: Patron bar
-      description: |
-        &b Bir durum çubuğu gösterir
-        &b her aşama için.
+        name: Boss Çubuğu
+        description: |-
+          &b Her aşama için bir
+          &b durum çubuğu gösterir.
+  ONEBLOCK_ACTIONBAR:
+    name: Eylem Çubuğu (Action Bar)
+    description: |-
+      &b Her aşama için bir
+      &b durumu Eylem Çubuğunda
+      &b gösterir.
 aoneblock:
   bossbar:
     title: Kalan bloklar
