@@ -44,7 +44,7 @@ public class BossBarListener implements Listener {
         this.addon = addon;
     }
 
-    private AOneBlock addon;
+    private final AOneBlock addon;
 
     // Store a boss bar for each player (using their UUID)
     private final Map<Island, BossBar> islandBossBars = new HashMap<>();
@@ -99,7 +99,7 @@ public class BossBarListener implements Listener {
         }
         // Default to showing action bar unless it is explicitly turned off
         if (!user.getMetaData(AONEBLOCK_ACTIONBAR).map(MetaDataValue::asBoolean).orElse(true)) {
-            // Do not show a action bar
+            // Do not show an action bar
             return;
         }        
         // Get the progress
@@ -218,7 +218,7 @@ public class BossBarListener implements Listener {
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onQuit(PlayerQuitEvent e) {
         // Clean up boss bars
-        islandBossBars.values().stream().forEach(bb -> bb.removePlayer(e.getPlayer()));
+        islandBossBars.values().forEach(bb -> bb.removePlayer(e.getPlayer()));
         islandBossBars.values().removeIf(bb -> bb.getPlayers().isEmpty());
     }
 

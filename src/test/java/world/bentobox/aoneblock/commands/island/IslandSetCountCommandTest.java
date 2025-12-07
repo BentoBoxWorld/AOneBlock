@@ -60,9 +60,7 @@ public class IslandSetCountCommandTest extends CommonTestSetup {
     @Mock
     private RanksManager rm;
 
-    private @NonNull OneBlockIslands oneBlockIsland = new OneBlockIslands(UUID.randomUUID().toString());
-
-    private AbstractDatabaseHandler<Object> h;
+    private final @NonNull OneBlockIslands oneBlockIsland = new OneBlockIslands(UUID.randomUUID().toString());
 
 
     @Override
@@ -81,11 +79,11 @@ public class IslandSetCountCommandTest extends CommonTestSetup {
     @BeforeEach
     public void setUp() throws Exception {
         super.setUp();
-        h = mock(AbstractDatabaseHandler.class);
+        AbstractDatabaseHandler<Object> h = mock(AbstractDatabaseHandler.class);
         // Database
         MockedStatic<DatabaseSetup> mockedDb = Mockito.mockStatic(DatabaseSetup.class);
         DatabaseSetup dbSetup = mock(DatabaseSetup.class);
-        mockedDb.when(() -> DatabaseSetup.getDatabase()).thenReturn(dbSetup);
+        mockedDb.when(DatabaseSetup::getDatabase).thenReturn(dbSetup);
         when(dbSetup.getHandler(any())).thenReturn(h);
         when(h.saveObject(any())).thenReturn(CompletableFuture.completedFuture(true));
 

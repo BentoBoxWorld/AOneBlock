@@ -59,8 +59,6 @@ public class AOneBlockTest extends CommonTestSetup {
     @Mock
     private Settings settings;
 
-    private AbstractDatabaseHandler<Object> h;
-
     @Override
     @AfterEach
     public void tearDown() throws Exception {
@@ -82,11 +80,11 @@ public class AOneBlockTest extends CommonTestSetup {
         super.setUp();
         // This has to be done beforeClass otherwise the tests will interfere with each
         // other
-        h = mock(AbstractDatabaseHandler.class);
+        AbstractDatabaseHandler<Object> h = mock(AbstractDatabaseHandler.class);
         // Database
         MockedStatic<DatabaseSetup> mockDb = Mockito.mockStatic(DatabaseSetup.class);
         DatabaseSetup dbSetup = mock(DatabaseSetup.class);
-        mockDb.when(() -> DatabaseSetup.getDatabase()).thenReturn(dbSetup);
+        mockDb.when(DatabaseSetup::getDatabase).thenReturn(dbSetup);
         when(dbSetup.getHandler(any())).thenReturn(h);
         when(h.saveObject(any())).thenReturn(CompletableFuture.completedFuture(true));
 

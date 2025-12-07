@@ -27,10 +27,8 @@ public class PlaceholdersManagerTest extends CommonTestSetup {
     private User user;
 
     private AOneBlockPlaceholders pm;
-    private @NonNull OneBlockIslands obi;
     @Mock
     private OneBlocksManager obm;
-    private Settings settings;
 
     /**
      * @throws java.lang.Exception
@@ -51,7 +49,7 @@ public class PlaceholdersManagerTest extends CommonTestSetup {
         when(im.getProtectedIslandAt(any())).thenReturn(Optional.of(island));
         when(im.getIsland(world, user)).thenReturn(island);
         when(im.getIslands(world, user)).thenReturn(List.of(island));
-        obi = new OneBlockIslands("uniqueId");
+        @NonNull OneBlockIslands obi = new OneBlockIslands("uniqueId");
         obi.setPhaseName("first");
         obi.setBlockNumber(1000);
         when(addon.getOneBlocksIsland(any())).thenReturn(obi);
@@ -60,7 +58,7 @@ public class PlaceholdersManagerTest extends CommonTestSetup {
         when(obm.getPercentageDone(any(OneBlockIslands.class))).thenReturn(70D);
         when(obm.getNextPhaseBlocks(any(OneBlockIslands.class))).thenReturn(123);
         // Settings
-        settings = new Settings();
+        Settings settings = new Settings();
         when(addon.getSettings()).thenReturn(settings);
         // Island
         when(island.getOwner()).thenReturn(uuid);

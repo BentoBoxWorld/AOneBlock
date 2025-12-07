@@ -108,12 +108,12 @@ aoneblock:
     # This section contains all button names and lore (description)
     buttons:
       # List of buttons in GUI's
-      # Button that is used in multi-page GUIs which allows to return to previous page.
+      # Button that is used in multipage GUIs which allows to return to previous page.
       previous:
         name: "&f&l Previous Page"
         description: |-
           &7 Switch to [number] page
-      # Button that is used in multi-page GUIs which allows to go to next page.
+      # Button that is used in multipage GUIs which allows to go to next page.
       next:
         name: "&f&l Next Page"
         description: |-

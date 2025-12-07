@@ -82,7 +82,7 @@ public class AOneBlockPlaceholders {
                 .filter(is -> user.getUniqueId().equals(is.getOwner())).toList();
         if (ownedIslands.size() == 1) {
             // Replace with the owned island
-            i = ownedIslands.get(0); // pick one
+            i = ownedIslands.getFirst(); // pick one
         }
         // Return what we have found
         return Optional.ofNullable(i);

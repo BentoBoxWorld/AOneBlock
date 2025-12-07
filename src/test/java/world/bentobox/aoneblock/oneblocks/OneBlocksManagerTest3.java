@@ -46,8 +46,7 @@ public class OneBlocksManagerTest3 extends CommonTestSetup {
 
 	private static File jFile;
 	private static YamlConfiguration oneBlocks;
-	private AOneBlock addon;
-	@Mock
+    @Mock
 	private AddonsManager am;
 	private OneBlocksManager obm;
 	private OneBlockPhase obPhase;
@@ -64,12 +63,33 @@ public class OneBlocksManagerTest3 extends CommonTestSetup {
 		 * Paths.get("config.yml"); Files.copy(fromPath, path);
 		 */
 		// Dummy oneblocks.yml
-		String oneblocks = "'0':\n" + "  name: Plains\n" + "  icon: GRASS_BLOCK\n" + "  firstBlock: GRASS_BLOCK\n"
-				+ "  biome: PLAINS\n" + "  fixedBlocks:\n" + "    0: GRASS_BLOCK\n" + "    1: GRASS_BLOCK\n"
-				+ "  holograms:\n" + "    0: &aGood Luck!\n" + "  blocks:\n" + "    GRASS_BLOCK: 2000\n"
-				+ "    BIRCH_LOG: 500\n" + "  mobs:\n" + "    SHEEP: 150\n" + "    VILLAGER: 30\n" + "'700':\n"
-				+ "  name: Underground\n" + "  firstBlock: STONE\n" + "  biome: TAIGA\n" + "  blocks:\n"
-				+ "    EMERALD_ORE: 5\n" + "    COBWEB: 250\n" + "    DIRT: 500\n" + "'11000':\n" + "  gotoBlock: 0";
+		String oneblocks = """
+                '0':
+                  name: Plains
+                  icon: GRASS_BLOCK
+                  firstBlock: GRASS_BLOCK
+                  biome: PLAINS
+                  fixedBlocks:
+                    0: GRASS_BLOCK
+                    1: GRASS_BLOCK
+                  holograms:
+                    0: &aGood Luck!
+                  blocks:
+                    GRASS_BLOCK: 2000
+                    BIRCH_LOG: 500
+                  mobs:
+                    SHEEP: 150
+                    VILLAGER: 30
+                '700':
+                  name: Underground
+                  firstBlock: STONE
+                  biome: TAIGA
+                  blocks:
+                    EMERALD_ORE: 5
+                    COBWEB: 250
+                    DIRT: 500
+                '11000':
+                  gotoBlock: 0""";
 		oneBlocks = new YamlConfiguration();
 		oneBlocks.loadFromString(oneblocks);
 		// Save
@@ -105,7 +125,7 @@ public class OneBlocksManagerTest3 extends CommonTestSetup {
 	public void setUp() throws Exception {
 	    super.setUp();
 		// Addon
-		addon = new AOneBlock();
+        AOneBlock addon = new AOneBlock();
 		File dataFolder = new File("addons/AOneBlock");
 		addon.setDataFolder(dataFolder);
 		addon.setFile(jFile);
@@ -145,11 +165,10 @@ public class OneBlocksManagerTest3 extends CommonTestSetup {
 	/**
 	 * Test method for
 	 * {@link world.bentobox.aoneblock.oneblocks.OneBlocksManager#OneBlocksManager(world.bentobox.aoneblock.AOneBlock)}.
-	 * 
-	 * @throws IOException
-	 */
+	 *
+     */
 	@Test
-	public void testOneBlocksManager() throws IOException {
+	public void testOneBlocksManager() {
 		File f = new File("phases", "0_plains.yml");
 		assertTrue(f.exists());
 	}
@@ -158,13 +177,12 @@ public class OneBlocksManagerTest3 extends CommonTestSetup {
 	 * Test method for
 	 * {@link world.bentobox.aoneblock.oneblocks.OneBlocksManager#loadPhases()}.
 	 * 
-	 * @throws InvalidConfigurationException
 	 * @throws IOException
 	 * @throws NumberFormatException
 	 */
 	// @Ignore("Cannot deserialize objects right now")
 	@Test
-	public void testLoadPhases() throws NumberFormatException, IOException, InvalidConfigurationException {
+	public void testLoadPhases() throws NumberFormatException, IOException {
 		obm.loadPhases();
 		verify(plugin, never()).logError(anyString());
 		assertEquals(Material.GRASS_BLOCK, obm.getPhase(0).getFirstBlock().getMaterial());
@@ -219,15 +237,14 @@ public class OneBlocksManagerTest3 extends CommonTestSetup {
 	 * Test method for
 	 * {@link world.bentobox.aoneblock.oneblocks.OneBlocksManager#saveOneBlockConfig()}.
 	 * 
-	 * @throws InvalidConfigurationException
-	 * @throws IOException
 	 * @throws NumberFormatException
+	 * @throws IOException 
 	 */
 	@Disabled("Not saving")
 	@Test
-	public void testSaveOneBlockConfig() throws NumberFormatException, IOException, InvalidConfigurationException {
-		// testLoadPhases();
-		// assertTrue(obm.saveOneBlockConfig());
+	public void testSaveOneBlockConfig() throws NumberFormatException, IOException {
+		 testLoadPhases();
+		 assertTrue(obm.saveOneBlockConfig());
 	}
 
 	/**
@@ -349,7 +366,7 @@ public class OneBlocksManagerTest3 extends CommonTestSetup {
 	 * {@link world.bentobox.aoneblock.oneblocks.OneBlocksManager#addBlocks(world.bentobox.aoneblock.oneblocks.OneBlockPhase, org.bukkit.configuration.ConfigurationSection)}.
 	 */
 	@Test
-	public void testAddBlocks() throws IOException {
+	public void testAddBlocks() {
 		obm.addBlocks(obPhase, oneBlocks);
 	}
 

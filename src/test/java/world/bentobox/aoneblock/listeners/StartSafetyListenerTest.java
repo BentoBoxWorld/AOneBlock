@@ -38,14 +38,13 @@ import world.bentobox.bentobox.api.user.User;
  */
 public class StartSafetyListenerTest extends CommonTestSetup {
 
-    private AOneBlock addon;
     private StartSafetyListener ssl;
     @Mock
     private Location location2;
     @Mock
     private Flag flag;
 
-    private @NonNull WSettings ws = new WSettings();
+    private final @NonNull WSettings ws = new WSettings();
     /**
      * @throws java.lang.Exception
      */
@@ -54,7 +53,7 @@ public class StartSafetyListenerTest extends CommonTestSetup {
     public void setUp() throws Exception {
         super.setUp();
 
-        addon = new AOneBlock();
+        AOneBlock addon = new AOneBlock();
         addon.setIslandWorld(world);
         addon.setSettings(new Settings());
 
@@ -137,7 +136,7 @@ public class StartSafetyListenerTest extends CommonTestSetup {
 
     class WSettings implements WorldSettings {
 
-        private Map<String, Boolean> flags = new HashMap<>();
+        private final Map<String, Boolean> flags = new HashMap<>();
 
         @Override
         public GameMode getDefaultGameMode() {

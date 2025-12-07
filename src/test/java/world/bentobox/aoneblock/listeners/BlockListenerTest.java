@@ -51,11 +51,9 @@ public class BlockListenerTest extends CommonTestSetup {
 
     @Mock
     AOneBlock addon;
-    private  AbstractDatabaseHandler<Object> h;
     @Mock
     private Settings pluginSettings;
 
-    private User user;
     @Mock
     private OneBlocksManager obm;
 
@@ -80,11 +78,11 @@ public class BlockListenerTest extends CommonTestSetup {
     public void setUp() throws Exception {
         super.setUp();
         // This has to be done beforeClass otherwise the tests will interfere with each other
-        h = mock(AbstractDatabaseHandler.class);
+        AbstractDatabaseHandler<Object> h = mock(AbstractDatabaseHandler.class);
         // Database
         MockedStatic<DatabaseSetup> mockDb = Mockito.mockStatic(DatabaseSetup.class);
         DatabaseSetup dbSetup = mock(DatabaseSetup.class);
-        mockDb.when(() -> DatabaseSetup.getDatabase()).thenReturn(dbSetup);
+        mockDb.when(DatabaseSetup::getDatabase).thenReturn(dbSetup);
         when(dbSetup.getHandler(any())).thenReturn(h);
         when(h.saveObject(any())).thenReturn(CompletableFuture.completedFuture(true));
 
@@ -102,7 +100,7 @@ public class BlockListenerTest extends CommonTestSetup {
         when(mockPlayer.isOnline()).thenReturn(true);
         when(mockPlayer.getWorld()).thenReturn(world);
         User.setPlugin(plugin);
-        user = User.getInstance(mockPlayer);
+        User user = User.getInstance(mockPlayer);
 
         // Island
         island = new Island();

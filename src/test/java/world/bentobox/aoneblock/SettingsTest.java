@@ -695,7 +695,7 @@ public class SettingsTest extends CommonTestSetup {
     @Test
     public void testSetDefaultIslandFlagNames() {
         s.setDefaultIslandFlagNames(Map.of("TEST", 500));
-        assertTrue(s.getDefaultIslandFlagNames().get("TEST") == 500);
+        assertEquals(500, (int) s.getDefaultIslandFlagNames().get("TEST"));
     }
 
     /**
@@ -704,7 +704,7 @@ public class SettingsTest extends CommonTestSetup {
     @Test
     public void testSetDefaultIslandSettingNames() {
         s.setDefaultIslandSettingNames(Map.of("SETTING", 456));
-        assertTrue(s.getDefaultIslandSettingNames().get("SETTING") == 456);
+        assertEquals(456, (int) s.getDefaultIslandSettingNames().get("SETTING"));
     }
 
     /**
@@ -1524,7 +1524,7 @@ public class SettingsTest extends CommonTestSetup {
     @Test
     public void testSetMobLimitSettings() {
         s.setMobLimitSettings(List.of("test"));
-        assertEquals("test", s.getMobLimitSettings().get(0));
+        assertEquals("test", s.getMobLimitSettings().getFirst());
     }
 
     /**

@@ -226,7 +226,7 @@ public abstract class CommonTestSetup {
         //mockedUtil.when(() -> translateColorCodes(anyString())).thenAnswer((Answer<String>) invocation -> invocation.getArgument(0, String.class));
         
         // Server & Scheduler
-        mockedBukkit.when(() -> Bukkit.getScheduler()).thenReturn(sch);
+        mockedBukkit.when(Bukkit::getScheduler).thenReturn(sch);
 
         // Hooks
         when(hooksManager.getHook(anyString())).thenReturn(Optional.empty());
@@ -234,32 +234,6 @@ public abstract class CommonTestSetup {
 
         // Blueprints Manager
         when(plugin.getBlueprintsManager()).thenReturn(bm);
-
-
-        // Tags
-        /*
-        for (Material m : Material.values()) {
-            if (m.name().contains("_SIGN")) {
-                when(Tag.ALL_SIGNS.isTagged(m)).thenReturn(true);
-                when(Tag.SIGNS.isTagged(m)).thenReturn(true);
-            }
-            if (m.name().contains("_WALL_SIGN")) {
-                when(Tag.WALL_SIGNS.isTagged(m)).thenReturn(true);
-            }
-            if (m.name().contains("_TRAPDOOR")) {
-                when(Tag.TRAPDOORS.isTagged(m)).thenReturn(true);
-            }
-            if (m.name().contains("FENCE")) {
-                when(Tag.FENCES.isTagged(m)).thenReturn(true);
-            }
-            if (m.name().contains("_DOOR")) {
-                when(Tag.DOORS.isTagged(m)).thenReturn(true);
-            }
-            if (m.name().contains("_BOAT") || m.name().contains("_RAFT")) {
-                when(Tag.ITEMS_BOATS.isTagged(m)).thenReturn(true);
-            }
-
-        }*/
     }
 
     /**
@@ -315,7 +289,7 @@ public abstract class CommonTestSetup {
     }
 
     /**
-     * Get the explode event
+     * Get the exploded event
      * @param entity
      * @param l
      * @param list

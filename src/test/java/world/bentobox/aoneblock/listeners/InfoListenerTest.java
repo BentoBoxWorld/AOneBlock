@@ -41,12 +41,6 @@ public class InfoListenerTest extends CommonTestSetup {
     private InfoListener il;
     @Mock
     private @NonNull OneBlockIslands is;
-    /*
-    @Mock
-    private LocalesManager lm;
-    @Mock
-    private PlaceholdersManager phm;
-    */
     @Mock
     private Spigot spigot;
     
@@ -60,11 +54,7 @@ public class InfoListenerTest extends CommonTestSetup {
     public void setUp() throws Exception {
         super.setUp();
         when(addon.getPlugin()).thenReturn(plugin);
-        //when(plugin.getLocalesManager()).thenReturn(lm);
-        //when(lm.get(toString())).thenAnswer(invocation -> invocation.getArgument(0, String.class));
-        //when(phm.replacePlaceholders(any(), any())).thenAnswer(invocation -> invocation.getArgument(1, String.class));
 
-        //when(plugin.getPlaceholdersManager()).thenReturn(phm);
         User.setPlugin(plugin);
         
         // Player
