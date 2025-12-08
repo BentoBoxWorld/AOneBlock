@@ -22,6 +22,7 @@ import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import world.bentobox.aoneblock.AOneBlock;
 import world.bentobox.aoneblock.dataobjects.OneBlockIslands;
 import world.bentobox.aoneblock.events.MagicBlockEvent;
+import world.bentobox.bentobox.BentoBox;
 import world.bentobox.bentobox.api.events.flags.FlagSettingChangeEvent;
 import world.bentobox.bentobox.api.events.island.IslandEnterEvent;
 import world.bentobox.bentobox.api.events.island.IslandExitEvent;
@@ -110,12 +111,13 @@ public class BossBarListener implements Listener {
         int numBlocksToGo = addon.getOneBlockManager().getNextPhaseBlocks(obi);
         int phaseBlocks = addon.getOneBlockManager().getPhaseBlocks(obi);
         int done = phaseBlocks - numBlocksToGo;
-        String translation = user.getTranslationOrNothing("aoneblock.actionbar.status", "[togo]",
+        String translation = user.getTranslationNoColor("aoneblock.actionbar.status", "[togo]",
                 String.valueOf(numBlocksToGo), "[total]", String.valueOf(phaseBlocks), "[done]", String.valueOf(done),
                 "[phase-name]", obi.getPhaseName(), "[percent-done]",
                 Math.round(addon.getOneBlockManager().getPercentageDone(obi)) + "%");
         // Send
-        player.sendActionBar(bukkitToAdventure(translation));
+        Component comp = bukkitToAdventure(translation);
+        player.sendActionBar(comp);
     }
     /**
      * Try to show the bossbar to the player
