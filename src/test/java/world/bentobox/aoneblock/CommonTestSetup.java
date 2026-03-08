@@ -132,7 +132,6 @@ public abstract class CommonTestSetup {
 
     @BeforeEach
     public void setUp() throws Exception {
-        MockitoAnnotations.openMocks(this);
         // Processes the @Mock annotations and initializes the field
         closeable = MockitoAnnotations.openMocks(this);
         server = MockBukkit.mock();

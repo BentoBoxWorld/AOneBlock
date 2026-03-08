@@ -69,6 +69,7 @@ public class InfoListenerTest extends CommonTestSetup {
         when(addon.getOverWorld()).thenReturn(world);
         // Player
         when(mockPlayer.getUniqueId()).thenReturn(ID);
+        when(player.getWorld()).thenReturn(world);
         User.getInstance(player);
         
         // Island
