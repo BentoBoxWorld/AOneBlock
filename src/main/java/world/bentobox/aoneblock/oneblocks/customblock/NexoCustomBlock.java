@@ -38,7 +38,7 @@ public class NexoCustomBlock implements OneBlockCustomBlock {
             block.setType(Material.AIR);
             NexoBlocks.place(itemId, block.getLocation());
         } catch (Exception e) {
-            BentoBox.getInstance().logError("Could not place Nexo block " + itemId + " at " + block.getLocation());
+            BentoBox.getInstance().logError("Could not place Nexo block " + itemId + ": " + e.getMessage());
             block.setType(Material.STONE);
         }
     }
