@@ -24,11 +24,13 @@ import world.bentobox.aoneblock.listeners.HoloListener;
 import world.bentobox.aoneblock.listeners.InfoListener;
 import world.bentobox.aoneblock.listeners.ItemsAdderListener;
 import world.bentobox.aoneblock.listeners.JoinLeaveListener;
+import world.bentobox.aoneblock.listeners.NexoListener;
 import world.bentobox.aoneblock.listeners.NoBlockHandler;
 import world.bentobox.aoneblock.listeners.StartSafetyListener;
 import world.bentobox.aoneblock.oneblocks.OneBlockCustomBlockCreator;
 import world.bentobox.aoneblock.oneblocks.OneBlocksManager;
 import world.bentobox.aoneblock.oneblocks.customblock.ItemsAdderCustomBlock;
+import world.bentobox.aoneblock.oneblocks.customblock.NexoCustomBlock;
 import world.bentobox.aoneblock.requests.IslandStatsHandler;
 import world.bentobox.aoneblock.requests.LocationStatsHandler;
 import world.bentobox.bentobox.api.addons.GameModeAddon;
@@ -53,6 +55,8 @@ public class AOneBlock extends GameModeAddon {
     private static final String THE_END = "_the_end";
     /** Whether ItemsAdder is present on the server */
     private boolean hasItemsAdder = false;
+    /** Whether Nexo is present on the server */
+    private boolean hasNexo = false;
 
     /** The addon settings */
     private Settings settings;
@@ -115,6 +119,13 @@ public class AOneBlock extends GameModeAddon {
             OneBlockCustomBlockCreator.register(ItemsAdderCustomBlock::fromId);
             OneBlockCustomBlockCreator.register("itemsadder", ItemsAdderCustomBlock::fromMap);
             hasItemsAdder = true;
+        }
+        // Check if Nexo exists, if yes register listener
+        if (Bukkit.getPluginManager().getPlugin("Nexo") != null) {
+            registerListener(new NexoListener(this));
+            OneBlockCustomBlockCreator.register(NexoCustomBlock::fromId);
+            OneBlockCustomBlockCreator.register("nexo", NexoCustomBlock::fromMap);
+            hasNexo = true;
         }
         // Save the default config from config.yml
         saveDefaultConfig();
@@ -396,6 +407,13 @@ public class AOneBlock extends GameModeAddon {
      */
     public boolean hasItemsAdder() {
         return hasItemsAdder;
+    }
+
+    /**
+     * @return true if Nexo is on the server
+     */
+    public boolean hasNexo() {
+        return hasNexo;
     }
 
     /**
