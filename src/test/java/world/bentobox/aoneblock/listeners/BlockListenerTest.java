@@ -142,7 +142,7 @@ public class BlockListenerTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.listeners.BlockListener#onBlockFromTo(org.bukkit.event.block.BlockFromToEvent)}
      */
     @Test
-    public void testOnBlockFromToNotInWorld() {
+    void testOnBlockFromToNotInWorld() {
         Block from = mock(Block.class);
         BlockFace to = BlockFace.NORTH;
         when(from.getLocation()).thenReturn(location);
@@ -156,7 +156,7 @@ public class BlockListenerTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.listeners.BlockListener#onBlockFromTo(org.bukkit.event.block.BlockFromToEvent)}
      */
     @Test
-    public void testOnBlockFromToNotIslandCenter() {
+    void testOnBlockFromToNotIslandCenter() {
         when(addon.inWorld(any(World.class))).thenReturn(true);
         Block from = mock(Block.class);
         BlockFace to = BlockFace.NORTH;
@@ -172,7 +172,7 @@ public class BlockListenerTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.listeners.BlockListener#onBlockFromTo(org.bukkit.event.block.BlockFromToEvent)}
      */
     @Test
-    public void testOnBlockFromToCenterBlock() {
+    void testOnBlockFromToCenterBlock() {
         when(addon.inWorld(any(World.class))).thenReturn(true);
         island.setCenter(location);
         when(im.getIslandAt(location)).thenReturn(Optional.of(island));

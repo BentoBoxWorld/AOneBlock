@@ -49,7 +49,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#getFriendlyName()}.
      */
     @Test
-    public void testGetFriendlyName() {
+    void testGetFriendlyName() {
         assertEquals("OneBlock", s.getFriendlyName());
     }
 
@@ -57,7 +57,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#getWorldName()}.
      */
     @Test
-    public void testGetWorldName() {
+    void testGetWorldName() {
         assertEquals("oneblock_world", s.getWorldName());
     }
 
@@ -65,7 +65,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#getDifficulty()}.
      */
     @Test
-    public void testGetDifficulty() {
+    void testGetDifficulty() {
         assertEquals(Difficulty.NORMAL, s.getDifficulty());
     }
 
@@ -73,7 +73,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#getIslandDistance()}.
      */
     @Test
-    public void testGetIslandDistance() {
+    void testGetIslandDistance() {
         assertEquals(400, s.getIslandDistance());
     }
 
@@ -81,7 +81,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#getIslandProtectionRange()}.
      */
     @Test
-    public void testGetIslandProtectionRange() {
+    void testGetIslandProtectionRange() {
         assertEquals(50, s.getIslandProtectionRange());
     }
 
@@ -89,7 +89,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#getIslandStartX()}.
      */
     @Test
-    public void testGetIslandStartX() {
+    void testGetIslandStartX() {
         assertEquals(0, s.getIslandStartX());
     }
 
@@ -97,7 +97,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#getIslandStartZ()}.
      */
     @Test
-    public void testGetIslandStartZ() {
+    void testGetIslandStartZ() {
         assertEquals(0, s.getIslandStartZ());
     }
 
@@ -105,7 +105,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#getIslandXOffset()}.
      */
     @Test
-    public void testGetIslandXOffset() {
+    void testGetIslandXOffset() {
         assertEquals(0, s.getIslandXOffset());
     }
 
@@ -113,7 +113,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#getIslandZOffset()}.
      */
     @Test
-    public void testGetIslandZOffset() {
+    void testGetIslandZOffset() {
         assertEquals(0, s.getIslandZOffset());
     }
 
@@ -121,7 +121,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#getIslandHeight()}.
      */
     @Test
-    public void testGetIslandHeight() {
+    void testGetIslandHeight() {
         assertEquals(120, s.getIslandHeight());
     }
 
@@ -129,7 +129,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#isUseOwnGenerator()}.
      */
     @Test
-    public void testIsUseOwnGenerator() {
+    void testIsUseOwnGenerator() {
         assertFalse(s.isUseOwnGenerator());
     }
 
@@ -137,7 +137,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#getSeaHeight()}.
      */
     @Test
-    public void testGetSeaHeight() {
+    void testGetSeaHeight() {
         assertEquals(0, s.getSeaHeight());
     }
 
@@ -145,7 +145,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#getMaxIslands()}.
      */
     @Test
-    public void testGetMaxIslands() {
+    void testGetMaxIslands() {
         assertEquals(-1, s.getMaxIslands());
     }
 
@@ -153,7 +153,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#getDefaultGameMode()}.
      */
     @Test
-    public void testGetDefaultGameMode() {
+    void testGetDefaultGameMode() {
         assertEquals(GameMode.SURVIVAL, s.getDefaultGameMode());
     }
 
@@ -161,7 +161,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#isNetherGenerate()}.
      */
     @Test
-    public void testIsNetherGenerate() {
+    void testIsNetherGenerate() {
         assertTrue(s.isNetherGenerate());
     }
 
@@ -169,7 +169,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#isNetherIslands()}.
      */
     @Test
-    public void testIsNetherIslands() {
+    void testIsNetherIslands() {
         assertFalse(s.isNetherIslands());
     }
 
@@ -177,7 +177,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#isNetherRoof()}.
      */
     @Test
-    public void testIsNetherRoof() {
+    void testIsNetherRoof() {
         assertFalse(s.isNetherRoof());
     }
 
@@ -185,7 +185,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#getNetherSpawnRadius()}.
      */
     @Test
-    public void testGetNetherSpawnRadius() {
+    void testGetNetherSpawnRadius() {
         assertEquals(32, s.getNetherSpawnRadius());
     }
 
@@ -193,7 +193,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#isEndGenerate()}.
      */
     @Test
-    public void testIsEndGenerate() {
+    void testIsEndGenerate() {
         assertFalse(s.isEndGenerate());
     }
 
@@ -201,7 +201,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#isEndIslands()}.
      */
     @Test
-    public void testIsEndIslands() {
+    void testIsEndIslands() {
         assertFalse(s.isEndIslands());
     }
 
@@ -209,7 +209,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#isDragonSpawn()}.
      */
     @Test
-    public void testIsDragonSpawn() {
+    void testIsDragonSpawn() {
         assertFalse(s.isDragonSpawn());
     }
 
@@ -217,7 +217,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#getRemoveMobsWhitelist()}.
      */
     @Test
-    public void testGetRemoveMobsWhitelist() {
+    void testGetRemoveMobsWhitelist() {
         assertTrue(s.getRemoveMobsWhitelist().isEmpty());
      
     }
@@ -226,7 +226,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#getWorldFlags()}.
      */
     @Test
-    public void testGetWorldFlags() {
+    void testGetWorldFlags() {
         assertTrue(s.getWorldFlags().isEmpty());
     }
 
@@ -234,7 +234,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#getDefaultIslandFlagNames()}.
      */
     @Test
-    public void testGetDefaultIslandFlagNames() {
+    void testGetDefaultIslandFlagNames() {
         assertTrue(s.getDefaultIslandFlagNames().isEmpty());
     }
 
@@ -242,7 +242,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#getDefaultIslandSettingNames()}.
      */
     @Test
-    public void testGetDefaultIslandSettingNames() {
+    void testGetDefaultIslandSettingNames() {
         assertTrue(s.getDefaultIslandSettingNames().isEmpty());
     }
 
@@ -251,7 +251,7 @@ public class SettingsTest extends CommonTestSetup {
      */
     @SuppressWarnings("deprecation")
     @Test
-    public void testGetDefaultIslandFlags() {
+    void testGetDefaultIslandFlags() {
         assertTrue(s.getDefaultIslandFlags().isEmpty());
     }
 
@@ -260,7 +260,7 @@ public class SettingsTest extends CommonTestSetup {
      */
     @SuppressWarnings("deprecation")
     @Test
-    public void testGetDefaultIslandSettings() {
+    void testGetDefaultIslandSettings() {
         assertTrue(s.getDefaultIslandSettings().isEmpty());
     }
 
@@ -268,7 +268,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#getHiddenFlags()}.
      */
     @Test
-    public void testGetHiddenFlags() {
+    void testGetHiddenFlags() {
         assertTrue(s.getHiddenFlags().isEmpty());
     }
 
@@ -276,7 +276,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#getVisitorBannedCommands()}.
      */
     @Test
-    public void testGetVisitorBannedCommands() {
+    void testGetVisitorBannedCommands() {
         assertTrue(s.getVisitorBannedCommands().isEmpty());
     }
 
@@ -284,7 +284,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#getFallingBannedCommands()}.
      */
     @Test
-    public void testGetFallingBannedCommands() {
+    void testGetFallingBannedCommands() {
         assertTrue(s.getFallingBannedCommands().isEmpty());
     }
 
@@ -292,7 +292,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#getMaxTeamSize()}.
      */
     @Test
-    public void testGetMaxTeamSize() {
+    void testGetMaxTeamSize() {
         assertEquals(4, s.getMaxTeamSize());
     }
 
@@ -300,7 +300,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#getMaxHomes()}.
      */
     @Test
-    public void testGetMaxHomes() {
+    void testGetMaxHomes() {
         assertEquals(5, s.getMaxHomes());
     }
 
@@ -308,7 +308,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#getResetLimit()}.
      */
     @Test
-    public void testGetResetLimit() {
+    void testGetResetLimit() {
         assertEquals(-1, s.getResetLimit());
     }
 
@@ -316,7 +316,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#isLeaversLoseReset()}.
      */
     @Test
-    public void testIsLeaversLoseReset() {
+    void testIsLeaversLoseReset() {
         assertFalse(s.isLeaversLoseReset());
     }
 
@@ -324,7 +324,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#isKickedKeepInventory()}.
      */
     @Test
-    public void testIsKickedKeepInventory() {
+    void testIsKickedKeepInventory() {
         assertFalse(s.isKickedKeepInventory());
     }
 
@@ -332,7 +332,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#isCreateIslandOnFirstLoginEnabled()}.
      */
     @Test
-    public void testIsCreateIslandOnFirstLoginEnabled() {
+    void testIsCreateIslandOnFirstLoginEnabled() {
         assertFalse(s.isCreateIslandOnFirstLoginEnabled());
     }
 
@@ -340,7 +340,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#getCreateIslandOnFirstLoginDelay()}.
      */
     @Test
-    public void testGetCreateIslandOnFirstLoginDelay() {
+    void testGetCreateIslandOnFirstLoginDelay() {
         assertEquals(5, s.getCreateIslandOnFirstLoginDelay());
     }
 
@@ -348,7 +348,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#isCreateIslandOnFirstLoginAbortOnLogout()}.
      */
     @Test
-    public void testIsCreateIslandOnFirstLoginAbortOnLogout() {
+    void testIsCreateIslandOnFirstLoginAbortOnLogout() {
         assertTrue(s.isCreateIslandOnFirstLoginAbortOnLogout());
     }
 
@@ -356,7 +356,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#isOnJoinResetMoney()}.
      */
     @Test
-    public void testIsOnJoinResetMoney() {
+    void testIsOnJoinResetMoney() {
         assertFalse(s.isOnJoinResetMoney());
     }
 
@@ -364,7 +364,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#isOnJoinResetInventory()}.
      */
     @Test
-    public void testIsOnJoinResetInventory() {
+    void testIsOnJoinResetInventory() {
         assertTrue(s.isOnJoinResetInventory());
     }
 
@@ -372,7 +372,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#isOnJoinResetEnderChest()}.
      */
     @Test
-    public void testIsOnJoinResetEnderChest() {
+    void testIsOnJoinResetEnderChest() {
         assertFalse(s.isOnJoinResetEnderChest());
     }
 
@@ -380,7 +380,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#isOnLeaveResetMoney()}.
      */
     @Test
-    public void testIsOnLeaveResetMoney() {
+    void testIsOnLeaveResetMoney() {
         assertFalse(s.isOnLeaveResetMoney());
     }
 
@@ -388,7 +388,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#isOnLeaveResetInventory()}.
      */
     @Test
-    public void testIsOnLeaveResetInventory() {
+    void testIsOnLeaveResetInventory() {
         assertFalse(s.isOnLeaveResetInventory());
     }
 
@@ -396,7 +396,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#isOnLeaveResetEnderChest()}.
      */
     @Test
-    public void testIsOnLeaveResetEnderChest() {
+    void testIsOnLeaveResetEnderChest() {
         assertFalse(s.isOnLeaveResetEnderChest());
     }
 
@@ -404,7 +404,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#isDeathsCounted()}.
      */
     @Test
-    public void testIsDeathsCounted() {
+    void testIsDeathsCounted() {
         assertTrue(s.isDeathsCounted());
     }
 
@@ -412,7 +412,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#isAllowSetHomeInNether()}.
      */
     @Test
-    public void testIsAllowSetHomeInNether() {
+    void testIsAllowSetHomeInNether() {
         assertTrue(s.isAllowSetHomeInNether());
     }
 
@@ -420,7 +420,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#isAllowSetHomeInTheEnd()}.
      */
     @Test
-    public void testIsAllowSetHomeInTheEnd() {
+    void testIsAllowSetHomeInTheEnd() {
         assertTrue(s.isAllowSetHomeInTheEnd());
     }
 
@@ -428,7 +428,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#isRequireConfirmationToSetHomeInNether()}.
      */
     @Test
-    public void testIsRequireConfirmationToSetHomeInNether() {
+    void testIsRequireConfirmationToSetHomeInNether() {
         assertTrue(s.isRequireConfirmationToSetHomeInNether());
     }
 
@@ -436,7 +436,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#isRequireConfirmationToSetHomeInTheEnd()}.
      */
     @Test
-    public void testIsRequireConfirmationToSetHomeInTheEnd() {
+    void testIsRequireConfirmationToSetHomeInTheEnd() {
         assertTrue(s.isRequireConfirmationToSetHomeInTheEnd());
     }
 
@@ -444,7 +444,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#getDeathsMax()}.
      */
     @Test
-    public void testGetDeathsMax() {
+    void testGetDeathsMax() {
         assertEquals(10, s.getDeathsMax());
     }
 
@@ -452,7 +452,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#isTeamJoinDeathReset()}.
      */
     @Test
-    public void testIsTeamJoinDeathReset() {
+    void testIsTeamJoinDeathReset() {
         assertTrue(s.isTeamJoinDeathReset());
     }
 
@@ -460,7 +460,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#getGeoLimitSettings()}.
      */
     @Test
-    public void testGetGeoLimitSettings() {
+    void testGetGeoLimitSettings() {
         assertTrue(s.getGeoLimitSettings().isEmpty());
     }
 
@@ -468,7 +468,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#getIvSettings()}.
      */
     @Test
-    public void testGetIvSettings() {
+    void testGetIvSettings() {
         assertTrue(s.getIvSettings().isEmpty());
     }
 
@@ -476,7 +476,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#getResetEpoch()}.
      */
     @Test
-    public void testGetResetEpoch() {
+    void testGetResetEpoch() {
         assertEquals(0L, s.getResetEpoch());
     }
 
@@ -484,7 +484,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#setFriendlyName(java.lang.String)}.
      */
     @Test
-    public void testSetFriendlyName() {
+    void testSetFriendlyName() {
         s.setFriendlyName("test");
         assertEquals("test", s.getFriendlyName());
     }
@@ -493,7 +493,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#setWorldName(java.lang.String)}.
      */
     @Test
-    public void testSetWorldName() {
+    void testSetWorldName() {
         s.setWorldName("test");
         assertEquals("test", s.getWorldName());
     }
@@ -502,7 +502,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#setDifficulty(org.bukkit.Difficulty)}.
      */
     @Test
-    public void testSetDifficulty() {
+    void testSetDifficulty() {
         s.setDifficulty(Difficulty.HARD);
         assertEquals(Difficulty.HARD, s.getDifficulty());
     }
@@ -511,7 +511,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#setIslandDistance(int)}.
      */
     @Test
-    public void testSetIslandDistance() {
+    void testSetIslandDistance() {
         s.setIslandDistance(12345);
         assertEquals(12345, s.getIslandDistance());
     }
@@ -520,7 +520,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#setIslandProtectionRange(int)}.
      */
     @Test
-    public void testSetIslandProtectionRange() {
+    void testSetIslandProtectionRange() {
         s.setIslandProtectionRange(12345);
         assertEquals(12345, s.getIslandProtectionRange());
     }
@@ -529,7 +529,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#setIslandStartX(int)}.
      */
     @Test
-    public void testSetIslandStartX() {
+    void testSetIslandStartX() {
         s.setIslandStartX(12345);
         assertEquals(12345, s.getIslandStartX());
     }
@@ -538,7 +538,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#setIslandStartZ(int)}.
      */
     @Test
-    public void testSetIslandStartZ() {
+    void testSetIslandStartZ() {
         s.setIslandStartZ(12345);
         assertEquals(12345, s.getIslandStartZ());
     }
@@ -547,7 +547,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#setIslandXOffset(int)}.
      */
     @Test
-    public void testSetIslandXOffset() {
+    void testSetIslandXOffset() {
         s.setIslandXOffset(12345);
         assertEquals(12345, s.getIslandXOffset());
     }
@@ -556,7 +556,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#setIslandZOffset(int)}.
      */
     @Test
-    public void testSetIslandZOffset() {
+    void testSetIslandZOffset() {
         s.setIslandZOffset(12345);
         assertEquals(12345, s.getIslandZOffset());
     }
@@ -565,7 +565,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#setIslandHeight(int)}.
      */
     @Test
-    public void testSetIslandHeight() {
+    void testSetIslandHeight() {
         s.setIslandHeight(12345);
         assertEquals(12345, s.getIslandHeight());
     }
@@ -574,7 +574,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#setUseOwnGenerator(boolean)}.
      */
     @Test
-    public void testSetUseOwnGenerator() {
+    void testSetUseOwnGenerator() {
         s.setUseOwnGenerator(true);
         assertTrue(s.isUseOwnGenerator());
     }
@@ -583,7 +583,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#setSeaHeight(int)}.
      */
     @Test
-    public void testSetSeaHeight() {
+    void testSetSeaHeight() {
         s.setSeaHeight(12345);
         assertEquals(12345, s.getSeaHeight());
     }
@@ -592,7 +592,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#setMaxIslands(int)}.
      */
     @Test
-    public void testSetMaxIslands() {
+    void testSetMaxIslands() {
         s.setMaxIslands(12345);
         assertEquals(12345, s.getMaxIslands());
     }
@@ -601,7 +601,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#setDefaultGameMode(org.bukkit.GameMode)}.
      */
     @Test
-    public void testSetDefaultGameMode() {
+    void testSetDefaultGameMode() {
         s.setDefaultGameMode(GameMode.SPECTATOR);
         assertEquals(GameMode.SPECTATOR, s.getDefaultGameMode());
     }
@@ -610,7 +610,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#setNetherGenerate(boolean)}.
      */
     @Test
-    public void testSetNetherGenerate() {
+    void testSetNetherGenerate() {
         s.setNetherGenerate(false);
         assertFalse(s.isNetherGenerate());
         s.setNetherGenerate(true);
@@ -621,7 +621,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#setNetherIslands(boolean)}.
      */
     @Test
-    public void testSetNetherIslands() {
+    void testSetNetherIslands() {
         s.setNetherIslands(false);
         assertFalse(s.isNetherIslands());
         s.setNetherIslands(true);
@@ -632,7 +632,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#setNetherRoof(boolean)}.
      */
     @Test
-    public void testSetNetherRoof() {
+    void testSetNetherRoof() {
         s.setNetherRoof(false);
         assertFalse(s.isNetherRoof());
         s.setNetherRoof(true);
@@ -643,7 +643,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#setNetherSpawnRadius(int)}.
      */
     @Test
-    public void testSetNetherSpawnRadius() {
+    void testSetNetherSpawnRadius() {
         s.setNetherSpawnRadius(12345);
         assertEquals(12345, s.getNetherSpawnRadius());
     }
@@ -652,7 +652,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#setEndGenerate(boolean)}.
      */
     @Test
-    public void testSetEndGenerate() {
+    void testSetEndGenerate() {
         s.setEndGenerate(false);
         assertFalse(s.isEndGenerate());
         s.setEndGenerate(true);
@@ -663,7 +663,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#setEndIslands(boolean)}.
      */
     @Test
-    public void testSetEndIslands() {
+    void testSetEndIslands() {
         s.setEndIslands(false);
         assertFalse(s.isEndIslands());
         s.setEndIslands(true);
@@ -674,7 +674,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#setRemoveMobsWhitelist(java.util.Set)}.
      */
     @Test
-    public void testSetRemoveMobsWhitelist() {
+    void testSetRemoveMobsWhitelist() {
         s.setRemoveMobsWhitelist(Collections.singleton(EntityType.AXOLOTL));
         assertTrue(s.getRemoveMobsWhitelist().contains(EntityType.AXOLOTL));
     }
@@ -683,7 +683,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#setWorldFlags(java.util.Map)}.
      */
     @Test
-    public void testSetWorldFlags() {
+    void testSetWorldFlags() {
         s.setWorldFlags(Map.of("trueFlag", true, "falseFlag", false));
         assertTrue(s.getWorldFlags().get("trueFlag"));
         assertFalse(s.getWorldFlags().get("falseFlag"));
@@ -693,7 +693,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#setDefaultIslandFlagNames(java.util.Map)}.
      */
     @Test
-    public void testSetDefaultIslandFlagNames() {
+    void testSetDefaultIslandFlagNames() {
         s.setDefaultIslandFlagNames(Map.of("TEST", 500));
         assertEquals(500, (int) s.getDefaultIslandFlagNames().get("TEST"));
     }
@@ -702,7 +702,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#setDefaultIslandSettingNames(java.util.Map)}.
      */
     @Test
-    public void testSetDefaultIslandSettingNames() {
+    void testSetDefaultIslandSettingNames() {
         s.setDefaultIslandSettingNames(Map.of("SETTING", 456));
         assertEquals(456, (int) s.getDefaultIslandSettingNames().get("SETTING"));
     }
@@ -711,7 +711,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#setHiddenFlags(java.util.List)}.
      */
     @Test
-    public void testSetHiddenFlags() {
+    void testSetHiddenFlags() {
         s.setHiddenFlags(List.of("FLAG1", "FLAG2"));
         assertTrue(s.getHiddenFlags().contains("FLAG2"));
         assertFalse(s.getHiddenFlags().contains("FLAG3"));
@@ -721,7 +721,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#setVisitorBannedCommands(java.util.List)}.
      */
     @Test
-    public void testSetVisitorBannedCommands() {
+    void testSetVisitorBannedCommands() {
         s.setVisitorBannedCommands(List.of("banned"));
         assertTrue(s.getVisitorBannedCommands().contains("banned"));
         assertFalse(s.getVisitorBannedCommands().contains("not-banned"));
@@ -731,7 +731,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#setFallingBannedCommands(java.util.List)}.
      */
     @Test
-    public void testSetFallingBannedCommands() {
+    void testSetFallingBannedCommands() {
         s.setFallingBannedCommands(List.of("banned"));
         assertTrue(s.getFallingBannedCommands().contains("banned"));
         assertFalse(s.getFallingBannedCommands().contains("not-banned"));
@@ -741,7 +741,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#setMaxTeamSize(int)}.
      */
     @Test
-    public void testSetMaxTeamSize() {
+    void testSetMaxTeamSize() {
         s.setMaxTeamSize(12345);
         assertEquals(12345, s.getMaxTeamSize());
     }
@@ -750,7 +750,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#setMaxHomes(int)}.
      */
     @Test
-    public void testSetMaxHomes() {
+    void testSetMaxHomes() {
         s.setMaxHomes(12345);
         assertEquals(12345, s.getMaxHomes());
     }
@@ -759,7 +759,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#setResetLimit(int)}.
      */
     @Test
-    public void testSetResetLimit() {
+    void testSetResetLimit() {
         s.setResetLimit(12345);
         assertEquals(12345, s.getResetLimit());
     }
@@ -768,7 +768,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#setLeaversLoseReset(boolean)}.
      */
     @Test
-    public void testSetLeaversLoseReset() {
+    void testSetLeaversLoseReset() {
         s.setLeaversLoseReset(false);
         assertFalse(s.isLeaversLoseReset());
         s.setLeaversLoseReset(true);
@@ -779,7 +779,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#setKickedKeepInventory(boolean)}.
      */
     @Test
-    public void testSetKickedKeepInventory() {
+    void testSetKickedKeepInventory() {
         s.setKickedKeepInventory(false);
         assertFalse(s.isKickedKeepInventory());
         s.setKickedKeepInventory(true);
@@ -790,7 +790,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#setOnJoinResetMoney(boolean)}.
      */
     @Test
-    public void testSetOnJoinResetMoney() {
+    void testSetOnJoinResetMoney() {
         s.setOnJoinResetMoney(false);
         assertFalse(s.isOnJoinResetMoney());
         s.setOnJoinResetMoney(true);
@@ -801,7 +801,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#setOnJoinResetInventory(boolean)}.
      */
     @Test
-    public void testSetOnJoinResetInventory() {
+    void testSetOnJoinResetInventory() {
         s.setOnJoinResetInventory(false);
         assertFalse(s.isOnJoinResetInventory());
         s.setOnJoinResetInventory(true);
@@ -812,7 +812,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#setOnJoinResetEnderChest(boolean)}.
      */
     @Test
-    public void testSetOnJoinResetEnderChest() {
+    void testSetOnJoinResetEnderChest() {
         s.setOnJoinResetEnderChest(false);
         assertFalse(s.isOnJoinResetEnderChest());
         s.setOnJoinResetEnderChest(true);
@@ -823,7 +823,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#setOnLeaveResetMoney(boolean)}.
      */
     @Test
-    public void testSetOnLeaveResetMoney() {
+    void testSetOnLeaveResetMoney() {
         s.setOnLeaveResetMoney(false);
         assertFalse(s.isOnLeaveResetMoney());
         s.setOnLeaveResetMoney(true);
@@ -834,7 +834,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#setOnLeaveResetInventory(boolean)}.
      */
     @Test
-    public void testSetOnLeaveResetInventory() {
+    void testSetOnLeaveResetInventory() {
         s.setOnLeaveResetInventory(false);
         assertFalse(s.isOnLeaveResetInventory());
         s.setOnLeaveResetInventory(true);
@@ -845,7 +845,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#setOnLeaveResetEnderChest(boolean)}.
      */
     @Test
-    public void testSetOnLeaveResetEnderChest() {
+    void testSetOnLeaveResetEnderChest() {
         s.setOnLeaveResetEnderChest(false);
         assertFalse(s.isOnLeaveResetEnderChest());
         s.setOnLeaveResetEnderChest(true);
@@ -856,7 +856,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#setCreateIslandOnFirstLoginEnabled(boolean)}.
      */
     @Test
-    public void testSetCreateIslandOnFirstLoginEnabled() {
+    void testSetCreateIslandOnFirstLoginEnabled() {
         s.setCreateIslandOnFirstLoginEnabled(false);
         assertFalse(s.isCreateIslandOnFirstLoginEnabled());
         s.setCreateIslandOnFirstLoginEnabled(true);
@@ -867,7 +867,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#setCreateIslandOnFirstLoginDelay(int)}.
      */
     @Test
-    public void testSetCreateIslandOnFirstLoginDelay() {
+    void testSetCreateIslandOnFirstLoginDelay() {
         s.setCreateIslandOnFirstLoginDelay(12345);
         assertEquals(12345, s.getCreateIslandOnFirstLoginDelay());
     }
@@ -876,7 +876,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#setCreateIslandOnFirstLoginAbortOnLogout(boolean)}.
      */
     @Test
-    public void testSetCreateIslandOnFirstLoginAbortOnLogout() {
+    void testSetCreateIslandOnFirstLoginAbortOnLogout() {
         s.setCreateIslandOnFirstLoginAbortOnLogout(false);
         assertFalse(s.isCreateIslandOnFirstLoginAbortOnLogout());
         s.setCreateIslandOnFirstLoginAbortOnLogout(true);
@@ -887,7 +887,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#setDeathsCounted(boolean)}.
      */
     @Test
-    public void testSetDeathsCounted() {
+    void testSetDeathsCounted() {
         s.setDeathsCounted(false);
         assertFalse(s.isDeathsCounted());
         s.setDeathsCounted(true);
@@ -898,7 +898,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#setDeathsMax(int)}.
      */
     @Test
-    public void testSetDeathsMax() {
+    void testSetDeathsMax() {
         s.setDeathsMax(12345);
         assertEquals(12345, s.getDeathsMax());
     }
@@ -907,7 +907,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#setTeamJoinDeathReset(boolean)}.
      */
     @Test
-    public void testSetTeamJoinDeathReset() {
+    void testSetTeamJoinDeathReset() {
         s.setTeamJoinDeathReset(false);
         assertFalse(s.isTeamJoinDeathReset());
         s.setTeamJoinDeathReset(true);
@@ -918,7 +918,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#setGeoLimitSettings(java.util.List)}.
      */
     @Test
-    public void testSetGeoLimitSettings() {
+    void testSetGeoLimitSettings() {
         s.setGeoLimitSettings(List.of("test"));
         assertTrue(s.getGeoLimitSettings().contains("test"));
     }
@@ -927,7 +927,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#setIvSettings(java.util.List)}.
      */
     @Test
-    public void testSetIvSettings() {
+    void testSetIvSettings() {
         s.setIvSettings(List.of("test"));
         assertTrue(s.getIvSettings().contains("test"));
     }
@@ -936,7 +936,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#setAllowSetHomeInNether(boolean)}.
      */
     @Test
-    public void testSetAllowSetHomeInNether() {
+    void testSetAllowSetHomeInNether() {
         s.setAllowSetHomeInNether(false);
         assertFalse(s.isAllowSetHomeInNether());
         s.setAllowSetHomeInNether(true);
@@ -947,7 +947,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#setAllowSetHomeInTheEnd(boolean)}.
      */
     @Test
-    public void testSetAllowSetHomeInTheEnd() {
+    void testSetAllowSetHomeInTheEnd() {
         s.setAllowSetHomeInTheEnd(false);
         assertFalse(s.isAllowSetHomeInTheEnd());
         s.setAllowSetHomeInTheEnd(true);
@@ -958,7 +958,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#setRequireConfirmationToSetHomeInNether(boolean)}.
      */
     @Test
-    public void testSetRequireConfirmationToSetHomeInNether() {
+    void testSetRequireConfirmationToSetHomeInNether() {
         s.setRequireConfirmationToSetHomeInNether(false);
         assertFalse(s.isRequireConfirmationToSetHomeInNether());
         s.setRequireConfirmationToSetHomeInNether(true);
@@ -969,7 +969,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#setRequireConfirmationToSetHomeInTheEnd(boolean)}.
      */
     @Test
-    public void testSetRequireConfirmationToSetHomeInTheEnd() {
+    void testSetRequireConfirmationToSetHomeInTheEnd() {
         s.setRequireConfirmationToSetHomeInTheEnd(false);
         assertFalse(s.isRequireConfirmationToSetHomeInTheEnd());
         s.setRequireConfirmationToSetHomeInTheEnd(true);
@@ -980,7 +980,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#setResetEpoch(long)}.
      */
     @Test
-    public void testSetResetEpoch() {
+    void testSetResetEpoch() {
         s.setResetEpoch(12345);
         assertEquals(12345, s.getResetEpoch());
     }
@@ -989,7 +989,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#getPermissionPrefix()}.
      */
     @Test
-    public void testGetPermissionPrefix() {
+    void testGetPermissionPrefix() {
         assertEquals("aoneblock", s.getPermissionPrefix());
     }
 
@@ -997,7 +997,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#isWaterUnsafe()}.
      */
     @Test
-    public void testIsWaterUnsafe() {
+    void testIsWaterUnsafe() {
         assertFalse(s.isWaterUnsafe());
     }
 
@@ -1006,7 +1006,7 @@ public class SettingsTest extends CommonTestSetup {
      */
     @Test
     //@Ignore("Need to solve Biome enum issue")
-    public void testGetDefaultBiome() {
+    void testGetDefaultBiome() {
         assertEquals(Biome.PLAINS, s.getDefaultBiome());
     }
 
@@ -1015,7 +1015,7 @@ public class SettingsTest extends CommonTestSetup {
      */
     @Test
     //@Ignore("Need to solve Biome enum issue")
-    public void testSetDefaultBiome() {
+    void testSetDefaultBiome() {
         assertEquals(Biome.PLAINS, s.getDefaultBiome());
         s.setDefaultBiome(Biome.BAMBOO_JUNGLE);
         assertEquals(Biome.BAMBOO_JUNGLE, s.getDefaultBiome());
@@ -1025,7 +1025,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#getBanLimit()}.
      */
     @Test
-    public void testGetBanLimit() {
+    void testGetBanLimit() {
         assertEquals(-1, s.getBanLimit());
     }
 
@@ -1033,7 +1033,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#setBanLimit(int)}.
      */
     @Test
-    public void testSetBanLimit() {
+    void testSetBanLimit() {
         assertEquals(-1, s.getBanLimit());
         s.setBanLimit(12345);
         assertEquals(12345, s.getBanLimit());
@@ -1043,7 +1043,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#getPlayerCommandAliases()}.
      */
     @Test
-    public void testGetPlayerCommandAliases() {
+    void testGetPlayerCommandAliases() {
         assertEquals("ob oneblock",s.getPlayerCommandAliases());
     }
 
@@ -1051,7 +1051,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#setPlayerCommandAliases(java.lang.String)}.
      */
     @Test
-    public void testSetPlayerCommandAliases() {
+    void testSetPlayerCommandAliases() {
         assertEquals("ob oneblock",s.getPlayerCommandAliases());
         s.setPlayerCommandAliases("aliases");
         assertEquals("aliases",s.getPlayerCommandAliases());
@@ -1061,7 +1061,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#getAdminCommandAliases()}.
      */
     @Test
-    public void testGetAdminCommandAliases() {
+    void testGetAdminCommandAliases() {
         assertEquals("oba obadmin",s.getAdminCommandAliases());
     }
 
@@ -1069,7 +1069,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#setAdminCommandAliases(java.lang.String)}.
      */
     @Test
-    public void testSetAdminCommandAliases() {
+    void testSetAdminCommandAliases() {
         assertEquals("oba obadmin",s.getAdminCommandAliases());
         s.setAdminCommandAliases("aliases");
         assertEquals("aliases",s.getAdminCommandAliases());
@@ -1079,7 +1079,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#isDeathsResetOnNewIsland()}.
      */
     @Test
-    public void testIsDeathsResetOnNewIsland() {
+    void testIsDeathsResetOnNewIsland() {
         assertTrue(s.isDeathsResetOnNewIsland());
     }
 
@@ -1087,7 +1087,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#setDeathsResetOnNewIsland(boolean)}.
      */
     @Test
-    public void testSetDeathsResetOnNewIsland() {
+    void testSetDeathsResetOnNewIsland() {
         s.setDeathsResetOnNewIsland(false);
         assertFalse(s.isDeathsResetOnNewIsland());
         s.setDeathsResetOnNewIsland(true);
@@ -1098,7 +1098,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#getOnJoinCommands()}.
      */
     @Test
-    public void testGetOnJoinCommands() {
+    void testGetOnJoinCommands() {
         assertTrue(s.getOnJoinCommands().isEmpty());
     }
 
@@ -1106,7 +1106,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#setOnJoinCommands(java.util.List)}.
      */
     @Test
-    public void testSetOnJoinCommands() {
+    void testSetOnJoinCommands() {
         s.setOnJoinCommands(List.of("command", "do this"));
         assertEquals("do this", s.getOnJoinCommands().get(1));
     }
@@ -1115,7 +1115,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#getOnLeaveCommands()}.
      */
     @Test
-    public void testGetOnLeaveCommands() {
+    void testGetOnLeaveCommands() {
         assertTrue(s.getOnLeaveCommands().isEmpty());
     }
 
@@ -1123,7 +1123,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#setOnLeaveCommands(java.util.List)}.
      */
     @Test
-    public void testSetOnLeaveCommands() {
+    void testSetOnLeaveCommands() {
         s.setOnLeaveCommands(List.of("command", "do this"));
         assertEquals("do this", s.getOnLeaveCommands().get(1));
     }
@@ -1132,7 +1132,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#getOnRespawnCommands()}.
      */
     @Test
-    public void testGetOnRespawnCommands() {
+    void testGetOnRespawnCommands() {
         assertTrue(s.getOnRespawnCommands().isEmpty());
     }
 
@@ -1140,7 +1140,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#setOnRespawnCommands(java.util.List)}.
      */
     @Test
-    public void testSetOnRespawnCommands() {
+    void testSetOnRespawnCommands() {
         s.setOnRespawnCommands(List.of("command", "do this"));
         assertEquals("do this", s.getOnRespawnCommands().get(1));
     }
@@ -1149,7 +1149,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#isOnJoinResetHealth()}.
      */
     @Test
-    public void testIsOnJoinResetHealth() {
+    void testIsOnJoinResetHealth() {
         assertTrue(s.isOnJoinResetHealth());
     }
 
@@ -1157,7 +1157,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#setOnJoinResetHealth(boolean)}.
      */
     @Test
-    public void testSetOnJoinResetHealth() {
+    void testSetOnJoinResetHealth() {
         s.setOnJoinResetHealth(false);
         assertFalse(s.isOnJoinResetHealth());
         s.setOnJoinResetHealth(true);
@@ -1168,7 +1168,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#isOnJoinResetHunger()}.
      */
     @Test
-    public void testIsOnJoinResetHunger() {
+    void testIsOnJoinResetHunger() {
         assertTrue(s.isOnJoinResetHunger());
     }
 
@@ -1176,7 +1176,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#setOnJoinResetHunger(boolean)}.
      */
     @Test
-    public void testSetOnJoinResetHunger() {
+    void testSetOnJoinResetHunger() {
         s.setOnJoinResetHunger(false);
         assertFalse(s.isOnJoinResetHunger());
         s.setOnJoinResetHunger(true);
@@ -1187,7 +1187,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#isOnJoinResetXP()}.
      */
     @Test
-    public void testIsOnJoinResetXP() {
+    void testIsOnJoinResetXP() {
         assertTrue(s.isOnJoinResetXP());
     }
 
@@ -1195,7 +1195,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#setOnJoinResetXP(boolean)}.
      */
     @Test
-    public void testSetOnJoinResetXP() {
+    void testSetOnJoinResetXP() {
         s.setOnJoinResetXP(false);
         assertFalse(s.isOnJoinResetXP());
         s.setOnJoinResetXP(true);
@@ -1206,7 +1206,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#isOnLeaveResetHealth()}.
      */
     @Test
-    public void testIsOnLeaveResetHealth() {
+    void testIsOnLeaveResetHealth() {
         assertFalse(s.isOnLeaveResetHealth());
     }
 
@@ -1214,7 +1214,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#setOnLeaveResetHealth(boolean)}.
      */
     @Test
-    public void testSetOnLeaveResetHealth() {
+    void testSetOnLeaveResetHealth() {
         s.setOnLeaveResetHealth(false);
         assertFalse(s.isOnLeaveResetHealth());
         s.setOnLeaveResetHealth(true);
@@ -1225,7 +1225,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#isOnLeaveResetHunger()}.
      */
     @Test
-    public void testIsOnLeaveResetHunger() {
+    void testIsOnLeaveResetHunger() {
         assertFalse(s.isOnLeaveResetHunger());
     }
 
@@ -1233,7 +1233,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#setOnLeaveResetHunger(boolean)}.
      */
     @Test
-    public void testSetOnLeaveResetHunger() {
+    void testSetOnLeaveResetHunger() {
         s.setOnLeaveResetHunger(false);
         assertFalse(s.isOnLeaveResetHunger());
         s.setOnLeaveResetHunger(true);
@@ -1244,7 +1244,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#isOnLeaveResetXP()}.
      */
     @Test
-    public void testIsOnLeaveResetXP() {
+    void testIsOnLeaveResetXP() {
         assertFalse(s.isOnLeaveResetXP());
     }
 
@@ -1252,7 +1252,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#setOnLeaveResetXP(boolean)}.
      */
     @Test
-    public void testSetOnLeaveResetXP() {
+    void testSetOnLeaveResetXP() {
         assertFalse(s.isOnLeaveResetXP());
         s.setOnLeaveResetXP(true);
         assertTrue(s.isOnLeaveResetXP());
@@ -1262,7 +1262,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#isPasteMissingIslands()}.
      */
     @Test
-    public void testIsPasteMissingIslands() {
+    void testIsPasteMissingIslands() {
         assertFalse(s.isPasteMissingIslands());
     }
 
@@ -1270,7 +1270,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#setPasteMissingIslands(boolean)}.
      */
     @Test
-    public void testSetPasteMissingIslands() {
+    void testSetPasteMissingIslands() {
         assertFalse(s.isPasteMissingIslands());
         s.setPasteMissingIslands(true);
         assertTrue(s.isPasteMissingIslands());
@@ -1280,7 +1280,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#isTeleportPlayerToIslandUponIslandCreation()}.
      */
     @Test
-    public void testIsTeleportPlayerToIslandUponIslandCreation() {
+    void testIsTeleportPlayerToIslandUponIslandCreation() {
         assertTrue(s.isTeleportPlayerToIslandUponIslandCreation());
     }
 
@@ -1288,7 +1288,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#setTeleportPlayerToIslandUponIslandCreation(boolean)}.
      */
     @Test
-    public void testSetTeleportPlayerToIslandUponIslandCreation() {
+    void testSetTeleportPlayerToIslandUponIslandCreation() {
         assertTrue(s.isTeleportPlayerToIslandUponIslandCreation());
         s.setTeleportPlayerToIslandUponIslandCreation(false);
         assertFalse(s.isTeleportPlayerToIslandUponIslandCreation());
@@ -1298,7 +1298,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#getSpawnLimitMonsters()}.
      */
     @Test
-    public void testGetSpawnLimitMonsters() {
+    void testGetSpawnLimitMonsters() {
         assertEquals(-1, s.getSpawnLimitMonsters());
     }
 
@@ -1306,7 +1306,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#setSpawnLimitMonsters(int)}.
      */
     @Test
-    public void testSetSpawnLimitMonsters() {
+    void testSetSpawnLimitMonsters() {
         assertEquals(-1, s.getSpawnLimitMonsters());
         s.setSpawnLimitMonsters(12345);
         assertEquals(12345, s.getSpawnLimitMonsters());
@@ -1316,7 +1316,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#getSpawnLimitAnimals()}.
      */
     @Test
-    public void testGetSpawnLimitAnimals() {
+    void testGetSpawnLimitAnimals() {
         assertEquals(-1, s.getSpawnLimitAnimals());
     }
 
@@ -1324,7 +1324,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#setSpawnLimitAnimals(int)}.
      */
     @Test
-    public void testSetSpawnLimitAnimals() {
+    void testSetSpawnLimitAnimals() {
         assertEquals(-1, s.getSpawnLimitAnimals());
         s.setSpawnLimitAnimals(12345);
         assertEquals(12345, s.getSpawnLimitAnimals());
@@ -1334,7 +1334,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#getSpawnLimitWaterAnimals()}.
      */
     @Test
-    public void testGetSpawnLimitWaterAnimals() {
+    void testGetSpawnLimitWaterAnimals() {
         assertEquals(-1, s.getSpawnLimitWaterAnimals());
     }
 
@@ -1342,7 +1342,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#setSpawnLimitWaterAnimals(int)}.
      */
     @Test
-    public void testSetSpawnLimitWaterAnimals() {
+    void testSetSpawnLimitWaterAnimals() {
         assertEquals(-1, s.getSpawnLimitWaterAnimals());
         s.setSpawnLimitWaterAnimals(12345);
         assertEquals(12345, s.getSpawnLimitWaterAnimals());
@@ -1352,7 +1352,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#getSpawnLimitAmbient()}.
      */
     @Test
-    public void testGetSpawnLimitAmbient() {
+    void testGetSpawnLimitAmbient() {
         assertEquals(-1, s.getSpawnLimitAmbient());
     }
 
@@ -1360,7 +1360,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#setSpawnLimitAmbient(int)}.
      */
     @Test
-    public void testSetSpawnLimitAmbient() {
+    void testSetSpawnLimitAmbient() {
         assertEquals(-1, s.getSpawnLimitAmbient());
         s.setSpawnLimitAmbient(12345);
         assertEquals(12345, s.getSpawnLimitAmbient());
@@ -1370,7 +1370,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#getTicksPerAnimalSpawns()}.
      */
     @Test
-    public void testGetTicksPerAnimalSpawns() {
+    void testGetTicksPerAnimalSpawns() {
         assertEquals(-1, s.getTicksPerAnimalSpawns());
     }
 
@@ -1378,7 +1378,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#setTicksPerAnimalSpawns(int)}.
      */
     @Test
-    public void testSetTicksPerAnimalSpawns() {
+    void testSetTicksPerAnimalSpawns() {
         assertEquals(-1, s.getTicksPerAnimalSpawns());
         s.setTicksPerAnimalSpawns(12345);
         assertEquals(12345, s.getTicksPerAnimalSpawns());
@@ -1388,7 +1388,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#getTicksPerMonsterSpawns()}.
      */
     @Test
-    public void testGetTicksPerMonsterSpawns() {
+    void testGetTicksPerMonsterSpawns() {
         assertEquals(-1, s.getTicksPerMonsterSpawns());
     }
 
@@ -1396,7 +1396,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#setTicksPerMonsterSpawns(int)}.
      */
     @Test
-    public void testSetTicksPerMonsterSpawns() {
+    void testSetTicksPerMonsterSpawns() {
         assertEquals(-1, s.getTicksPerMonsterSpawns());
         s.setTicksPerMonsterSpawns(12345);
         assertEquals(12345, s.getTicksPerMonsterSpawns());
@@ -1406,7 +1406,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#getMaxCoopSize()}.
      */
     @Test
-    public void testGetMaxCoopSize() {
+    void testGetMaxCoopSize() {
         assertEquals(4, s.getMaxCoopSize());
     }
 
@@ -1414,7 +1414,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#setMaxCoopSize(int)}.
      */
     @Test
-    public void testSetMaxCoopSize() {
+    void testSetMaxCoopSize() {
         s.setMaxCoopSize(12345);
         assertEquals(12345, s.getMaxCoopSize());
     }
@@ -1423,7 +1423,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#getMaxTrustSize()}.
      */
     @Test
-    public void testGetMaxTrustSize() {
+    void testGetMaxTrustSize() {
         assertEquals(4, s.getMaxTrustSize());
     }
 
@@ -1431,7 +1431,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#setMaxTrustSize(int)}.
      */
     @Test
-    public void testSetMaxTrustSize() {
+    void testSetMaxTrustSize() {
         s.setMaxTrustSize(12345);
         assertEquals(12345, s.getMaxTrustSize());
     }
@@ -1440,7 +1440,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#getMobWarning()}.
      */
     @Test
-    public void testGetMobWarning() {
+    void testGetMobWarning() {
         assertEquals(5, s.getMobWarning());
     }
 
@@ -1448,7 +1448,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#setMobWarning(int)}.
      */
     @Test
-    public void testSetMobWarning() {
+    void testSetMobWarning() {
         s.setMobWarning(12345);
         // Should be no more than 5
         assertEquals(BlockListener.MAX_LOOK_AHEAD, s.getMobWarning());
@@ -1461,7 +1461,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#isWaterMobProtection()}.
      */
     @Test
-    public void testIsWaterMobProtection() {
+    void testIsWaterMobProtection() {
         assertTrue(s.isWaterMobProtection());
     }
 
@@ -1469,7 +1469,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#setWaterMobProtection(boolean)}.
      */
     @Test
-    public void testSetWaterMobProtection() {
+    void testSetWaterMobProtection() {
         s.setWaterMobProtection(false);
         assertFalse(s.isWaterMobProtection());
         s.setWaterMobProtection(true);
@@ -1480,7 +1480,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#getDefaultNewPlayerAction()}.
      */
     @Test
-    public void testGetDefaultNewPlayerAction() {
+    void testGetDefaultNewPlayerAction() {
         assertEquals("create", s.getDefaultNewPlayerAction());
     }
 
@@ -1488,7 +1488,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#setDefaultNewPlayerAction(java.lang.String)}.
      */
     @Test
-    public void testSetDefaultNewPlayerAction() {
+    void testSetDefaultNewPlayerAction() {
         s.setDefaultNewPlayerAction("test");
         assertEquals("test", s.getDefaultNewPlayerAction());
     }
@@ -1497,7 +1497,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#getDefaultPlayerAction()}.
      */
     @Test
-    public void testGetDefaultPlayerAction() {
+    void testGetDefaultPlayerAction() {
         assertEquals("go", s.getDefaultPlayerAction());
     }
 
@@ -1505,7 +1505,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#setDefaultPlayerAction(java.lang.String)}.
      */
     @Test
-    public void testSetDefaultPlayerAction() {
+    void testSetDefaultPlayerAction() {
         s.setDefaultPlayerAction("test");
         assertEquals("test", s.getDefaultPlayerAction());
     }
@@ -1514,7 +1514,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#getMobLimitSettings()}.
      */
     @Test
-    public void testGetMobLimitSettings() {
+    void testGetMobLimitSettings() {
         assertTrue(s.getMobLimitSettings().isEmpty());
     }
 
@@ -1522,7 +1522,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#setMobLimitSettings(java.util.List)}.
      */
     @Test
-    public void testSetMobLimitSettings() {
+    void testSetMobLimitSettings() {
         s.setMobLimitSettings(List.of("test"));
         assertEquals("test", s.getMobLimitSettings().getFirst());
     }
@@ -1531,7 +1531,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#isDropOnTop()}.
      */
     @Test
-    public void testIsDropOnTop() {
+    void testIsDropOnTop() {
         assertTrue(s.isDropOnTop());
     }
 
@@ -1539,7 +1539,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#setDropOnTop(boolean)}.
      */
     @Test
-    public void testSetDropOnTop() {
+    void testSetDropOnTop() {
         s.setDropOnTop(false);
         assertFalse(s.isDropOnTop());
         s.setDropOnTop(true);
@@ -1550,7 +1550,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#getDefaultNetherBiome()}.
      */
     @Test
-    public void testGetDefaultNetherBiome() {
+    void testGetDefaultNetherBiome() {
         assertEquals(Biome.NETHER_WASTES, s.getDefaultNetherBiome());
     }
 
@@ -1558,7 +1558,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#setDefaultNetherBiome(org.bukkit.block.Biome)}.
      */
     @Test
-    public void testSetDefaultNetherBiome() {
+    void testSetDefaultNetherBiome() {
         assertEquals(Biome.NETHER_WASTES, s.getDefaultNetherBiome());
         s.setDefaultNetherBiome(Biome.BADLANDS);
         assertEquals(Biome.BADLANDS, s.getDefaultNetherBiome());
@@ -1568,7 +1568,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#getDefaultEndBiome()}.
      */
     @Test
-    public void testGetDefaultEndBiome() {
+    void testGetDefaultEndBiome() {
         assertEquals(Biome.THE_END, s.getDefaultEndBiome());
     }
 
@@ -1576,7 +1576,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#setDefaultEndBiome(org.bukkit.block.Biome)}.
      */
     @Test
-    public void testSetDefaultEndBiome() {
+    void testSetDefaultEndBiome() {
         assertEquals(Biome.THE_END, s.getDefaultEndBiome());
         s.setDefaultEndBiome(Biome.BADLANDS);
         assertEquals(Biome.BADLANDS, s.getDefaultEndBiome());
@@ -1586,7 +1586,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#isMakeNetherPortals()}.
      */
     @Test
-    public void testIsMakeNetherPortals() {
+    void testIsMakeNetherPortals() {
         assertFalse(s.isMakeNetherPortals());
     }
 
@@ -1594,7 +1594,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#isMakeEndPortals()}.
      */
     @Test
-    public void testIsMakeEndPortals() {
+    void testIsMakeEndPortals() {
         assertFalse(s.isMakeEndPortals());
     }
 
@@ -1602,7 +1602,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#setMakeNetherPortals(boolean)}.
      */
     @Test
-    public void testSetMakeNetherPortals() {
+    void testSetMakeNetherPortals() {
         s.setMakeNetherPortals(false);
         assertFalse(s.isMakeNetherPortals());
         s.setMakeNetherPortals(true);
@@ -1613,7 +1613,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#setMakeEndPortals(boolean)}.
      */
     @Test
-    public void testSetMakeEndPortals() {
+    void testSetMakeEndPortals() {
         s.setMakeEndPortals(false);
         assertFalse(s.isMakeEndPortals());
         s.setMakeEndPortals(true);
@@ -1624,7 +1624,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#getPercentCompleteSymbol()}.
      */
     @Test
-    public void testGetPercentCompleteSymbol() {
+    void testGetPercentCompleteSymbol() {
         assertEquals("■", s.getPercentCompleteSymbol());
     }
 
@@ -1632,7 +1632,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#setPercentCompleteSymbol(java.lang.String)}.
      */
     @Test
-    public void testSetPercentCompleteSymbol() {
+    void testSetPercentCompleteSymbol() {
         assertEquals("■", s.getPercentCompleteSymbol());
         s.setPercentCompleteSymbol("#");
         assertEquals("#", s.getPercentCompleteSymbol());
@@ -1642,7 +1642,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#getCountCommand()}.
      */
     @Test
-    public void testGetCountCommand() {
+    void testGetCountCommand() {
         assertEquals("count", s.getCountCommand());
     }
 
@@ -1650,7 +1650,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#setCountCommand(java.lang.String)}.
      */
     @Test
-    public void testSetCountCommand() {
+    void testSetCountCommand() {
         s.setCountCommand("count123");
         assertEquals("count123", s.getCountCommand());
     }
@@ -1659,7 +1659,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#getPhasesCommand()}.
      */
     @Test
-    public void testGetPhasesCommand() {
+    void testGetPhasesCommand() {
         assertEquals("phases", s.getPhasesCommand());
     }
 
@@ -1667,7 +1667,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#setPhasesCommand(java.lang.String)}.
      */
     @Test
-    public void testSetPhasesCommand() {
+    void testSetPhasesCommand() {
         s.setPhasesCommand("count123");
         assertEquals("count123", s.getPhasesCommand());
     }
@@ -1676,7 +1676,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#getSetCountCommand()}.
      */
     @Test
-    public void testGetSetCountCommand() {
+    void testGetSetCountCommand() {
         assertEquals("setCount", s.getSetCountCommand());
     }
 
@@ -1684,7 +1684,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#setSetCountCommand(java.lang.String)}.
      */
     @Test
-    public void testSetSetCountCommand() {
+    void testSetSetCountCommand() {
         s.setSetCountCommand("count123");
         assertEquals("count123", s.getSetCountCommand());
     }
@@ -1693,7 +1693,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#getRespawnBlockCommand()}.
      */
     @Test
-    public void testGetRespawnBlockCommand() {
+    void testGetRespawnBlockCommand() {
         assertEquals("respawnBlock check", s.getRespawnBlockCommand());
     }
 
@@ -1701,7 +1701,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#setRespawnBlockCommand(java.lang.String)}.
      */
     @Test
-    public void testSetRespawnBlockCommand() {
+    void testSetRespawnBlockCommand() {
         s.setRespawnBlockCommand("respawn");
         assertEquals("respawn", s.getRespawnBlockCommand());
     }
@@ -1710,7 +1710,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#isUseHolograms()}.
      */
     @Test
-    public void testIsUseHolograms() {
+    void testIsUseHolograms() {
         assertTrue(s.isUseHolograms());
     }
     
@@ -1718,7 +1718,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#setUseHolograms(boolean)}.
      */
     @Test
-    public void testSetUseHolograms() {
+    void testSetUseHolograms() {
         assertTrue(s.isUseHolograms());
         s.setUseHolograms(false);
         assertFalse(s.isUseHolograms());
@@ -1728,7 +1728,7 @@ public class SettingsTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.Settings#setHologramDuration(int)}.
      */
     @Test
-    public void testSetHologramDuration() {
+    void testSetHologramDuration() {
         s.setHologramDuration(2345);
         assertEquals(2345, s.getHologramDuration());
     }

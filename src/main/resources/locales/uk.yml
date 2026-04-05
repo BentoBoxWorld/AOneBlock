@@ -20,12 +20,12 @@ protection:
         description: |-
           &b Показує панель стану
           &b для кожної фази.
-  ONEBLOCK_ACTIONBAR:
-    name: Action Bar
-    description: |-
-      &b Показує статус
-      &b для кожної фази
-      &b в Action Bar.
+    ONEBLOCK_ACTIONBAR:
+      name: Action Bar
+      description: |-
+        &b Показує статус
+        &b для кожної фази
+        &b в Action Bar.
 aoneblock:
   bossbar:
     title: Блоки, що залишилися

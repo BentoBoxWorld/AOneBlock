@@ -644,53 +644,51 @@ public class BlockListener extends FlagListener implements Listener {
     private void spawnBlock(@NonNull OneBlockObject nextBlock, @NonNull Block block) {
         if (nextBlock.isCustomBlock()) {
             nextBlock.getCustomBlock().execute(addon, block);
-        } else {
-            Material type = nextBlock.getMaterial();
-            // Place new block with no physics
-            block.setType(type, false);
-            // Fill the chest
-            if (type.equals(Material.CHEST) && nextBlock.getChest() != null) {
-                fillChest(nextBlock, block);
-                return;
-            } else if (Tag.LEAVES.isTagged(type)) {
-                Leaves leaves = (Leaves) block.getState().getBlockData();
-                leaves.setPersistent(true);
-                block.setBlockData(leaves);
-            } else if (type == Material.SUSPICIOUS_GRAVEL || type == Material.SUSPICIOUS_SAND) {
-                // Create the default block data
-                BlockData blockData = type.createBlockData();
-
-                // Set the block data in the world *without* physics
-                //    This is safer than setType for block entities.
-                block.setBlockData(blockData, false);
-
-                // Now, get the state of the block we just placed
-                BlockState state = block.getState();
-
-                // Check and cast to BrushableBlock
-                if (state instanceof BrushableBlock suspiciousBlock) {
-
-                    // Define the loot table
-                    int totalWeight = SUSPICIOUS_LOOT.lastKey(); 
-                    // Generate random number in the range [0, 13]
-                    int randomValue = RAND.nextInt(totalWeight);
-                    String loot = SUSPICIOUS_LOOT.higherEntry(randomValue).getValue();
-                    NamespacedKey lootTableKey = new NamespacedKey("minecraft", loot);
-                    LootTable lootTable = Bukkit.getLootTable(lootTableKey);
-
-                    if (lootTable != null) {
-                        // Set the loot table
-                        suspiciousBlock.setLootTable(lootTable);
-
-                        // Update the state in the world.
-                        suspiciousBlock.update(true, false); 
-                    } else {
-                        BentoBox.getInstance().logWarning("Could not find loot table: " + lootTableKey);
-                    }
-                }
-            }
+            return;
         }
+        Material type = nextBlock.getMaterial();
+        block.setType(type, false);
+        if (type.equals(Material.CHEST) && nextBlock.getChest() != null) {
+            fillChest(nextBlock, block);
+        } else if (Tag.LEAVES.isTagged(type)) {
+            setLeavesPersistent(block);
+        } else if (type == Material.SUSPICIOUS_GRAVEL || type == Material.SUSPICIOUS_SAND) {
+            spawnSuspiciousBlock(block, type);
+        }
+    }
 
+    /**
+     * Sets a leaves block to persistent so it does not decay.
+     * @param block The leaves block.
+     */
+    private void setLeavesPersistent(Block block) {
+        Leaves leaves = (Leaves) block.getState().getBlockData();
+        leaves.setPersistent(true);
+        block.setBlockData(leaves);
+    }
+
+    /**
+     * Sets up a suspicious gravel or sand block with a randomly chosen archaeology loot table.
+     * @param block The block to configure.
+     * @param type  SUSPICIOUS_GRAVEL or SUSPICIOUS_SAND.
+     */
+    private void spawnSuspiciousBlock(Block block, Material type) {
+        // Use setBlockData (safer than setType for block entities) — no physics
+        block.setBlockData(type.createBlockData(), false);
+
+        if (!(block.getState() instanceof BrushableBlock suspiciousBlock)) {
+            return;
+        }
+        int randomValue = RAND.nextInt(SUSPICIOUS_LOOT.lastKey());
+        String loot = SUSPICIOUS_LOOT.higherEntry(randomValue).getValue();
+        NamespacedKey lootTableKey = new NamespacedKey("minecraft", loot);
+        LootTable lootTable = Bukkit.getLootTable(lootTableKey);
+        if (lootTable != null) {
+            suspiciousBlock.setLootTable(lootTable);
+            suspiciousBlock.update(true, false);
+        } else {
+            BentoBox.getInstance().logWarning("Could not find loot table: " + lootTableKey);
+        }
     }
 
     /**
@@ -700,67 +698,56 @@ public class BlockListener extends FlagListener implements Listener {
      */
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent e) {
-        // Check if this is a magic block
-        if (!addon.inWorld(e.getPlayer().getWorld())) {
-            return;
-        }
+        if (!addon.inWorld(e.getPlayer().getWorld())) return;
         if (e.getAction() != Action.RIGHT_CLICK_BLOCK) return;
         if (e.getHand() != EquipmentSlot.HAND) return;
         Block block = e.getClickedBlock();
         if (block == null) return;
-        if (block.getType() != Material.SUSPICIOUS_GRAVEL &&
-                block.getType() != Material.SUSPICIOUS_SAND) return;
+        if (block.getType() != Material.SUSPICIOUS_GRAVEL && block.getType() != Material.SUSPICIOUS_SAND) return;
         if (e.getPlayer().getInventory().getItemInMainHand().getType() != Material.BRUSH) return;
-        // Check for magic block
-        if (addon.getIslands().getIslandAt(block.getLocation()).filter(i -> i.getCenter().equals(block.getLocation())).isEmpty()) {
-            return;
-        }
+        if (addon.getIslands().getIslandAt(block.getLocation())
+                .filter(i -> i.getCenter().equals(block.getLocation())).isEmpty()) return;
 
         if (block.getBlockData() instanceof Brushable bb) {
             int dusted = bb.getDusted() + 1;
             if (dusted > bb.getMaximumDusted()) {
-                /// === Brushing is FINISHED! ===
-                Location loc = block.getLocation().add(0.5, 0.5, 0.5); // Center of block
-                World world = block.getWorld();
-
-                // Get the loot from the BlockState
-                BlockState state = block.getState();
-                if (state instanceof BrushableBlock suspiciousBlock) {
-                    LootTable lootTable = suspiciousBlock.getLootTable();
-
-                    if (lootTable != null) {
-                        // Build a LootContext
-                        LootContext context = new LootContext.Builder(loc).lootedEntity(e.getPlayer()).killer(e.getPlayer()).build();
-                        // Generate and spawn the loot
-                        Collection<ItemStack> items = lootTable.populateLoot(new Random(), context);
-                        for (ItemStack item : items) {
-                            world.dropItemNaturally(loc, item);
-                        }
-                    }
-                }
-
-                // Determine break sound
-                Sound breakSound = (block.getType() == Material.SUSPICIOUS_GRAVEL) 
-                        ? Sound.BLOCK_SUSPICIOUS_GRAVEL_BREAK
-                                : Sound.BLOCK_SUSPICIOUS_SAND_BREAK;
-
-                // Break block and play sound
-                world.playSound(loc, breakSound, 1.0f, 1.0f);
-                block.setType(Material.AIR);
-
-                // Fire break block event
-                Bukkit.getPluginManager().callEvent(new BlockBreakEvent(block, e.getPlayer()));
-
-                // 6. Damage the brush
-                // This method correctly handles Unbreaking and breaks the item if durability hits 0
-                e.getPlayer().getInventory().getItemInMainHand().damage(1, e.getPlayer());
-
+                completeBrush(e, block);
             } else {
-                // Brush some more
                 bb.setDusted(dusted);
                 block.setBlockData(bb);
             }
         }
+    }
+
+    /**
+     * Completes the brushing of a suspicious block: drops loot (if available), plays the
+     * break sound, removes the block, fires a BlockBreakEvent, and damages the brush.
+     * @param e     The originating PlayerInteractEvent.
+     * @param block The suspicious block being brushed.
+     */
+    private void completeBrush(PlayerInteractEvent e, Block block) {
+        Location loc = block.getLocation().add(0.5, 0.5, 0.5);
+        World world = block.getWorld();
+
+        if (block.getState() instanceof BrushableBlock suspiciousBlock) {
+            LootTable lootTable = suspiciousBlock.getLootTable();
+            if (lootTable != null) {
+                LootContext context = new LootContext.Builder(loc)
+                        .lootedEntity(e.getPlayer()).killer(e.getPlayer()).build();
+                Collection<ItemStack> items = lootTable.populateLoot(new Random(), context);
+                for (ItemStack item : items) {
+                    world.dropItemNaturally(loc, item);
+                }
+            }
+        }
+
+        Sound breakSound = (block.getType() == Material.SUSPICIOUS_GRAVEL)
+                ? Sound.BLOCK_SUSPICIOUS_GRAVEL_BREAK
+                : Sound.BLOCK_SUSPICIOUS_SAND_BREAK;
+        world.playSound(loc, breakSound, 1.0f, 1.0f);
+        block.setType(Material.AIR);
+        Bukkit.getPluginManager().callEvent(new BlockBreakEvent(block, e.getPlayer()));
+        e.getPlayer().getInventory().getItemInMainHand().damage(1, e.getPlayer());
     }
 
     /**

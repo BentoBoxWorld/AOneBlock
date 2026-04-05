@@ -74,7 +74,7 @@ public class JoinLeaveListenerTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.listeners.JoinLeaveListener#JoinLeaveListener(world.bentobox.aoneblock.AOneBlock)}.
      */
     @Test
-    public void testJoinLeaveListener() {
+    void testJoinLeaveListener() {
         assertNotNull(jll);
     }
 
@@ -82,7 +82,7 @@ public class JoinLeaveListenerTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.listeners.JoinLeaveListener#onPlayerQuit(org.bukkit.event.player.PlayerQuitEvent)}.
      */
     @Test
-    public void testOnPlayerQuit() {
+    void testOnPlayerQuit() {
         PlayerQuitEvent event = new PlayerQuitEvent(mockPlayer, "nothing");
         jll.onPlayerQuit(event);
         verify(aob,never()).logError(anyString());
@@ -93,7 +93,7 @@ public class JoinLeaveListenerTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.listeners.JoinLeaveListener#onPlayerQuit(org.bukkit.event.player.PlayerQuitEvent)}.
      */
     @Test
-    public void testOnPlayerQuitNoIsland() {
+    void testOnPlayerQuitNoIsland() {
         when(im.getIsland(world, ID)).thenReturn(null);
         PlayerQuitEvent event = new PlayerQuitEvent(mockPlayer, "nothing");
         jll.onPlayerQuit(event);
@@ -105,7 +105,7 @@ public class JoinLeaveListenerTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.listeners.JoinLeaveListener#onPlayerQuit(org.bukkit.event.player.PlayerQuitEvent)}.
      */
     @Test
-    public void testOnPlayerQuitSaveError() {
+    void testOnPlayerQuitSaveError() {
         when(bl.saveIsland(any())).thenReturn(CompletableFuture.completedFuture(Boolean.FALSE));
         PlayerQuitEvent event = new PlayerQuitEvent(mockPlayer, "nothing");
         jll.onPlayerQuit(event);

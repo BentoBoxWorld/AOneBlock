@@ -110,12 +110,13 @@ public class BossBarListener implements Listener {
         int numBlocksToGo = addon.getOneBlockManager().getNextPhaseBlocks(obi);
         int phaseBlocks = addon.getOneBlockManager().getPhaseBlocks(obi);
         int done = phaseBlocks - numBlocksToGo;
-        String translation = user.getTranslationOrNothing("aoneblock.actionbar.status", "[togo]",
+        String translation = user.getTranslation("aoneblock.actionbar.status", "[togo]",
                 String.valueOf(numBlocksToGo), "[total]", String.valueOf(phaseBlocks), "[done]", String.valueOf(done),
                 "[phase-name]", obi.getPhaseName(), "[percent-done]",
                 Math.round(addon.getOneBlockManager().getPercentageDone(obi)) + "%");
         // Send
-        player.sendActionBar(bukkitToAdventure(translation));
+        Component comp = bukkitToAdventure(translation);
+        player.sendActionBar(comp);
     }
     /**
      * Try to show the bossbar to the player

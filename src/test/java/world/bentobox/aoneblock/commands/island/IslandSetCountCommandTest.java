@@ -142,7 +142,7 @@ public class IslandSetCountCommandTest extends CommonTestSetup {
      * {@link world.bentobox.aoneblock.commands.island.IslandSetCountCommand#IslandSetCountCommand(world.bentobox.bentobox.api.commands.CompositeCommand, java.lang.String, java.lang.String[])}.
      */
     @Test
-    public void testIslandSetCountCommand() {
+    void testIslandSetCountCommand() {
         assertNotNull(iscc);
     }
 
@@ -151,7 +151,7 @@ public class IslandSetCountCommandTest extends CommonTestSetup {
      * {@link world.bentobox.aoneblock.commands.island.IslandSetCountCommand#setup()}.
      */
     @Test
-    public void testSetup() {
+    void testSetup() {
         assertEquals("island.setcount", iscc.getPermission());
         assertEquals("aoneblock.commands.island.setcount.parameters", iscc.getParameters());
         assertEquals("aoneblock.commands.island.setcount.description", iscc.getDescription());
@@ -164,7 +164,7 @@ public class IslandSetCountCommandTest extends CommonTestSetup {
      * Test method for
      * {@link world.bentobox.aoneblock.commands.island.IslandSetCountCommand#execute(world.bentobox.bentobox.api.user.User, java.lang.String, java.util.List)}.
      */
-    public void testExecuteUserStringListOfStringShowHelp() {
+    void testExecuteUserStringListOfStringShowHelp() {
         assertFalse(iscc.execute(user, "", Collections.emptyList()));
         verify(user).sendMessage("commands.help.header", "[label]", null);
     }
@@ -173,7 +173,7 @@ public class IslandSetCountCommandTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.commands.island.IslandSetCountCommand#execute(world.bentobox.bentobox.api.user.User, java.lang.String, java.util.List)}.
      */
     @Test
-    public void testExecuteUserStringListOfStringNoIsland() {
+    void testExecuteUserStringListOfStringNoIsland() {
         when(im.hasIsland(world, user)).thenReturn(false);
         when(im.inTeam(world, uuid)).thenReturn(false);
         assertFalse(iscc.execute(user, "", List.of("2000")));
@@ -185,7 +185,7 @@ public class IslandSetCountCommandTest extends CommonTestSetup {
      * {@link world.bentobox.aoneblock.commands.island.IslandSetCountCommand#execute(world.bentobox.bentobox.api.user.User, java.lang.String, java.util.List)}.
      */
     @Test
-    public void testExecuteUserStringListOfStringLowRank() {
+    void testExecuteUserStringListOfStringLowRank() {
         when(rm.getRank(anyInt())).thenReturn(RanksManager.MEMBER_RANK_REF);
         assertFalse(iscc.execute(user, "", List.of("2000")));
         verify(user).sendMessage("general.errors.insufficient-rank", TextVariables.RANK, RanksManager.MEMBER_RANK_REF);
@@ -195,7 +195,7 @@ public class IslandSetCountCommandTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.commands.island.IslandSetCountCommand#execute(world.bentobox.bentobox.api.user.User, java.lang.String, java.util.List)}.
      */
     @Test
-    public void testExecuteUserStringListOfStringRankOKNegativeCount() {
+    void testExecuteUserStringListOfStringRankOKNegativeCount() {
         when(island.getRankCommand(anyString())).thenReturn(RanksManager.MEMBER_RANK);
         assertFalse(iscc.execute(user, "", List.of("-2000")));
         verify(user).sendMessage("general.errors.must-be-positive-number", TextVariables.NUMBER, "-2000");
@@ -205,7 +205,7 @@ public class IslandSetCountCommandTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.commands.island.IslandSetCountCommand#execute(world.bentobox.bentobox.api.user.User, java.lang.String, java.util.List)}.
      */
     @Test
-    public void testExecuteUserStringListOfStringRankOKTooHighCount() {
+    void testExecuteUserStringListOfStringRankOKTooHighCount() {
         when(island.getRankCommand(anyString())).thenReturn(RanksManager.MEMBER_RANK);
         oneBlockIsland.setLifetime(0);
         assertFalse(iscc.execute(user, "", List.of("2000")));
@@ -216,7 +216,7 @@ public class IslandSetCountCommandTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.commands.island.IslandSetCountCommand#execute(world.bentobox.bentobox.api.user.User, java.lang.String, java.util.List)}.
      */
     @Test
-    public void testExecuteUserStringListOfString() {
+    void testExecuteUserStringListOfString() {
         when(island.getRankCommand(anyString())).thenReturn(RanksManager.MEMBER_RANK);
         oneBlockIsland.setLifetime(4000);
         oneBlockIsland.add(new OneBlockObject(EntityType.ALLAY, 20));

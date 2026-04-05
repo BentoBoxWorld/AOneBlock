@@ -20,12 +20,12 @@ protection:
         description: |-
           &b Zeigt eine Statusleiste
           &b für jede Phase.
-  ONEBLOCK_ACTIONBAR:
-    name: Action-Leiste
-    description: |-
-      &b Zeigt einen Status
-      &b für jede Phase
-      &b in der Action-Leiste.
+    ONEBLOCK_ACTIONBAR:
+      name: Action-Leiste
+      description: |-
+        &b Zeigt einen Status
+        &b für jede Phase
+        &b in der Action-Leiste.
 aoneblock:
   bossbar:
     title: Verbleibende Blöcke

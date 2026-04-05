@@ -100,7 +100,7 @@ public class BlockProtectTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.listeners.BlockProtect#BlockProtect(world.bentobox.aoneblock.AOneBlock)}.
      */
     @Test
-    public void testBlockProtect() {
+    void testBlockProtect() {
         assertNotNull(bp);
     }
 
@@ -108,7 +108,7 @@ public class BlockProtectTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.listeners.BlockProtect#onBlockDamage(PlayerInteractEvent)}.
      */
     @Test
-    public void testOnBlockDamage() {
+    void testOnBlockDamage() {
         ItemStack item = new ItemStack(Material.DIAMOND_PICKAXE);
         PlayerInteractEvent blockDamageEvent = new PlayerInteractEvent(mockPlayer, Action.LEFT_CLICK_BLOCK, item, block,
                 BlockFace.UP);
@@ -123,7 +123,7 @@ public class BlockProtectTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.listeners.BlockProtect#onBlockDamage(PlayerInteractEvent)}.
      */
     @Test
-    public void testOnBlockDamageWrongWorld() {
+    void testOnBlockDamageWrongWorld() {
         when(mockPlayer.getWorld()).thenReturn(mock(World.class));
         ItemStack item = new ItemStack(Material.DIAMOND_PICKAXE);
         PlayerInteractEvent blockDamageEvent = new PlayerInteractEvent(mockPlayer, Action.LEFT_CLICK_BLOCK, item, block,
@@ -138,7 +138,7 @@ public class BlockProtectTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.listeners.BlockProtect#onBlockDamage(PlayerInteractEvent)}.
      */
     @Test
-    public void testOnBlockDamageNotCenterMagicBlock() {
+    void testOnBlockDamageNotCenterMagicBlock() {
         when(block.getLocation()).thenReturn(mock(Location.class));
         ItemStack item = new ItemStack(Material.DIAMOND_PICKAXE);
         PlayerInteractEvent blockDamageEvent = new PlayerInteractEvent(mockPlayer, Action.LEFT_CLICK_BLOCK, item, block,
@@ -154,7 +154,7 @@ public class BlockProtectTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.listeners.BlockProtect#onBlockChange(org.bukkit.event.entity.EntityChangeBlockEvent)}.
      */
     @Test
-    public void testOnBlockChange() {
+    void testOnBlockChange() {
         BlockData blockData = mock(BlockData.class);
         EntityChangeBlockEvent event = new EntityChangeBlockEvent(mockPlayer, block, blockData);
         bp.onBlockChange(event);
@@ -165,7 +165,7 @@ public class BlockProtectTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.listeners.BlockProtect#onBlockChange(org.bukkit.event.entity.EntityChangeBlockEvent)}.
      */
     @Test
-    public void testOnBlockChangeWrongWorld() {
+    void testOnBlockChangeWrongWorld() {
         when(block.getWorld()).thenReturn(mock(World.class));
         BlockData blockData = mock(BlockData.class);
         EntityChangeBlockEvent event = new EntityChangeBlockEvent(mockPlayer, block, blockData);
@@ -177,7 +177,7 @@ public class BlockProtectTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.listeners.BlockProtect#onBlockChange(org.bukkit.event.entity.EntityChangeBlockEvent)}.
      */
     @Test
-    public void testOnBlockChangeNotMagicBlock() {
+    void testOnBlockChangeNotMagicBlock() {
         when(block.getLocation()).thenReturn(mock(Location.class));
         BlockData blockData = mock(BlockData.class);
         EntityChangeBlockEvent event = new EntityChangeBlockEvent(mockPlayer, block, blockData);
@@ -189,7 +189,7 @@ public class BlockProtectTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.listeners.BlockProtect#onExplosion(org.bukkit.event.entity.EntityExplodeEvent)}.
      */
     @Test
-    public void testOnExplosion() {
+    void testOnExplosion() {
         List<Block> blocks = new ArrayList<>();
         EntityExplodeEvent event = new EntityExplodeEvent(mockPlayer, location, blocks, 0, null);
         bp.onExplosion(event);
@@ -211,7 +211,7 @@ public class BlockProtectTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.listeners.BlockProtect#onExplosion(org.bukkit.event.entity.EntityExplodeEvent)}.
      */
     @Test
-    public void testOnExplosionWrongWorld() {
+    void testOnExplosionWrongWorld() {
         when(location.getWorld()).thenReturn(mock(World.class));
         List<Block> blocks = new ArrayList<>();
         EntityExplodeEvent event = new EntityExplodeEvent(mockPlayer, location, blocks, 0, null);
@@ -230,7 +230,7 @@ public class BlockProtectTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.listeners.BlockProtect#onPistonExtend(org.bukkit.event.block.BlockPistonExtendEvent)}.
      */
     @Test
-    public void testOnPistonExtendBlockPistonExtendEvent() {
+    void testOnPistonExtendBlockPistonExtendEvent() {
         List<Block> blocks = new ArrayList<>();
         BlockPistonExtendEvent event = new BlockPistonExtendEvent(block, blocks, BlockFace.EAST);
         bp.onPistonExtend(event);
@@ -245,7 +245,7 @@ public class BlockProtectTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.listeners.BlockProtect#onPistonExtend(org.bukkit.event.block.BlockPistonExtendEvent)}.
      */
     @Test
-    public void testOnPistonExtendBlockPistonExtendEventWrongWorld() {
+    void testOnPistonExtendBlockPistonExtendEventWrongWorld() {
         when(block.getWorld()).thenReturn(mock(World.class));
         List<Block> blocks = new ArrayList<>();
         BlockPistonExtendEvent event = new BlockPistonExtendEvent(block, blocks, BlockFace.EAST);
@@ -261,7 +261,7 @@ public class BlockProtectTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.listeners.BlockProtect#onPistonRetract(BlockPistonRetractEvent)}.
      */
     @Test
-    public void testOnPistonBlockPistonRetractEvent() {
+    void testOnPistonBlockPistonRetractEvent() {
         List<Block> blocks = new ArrayList<>();
         BlockPistonRetractEvent event = new BlockPistonRetractEvent(block, blocks, BlockFace.EAST);
         bp.onPistonRetract(event);
@@ -276,7 +276,7 @@ public class BlockProtectTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.listeners.BlockProtect#onPistonRetract(BlockPistonRetractEvent)}.
      */
     @Test
-    public void testOnPistonBlockPistonRetractEventWrongWorld() {
+    void testOnPistonBlockPistonRetractEventWrongWorld() {
         when(block.getWorld()).thenReturn(mock(World.class));
         List<Block> blocks = new ArrayList<>();
         BlockPistonRetractEvent event = new BlockPistonRetractEvent(block, blocks, BlockFace.EAST);
@@ -293,7 +293,7 @@ public class BlockProtectTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.listeners.BlockProtect#onFallingBlockSpawn(org.bukkit.event.entity.EntitySpawnEvent)}.
      */
     @Test
-    public void testOnFallingBlockSpawn() {
+    void testOnFallingBlockSpawn() {
         Entity fallingBlock = mock(Entity.class);
         when(fallingBlock.getLocation()).thenReturn(location);
         when(fallingBlock.getType()).thenReturn(EntityType.FALLING_BLOCK);
@@ -307,7 +307,7 @@ public class BlockProtectTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.listeners.BlockProtect#onFallingBlockSpawn(org.bukkit.event.entity.EntitySpawnEvent)}.
      */
     @Test
-    public void testOnFallingBlockSpawnWrongWorld() {
+    void testOnFallingBlockSpawnWrongWorld() {
         Entity fallingBlock = mock(Entity.class);
         when(fallingBlock.getLocation()).thenReturn(location);
         when(fallingBlock.getType()).thenReturn(EntityType.FALLING_BLOCK);
@@ -321,7 +321,7 @@ public class BlockProtectTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.listeners.BlockProtect#onFallingBlockSpawn(org.bukkit.event.entity.EntitySpawnEvent)}.
      */
     @Test
-    public void testOnFallingBlockSpawnNotFallingBlock() {
+    void testOnFallingBlockSpawnNotFallingBlock() {
         Entity fallingBlock = mock(Entity.class);
         when(fallingBlock.getLocation()).thenReturn(location);
         when(fallingBlock.getType()).thenReturn(EntityType.AREA_EFFECT_CLOUD);
@@ -335,7 +335,7 @@ public class BlockProtectTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.listeners.BlockProtect#onFallingBlockSpawn(org.bukkit.event.entity.EntitySpawnEvent)}.
      */
     @Test
-    public void testOnFallingBlockSpawnWrongLocation() {
+    void testOnFallingBlockSpawnWrongLocation() {
         Entity fallingBlock = mock(Entity.class);
         Location l = mock(Location.class);
         when(l.getWorld()).thenReturn(world);

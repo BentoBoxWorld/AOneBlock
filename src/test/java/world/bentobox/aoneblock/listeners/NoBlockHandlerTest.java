@@ -84,7 +84,7 @@ public class NoBlockHandlerTest extends CommonTestSetup {
      * {@link world.bentobox.aoneblock.listeners.NoBlockHandler#NoBlockHandler(world.bentobox.aoneblock.AOneBlock)}.
      */
     @Test
-    public void testNoBlockHandler() {
+    void testNoBlockHandler() {
 	assertNotNull(nbh);
     }
 
@@ -93,7 +93,7 @@ public class NoBlockHandlerTest extends CommonTestSetup {
      * {@link world.bentobox.aoneblock.listeners.NoBlockHandler#onRespawn(org.bukkit.event.player.PlayerRespawnEvent)}.
      */
     @Test
-    public void testOnRespawnSolidBlock() {
+    void testOnRespawnSolidBlock() {
 	PlayerRespawnEvent event = new PlayerRespawnEvent(mockPlayer, location, false, false, false, RespawnReason.DEATH);
 	nbh.onRespawn(event);
 	verify(block, never()).setType(any(Material.class));
@@ -104,7 +104,7 @@ public class NoBlockHandlerTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.listeners.NoBlockHandler#onRespawn(org.bukkit.event.player.PlayerRespawnEvent)}.
      */
     @Test
-    public void testOnRespawnAirBlock() {
+    void testOnRespawnAirBlock() {
         when(block.isEmpty()).thenReturn(true);
         PlayerRespawnEvent event = new PlayerRespawnEvent(mockPlayer, location, false, false, false, RespawnReason.DEATH);
         nbh.onRespawn(event);
@@ -116,7 +116,7 @@ public class NoBlockHandlerTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.listeners.NoBlockHandler#onRespawn(org.bukkit.event.player.PlayerRespawnEvent)}.
      */
     @Test
-    public void testOnRespawnAirBlockWrongWorld() {
+    void testOnRespawnAirBlockWrongWorld() {
         when(aob.inWorld(world)).thenReturn(false);
         when(block.isEmpty()).thenReturn(true);
         PlayerRespawnEvent event = new PlayerRespawnEvent(mockPlayer, location, false, false, true, RespawnReason.DEATH);
@@ -129,7 +129,7 @@ public class NoBlockHandlerTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.listeners.NoBlockHandler#onRespawn(org.bukkit.event.player.PlayerRespawnEvent)}.
      */
     @Test
-    public void testOnRespawnAirBlockNoIsland() {
+    void testOnRespawnAirBlockNoIsland() {
         when(im.getIsland(world, ID)).thenReturn(null);
         when(block.isEmpty()).thenReturn(true);
         PlayerRespawnEvent event = new PlayerRespawnEvent(mockPlayer, location, false, false, false, RespawnReason.DEATH);

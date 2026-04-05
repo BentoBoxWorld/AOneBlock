@@ -132,13 +132,19 @@ public abstract class CommonTestSetup {
 
     @BeforeEach
     public void setUp() throws Exception {
-        MockitoAnnotations.openMocks(this);
         // Processes the @Mock annotations and initializes the field
         closeable = MockitoAnnotations.openMocks(this);
         server = MockBukkit.mock();
         // Bukkit
         // Set up plugin
         WhiteBox.setInternalState(BentoBox.class, "instance", plugin);
+
+        // Force Tag static fields (e.g. Tag.LEAVES) to be initialized NOW, while the
+        // real MockBukkit server is active, rather than later when mockedBukkit is in
+        // place. If Tag fields load under mockedBukkit (RETURNS_DEEP_STUBS), they
+        // become Mockito deep-stub mocks that stale across tests after clearInlineMocks().
+        @SuppressWarnings("unused")
+        var unusedTagRef = org.bukkit.Tag.LEAVES;
 
         // Register the static mock
         mockedBukkit = Mockito.mockStatic(Bukkit.class, Mockito.RETURNS_DEEP_STUBS);

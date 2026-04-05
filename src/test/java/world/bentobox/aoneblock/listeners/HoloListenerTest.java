@@ -112,7 +112,7 @@ public class HoloListenerTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.listeners.HoloListener#HoloListener(world.bentobox.aoneblock.AOneBlock)}.
      */
     @Test
-    public void testHoloListener() {
+    void testHoloListener() {
         assertNotNull(hl);
     }
 
@@ -120,7 +120,7 @@ public class HoloListenerTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.listeners.HoloListener#onDeletedIsland(world.bentobox.bentobox.api.events.island.IslandDeleteEvent)}.
      */
     @Test
-    public void testOnDeletedIsland() {
+    void testOnDeletedIsland() {
         IslandDeleteEvent event = new IslandDeleteEvent(island, uuid, false, location);
         this.hl.onDeletedIsland(event);
         verify(hologram).remove();
@@ -130,7 +130,7 @@ public class HoloListenerTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.listeners.HoloListener#onDisable()}.
      */
     @Test
-    public void testOnDisable() {
+    void testOnDisable() {
         hl.setUp(island, is, true);
         hl.onDisable();
         verify(hologram, times(2)).remove();
@@ -141,7 +141,7 @@ public class HoloListenerTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.listeners.HoloListener#setUp(world.bentobox.bentobox.database.objects.Island, world.bentobox.aoneblock.dataobjects.OneBlockIslands, boolean)}.
      */
     @Test
-    public void testSetUpNoHolograms() {
+    void testSetUpNoHolograms() {
         settings.setUseHolograms(false);
         hl.setUp(island, is, true);
         verify(sch, never()).runTaskLater(isNull(), any(Runnable.class), anyLong());
@@ -151,7 +151,7 @@ public class HoloListenerTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.listeners.HoloListener#setUp(world.bentobox.bentobox.database.objects.Island, world.bentobox.aoneblock.dataobjects.OneBlockIslands, boolean)}.
      */
     @Test
-    public void testSetUpNoScheduling() {
+    void testSetUpNoScheduling() {
         settings.setHologramDuration(0);
         hl.setUp(island, is, true);
         verify(sch, never()).runTaskLater(isNull(), any(Runnable.class), anyLong());
@@ -161,7 +161,7 @@ public class HoloListenerTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.listeners.HoloListener#setUp(world.bentobox.bentobox.database.objects.Island, world.bentobox.aoneblock.dataobjects.OneBlockIslands, boolean)}.
      */
     @Test
-    public void testSetUpNewIsland() {
+    void testSetUpNewIsland() {
         hl.setUp(island, is, true);
         verify(is).setHologram("aoneblock.island.starting-hologram");
         verify(sch).runTaskLater(isNull(), any(Runnable.class), anyLong());
@@ -171,7 +171,7 @@ public class HoloListenerTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.listeners.HoloListener#setUp(world.bentobox.bentobox.database.objects.Island, world.bentobox.aoneblock.dataobjects.OneBlockIslands, boolean)}.
      */
     @Test
-    public void testSetUpNotNewIsland() {
+    void testSetUpNotNewIsland() {
         hl.setUp(island, is, false);
         verify(is, never()).setHologram(anyString());
         verify(sch).runTaskLater(isNull(), any(Runnable.class), anyLong());
@@ -182,7 +182,7 @@ public class HoloListenerTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.listeners.HoloListener#process(world.bentobox.bentobox.database.objects.Island, world.bentobox.aoneblock.dataobjects.OneBlockIslands, world.bentobox.aoneblock.oneblocks.OneBlockPhase)}.
      */
     @Test
-    public void testProcessNull() {
+    void testProcessNull() {
         when(phase.getHologramLine(anyInt())).thenReturn(null);
         when(is.getHologram()).thenReturn(""); // Return blank
         hl.process(island, is, phase);
@@ -193,7 +193,7 @@ public class HoloListenerTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.listeners.HoloListener#process(world.bentobox.bentobox.database.objects.Island, world.bentobox.aoneblock.dataobjects.OneBlockIslands, world.bentobox.aoneblock.oneblocks.OneBlockPhase)}.
      */
     @Test
-    public void testProcess() {
+    void testProcess() {
         when(phase.getHologramLine(anyInt())).thenReturn("my Holo");
         hl.process(island, is, phase);
         verify(sch).runTaskLater(isNull(), any(Runnable.class), anyLong());

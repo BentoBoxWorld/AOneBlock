@@ -20,12 +20,12 @@ protection:
         description: |-
           &b Mostra una barra di stato
           &b per ogni fase.
-  ONEBLOCK_ACTIONBAR:
-    name: Action Bar
-    description: |-
-      &b Mostra uno stato
-      &b per ogni fase
-      &b nella Action Bar.
+    ONEBLOCK_ACTIONBAR:
+      name: Action Bar
+      description: |-
+        &b Mostra uno stato
+        &b per ogni fase
+        &b nella Action Bar.
 aoneblock:
   bossbar:
     title: Blocca i restanti
