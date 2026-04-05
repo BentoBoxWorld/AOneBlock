@@ -22,7 +22,6 @@ import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import world.bentobox.aoneblock.AOneBlock;
 import world.bentobox.aoneblock.dataobjects.OneBlockIslands;
 import world.bentobox.aoneblock.events.MagicBlockEvent;
-import world.bentobox.bentobox.BentoBox;
 import world.bentobox.bentobox.api.events.flags.FlagSettingChangeEvent;
 import world.bentobox.bentobox.api.events.island.IslandEnterEvent;
 import world.bentobox.bentobox.api.events.island.IslandExitEvent;
