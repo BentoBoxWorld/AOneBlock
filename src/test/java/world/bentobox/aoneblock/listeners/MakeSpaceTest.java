@@ -3,6 +3,7 @@ package world.bentobox.aoneblock.listeners;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.atLeastOnce;
@@ -70,6 +71,7 @@ public class MakeSpaceTest extends CommonTestSetup {
         // World basics
         when(world.getMaxHeight()).thenReturn(256);
         when(world.getBlockAt(any(Location.class))).thenReturn(centerBlock);
+        when(world.getBlockAt(anyInt(), anyInt(), anyInt())).thenReturn(centerBlock);
 
         // Default entity setup (non-water, narrow)
         when(entity.getWorld()).thenReturn(world);

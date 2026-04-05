@@ -57,102 +57,104 @@ public class MakeSpace {
         World world = entity.getWorld();
         List<Block> airBlocks = new ArrayList<>();
         List<Block> waterBlocks = new ArrayList<>();
-        // Make space for entity based on the entity's size
         final BoundingBox boundingBox = entity.getBoundingBox();
         final boolean isWaterProtected = this.addon.getSettings().isWaterMobProtection() &&
                 WATER_ENTITIES.contains(entity.getType());
 
-        for (double y = boundingBox.getMinY(); y <= Math.min(boundingBox.getMaxY(), world.getMaxHeight()); y++)
-        {
-            // Start with middle block.
-            Block block = world.getBlockAt(new Location(world, spawnLocation.getBlockX(), y, spawnLocation.getBlockZ()));
+        int yStart = (int) Math.floor(boundingBox.getMinY());
+        int yEnd = yStart + (int) Math.floor(Math.min(boundingBox.getMaxY(), world.getMaxHeight()) - boundingBox.getMinY());
 
-            // Check if block must be replaced with air or water.
+        for (int y = yStart; y <= yEnd; y++)
+        {
+            Block block = world.getBlockAt(spawnLocation.getBlockX(), y, spawnLocation.getBlockZ());
             this.checkBlock(block, boundingBox, isWaterProtected, airBlocks, waterBlocks);
 
-            // If entity requires water protection, then add air block above it. Dolphin protection.
-            if (isWaterProtected)
+            // If entity requires water protection, add an air block above it (dolphin protection).
+            if (isWaterProtected && y + 1 < world.getMaxHeight())
             {
-                // Look up only if possible
-                if (y + 1 < world.getMaxHeight())
-                {
-                    airBlocks.add(block.getRelative(BlockFace.UP));
-                }
+                airBlocks.add(block.getRelative(BlockFace.UP));
             }
 
-            // Process entity width and depth.
-            if (boundingBox.getWidthX() > 1 && boundingBox.getWidthZ() > 1)
-            {
-                // Entities are spawned in the middle of block. So add extra half block to both dimensions.
-                for (double x = boundingBox.getMinX() - 0.5; x < boundingBox.getMaxX() + 0.5; x++)
-                {
-                    for (double z = boundingBox.getMinZ() - 0.5; z < boundingBox.getMaxZ() + 0.5; z++)
-                    {
-                        block = world.getBlockAt(new Location(world,
-                                x,
-                                y,
-                                z));
-
-                        // Check if block should be marked.
-                        this.checkBlock(block, boundingBox, isWaterProtected, airBlocks, waterBlocks);
-                    }
-                }
-            }
-            else if (boundingBox.getWidthX() > 1)
-            {
-                // If entity is just wider, then check the one dimension.
-                for (double x = boundingBox.getMinX() - 0.5; x < boundingBox.getMaxX() + 0.5; x++)
-                {
-                    block = world.getBlockAt(new Location(world,
-                            x,
-                            y,
-                            spawnLocation.getZ()));
-
-                    // Check if block should be marked.
-                    this.checkBlock(block, boundingBox, isWaterProtected, airBlocks, waterBlocks);
-                }
-            }
-            else if (boundingBox.getWidthZ() > 1)
-            {
-                // If entity is just wider, then check the one dimension.
-                for (double z = boundingBox.getMinZ() - 0.5; z < boundingBox.getMaxZ() + 0.5; z++)
-                {
-                    block = world.getBlockAt(new Location(world,
-                            spawnLocation.getX(),
-                            y,
-                            z));
-
-                    // Check if block should be marked.
-                    this.checkBlock(block, boundingBox, isWaterProtected, airBlocks, waterBlocks);
-                }
-            }
+            processEntityWidth(world, spawnLocation, boundingBox, y, isWaterProtected, airBlocks, waterBlocks);
         }
 
-        // Fire event
         BlockClearEvent event = new BlockClearEvent(entity, airBlocks, waterBlocks);
         Bukkit.getPluginManager().callEvent(event);
 
         if (event.isCancelled())
         {
-            // Event is cancelled. Blocks cannot be removed.
             return;
         }
 
-        // Break blocks.
         airBlocks.forEach(Block::breakNaturally);
         airBlocks.forEach(b -> b.setType(Material.AIR));
-        waterBlocks.forEach(block -> {
-            if (block.getBlockData() instanceof Waterlogged waterlogged)
+        waterBlocks.forEach(this::applyWaterBlock);
+    }
+
+    /**
+     * Checks blocks in the X and Z dimensions around the entity bounding box.
+     * Only runs when the entity is wider than one block in at least one horizontal axis.
+     * Block coordinates are derived from the bounding box using integer arithmetic to
+     * avoid floating-point increment issues.
+     * @param world The world.
+     * @param spawnLocation The entity spawn location (used as the fixed axis when only one dimension is wide).
+     * @param boundingBox The entity bounding box.
+     * @param y The current Y block coordinate.
+     * @param isWaterProtected Whether the entity needs water protection.
+     * @param airBlocks Accumulator list for blocks to clear with air.
+     * @param waterBlocks Accumulator list for blocks to fill with water.
+     */
+    private void processEntityWidth(World world, Location spawnLocation, BoundingBox boundingBox, int y,
+            boolean isWaterProtected, List<Block> airBlocks, List<Block> waterBlocks)
+    {
+        // Convert the expanded bounding box range (±0.5) to integer block coordinates.
+        // floor(min - 0.5) gives the first block; ceil(width + 1) gives the iteration count.
+        int xStart = (int) Math.floor(boundingBox.getMinX() - 0.5);
+        int xCount = (int) Math.ceil(boundingBox.getMaxX() - boundingBox.getMinX() + 1);
+        int zStart = (int) Math.floor(boundingBox.getMinZ() - 0.5);
+        int zCount = (int) Math.ceil(boundingBox.getMaxZ() - boundingBox.getMinZ() + 1);
+
+        if (boundingBox.getWidthX() > 1 && boundingBox.getWidthZ() > 1)
+        {
+            for (int x = xStart; x < xStart + xCount; x++)
             {
-                // If block was not removed and is waterlogged, then it means it can be just waterlogged.
-                waterlogged.setWaterlogged(true);
+                for (int z = zStart; z < zStart + zCount; z++)
+                {
+                    this.checkBlock(world.getBlockAt(x, y, z), boundingBox, isWaterProtected, airBlocks, waterBlocks);
+                }
             }
-            else
+        }
+        else if (boundingBox.getWidthX() > 1)
+        {
+            for (int x = xStart; x < xStart + xCount; x++)
             {
-                // Replace block with water.
-                block.setType(Material.WATER);
+                this.checkBlock(world.getBlockAt(x, y, spawnLocation.getBlockZ()), boundingBox, isWaterProtected, airBlocks, waterBlocks);
             }
-        });
+        }
+        else if (boundingBox.getWidthZ() > 1)
+        {
+            for (int z = zStart; z < zStart + zCount; z++)
+            {
+                this.checkBlock(world.getBlockAt(spawnLocation.getBlockX(), y, z), boundingBox, isWaterProtected, airBlocks, waterBlocks);
+            }
+        }
+    }
+
+    /**
+     * Applies water to a block: sets a waterlogged block to waterlogged state,
+     * or replaces a non-water block with water.
+     * @param block The block to apply water to.
+     */
+    private void applyWaterBlock(Block block)
+    {
+        if (block.getBlockData() instanceof Waterlogged waterlogged)
+        {
+            waterlogged.setWaterlogged(true);
+        }
+        else
+        {
+            block.setType(Material.WATER);
+        }
     }
 
     /**
