@@ -2,6 +2,7 @@ package world.bentobox.aoneblock.oneblocks;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -15,6 +16,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
 import java.util.NavigableMap;
+import java.util.concurrent.CompletableFuture;
 import java.util.jar.JarEntry;
 import java.util.jar.JarOutputStream;
 
@@ -31,12 +33,18 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
+import org.mockito.MockedStatic;
+import org.mockito.Mockito;
 
 import world.bentobox.aoneblock.AOneBlock;
 import world.bentobox.aoneblock.CommonTestSetup;
 import world.bentobox.aoneblock.dataobjects.OneBlockIslands;
 import world.bentobox.bentobox.api.addons.AddonDescription;
+import world.bentobox.bentobox.database.AbstractDatabaseHandler;
+import world.bentobox.bentobox.database.DatabaseSetup;
 import world.bentobox.bentobox.managers.AddonsManager;
+import world.bentobox.bentobox.managers.CommandsManager;
+import world.bentobox.bentobox.multilib.MultiLib;
 
 /**
  * @author tastybento
@@ -66,7 +74,6 @@ public class OneBlocksManagerTest3 extends CommonTestSetup {
 		String oneblocks = """
                 '0':
                   name: Plains
-                  icon: GRASS_BLOCK
                   firstBlock: GRASS_BLOCK
                   biome: PLAINS
                   fixedBlocks:
@@ -120,10 +127,23 @@ public class OneBlocksManagerTest3 extends CommonTestSetup {
 	/**
 	 * @throws java.lang.Exception
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	@BeforeEach
 	public void setUp() throws Exception {
 	    super.setUp();
+		// Database
+		AbstractDatabaseHandler<Object> h = Mockito.mock(AbstractDatabaseHandler.class);
+		MockedStatic<DatabaseSetup> mockDb = Mockito.mockStatic(DatabaseSetup.class);
+		DatabaseSetup dbSetup = Mockito.mock(DatabaseSetup.class);
+		mockDb.when(DatabaseSetup::getDatabase).thenReturn(dbSetup);
+		when(dbSetup.getHandler(Mockito.any())).thenReturn(h);
+		when(h.saveObject(Mockito.any())).thenReturn(CompletableFuture.completedFuture(true));
+		// Commands manager
+		CommandsManager cm = Mockito.mock(CommandsManager.class);
+		when(plugin.getCommandsManager()).thenReturn(cm);
+		// MultiLib - prevent BukkitImpl from checking Paper classloader
+		Mockito.mockStatic(MultiLib.class);
 		// Addon
         AOneBlock addon = new AOneBlock();
 		File dataFolder = new File("addons/AOneBlock");
@@ -314,6 +334,8 @@ public class OneBlocksManagerTest3 extends CommonTestSetup {
 	@Test
 	public void testAddFirstBlockNullMaterial() {
 		obm.addFirstBlock(obPhase, null);
+		assertNull(obPhase.getFirstBlock());
+		verify(plugin, never()).logError(anyString());
 	}
 
 	/**
@@ -323,6 +345,8 @@ public class OneBlocksManagerTest3 extends CommonTestSetup {
 	@Test
 	public void testAddFirstBlock() {
 		obm.addFirstBlock(obPhase, "SPONGE");
+		assertNotNull(obPhase.getFirstBlock());
+		assertEquals(Material.SPONGE, obPhase.getFirstBlock().getMaterial());
 	}
 
 	/**
@@ -332,6 +356,9 @@ public class OneBlocksManagerTest3 extends CommonTestSetup {
 	@Test
 	public void testAddCommands() {
 		obm.addCommands(obPhase, oneBlocks);
+		assertTrue(obPhase.getStartCommands().isEmpty());
+		assertTrue(obPhase.getEndCommands().isEmpty());
+		assertTrue(obPhase.getFirstTimeEndCommands().isEmpty());
 	}
 
 	/**
@@ -341,6 +368,7 @@ public class OneBlocksManagerTest3 extends CommonTestSetup {
 	@Test
 	public void testAddRequirements() {
 		obm.addRequirements(obPhase, oneBlocks);
+		assertTrue(obPhase.getRequirements().isEmpty());
 	}
 
 	/**
@@ -350,6 +378,7 @@ public class OneBlocksManagerTest3 extends CommonTestSetup {
 	@Test
 	public void testAddChests() throws IOException {
 		obm.addChests(obPhase, oneBlocks);
+		assertTrue(obPhase.getChests().isEmpty());
 	}
 
 	/**
@@ -359,6 +388,7 @@ public class OneBlocksManagerTest3 extends CommonTestSetup {
 	@Test
 	public void testAddMobs() throws IOException {
 		obm.addMobs(obPhase, oneBlocks);
+		assertTrue(obPhase.getMobs().isEmpty());
 	}
 
 	/**
@@ -368,6 +398,7 @@ public class OneBlocksManagerTest3 extends CommonTestSetup {
 	@Test
 	public void testAddBlocks() {
 		obm.addBlocks(obPhase, oneBlocks);
+		assertTrue(obPhase.getBlocks().isEmpty());
 	}
 
 	/**
@@ -378,6 +409,7 @@ public class OneBlocksManagerTest3 extends CommonTestSetup {
 	public void testGetPhaseInt() {
 		@Nullable
 		OneBlockPhase phase = obm.getPhase(1);
+		assertNull(phase);
 	}
 
 	/**
@@ -387,6 +419,8 @@ public class OneBlocksManagerTest3 extends CommonTestSetup {
 	@Test
 	public void testGetBlockProbs() {
 		NavigableMap<Integer, OneBlockPhase> probs = obm.getBlockProbs();
+		assertNotNull(probs);
+		assertTrue(probs.isEmpty());
 	}
 
 	/**
@@ -395,7 +429,9 @@ public class OneBlocksManagerTest3 extends CommonTestSetup {
 	 */
 	@Test
 	public void testSavePhase() {
+		new File("addons/AOneBlock/phases").mkdirs();
 		boolean result = obm.savePhase(obPhase);
+		assertTrue(result);
 	}
 
 	/**
@@ -406,6 +442,7 @@ public class OneBlocksManagerTest3 extends CommonTestSetup {
 	public void testGetNextPhaseOneBlockPhase() {
 		@Nullable
 		OneBlockPhase phase = obm.getNextPhase(obPhase);
+		assertNull(phase);
 	}
 
 	/**
@@ -415,6 +452,7 @@ public class OneBlocksManagerTest3 extends CommonTestSetup {
 	@Test
 	public void testGetNextPhaseBlocks() {
 		int phase = obm.getNextPhaseBlocks(obi);
+		assertEquals(-1, phase);
 	}
 
 	/**
@@ -424,6 +462,7 @@ public class OneBlocksManagerTest3 extends CommonTestSetup {
 	@Test
 	public void testGetPercentageDone() {
 		double percent = obm.getPercentageDone(obi);
+		assertEquals(0.0, percent, 0.0);
 	}
 
 	/**
@@ -433,6 +472,7 @@ public class OneBlocksManagerTest3 extends CommonTestSetup {
 	@Test
 	public void testGetProbs() {
 		obm.getProbs(obPhase);
+		verify(plugin, never()).logError(anyString());
 	}
 
 	/**
@@ -442,6 +482,7 @@ public class OneBlocksManagerTest3 extends CommonTestSetup {
 	@Test
 	public void testGetAllProbs() {
 		obm.getAllProbs();
+		verify(plugin, never()).logError(anyString());
 	}
 
 	/**
@@ -451,6 +492,7 @@ public class OneBlocksManagerTest3 extends CommonTestSetup {
 	@Test
 	public void testGetNextPhaseOneBlockIslands() {
 		String phase = obm.getNextPhase(obi);
+		assertEquals("", phase);
 	}
 
 	/**
