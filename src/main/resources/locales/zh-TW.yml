@@ -19,12 +19,12 @@ protection:
         description: |-
           &b 為每個階段
           &b 顯示一個狀態條。
-  ONEBLOCK_ACTIONBAR:
-    name: 動作欄
-    description: |-
-      &b 在動作欄中
-      &b 顯示每個階段
-      &b 的狀態。
+    ONEBLOCK_ACTIONBAR:
+      name: 動作欄
+      description: |-
+        &b 在動作欄中
+        &b 顯示每個階段
+        &b 的狀態。
 aoneblock:
   bossbar:
     title: 剩餘的塊

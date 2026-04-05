@@ -20,12 +20,12 @@ protection:
         description: |-
           &b Pokazuje pasek statusu
           &b dla każdej fazy.
-  ONEBLOCK_ACTIONBAR:
-    name: Pasek Akcji
-    description: |-
-      &b Pokazuje status
-      &b dla każdej fazy
-      &b na Pasku Akcji.
+    ONEBLOCK_ACTIONBAR:
+      name: Pasek Akcji
+      description: |-
+        &b Pokazuje status
+        &b dla każdej fazy
+        &b na Pasku Akcji.
 aoneblock:
   bossbar:
     title: Pozostałe bloki

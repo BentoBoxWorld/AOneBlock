@@ -24,12 +24,12 @@ protection:
         description: |-
           &b Shows a status bar
           &b for each phase.
-  ONEBLOCK_ACTIONBAR:
-    name: Action Bar
-    description: |-
-      &b Shows a status
-      &b for each phase
-      &b in the Action Bar.
+    ONEBLOCK_ACTIONBAR:
+      name: Action Bar
+      description: |-
+        &b Shows a status
+        &b for each phase
+        &b in the Action Bar.
 
 aoneblock:
   bossbar:

@@ -20,12 +20,12 @@ protection:
         description: |-
           &b Her aşama için bir
           &b durum çubuğu gösterir.
-  ONEBLOCK_ACTIONBAR:
-    name: Eylem Çubuğu (Action Bar)
-    description: |-
-      &b Her aşama için bir
-      &b durumu Eylem Çubuğunda
-      &b gösterir.
+    ONEBLOCK_ACTIONBAR:
+      name: Eylem Çubuğu (Action Bar)
+      description: |-
+        &b Her aşama için bir
+        &b durumu Eylem Çubuğunda
+        &b gösterir.
 aoneblock:
   bossbar:
     title: Kalan bloklar

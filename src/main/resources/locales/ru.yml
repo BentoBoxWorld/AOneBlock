@@ -15,11 +15,16 @@ protection:
       hint: <red>Движение заблокировано в целях безопасности ещё на [number] секунд!</red>
       free-to-move: <green>Теперь вы можете двигаться. Будьте осторожны!</green>
     ONEBLOCK_BOSSBAR:
-      name: Боссбар
-      description: Показывает статус фазы в боссбаре
-  ONEBLOCK_ACTIONBAR:
-    name: Панель действий
-    description: Показывает статус фазы в панели действий
+        name: Boss Bar
+        description: |-
+          &b Показывает панель состояния
+          &b для каждой фазы.
+    ONEBLOCK_ACTIONBAR:
+      name: Action Bar
+      description: |-
+        &b Показывает статус
+        &b для каждой фазы
+        &b в Action Bar.
 aoneblock:
   bossbar:
     title: Осталось блоков
