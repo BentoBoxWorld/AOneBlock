@@ -166,7 +166,7 @@ public class AOneBlockTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.AOneBlock#onEnable()}.
      */
     @Test
-    public void testOnEnable() {
+    void testOnEnable() {
         testOnLoad();
         addon.setState(State.ENABLED);
         addon.onEnable();
@@ -180,7 +180,7 @@ public class AOneBlockTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.AOneBlock#onLoad()}.
      */
     @Test
-    public void testOnLoad() {
+    void testOnLoad() {
         addon.onLoad();
         // Check that config.yml file has been saved
         File check = new File("addons/AOneBlock", "config.yml");
@@ -194,7 +194,7 @@ public class AOneBlockTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.AOneBlock#onReload()}.
      */
     @Test
-    public void testOnReload() {
+    void testOnReload() {
         addon.onLoad();
         addon.onEnable();
         addon.onReload();
@@ -207,7 +207,7 @@ public class AOneBlockTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.AOneBlock#createWorlds()}.
      */
     @Test
-    public void testCreateWorlds() {
+    void testCreateWorlds() {
         addon.onLoad();
         addon.createWorlds();
         verify(plugin).log("[aoneblock] Creating AOneBlock world ...");
@@ -220,7 +220,7 @@ public class AOneBlockTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.AOneBlock#getSettings()}.
      */
     @Test
-    public void testGetSettings() {
+    void testGetSettings() {
         addon.onLoad();
         assertNotNull(addon.getSettings());
 
@@ -231,7 +231,7 @@ public class AOneBlockTest extends CommonTestSetup {
      * {@link world.bentobox.aoneblock.AOneBlock#getWorldSettings()}.
      */
     @Test
-    public void testGetWorldSettings() {
+    void testGetWorldSettings() {
         addon.onLoad();
         assertEquals(addon.getSettings(), addon.getWorldSettings());
     }
@@ -241,7 +241,7 @@ public class AOneBlockTest extends CommonTestSetup {
      * {@link world.bentobox.aoneblock.AOneBlock#getOneBlocksIsland(world.bentobox.bentobox.database.objects.Island)}.
      */
     @Test
-    public void testGetOneBlocksIsland() {
+    void testGetOneBlocksIsland() {
         addon.onLoad();
         addon.onEnable();
         @NonNull
@@ -254,7 +254,7 @@ public class AOneBlockTest extends CommonTestSetup {
      * {@link world.bentobox.aoneblock.AOneBlock#getOneBlockManager()}.
      */
     @Test
-    public void testGetOneBlockManager() {
+    void testGetOneBlockManager() {
         assertNull(addon.getOneBlockManager());
     }
 
@@ -263,7 +263,7 @@ public class AOneBlockTest extends CommonTestSetup {
      * {@link world.bentobox.aoneblock.AOneBlock#getBlockListener()}.
      */
     @Test
-    public void testGetBlockListener() {
+    void testGetBlockListener() {
         assertNull(addon.getBlockListener());
     }
 
@@ -272,7 +272,7 @@ public class AOneBlockTest extends CommonTestSetup {
      * {@link world.bentobox.aoneblock.AOneBlock#getPlaceholdersManager()}.
      */
     @Test
-    public void testGetPlaceholdersManager() {
+    void testGetPlaceholdersManager() {
         assertNull(addon.getPlaceholdersManager());
     }
 
@@ -280,7 +280,7 @@ public class AOneBlockTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.AOneBlock#getHoloListener()}.
      */
     @Test
-    public void testGetHoloListener() {
+    void testGetHoloListener() {
         assertNull(addon.getHoloListener());
     }
 }

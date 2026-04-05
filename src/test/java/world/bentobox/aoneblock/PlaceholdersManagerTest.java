@@ -70,7 +70,7 @@ public class PlaceholdersManagerTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.AOneBlockPlaceholders#getPhaseByLocation(world.bentobox.bentobox.api.user.User)}.
      */
     @Test
-    public void testGetPhaseByLocation() {
+    void testGetPhaseByLocation() {
         assertEquals("", pm.getPhaseByLocation(user));
         assertEquals("", pm.getPhaseByLocation(null));
         when(user.getUniqueId()).thenReturn(uuid);
@@ -83,7 +83,7 @@ public class PlaceholdersManagerTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.AOneBlockPlaceholders#getCountByLocation(world.bentobox.bentobox.api.user.User)}.
      */
     @Test
-    public void testGetCountByLocation() {
+    void testGetCountByLocation() {
         assertEquals("", pm.getCountByLocation(user));
         assertEquals("", pm.getCountByLocation(null));
         when(user.getUniqueId()).thenReturn(uuid);
@@ -96,7 +96,7 @@ public class PlaceholdersManagerTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.AOneBlockPlaceholders#getPhase(world.bentobox.bentobox.api.user.User)}.
      */
     @Test
-    public void testGetPhase() {
+    void testGetPhase() {
         assertEquals("", pm.getPhase(user));
         assertEquals("", pm.getPhase(null));
         when(user.getUniqueId()).thenReturn(uuid);
@@ -110,7 +110,7 @@ public class PlaceholdersManagerTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.AOneBlockPlaceholders#getCount(world.bentobox.bentobox.api.user.User)}.
      */
     @Test
-    public void testGetCount() {
+    void testGetCount() {
         assertEquals("", pm.getCount(user));
         assertEquals("", pm.getCount(null));
         when(user.getUniqueId()).thenReturn(uuid);
@@ -124,7 +124,7 @@ public class PlaceholdersManagerTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.AOneBlockPlaceholders#getNextPhaseByLocation(world.bentobox.bentobox.api.user.User)}.
      */
     @Test
-    public void testGetNextPhaseByLocation() {
+    void testGetNextPhaseByLocation() {
         assertEquals("", pm.getNextPhaseByLocation(user));
         assertEquals("", pm.getNextPhaseByLocation(null));
         when(user.getUniqueId()).thenReturn(uuid);
@@ -137,7 +137,7 @@ public class PlaceholdersManagerTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.AOneBlockPlaceholders#getNextPhase(world.bentobox.bentobox.api.user.User)}.
      */
     @Test
-    public void testGetNextPhase() {
+    void testGetNextPhase() {
         assertEquals("", pm.getNextPhase(user));
         assertEquals("", pm.getNextPhase(null));
         when(user.getUniqueId()).thenReturn(uuid);
@@ -151,7 +151,7 @@ public class PlaceholdersManagerTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.AOneBlockPlaceholders#getNextPhaseBlocksByLocation(world.bentobox.bentobox.api.user.User)}.
      */
     @Test
-    public void testGetNextPhaseBlocksByLocation() {
+    void testGetNextPhaseBlocksByLocation() {
         assertEquals("", pm.getNextPhaseBlocksByLocation(user));
         assertEquals("", pm.getNextPhaseBlocksByLocation(null));
         when(user.getUniqueId()).thenReturn(uuid);
@@ -166,7 +166,7 @@ public class PlaceholdersManagerTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.AOneBlockPlaceholders#getNextPhaseBlocks(world.bentobox.bentobox.api.user.User)}.
      */
     @Test
-    public void testGetNextPhaseBlocks() {
+    void testGetNextPhaseBlocks() {
         assertEquals("", pm.getNextPhaseBlocks(user));
         assertEquals("", pm.getNextPhaseBlocks(null));
         when(user.getUniqueId()).thenReturn(uuid);
@@ -182,7 +182,7 @@ public class PlaceholdersManagerTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.AOneBlockPlaceholders#getPercentDoneByLocation(world.bentobox.bentobox.api.user.User)}.
      */
     @Test
-    public void testGetPercentDoneByLocation() {
+    void testGetPercentDoneByLocation() {
         assertEquals("", pm.getPercentDoneByLocation(user));
         assertEquals("", pm.getPercentDoneByLocation(null));
         when(user.getUniqueId()).thenReturn(uuid);
@@ -195,7 +195,7 @@ public class PlaceholdersManagerTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.AOneBlockPlaceholders#getPercentDone(world.bentobox.bentobox.api.user.User)}.
      */
     @Test
-    public void testGetPercentDone() {
+    void testGetPercentDone() {
         assertEquals("", pm.getPercentDone(user));
         assertEquals("", pm.getPercentDone(null));
         when(user.getUniqueId()).thenReturn(uuid);
@@ -209,7 +209,7 @@ public class PlaceholdersManagerTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.AOneBlockPlaceholders#getDoneScaleByLocation(world.bentobox.bentobox.api.user.User)}.
      */
     @Test
-    public void testGetDoneScaleByLocation() {
+    void testGetDoneScaleByLocation() {
         assertEquals("", pm.getDoneScaleByLocation(user));
         assertEquals("", pm.getDoneScaleByLocation(null));
         when(user.getUniqueId()).thenReturn(uuid);
@@ -222,7 +222,7 @@ public class PlaceholdersManagerTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.AOneBlockPlaceholders#getDoneScale(world.bentobox.bentobox.api.user.User)}.
      */
     @Test
-    public void testGetDoneScale() {
+    void testGetDoneScale() {
         assertEquals("", pm.getDoneScale(user));
         assertEquals("", pm.getDoneScale(null));
         when(user.getUniqueId()).thenReturn(uuid);

@@ -99,7 +99,7 @@ public class InfoListenerTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.listeners.InfoListener#InfoListener(world.bentobox.aoneblock.AOneBlock)}.
      */
     @Test
-    public void testInfoListener() {
+    void testInfoListener() {
         assertNotNull(il);
     }
 
@@ -107,7 +107,7 @@ public class InfoListenerTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.listeners.InfoListener#onInfo(world.bentobox.bentobox.api.events.island.IslandInfoEvent)}.
      */
     @Test
-    public void testOnInfo() {
+    void testOnInfo() {
         IslandInfoEvent e = new IslandInfoEvent(island, ID, false, location, addon);
         il.onInfo(e);
         checkSpigotMessage("aoneblock.commands.info.count");
@@ -125,7 +125,7 @@ public class InfoListenerTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.listeners.InfoListener#onInfo(world.bentobox.bentobox.api.events.island.IslandInfoEvent)}.
      */
     @Test
-    public void testOnInfoOtherAddon() {
+    void testOnInfoOtherAddon() {
         IslandInfoEvent e = new IslandInfoEvent(island, ID, false, location, mock(Addon.class));
         il.onInfo(e);
         checkSpigotMessage("aoneblock.commands.info.count", 0);

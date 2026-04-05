@@ -94,7 +94,7 @@ public class StartSafetyListenerTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.listeners.StartSafetyListener#StartSafetyListener(world.bentobox.aoneblock.AOneBlock)}.
      */
     @Test
-    public void testStartSafetyListener() {
+    void testStartSafetyListener() {
         assertNotNull(ssl);
     }
 
@@ -102,7 +102,7 @@ public class StartSafetyListenerTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.listeners.StartSafetyListener#onNewIsland(world.bentobox.bentobox.api.events.island.IslandCreatedEvent)}.
      */
     @Test
-    public void testOnNewIsland() {
+    void testOnNewIsland() {
         IslandCreatedEvent e = new IslandCreatedEvent(island, uuid, false, location);
         ssl.onNewIsland(e);
         verify(sch).runTaskLater(eq(plugin), any(Runnable.class), anyLong());
@@ -112,7 +112,7 @@ public class StartSafetyListenerTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.listeners.StartSafetyListener#onResetIsland(world.bentobox.bentobox.api.events.island.IslandResetEvent)}.
      */
     @Test
-    public void testOnResetIsland() {
+    void testOnResetIsland() {
         IslandResetEvent e = new IslandResetEvent(island, uuid, false, location, null, island);
         ssl.onResetIsland(e);
         verify(sch).runTaskLater(eq(plugin), any(Runnable.class), anyLong());
@@ -123,7 +123,7 @@ public class StartSafetyListenerTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.listeners.StartSafetyListener#onPlayerMove(org.bukkit.event.player.PlayerMoveEvent)}.
      */
     @Test
-    public void testOnPlayerMove() {
+    void testOnPlayerMove() {
         testOnResetIsland();
         PlayerMoveEvent e = new PlayerMoveEvent(mockPlayer, location, location2);
         ssl.onPlayerMove(e);

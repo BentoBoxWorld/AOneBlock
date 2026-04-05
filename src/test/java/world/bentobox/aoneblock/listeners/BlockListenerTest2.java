@@ -238,7 +238,7 @@ public class BlockListenerTest2 extends CommonTestSetup {
      * Not in addon world → early return, block is unchanged.
      */
     @Test
-    public void testOnPlayerInteractNotInWorld() {
+    void testOnPlayerInteractNotInWorld() {
         when(addon.inWorld(world)).thenReturn(false);
         playerHoldsBrush();
         when(magicBlock.getType()).thenReturn(Material.SUSPICIOUS_GRAVEL);
@@ -255,7 +255,7 @@ public class BlockListenerTest2 extends CommonTestSetup {
      * Action is not RIGHT_CLICK_BLOCK → early return.
      */
     @Test
-    public void testOnPlayerInteractNotRightClick() {
+    void testOnPlayerInteractNotRightClick() {
         playerHoldsBrush();
         when(magicBlock.getType()).thenReturn(Material.SUSPICIOUS_GRAVEL);
         PlayerInteractEvent e = makeInteractEvent(Action.LEFT_CLICK_BLOCK, magicBlock, EquipmentSlot.HAND);
@@ -271,7 +271,7 @@ public class BlockListenerTest2 extends CommonTestSetup {
      * Hand is OFF_HAND → early return.
      */
     @Test
-    public void testOnPlayerInteractOffHand() {
+    void testOnPlayerInteractOffHand() {
         playerHoldsBrush();
         when(magicBlock.getType()).thenReturn(Material.SUSPICIOUS_GRAVEL);
         PlayerInteractEvent e = makeInteractEvent(Action.RIGHT_CLICK_BLOCK, magicBlock, EquipmentSlot.OFF_HAND);
@@ -287,7 +287,7 @@ public class BlockListenerTest2 extends CommonTestSetup {
      * Clicked block is null → early return (no NPE).
      */
     @Test
-    public void testOnPlayerInteractNullBlock() {
+    void testOnPlayerInteractNullBlock() {
         PlayerInteractEvent e = makeInteractEvent(Action.RIGHT_CLICK_BLOCK, null, EquipmentSlot.HAND);
 
         // Should not throw NPE
@@ -300,7 +300,7 @@ public class BlockListenerTest2 extends CommonTestSetup {
      * Block is STONE (not suspicious) → early return.
      */
     @Test
-    public void testOnPlayerInteractWrongBlockType() {
+    void testOnPlayerInteractWrongBlockType() {
         playerHoldsBrush();
         when(magicBlock.getType()).thenReturn(Material.STONE);
         PlayerInteractEvent e = makeInteractEvent(Action.RIGHT_CLICK_BLOCK, magicBlock, EquipmentSlot.HAND);
@@ -316,7 +316,7 @@ public class BlockListenerTest2 extends CommonTestSetup {
      * Player is holding a STICK, not a BRUSH → early return.
      */
     @Test
-    public void testOnPlayerInteractWrongTool() {
+    void testOnPlayerInteractWrongTool() {
         when(magicBlock.getType()).thenReturn(Material.SUSPICIOUS_GRAVEL);
         ItemStack stick = mock(ItemStack.class);
         when(stick.getType()).thenReturn(Material.STICK);
@@ -335,7 +335,7 @@ public class BlockListenerTest2 extends CommonTestSetup {
      * No island at block location → early return.
      */
     @Test
-    public void testOnPlayerInteractNoIslandAtLocation() {
+    void testOnPlayerInteractNoIslandAtLocation() {
         playerHoldsBrush();
         when(magicBlock.getType()).thenReturn(Material.SUSPICIOUS_GRAVEL);
         Location blockLoc = mock(Location.class);
@@ -354,7 +354,7 @@ public class BlockListenerTest2 extends CommonTestSetup {
      * Island exists at location but block is not the island center → early return.
      */
     @Test
-    public void testOnPlayerInteractBlockNotIslandCenter() {
+    void testOnPlayerInteractBlockNotIslandCenter() {
         playerHoldsBrush();
         when(magicBlock.getType()).thenReturn(Material.SUSPICIOUS_GRAVEL);
         // Block is at a different location than the island center
@@ -376,7 +376,7 @@ public class BlockListenerTest2 extends CommonTestSetup {
      * Block data is not Brushable → no action taken.
      */
     @Test
-    public void testOnPlayerInteractNotBrushableBlockData() {
+    void testOnPlayerInteractNotBrushableBlockData() {
         playerHoldsBrush();
         when(magicBlock.getType()).thenReturn(Material.SUSPICIOUS_GRAVEL);
         when(magicBlock.getLocation()).thenReturn(location);
@@ -395,7 +395,7 @@ public class BlockListenerTest2 extends CommonTestSetup {
      * Brushing is in progress (dusted + 1 <= maxDusted) → increment dusted and update block data.
      */
     @Test
-    public void testOnPlayerInteractBrushingInProgress() {
+    void testOnPlayerInteractBrushingInProgress() {
         playerHoldsBrush();
         when(magicBlock.getType()).thenReturn(Material.SUSPICIOUS_GRAVEL);
         when(magicBlock.getLocation()).thenReturn(location);
@@ -421,7 +421,7 @@ public class BlockListenerTest2 extends CommonTestSetup {
      * Brushing is finished on SUSPICIOUS_GRAVEL → set block to AIR and play gravel break sound.
      */
     @Test
-    public void testOnPlayerInteractBrushingFinishedGravel() {
+    void testOnPlayerInteractBrushingFinishedGravel() {
         playerHoldsBrush();
         when(magicBlock.getType()).thenReturn(Material.SUSPICIOUS_GRAVEL);
         Location blockCenter = mock(Location.class);
@@ -451,7 +451,7 @@ public class BlockListenerTest2 extends CommonTestSetup {
      * Brushing finished on SUSPICIOUS_SAND → play sand break sound.
      */
     @Test
-    public void testOnPlayerInteractBrushingFinishedSand() {
+    void testOnPlayerInteractBrushingFinishedSand() {
         playerHoldsBrush();
         when(magicBlock.getType()).thenReturn(Material.SUSPICIOUS_SAND);
         Location blockCenter = mock(Location.class);
@@ -479,7 +479,7 @@ public class BlockListenerTest2 extends CommonTestSetup {
      * Brushing finished and block state IS a BrushableBlock with a loot table → items are dropped.
      */
     @Test
-    public void testOnPlayerInteractBrushingFinishedWithLootTable() {
+    void testOnPlayerInteractBrushingFinishedWithLootTable() {
         playerHoldsBrush();
         when(magicBlock.getType()).thenReturn(Material.SUSPICIOUS_GRAVEL);
         Location blockCenter = mock(Location.class);
@@ -515,7 +515,7 @@ public class BlockListenerTest2 extends CommonTestSetup {
      * Brushing finished, BrushableBlock state but loot table is null → no items dropped.
      */
     @Test
-    public void testOnPlayerInteractBrushingFinishedNoLootTable() {
+    void testOnPlayerInteractBrushingFinishedNoLootTable() {
         playerHoldsBrush();
         when(magicBlock.getType()).thenReturn(Material.SUSPICIOUS_GRAVEL);
         Location blockCenter = mock(Location.class);
@@ -564,7 +564,7 @@ public class BlockListenerTest2 extends CommonTestSetup {
      * When nextBlock is a custom block, execute() is called on it.
      */
     @Test
-    public void testSpawnBlockCustomBlock() throws Exception {
+    void testSpawnBlockCustomBlock() throws Exception {
         OneBlockCustomBlock customBlock = mock(OneBlockCustomBlock.class);
         OneBlockObject nextBlock = new OneBlockObject(customBlock, 1);
 
@@ -580,7 +580,7 @@ public class BlockListenerTest2 extends CommonTestSetup {
      * The block is set to STONE without physics; no other side effects.
      */
     @Test
-    public void testSpawnBlockRegularMaterial() throws Exception {
+    void testSpawnBlockRegularMaterial() throws Exception {
         OneBlockObject nextBlock = new OneBlockObject(Material.STONE, 1);
 
         callSpawnBlock(nextBlock, magicBlock);
@@ -594,7 +594,7 @@ public class BlockListenerTest2 extends CommonTestSetup {
      * The block is set to CHEST and its inventory is populated from the OneBlockObject chest data.
      */
     @Test
-    public void testSpawnBlockChestWithItems() throws Exception {
+    void testSpawnBlockChestWithItems() throws Exception {
         ItemStack diamond = mock(ItemStack.class);
         when(diamond.getType()).thenReturn(Material.DIAMOND);
         Map<Integer, ItemStack> chestContents = Map.of(0, diamond);
@@ -618,7 +618,7 @@ public class BlockListenerTest2 extends CommonTestSetup {
      * The UNCOMMON rarity spawns particles; COMMON does not.
      */
     @Test
-    public void testSpawnBlockChestUncommonRarity() throws Exception {
+    void testSpawnBlockChestUncommonRarity() throws Exception {
         ItemStack item = mock(ItemStack.class);
         when(item.getType()).thenReturn(Material.EMERALD);
         Map<Integer, ItemStack> contents = Map.of(0, item);
@@ -648,7 +648,7 @@ public class BlockListenerTest2 extends CommonTestSetup {
      * Leaves are set persistent so they don't decay.
      */
     @Test
-    public void testSpawnBlockLeaves() throws Exception {
+    void testSpawnBlockLeaves() throws Exception {
         OneBlockObject nextBlock = new OneBlockObject(Material.OAK_LEAVES, 1);
 
         // Mock block state and data as Leaves
@@ -670,7 +670,7 @@ public class BlockListenerTest2 extends CommonTestSetup {
      * Block data is set, state is updated with a loot table.
      */
     @Test
-    public void testSpawnBlockSuspiciousGravelWithLootTable() throws Exception {
+    void testSpawnBlockSuspiciousGravelWithLootTable() throws Exception {
         OneBlockObject nextBlock = new OneBlockObject(Material.SUSPICIOUS_GRAVEL, 1);
 
         BrushableBlock bbState = mock(BrushableBlock.class);
@@ -692,7 +692,7 @@ public class BlockListenerTest2 extends CommonTestSetup {
      * When Bukkit.getLootTable returns null, a warning is logged.
      */
     @Test
-    public void testSpawnBlockSuspiciousGravelNoLootTable() throws Exception {
+    void testSpawnBlockSuspiciousGravelNoLootTable() throws Exception {
         OneBlockObject nextBlock = new OneBlockObject(Material.SUSPICIOUS_GRAVEL, 1);
 
         BrushableBlock bbState = mock(BrushableBlock.class);
@@ -714,7 +714,7 @@ public class BlockListenerTest2 extends CommonTestSetup {
      * {@link world.bentobox.aoneblock.listeners.BlockListener} spawnBlock — SUSPICIOUS_SAND with loot table.
      */
     @Test
-    public void testSpawnBlockSuspiciousSandWithLootTable() throws Exception {
+    void testSpawnBlockSuspiciousSandWithLootTable() throws Exception {
         OneBlockObject nextBlock = new OneBlockObject(Material.SUSPICIOUS_SAND, 1);
 
         BrushableBlock bbState = mock(BrushableBlock.class);
@@ -740,7 +740,7 @@ public class BlockListenerTest2 extends CommonTestSetup {
      * Island is in addon world → setUp is called, hologram is initialized.
      */
     @Test
-    public void testOnNewIslandCreatedInWorld() {
+    void testOnNewIslandCreatedInWorld() {
         Island newIsland = mock(Island.class);
         when(newIsland.getWorld()).thenReturn(world);
         when(newIsland.getCenter()).thenReturn(location);
@@ -763,7 +763,7 @@ public class BlockListenerTest2 extends CommonTestSetup {
      * Island is NOT in addon world → setUp is NOT called.
      */
     @Test
-    public void testOnNewIslandCreatedNotInWorld() {
+    void testOnNewIslandCreatedNotInWorld() {
         when(addon.inWorld(world)).thenReturn(false);
 
         Island newIsland = mock(Island.class);
@@ -784,7 +784,7 @@ public class BlockListenerTest2 extends CommonTestSetup {
      * Island is in addon world → setUp is called, hologram is initialized.
      */
     @Test
-    public void testOnNewIslandResettedInWorld() {
+    void testOnNewIslandResettedInWorld() {
         Island resetIsland = mock(Island.class);
         when(resetIsland.getWorld()).thenReturn(world);
         when(resetIsland.getCenter()).thenReturn(location);
@@ -806,7 +806,7 @@ public class BlockListenerTest2 extends CommonTestSetup {
      * Island is in addon world → island data is removed from cache and database.
      */
     @Test
-    public void testOnDeletedIslandInWorld() {
+    void testOnDeletedIslandInWorld() {
         Island toDelete = mock(Island.class);
         when(toDelete.getWorld()).thenReturn(world);
         String uid = UUID.randomUUID().toString();
@@ -830,7 +830,7 @@ public class BlockListenerTest2 extends CommonTestSetup {
      * Island is NOT in addon world → no deletion occurs.
      */
     @Test
-    public void testOnDeletedIslandNotInWorld() {
+    void testOnDeletedIslandNotInWorld() {
         when(addon.inWorld(world)).thenReturn(false);
 
         Island toDelete = mock(Island.class);
@@ -854,7 +854,7 @@ public class BlockListenerTest2 extends CommonTestSetup {
      * Drop-on-top feature is disabled → event is not cancelled.
      */
     @Test
-    public void testOnItemSpawnDropOnTopDisabled() {
+    void testOnItemSpawnDropOnTopDisabled() {
         when(addonSettings.isDropOnTop()).thenReturn(false);
 
         Item item = mock(Item.class);
@@ -873,7 +873,7 @@ public class BlockListenerTest2 extends CommonTestSetup {
      * Spawn is not in addon world → event is not cancelled.
      */
     @Test
-    public void testOnItemSpawnNotInWorld() {
+    void testOnItemSpawnNotInWorld() {
         when(addon.inWorld(world)).thenReturn(false);
 
         Item item = mock(Item.class);
@@ -892,7 +892,7 @@ public class BlockListenerTest2 extends CommonTestSetup {
      * Item spawns in world but NOT at island center → event is not cancelled.
      */
     @Test
-    public void testOnItemSpawnNotAtIslandCenter() {
+    void testOnItemSpawnNotAtIslandCenter() {
         // Use a different location for the spawn (not the island center)
         Location spawnLoc = mock(Location.class);
         Block spawnBlock = mock(Block.class);
@@ -919,7 +919,7 @@ public class BlockListenerTest2 extends CommonTestSetup {
      * Item spawns exactly at island center → event is cancelled and item is dropped one block higher.
      */
     @Test
-    public void testOnItemSpawnAtIslandCenter() {
+    void testOnItemSpawnAtIslandCenter() {
         // island.getCenter() == location; location.getBlock() == magicBlock; magicBlock.getLocation() == location
         Location dropLoc = mock(Location.class);
         when(location.add(0.5, 1, 0.5)).thenReturn(dropLoc);
@@ -949,7 +949,7 @@ public class BlockListenerTest2 extends CommonTestSetup {
      * Block is not in addon world → event is not processed.
      */
     @Test
-    public void testOnBlockBreakNotInWorld() {
+    void testOnBlockBreakNotInWorld() {
         when(addon.inWorld(any(World.class))).thenReturn(false);
         Block b = mock(Block.class);
         when(b.getWorld()).thenReturn(world);
@@ -967,7 +967,7 @@ public class BlockListenerTest2 extends CommonTestSetup {
      * Block is in world but there is no island at that location → event is not processed.
      */
     @Test
-    public void testOnBlockBreakNoIslandAtLocation() {
+    void testOnBlockBreakNoIslandAtLocation() {
         Block b = mock(Block.class);
         when(b.getWorld()).thenReturn(world);
         Location otherLoc = mock(Location.class);
@@ -986,7 +986,7 @@ public class BlockListenerTest2 extends CommonTestSetup {
      * Entity is NOT an ARMOR_STAND → event is not processed.
      */
     @Test
-    public void testOnBlockBreakByMinionNotArmorStand() {
+    void testOnBlockBreakByMinionNotArmorStand() {
         Entity zombie = mock(Entity.class);
         EntityInteractEvent e = mock(EntityInteractEvent.class);
         when(e.getBlock()).thenReturn(magicBlock);
@@ -1005,7 +1005,7 @@ public class BlockListenerTest2 extends CommonTestSetup {
      * Block is not in addon world → event is not processed.
      */
     @Test
-    public void testOnBlockBreakByMinionNotInWorld() {
+    void testOnBlockBreakByMinionNotInWorld() {
         when(addon.inWorld(world)).thenReturn(false);
 
         Entity armorStand = mock(Entity.class);
@@ -1029,7 +1029,7 @@ public class BlockListenerTest2 extends CommonTestSetup {
      * Block is not in addon world → event is not processed.
      */
     @Test
-    public void testOnBucketFillNotInWorld() {
+    void testOnBucketFillNotInWorld() {
         when(addon.inWorld(any(World.class))).thenReturn(false);
         Block b = mock(Block.class);
         when(b.getWorld()).thenReturn(world);
@@ -1054,7 +1054,7 @@ public class BlockListenerTest2 extends CommonTestSetup {
      * If island is not in cache, a new OneBlockIslands is created and cached.
      */
     @Test
-    public void testGetIslandNotInCache() {
+    void testGetIslandNotInCache() {
         OneBlockIslands result = bl.getIsland(island);
 
         // Should return a valid, non-null result
@@ -1072,7 +1072,7 @@ public class BlockListenerTest2 extends CommonTestSetup {
      * Island in cache → save is attempted and returns a CompletableFuture.
      */
     @Test
-    public void testSaveIslandInCache() {
+    void testSaveIslandInCache() {
         // Put it in the cache
         bl.getIsland(island);
 
@@ -1086,7 +1086,7 @@ public class BlockListenerTest2 extends CommonTestSetup {
      * Island not in cache → returns a completed true future immediately.
      */
     @Test
-    public void testSaveIslandNotInCache() throws Exception {
+    void testSaveIslandNotInCache() throws Exception {
         Island notCached = new Island();
         notCached.setUniqueId(UUID.randomUUID().toString());
 

@@ -188,7 +188,7 @@ public class OneBlocksManagerTest3 extends CommonTestSetup {
 	 *
      */
 	@Test
-	public void testOneBlocksManager() {
+	void testOneBlocksManager() {
 		File f = new File("phases", "0_plains.yml");
 		assertTrue(f.exists());
 	}
@@ -202,7 +202,7 @@ public class OneBlocksManagerTest3 extends CommonTestSetup {
 	 */
 	// @Ignore("Cannot deserialize objects right now")
 	@Test
-	public void testLoadPhases() throws NumberFormatException, IOException {
+	void testLoadPhases() throws NumberFormatException, IOException {
 		obm.loadPhases();
 		verify(plugin, never()).logError(anyString());
 		assertEquals(Material.GRASS_BLOCK, obm.getPhase(0).getFirstBlock().getMaterial());
@@ -228,7 +228,7 @@ public class OneBlocksManagerTest3 extends CommonTestSetup {
 	 * @throws NumberFormatException
 	 */
 	@Test
-	public void testGetPhaseList() throws NumberFormatException, IOException, InvalidConfigurationException {
+	void testGetPhaseList() throws NumberFormatException, IOException, InvalidConfigurationException {
 		testLoadPhases();
 		List<String> l = obm.getPhaseList();
 		assertEquals(2, l.size());
@@ -246,7 +246,7 @@ public class OneBlocksManagerTest3 extends CommonTestSetup {
 	 * @throws NumberFormatException
 	 */
 	@Test
-	public void testGetPhaseString() throws NumberFormatException, IOException, InvalidConfigurationException {
+	void testGetPhaseString() throws NumberFormatException, IOException, InvalidConfigurationException {
 		testLoadPhases();
 		assertFalse(obm.getPhase("sdf").isPresent());
 		assertTrue(obm.getPhase("Plains").isPresent());
@@ -262,7 +262,7 @@ public class OneBlocksManagerTest3 extends CommonTestSetup {
 	 */
 	@Disabled("Not saving")
 	@Test
-	public void testSaveOneBlockConfig() throws NumberFormatException, IOException {
+	void testSaveOneBlockConfig() throws NumberFormatException, IOException {
 		 testLoadPhases();
 		 assertTrue(obm.saveOneBlockConfig());
 	}
@@ -276,7 +276,7 @@ public class OneBlocksManagerTest3 extends CommonTestSetup {
 	 * @throws NumberFormatException
 	 */
 	@Test
-	public void testGetNextPhase() throws NumberFormatException, IOException, InvalidConfigurationException {
+	void testGetNextPhase() throws NumberFormatException, IOException, InvalidConfigurationException {
 		testLoadPhases();
 		OneBlockPhase plains = obm.getPhase("Plains").get();
 		OneBlockPhase underground = obm.getPhase("Underground").get();
@@ -293,7 +293,7 @@ public class OneBlocksManagerTest3 extends CommonTestSetup {
 	 * @throws IOException
 	 */
 	@Test
-	public void testCopyPhasesFromAddonJar() throws IOException {
+	void testCopyPhasesFromAddonJar() throws IOException {
 		File dest = new File("dest");
 		dest.mkdir();
 		obm.copyPhasesFromAddonJar(dest);
@@ -311,7 +311,7 @@ public class OneBlocksManagerTest3 extends CommonTestSetup {
 	 */
 	@Test
 	@Disabled
-	public void testInitBlock() throws IOException {
+	void testInitBlock() throws IOException {
 		System.out.println(oneBlocks);
 		obm.initBlock("0", obPhase, oneBlocks);
 		assertEquals("", obPhase.getPhaseName());
@@ -322,7 +322,7 @@ public class OneBlocksManagerTest3 extends CommonTestSetup {
 	 * {@link world.bentobox.aoneblock.oneblocks.OneBlocksManager#addFirstBlock(world.bentobox.aoneblock.oneblocks.OneBlockPhase, java.lang.String)}.
 	 */
 	@Test
-	public void testAddFirstBlockBadMateril() {
+	void testAddFirstBlockBadMateril() {
 		obm.addFirstBlock(obPhase, "shshhs");
 		verify(plugin).logError("[AOneBlock] Bad firstBlock material: shshhs");
 	}
@@ -332,7 +332,7 @@ public class OneBlocksManagerTest3 extends CommonTestSetup {
 	 * {@link world.bentobox.aoneblock.oneblocks.OneBlocksManager#addFirstBlock(world.bentobox.aoneblock.oneblocks.OneBlockPhase, java.lang.String)}.
 	 */
 	@Test
-	public void testAddFirstBlockNullMaterial() {
+	void testAddFirstBlockNullMaterial() {
 		obm.addFirstBlock(obPhase, null);
 		assertNull(obPhase.getFirstBlock());
 		verify(plugin, never()).logError(anyString());
@@ -343,7 +343,7 @@ public class OneBlocksManagerTest3 extends CommonTestSetup {
 	 * {@link world.bentobox.aoneblock.oneblocks.OneBlocksManager#addFirstBlock(world.bentobox.aoneblock.oneblocks.OneBlockPhase, java.lang.String)}.
 	 */
 	@Test
-	public void testAddFirstBlock() {
+	void testAddFirstBlock() {
 		obm.addFirstBlock(obPhase, "SPONGE");
 		assertNotNull(obPhase.getFirstBlock());
 		assertEquals(Material.SPONGE, obPhase.getFirstBlock().getMaterial());
@@ -354,7 +354,7 @@ public class OneBlocksManagerTest3 extends CommonTestSetup {
 	 * {@link world.bentobox.aoneblock.oneblocks.OneBlocksManager#addCommands(world.bentobox.aoneblock.oneblocks.OneBlockPhase, org.bukkit.configuration.ConfigurationSection)}.
 	 */
 	@Test
-	public void testAddCommands() {
+	void testAddCommands() {
 		obm.addCommands(obPhase, oneBlocks);
 		assertTrue(obPhase.getStartCommands().isEmpty());
 		assertTrue(obPhase.getEndCommands().isEmpty());
@@ -366,7 +366,7 @@ public class OneBlocksManagerTest3 extends CommonTestSetup {
 	 * {@link world.bentobox.aoneblock.oneblocks.OneBlocksManager#addRequirements(world.bentobox.aoneblock.oneblocks.OneBlockPhase, org.bukkit.configuration.ConfigurationSection)}.
 	 */
 	@Test
-	public void testAddRequirements() {
+	void testAddRequirements() {
 		obm.addRequirements(obPhase, oneBlocks);
 		assertTrue(obPhase.getRequirements().isEmpty());
 	}
@@ -376,7 +376,7 @@ public class OneBlocksManagerTest3 extends CommonTestSetup {
 	 * {@link world.bentobox.aoneblock.oneblocks.OneBlocksManager#addChests(world.bentobox.aoneblock.oneblocks.OneBlockPhase, org.bukkit.configuration.ConfigurationSection)}.
 	 */
 	@Test
-	public void testAddChests() throws IOException {
+	void testAddChests() throws IOException {
 		obm.addChests(obPhase, oneBlocks);
 		assertTrue(obPhase.getChests().isEmpty());
 	}
@@ -386,7 +386,7 @@ public class OneBlocksManagerTest3 extends CommonTestSetup {
 	 * {@link world.bentobox.aoneblock.oneblocks.OneBlocksManager#addMobs(world.bentobox.aoneblock.oneblocks.OneBlockPhase, org.bukkit.configuration.ConfigurationSection)}.
 	 */
 	@Test
-	public void testAddMobs() throws IOException {
+	void testAddMobs() throws IOException {
 		obm.addMobs(obPhase, oneBlocks);
 		assertTrue(obPhase.getMobs().isEmpty());
 	}
@@ -396,7 +396,7 @@ public class OneBlocksManagerTest3 extends CommonTestSetup {
 	 * {@link world.bentobox.aoneblock.oneblocks.OneBlocksManager#addBlocks(world.bentobox.aoneblock.oneblocks.OneBlockPhase, org.bukkit.configuration.ConfigurationSection)}.
 	 */
 	@Test
-	public void testAddBlocks() {
+	void testAddBlocks() {
 		obm.addBlocks(obPhase, oneBlocks);
 		assertTrue(obPhase.getBlocks().isEmpty());
 	}
@@ -406,7 +406,7 @@ public class OneBlocksManagerTest3 extends CommonTestSetup {
 	 * {@link world.bentobox.aoneblock.oneblocks.OneBlocksManager#getPhase(int)}.
 	 */
 	@Test
-	public void testGetPhaseInt() {
+	void testGetPhaseInt() {
 		@Nullable
 		OneBlockPhase phase = obm.getPhase(1);
 		assertNull(phase);
@@ -417,7 +417,7 @@ public class OneBlocksManagerTest3 extends CommonTestSetup {
 	 * {@link world.bentobox.aoneblock.oneblocks.OneBlocksManager#getBlockProbs()}.
 	 */
 	@Test
-	public void testGetBlockProbs() {
+	void testGetBlockProbs() {
 		NavigableMap<Integer, OneBlockPhase> probs = obm.getBlockProbs();
 		assertNotNull(probs);
 		assertTrue(probs.isEmpty());
@@ -428,7 +428,7 @@ public class OneBlocksManagerTest3 extends CommonTestSetup {
 	 * {@link world.bentobox.aoneblock.oneblocks.OneBlocksManager#savePhase(world.bentobox.aoneblock.oneblocks.OneBlockPhase)}.
 	 */
 	@Test
-	public void testSavePhase() {
+	void testSavePhase() {
 		new File("addons/AOneBlock/phases").mkdirs();
 		boolean result = obm.savePhase(obPhase);
 		assertTrue(result);
@@ -439,7 +439,7 @@ public class OneBlocksManagerTest3 extends CommonTestSetup {
 	 * {@link world.bentobox.aoneblock.oneblocks.OneBlocksManager#getNextPhase(world.bentobox.aoneblock.oneblocks.OneBlockPhase)}.
 	 */
 	@Test
-	public void testGetNextPhaseOneBlockPhase() {
+	void testGetNextPhaseOneBlockPhase() {
 		@Nullable
 		OneBlockPhase phase = obm.getNextPhase(obPhase);
 		assertNull(phase);
@@ -450,7 +450,7 @@ public class OneBlocksManagerTest3 extends CommonTestSetup {
 	 * {@link world.bentobox.aoneblock.oneblocks.OneBlocksManager#getNextPhaseBlocks(world.bentobox.aoneblock.dataobjects.OneBlockIslands)}.
 	 */
 	@Test
-	public void testGetNextPhaseBlocks() {
+	void testGetNextPhaseBlocks() {
 		int phase = obm.getNextPhaseBlocks(obi);
 		assertEquals(-1, phase);
 	}
@@ -460,7 +460,7 @@ public class OneBlocksManagerTest3 extends CommonTestSetup {
 	 * {@link world.bentobox.aoneblock.oneblocks.OneBlocksManager#getPercentageDone(world.bentobox.aoneblock.dataobjects.OneBlockIslands)}.
 	 */
 	@Test
-	public void testGetPercentageDone() {
+	void testGetPercentageDone() {
 		double percent = obm.getPercentageDone(obi);
 		assertEquals(0.0, percent, 0.0);
 	}
@@ -470,7 +470,7 @@ public class OneBlocksManagerTest3 extends CommonTestSetup {
 	 * {@link world.bentobox.aoneblock.oneblocks.OneBlocksManager#getProbs(world.bentobox.aoneblock.oneblocks.OneBlockPhase)}.
 	 */
 	@Test
-	public void testGetProbs() {
+	void testGetProbs() {
 		obm.getProbs(obPhase);
 		verify(plugin, never()).logError(anyString());
 	}
@@ -480,7 +480,7 @@ public class OneBlocksManagerTest3 extends CommonTestSetup {
 	 * {@link world.bentobox.aoneblock.oneblocks.OneBlocksManager#getAllProbs()}.
 	 */
 	@Test
-	public void testGetAllProbs() {
+	void testGetAllProbs() {
 		obm.getAllProbs();
 		verify(plugin, never()).logError(anyString());
 	}
@@ -490,7 +490,7 @@ public class OneBlocksManagerTest3 extends CommonTestSetup {
 	 * {@link world.bentobox.aoneblock.oneblocks.OneBlocksManager#getNextPhase(world.bentobox.aoneblock.dataobjects.OneBlockIslands)}.
 	 */
 	@Test
-	public void testGetNextPhaseOneBlockIslands() {
+	void testGetNextPhaseOneBlockIslands() {
 		String phase = obm.getNextPhase(obi);
 		assertEquals("", phase);
 	}
@@ -500,7 +500,7 @@ public class OneBlocksManagerTest3 extends CommonTestSetup {
 	 * {@link world.bentobox.aoneblock.oneblocks.OneBlocksManager#getPhaseBlocks(world.bentobox.aoneblock.dataobjects.OneBlockIslands)}.
 	 */
 	@Test
-	public void testGetPhaseBlocks() {
+	void testGetPhaseBlocks() {
 		assertEquals(-1, obm.getPhaseBlocks(obi));
 	}
 

@@ -98,17 +98,17 @@ public class MakeSpaceTest extends CommonTestSetup {
     // -------------------------------------------------------------------------
 
     @Test
-    public void testWaterEntitiesContainsGuardian() {
+    void testWaterEntitiesContainsGuardian() {
         assertTrue(MakeSpace.WATER_ENTITIES.contains(EntityType.GUARDIAN));
     }
 
     @Test
-    public void testWaterEntitiesContainsElderGuardian() {
+    void testWaterEntitiesContainsElderGuardian() {
         assertTrue(MakeSpace.WATER_ENTITIES.contains(EntityType.ELDER_GUARDIAN));
     }
 
     @Test
-    public void testWaterEntitiesDoesNotContainCow() {
+    void testWaterEntitiesDoesNotContainCow() {
         assertFalse(MakeSpace.WATER_ENTITIES.contains(EntityType.COW));
     }
 
@@ -121,7 +121,7 @@ public class MakeSpaceTest extends CommonTestSetup {
      * cause that block to be broken and set to AIR.
      */
     @Test
-    public void testMakeSpaceBreaksOverlappingBlock() {
+    void testMakeSpaceBreaksOverlappingBlock() {
         makeSpace.makeSpace(entity, location);
 
         verify(centerBlock, atLeastOnce()).breakNaturally();
@@ -132,7 +132,7 @@ public class MakeSpaceTest extends CommonTestSetup {
      * When the event is not cancelled, breakNaturally() must be called.
      */
     @Test
-    public void testMakeSpaceEventNotCancelledProceedsNormally() {
+    void testMakeSpaceEventNotCancelledProceedsNormally() {
         // pim.callEvent leaves the event uncancelled by default
         makeSpace.makeSpace(entity, location);
 
@@ -143,7 +143,7 @@ public class MakeSpaceTest extends CommonTestSetup {
      * BlockClearEvent must be fired once per makeSpace call.
      */
     @Test
-    public void testMakeSpaceFiresBlockClearEvent() {
+    void testMakeSpaceFiresBlockClearEvent() {
         makeSpace.makeSpace(entity, location);
 
         verify(pim).callEvent(any(BlockClearEvent.class));
@@ -157,7 +157,7 @@ public class MakeSpaceTest extends CommonTestSetup {
      * When the BlockClearEvent is cancelled, no blocks should be broken or set.
      */
     @Test
-    public void testMakeSpaceCancelledEventPreventsBlockChanges() {
+    void testMakeSpaceCancelledEventPreventsBlockChanges() {
         doAnswer(invocation -> {
             BlockClearEvent e = invocation.getArgument(0);
             e.setCancelled(true);
@@ -179,7 +179,7 @@ public class MakeSpaceTest extends CommonTestSetup {
      * not be added to the air-block list and therefore not be broken.
      */
     @Test
-    public void testMakeSpaceNoOverlapBlockNotBroken() {
+    void testMakeSpaceNoOverlapBlockNotBroken() {
         when(centerBlock.getBoundingBox()).thenReturn(DISTANT_BLOCK_BB);
 
         makeSpace.makeSpace(entity, location);
@@ -197,7 +197,7 @@ public class MakeSpaceTest extends CommonTestSetup {
      * centre block when it is not water.
      */
     @Test
-    public void testMakeSpaceWaterEntitySetsWaterOnNonWaterBlock() {
+    void testMakeSpaceWaterEntitySetsWaterOnNonWaterBlock() {
         when(entity.getType()).thenReturn(EntityType.GUARDIAN);
         when(centerBlock.getBoundingBox()).thenReturn(SOLID_BLOCK_BB);
         // block is not Waterlogged and not WATER
@@ -213,7 +213,7 @@ public class MakeSpaceTest extends CommonTestSetup {
      * yet waterlogged should be set to waterlogged rather than replaced with water.
      */
     @Test
-    public void testMakeSpaceWaterEntityWaterloggedBlock() {
+    void testMakeSpaceWaterEntityWaterloggedBlock() {
         when(entity.getType()).thenReturn(EntityType.GUARDIAN);
         when(centerBlock.getBoundingBox()).thenReturn(SOLID_BLOCK_BB);
 
@@ -232,7 +232,7 @@ public class MakeSpaceTest extends CommonTestSetup {
      * setType(WATER) must not be called again.
      */
     @Test
-    public void testMakeSpaceWaterEntitySkipsExistingWaterBlock() {
+    void testMakeSpaceWaterEntitySkipsExistingWaterBlock() {
         when(entity.getType()).thenReturn(EntityType.GUARDIAN);
         when(centerBlock.getBoundingBox()).thenReturn(DISTANT_BLOCK_BB); // no overlap → not in airBlocks
         when(centerBlock.getType()).thenReturn(Material.WATER);
@@ -249,7 +249,7 @@ public class MakeSpaceTest extends CommonTestSetup {
      * any water-block placement.
      */
     @Test
-    public void testMakeSpaceWaterMobProtectionDisabledSkipsWater() {
+    void testMakeSpaceWaterMobProtectionDisabledSkipsWater() {
         when(settings.isWaterMobProtection()).thenReturn(false);
         when(entity.getType()).thenReturn(EntityType.GUARDIAN);
         when(centerBlock.getBoundingBox()).thenReturn(SOLID_BLOCK_BB);
@@ -265,7 +265,7 @@ public class MakeSpaceTest extends CommonTestSetup {
      * that dolphins have breathing space (blockAbove must be broken).
      */
     @Test
-    public void testMakeSpaceWaterEntityAddsAirBlockAbove() {
+    void testMakeSpaceWaterEntityAddsAirBlockAbove() {
         when(entity.getType()).thenReturn(EntityType.GUARDIAN);
         // Make bounding box end below maxHeight so the "+1" check passes
         when(entity.getBoundingBox()).thenReturn(new BoundingBox(0, 0, 0, 1, 1, 1));
@@ -291,7 +291,7 @@ public class MakeSpaceTest extends CommonTestSetup {
      * each X/Z position within the bounding box in addition to the centre column.
      */
     @Test
-    public void testMakeSpaceWideEntityProcessesExtraBlocks() {
+    void testMakeSpaceWideEntityProcessesExtraBlocks() {
         when(entity.getBoundingBox()).thenReturn(WIDE_BB);
 
         // All extra blocks also return centerBlock mock for simplicity
@@ -313,7 +313,7 @@ public class MakeSpaceTest extends CommonTestSetup {
      * extra blocks along the X axis are processed.
      */
     @Test
-    public void testMakeSpaceWideXOnlyProcessesXBlocks() {
+    void testMakeSpaceWideXOnlyProcessesXBlocks() {
         // widthX = 2, widthZ = 1
         BoundingBox wideX = new BoundingBox(0, 0, 0, 2, 2, 1);
         when(entity.getBoundingBox()).thenReturn(wideX);
@@ -333,7 +333,7 @@ public class MakeSpaceTest extends CommonTestSetup {
      * extra blocks along the Z axis are processed.
      */
     @Test
-    public void testMakeSpaceWideZOnlyProcessesZBlocks() {
+    void testMakeSpaceWideZOnlyProcessesZBlocks() {
         // widthX = 1, widthZ = 2
         BoundingBox wideZ = new BoundingBox(0, 0, 0, 1, 2, 2);
         when(entity.getBoundingBox()).thenReturn(wideZ);
@@ -353,7 +353,7 @@ public class MakeSpaceTest extends CommonTestSetup {
      * limit are never queried.
      */
     @Test
-    public void testMakeSpaceRespectsWorldMaxHeight() {
+    void testMakeSpaceRespectsWorldMaxHeight() {
         // Entity BB from y=0 to y=500, but world only has 256 height
         when(entity.getBoundingBox()).thenReturn(new BoundingBox(0, 0, 0, 1, 500, 1));
         when(world.getMaxHeight()).thenReturn(256);
@@ -373,7 +373,7 @@ public class MakeSpaceTest extends CommonTestSetup {
      * overlapping centre block.
      */
     @Test
-    public void testMakeSpaceBlockClearEventContainsAirBlock() {
+    void testMakeSpaceBlockClearEventContainsAirBlock() {
         // centerBlock overlaps (SOLID_BLOCK_BB overlaps NARROW_BB)
         org.mockito.ArgumentCaptor<BlockClearEvent> captor =
                 org.mockito.ArgumentCaptor.forClass(BlockClearEvent.class);
@@ -389,7 +389,7 @@ public class MakeSpaceTest extends CommonTestSetup {
      * For a non-water entity, the waterBlocks list in the event must be empty.
      */
     @Test
-    public void testMakeSpaceNonWaterEntityHasEmptyWaterBlocksList() {
+    void testMakeSpaceNonWaterEntityHasEmptyWaterBlocksList() {
         org.mockito.ArgumentCaptor<BlockClearEvent> captor =
                 org.mockito.ArgumentCaptor.forClass(BlockClearEvent.class);
 

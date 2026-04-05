@@ -127,7 +127,7 @@ public class CheckPhaseTest extends CommonTestSetup {
      * {@link world.bentobox.aoneblock.listeners.CheckPhase#setNewPhase(Player, Island, world.bentobox.aoneblock.dataobjects.OneBlockIslands, world.bentobox.aoneblock.oneblocks.OneBlockPhase)}
      */
     @Test
-    public void testSetNewPhase() {
+    void testSetNewPhase() {
         // Set up that a phase has been completed
         is = new OneBlockIslands(UUID.randomUUID().toString());
         is.setPhaseName("Previous");
@@ -160,7 +160,7 @@ public class CheckPhaseTest extends CommonTestSetup {
      * {@link world.bentobox.aoneblock.listeners.CheckPhase#setNewPhase(Player, Island, world.bentobox.aoneblock.dataobjects.OneBlockIslands, world.bentobox.aoneblock.oneblocks.OneBlockPhase)}
      */
     @Test
-    public void testSetNewPhaseSecondTime() {
+    void testSetNewPhaseSecondTime() {
         // Set up that a phase has been completed
         is = new OneBlockIslands(UUID.randomUUID().toString());
         is.setPhaseName("Previous");
@@ -193,7 +193,7 @@ public class CheckPhaseTest extends CommonTestSetup {
      * {@link world.bentobox.aoneblock.listeners.CheckPhase#setNewPhase(Player, Island, world.bentobox.aoneblock.dataobjects.OneBlockIslands, world.bentobox.aoneblock.oneblocks.OneBlockPhase)}
      */
     @Test
-    public void testSetNewPhaseNullPlayer() {
+    void testSetNewPhaseNullPlayer() {
         // Set up that a phase has been completed
         is = new OneBlockIslands(UUID.randomUUID().toString());
         is.setPhaseName("Previous");
@@ -225,7 +225,7 @@ public class CheckPhaseTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.listeners.CheckPhase#setNewPhase(Player, Island, world.bentobox.aoneblock.dataobjects.OneBlockIslands, world.bentobox.aoneblock.oneblocks.OneBlockPhase)}
      */
     @Test
-    public void testCheckPhaseNPCPlayer() {
+    void testCheckPhaseNPCPlayer() {
         when(mockPlayer.hasMetadata("NPC")).thenReturn(true);
         // Set up that a phase has been completed
         is = new OneBlockIslands(UUID.randomUUID().toString());
@@ -259,7 +259,7 @@ public class CheckPhaseTest extends CommonTestSetup {
      * {@link world.bentobox.aoneblock.listeners.BlockListener#replacePlaceholders(org.bukkit.entity.Player, java.lang.String, java.lang.String, world.bentobox.bentobox.database.objects.Island, java.util.List)}.
      */
     @Test
-    public void testReplacePlaceholders() {
+    void testReplacePlaceholders() {
         // Commands
         /*
          * [island] - Island name [owner] - Island owner's name [player] - The name of
