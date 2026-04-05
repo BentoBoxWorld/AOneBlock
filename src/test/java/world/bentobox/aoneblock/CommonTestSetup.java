@@ -139,6 +139,13 @@ public abstract class CommonTestSetup {
         // Set up plugin
         WhiteBox.setInternalState(BentoBox.class, "instance", plugin);
 
+        // Force Tag static fields (e.g. Tag.LEAVES) to be initialized NOW, while the
+        // real MockBukkit server is active, rather than later when mockedBukkit is in
+        // place. If Tag fields load under mockedBukkit (RETURNS_DEEP_STUBS), they
+        // become Mockito deep-stub mocks that stale across tests after clearInlineMocks().
+        @SuppressWarnings("unused")
+        var unusedTagRef = org.bukkit.Tag.LEAVES;
+
         // Register the static mock
         mockedBukkit = Mockito.mockStatic(Bukkit.class, Mockito.RETURNS_DEEP_STUBS);
         mockedBukkit.when(Bukkit::getMinecraftVersion).thenReturn("1.21.10");
