@@ -20,12 +20,12 @@ protection:
         description: |-
           &b Muestra una barra de estado
           &b para cada fase.
-  ONEBLOCK_ACTIONBAR:
-    name: Barra de Acción (Action Bar)
-    description: |-
-      &b Muestra un estado
-      &b para cada fase
-      &b en la Barra de Acción.
+    ONEBLOCK_ACTIONBAR:
+      name: Barra de Acción (Action Bar)
+      description: |-
+        &b Muestra un estado
+        &b para cada fase
+        &b en la Barra de Acción.
 aoneblock:
   bossbar:
     title: Bloques restantes

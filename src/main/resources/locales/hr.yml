@@ -20,12 +20,12 @@ protection:
         description: |-
           &b Prikazuje statusnu traku
           &b za svaku fazu.
-  ONEBLOCK_ACTIONBAR:
-    name: Traka Akcije
-    description: |-
-      &b Prikazuje status
-      &b za svaku fazu
-      &b u Traci Akcije.
+    ONEBLOCK_ACTIONBAR:
+      name: Traka Akcije
+      description: |-
+        &b Prikazuje status
+        &b za svaku fazu
+        &b u Traci Akcije.
 aoneblock:
   bossbar:
     title: Preostali blokovi

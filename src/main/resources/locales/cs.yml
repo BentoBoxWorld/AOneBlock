@@ -20,12 +20,12 @@ protection:
         description: |-
           &b Zobrazuje stavový panel
           &b pro každou fázi.
-  ONEBLOCK_ACTIONBAR:
-    name: Action Bar
-    description: |-
-      &b Zobrazuje stav
-      &b pro každou fázi
-      &b v Action Baru.
+    ONEBLOCK_ACTIONBAR:
+      name: Action Bar
+      description: |-
+        &b Zobrazuje stav
+        &b pro každou fázi
+        &b v Action Baru.
 aoneblock:
   bossbar:
     title: Bloky zbývající

@@ -20,12 +20,12 @@ protection:
         description: |-
           &b 各フェーズの
           &b ステータスバーを表示します。
-  ONEBLOCK_ACTIONBAR:
-    name: アクションバー
-    description: |-
-      &b 各フェーズの
-      &b ステータスを
-      &b アクションバーに表示します。
+    ONEBLOCK_ACTIONBAR:
+      name: アクションバー
+      description: |-
+        &b 各フェーズの
+        &b ステータスを
+        &b アクションバーに表示します。
 aoneblock:
   bossbar:
     title: 残りのブロック

@@ -20,12 +20,12 @@ protection:
         description: |-
           &b Menampilkan bilah status
           &b untuk setiap fase.
-  ONEBLOCK_ACTIONBAR:
-    name: Action Bar
-    description: |-
-      &b Menampilkan status
-      &b untuk setiap fase
-      &b di Action Bar.
+    ONEBLOCK_ACTIONBAR:
+      name: Action Bar
+      description: |-
+        &b Menampilkan status
+        &b untuk setiap fase
+        &b di Action Bar.
 aoneblock:
   bossbar:
     title: Blok tersisa

@@ -20,12 +20,12 @@ protection:
         description: |-
           &b Hiển thị thanh trạng thái
           &b cho mỗi giai đoạn.
-  ONEBLOCK_ACTIONBAR:
-    name: Thanh Hành Động (Action Bar)
-    description: |-
-      &b Hiển thị trạng thái
-      &b cho mỗi giai đoạn
-      &b trên Thanh Hành Động.
+    ONEBLOCK_ACTIONBAR:
+      name: Thanh Hành Động (Action Bar)
+      description: |-
+        &b Hiển thị trạng thái
+        &b cho mỗi giai đoạn
+        &b trên Thanh Hành Động.
 aoneblock:
   bossbar:
     title: Khối còn lại

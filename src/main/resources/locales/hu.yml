@@ -21,12 +21,12 @@ protection:
         description: |-
           &b Állapotjelző sávot
           &b mutat minden fázishoz.
-  ONEBLOCK_ACTIONBAR:
-    name: Műveleti Sáv (Action Bar)
-    description: |-
-      &b Állapotot mutat
-      &b minden fázishoz
-      &b a Műveleti Sávban.
+    ONEBLOCK_ACTIONBAR:
+      name: Műveleti Sáv (Action Bar)
+      description: |-
+        &b Állapotot mutat
+        &b minden fázishoz
+        &b a Műveleti Sávban.
 aoneblock:
   bossbar:
     title: Blokkok maradtak
