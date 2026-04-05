@@ -51,6 +51,6 @@ AOneBlock is a BentoBox GameModeAddon for Minecraft. Players start on a single m
 
 ## Testing
 
-All tests extend `CommonTestSetup`, which sets up a MockBukkit server, mocks BentoBox and its managers (islands, players, worlds), and tears everything down after each test. Use Mockito and `Whitebox` (from PowerMock/Mockito internals) for injecting state into private fields.
+All tests extend `CommonTestSetup`, which sets up a MockBukkit server, mocks BentoBox and its managers (islands, players, worlds), and tears everything down after each test. Use Mockito and the repository's `world.bentobox.aoneblock.WhiteBox` helper for injecting state into private fields.
 
 Phase YAML files under `src/main/resources/phases/` are loaded at startup; tests that exercise `OneBlocksManager` need those resources on the classpath (they are by default via Maven's test resource path).
