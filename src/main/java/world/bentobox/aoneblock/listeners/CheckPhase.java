@@ -9,6 +9,9 @@ import org.bukkit.entity.Player;
 import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jdt.annotation.Nullable;
 
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.title.Title;
+
 import world.bentobox.aoneblock.AOneBlock;
 import world.bentobox.aoneblock.dataobjects.OneBlockIslands;
 import world.bentobox.aoneblock.oneblocks.OneBlockPhase;
@@ -82,7 +85,7 @@ public class CheckPhase {
 	// Set the phase name
 	is.setPhaseName(newPhaseName);
 	if (user.isPlayer() && user.isOnline() && addon.inWorld(user.getWorld())) {
-	    user.getPlayer().sendTitle(newPhaseName, null, -1, -1, -1);
+	    user.getPlayer().showTitle(Title.title(Component.text(newPhaseName), Component.empty()));
 	}
 	// Run phase start commands
 	Util.runCommands(user,
