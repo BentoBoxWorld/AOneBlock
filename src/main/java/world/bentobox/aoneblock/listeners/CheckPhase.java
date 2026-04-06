@@ -9,10 +9,6 @@ import org.bukkit.entity.Player;
 import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jdt.annotation.Nullable;
 
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
-import net.kyori.adventure.title.Title;
-
 import world.bentobox.aoneblock.AOneBlock;
 import world.bentobox.aoneblock.dataobjects.OneBlockIslands;
 import world.bentobox.aoneblock.oneblocks.OneBlockPhase;
@@ -46,20 +42,6 @@ public class CheckPhase {
 	this.oneBlocksManager = addon.getOneBlockManager();
 	this.blockListener = blockListener;
 
-    }
-
-    /**
-     * Converts a BentoBox translation key into an Adventure {@link Component}.
-     * BentoBox's {@code getTranslation()} returns strings with § color codes already
-     * applied, so {@link LegacyComponentSerializer#legacySection()} is used here.
-     *
-     * @param user - the user whose locale is used
-     * @param key  - BentoBox translation key
-     * @param vars - alternating placeholder key/value pairs
-     * @return the translated, colored Component
-     */
-    private Component translate(User user, String key, String... vars) {
-        return LegacyComponentSerializer.legacySection().deserialize(user.getTranslation(key, vars));
     }
 
     /**
@@ -100,9 +82,7 @@ public class CheckPhase {
 	// Set the phase name
 	is.setPhaseName(newPhaseName);
 	if (user.isPlayer() && user.isOnline() && addon.inWorld(user.getWorld())) {
-	    // Phase names are raw YAML strings — use legacyAmpersand to parse & color codes.
-	    Component titleComponent = LegacyComponentSerializer.legacyAmpersand().deserialize(newPhaseName);
-	    user.getPlayer().showTitle(Title.title(titleComponent, Component.empty()));
+	    user.getPlayer().sendTitle(newPhaseName, null, -1, -1, -1);
 	}
 	// Run phase start commands
 	Util.runCommands(user,
@@ -147,10 +127,11 @@ public class CheckPhase {
     }
 
     private boolean checkLevelRequirement(Requirement r, User user, Island i, World world) {
+	// Level checking logic
 	return addon.getAddonByName("Level").map(l -> {
 	    if (((Level) l).getIslandLevel(world, i.getOwner()) < r.getLevel()) {
-		user.getPlayer().sendMessage(translate(user, "aoneblock.phase.insufficient-level",
-			TextVariables.NUMBER, String.valueOf(r.getLevel())));
+		user.sendMessage("aoneblock.phase.insufficient-level", TextVariables.NUMBER,
+			String.valueOf(r.getLevel()));
 		return true;
 	    }
 	    return false;
@@ -158,10 +139,11 @@ public class CheckPhase {
     }
 
     private boolean checkBankRequirement(Requirement r, User user, Island i) {
+	// Bank checking logic
 	return addon.getAddonByName("Bank").map(l -> {
 	    if (((Bank) l).getBankManager().getBalance(i).getValue() < r.getBank()) {
-		user.getPlayer().sendMessage(translate(user, "aoneblock.phase.insufficient-bank-balance",
-			TextVariables.NUMBER, String.valueOf(r.getBank())));
+		user.sendMessage("aoneblock.phase.insufficient-bank-balance", TextVariables.NUMBER,
+			String.valueOf(r.getBank()));
 		return true;
 	    }
 	    return false;
@@ -169,10 +151,11 @@ public class CheckPhase {
     }
 
     private boolean checkEcoRequirement(Requirement r, User user, World world) {
+	// Eco checking logic
 	return addon.getPlugin().getVault().map(vaultHook -> {
 	    if (vaultHook.getBalance(user, world) < r.getEco()) {
-		user.getPlayer().sendMessage(translate(user, "aoneblock.phase.insufficient-funds",
-			TextVariables.NUMBER, vaultHook.format(r.getEco())));
+		user.sendMessage("aoneblock.phase.insufficient-funds", TextVariables.NUMBER,
+			vaultHook.format(r.getEco()));
 		return true;
 	    }
 	    return false;
@@ -180,19 +163,19 @@ public class CheckPhase {
     }
 
     private boolean checkPermissionRequirement(Requirement r, User user) {
+	// Permission checking logic
 	if (user != null && !user.hasPermission(r.getPermission())) {
-	    user.getPlayer().sendMessage(translate(user, "aoneblock.phase.insufficient-permission",
-		    TextVariables.NAME, r.getPermission()));
+	    user.sendMessage("aoneblock.phase.insufficient-permission", TextVariables.NAME, r.getPermission());
 	    return true;
 	}
 	return false;
     }
 
     private boolean checkCooldownRequirement(Requirement r, User player, OneBlockIslands is) {
+	// Cooldown checking logic
 	long remainingTime = r.getCooldown() - (System.currentTimeMillis() - is.getLastPhaseChangeTime()) / 1000;
 	if (remainingTime > 0) {
-	    player.getPlayer().sendMessage(translate(player, "aoneblock.phase.cooldown",
-		    TextVariables.NUMBER, String.valueOf(remainingTime)));
+	    player.sendMessage("aoneblock.phase.cooldown", TextVariables.NUMBER, String.valueOf(remainingTime));
 	    return true;
 	}
 	return false;
