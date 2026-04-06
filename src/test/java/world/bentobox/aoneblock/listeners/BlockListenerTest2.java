@@ -1,5 +1,6 @@
 package world.bentobox.aoneblock.listeners;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
@@ -81,7 +82,7 @@ import world.bentobox.level.Level;
  *
  * @author tastybento
  */
-public class BlockListenerTest2 extends CommonTestSetup {
+class BlockListenerTest2 extends CommonTestSetup {
 
     // Class under test
     private BlockListener bl;
@@ -291,7 +292,7 @@ public class BlockListenerTest2 extends CommonTestSetup {
         PlayerInteractEvent e = makeInteractEvent(Action.RIGHT_CLICK_BLOCK, null, EquipmentSlot.HAND);
 
         // Should not throw NPE
-        bl.onPlayerInteract(e);
+        assertDoesNotThrow(() -> bl.onPlayerInteract(e));
     }
 
     /**
@@ -819,7 +820,7 @@ public class BlockListenerTest2 extends CommonTestSetup {
                 mock(world.bentobox.bentobox.api.events.island.IslandDeleteEvent.class);
         when(e.getIsland()).thenReturn(toDelete);
 
-        bl.onDeletedIsland(e);
+        assertDoesNotThrow(() -> bl.onDeletedIsland(e));
 
         // Confirm the method completes without exception (cache and DB deletion happened)
     }
@@ -840,7 +841,7 @@ public class BlockListenerTest2 extends CommonTestSetup {
                 mock(world.bentobox.bentobox.api.events.island.IslandDeleteEvent.class);
         when(e.getIsland()).thenReturn(toDelete);
 
-        bl.onDeletedIsland(e);
+        assertDoesNotThrow(() -> bl.onDeletedIsland(e));
         // No exception; nothing to verify beyond the early return
     }
 
