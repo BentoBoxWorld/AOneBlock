@@ -790,71 +790,98 @@ public class OneBlocksManager {
     }
 
     public void getProbs(OneBlockPhase phase) {
-        // Find the phase after this one
         Integer blockNum = Integer.valueOf(phase.getBlockNumber());
         Integer nextKey = blockProbs.ceilingKey(blockNum + 1);
-        if (nextKey != null) {
-            // This is the size of the phase in blocks
-            int phaseSize = nextKey - blockNum;
-            int blockTotal = phase.getBlockTotal();
-            int likelyChestTotal = 0;
-            double totalBlocks = 0;
-            // Now calculate the relative block probability
-            for (Entry<Material, Integer> en : phase.getBlocks().entrySet()) {
-                double chance = (double) en.getValue() / blockTotal;
-                double likelyNumberGenerated = chance * phaseSize;
-                totalBlocks += likelyNumberGenerated;
-                String report = en.getKey() + " likely generated = " + Math.round(likelyNumberGenerated) + " = "
-                        + Math.round(likelyNumberGenerated * 100 / phaseSize) + "%";
-                if (likelyNumberGenerated < 1) {
-                    addon.logWarning(report);
-                } else {
-                    addon.log(report);
-                }
-                if (en.getKey().equals(Material.CHEST)) {
-                    likelyChestTotal = (int) Math.round(likelyNumberGenerated);
-                }
-            }
-            addon.log("Total blocks generated = " + totalBlocks);
-            // Get the specific chest probability
-            if (likelyChestTotal == 0) {
-                addon.logWarning("No chests will be generated");
-                return;
-            }
-            addon.log("**** A total of " + likelyChestTotal + " chests will be generated ****");
-            // Now calculate chest chances
-            double lastChance = 0;
-            for (Entry<Double, Rarity> en : OneBlockPhase.CHEST_CHANCES.entrySet()) {
-                // Get the number of chests in this rarity group
-                int num = phase.getChestsMap().getOrDefault(en.getValue(), Collections.emptyList()).size();
-                double likelyNumberGenerated = (en.getKey() - lastChance) * likelyChestTotal;
-                lastChance = en.getKey();
-                String report = num + " " + en.getValue() + " chests in phase. Likely number generated = "
-                        + Math.round(likelyNumberGenerated);
-                if (num > 0 && likelyNumberGenerated < 1) {
-                    addon.logWarning(report);
-                } else {
-                    addon.log(report);
-                }
+        if (nextKey == null) {
+            return;
+        }
+        int phaseSize = nextKey - blockNum;
+        int likelyChestTotal = logBlockProbs(phase, phaseSize);
+        if (likelyChestTotal == 0) {
+            addon.logWarning("No chests will be generated");
+            return;
+        }
+        addon.log("**** A total of " + likelyChestTotal + " chests will be generated ****");
+        logChestProbs(phase, likelyChestTotal);
+        logMobProbs(phase, phaseSize);
+    }
 
+    /**
+     * Logs the probability report for each block type in the phase.
+     *
+     * @param phase     - the phase to report on
+     * @param phaseSize - total number of blocks in the phase
+     * @return the likely number of CHEST blocks that will be generated
+     */
+    private int logBlockProbs(OneBlockPhase phase, int phaseSize) {
+        int blockTotal = phase.getBlockTotal();
+        int likelyChestTotal = 0;
+        double totalBlocks = 0;
+        for (Entry<Material, Integer> en : phase.getBlocks().entrySet()) {
+            double likelyNumberGenerated = (double) en.getValue() / blockTotal * phaseSize;
+            totalBlocks += likelyNumberGenerated;
+            logReport(en.getKey() + " likely generated = " + Math.round(likelyNumberGenerated) + " = "
+                    + Math.round(likelyNumberGenerated * 100 / phaseSize) + "%", likelyNumberGenerated);
+            if (en.getKey().equals(Material.CHEST)) {
+                likelyChestTotal = (int) Math.round(likelyNumberGenerated);
             }
-            // Mobs
-            addon.log("-=-=-=-= Mobs -=-=-=-=-");
-            double totalMobs = 0;
-            // Now calculate the relative block probability
-            for (Entry<EntityType, Integer> en : phase.getMobs().entrySet()) {
-                double chance = (double) en.getValue() / phase.getTotal();
-                double likelyNumberGenerated = chance * phaseSize;
-                totalMobs += likelyNumberGenerated;
-                String report = en.getKey() + " likely generated = " + Math.round(likelyNumberGenerated) + " = "
-                        + Math.round(likelyNumberGenerated * 100 / phaseSize) + "%";
-                if (likelyNumberGenerated < 1) {
-                    addon.logWarning(report);
-                } else {
-                    addon.log(report);
-                }
+        }
+        addon.log("Total blocks generated = " + totalBlocks);
+        return likelyChestTotal;
+    }
+
+    /**
+     * Logs the probability report for each chest rarity in the phase.
+     *
+     * @param phase            - the phase to report on
+     * @param likelyChestTotal - the likely total number of chests generated
+     */
+    private void logChestProbs(OneBlockPhase phase, int likelyChestTotal) {
+        double lastChance = 0;
+        for (Entry<Double, Rarity> en : OneBlockPhase.CHEST_CHANCES.entrySet()) {
+            int num = phase.getChestsMap().getOrDefault(en.getValue(), Collections.emptyList()).size();
+            double likelyNumberGenerated = (en.getKey() - lastChance) * likelyChestTotal;
+            lastChance = en.getKey();
+            String report = num + " " + en.getValue() + " chests in phase. Likely number generated = "
+                    + Math.round(likelyNumberGenerated);
+            if (num > 0 && likelyNumberGenerated < 1) {
+                addon.logWarning(report);
+            } else {
+                addon.log(report);
             }
-            addon.log("**** A total of " + Math.round(totalMobs) + " mobs will likely be generated ****");
+        }
+    }
+
+    /**
+     * Logs the probability report for each mob type in the phase.
+     *
+     * @param phase     - the phase to report on
+     * @param phaseSize - total number of blocks in the phase
+     */
+    private void logMobProbs(OneBlockPhase phase, int phaseSize) {
+        addon.log("-=-=-=-= Mobs -=-=-=-=-");
+        double totalMobs = 0;
+        for (Entry<EntityType, Integer> en : phase.getMobs().entrySet()) {
+            double likelyNumberGenerated = (double) en.getValue() / phase.getTotal() * phaseSize;
+            totalMobs += likelyNumberGenerated;
+            logReport(en.getKey() + " likely generated = " + Math.round(likelyNumberGenerated) + " = "
+                    + Math.round(likelyNumberGenerated * 100 / phaseSize) + "%", likelyNumberGenerated);
+        }
+        addon.log("**** A total of " + Math.round(totalMobs) + " mobs will likely be generated ****");
+    }
+
+    /**
+     * Logs a report line as a warning if the likely count is below 1, otherwise as
+     * a normal log entry.
+     *
+     * @param report                - the message to log
+     * @param likelyNumberGenerated - the computed likelihood
+     */
+    private void logReport(String report, double likelyNumberGenerated) {
+        if (likelyNumberGenerated < 1) {
+            addon.logWarning(report);
+        } else {
+            addon.log(report);
         }
     }
 
