@@ -164,7 +164,7 @@ public class StartSafetyListenerTest extends CommonTestSetup {
 
         @Override
         public void setDifficulty(Difficulty difficulty) {
-
+            // Do nothing
         }
 
         @Override
@@ -432,7 +432,7 @@ public class StartSafetyListenerTest extends CommonTestSetup {
 
         @Override
         public void setResetEpoch(long timestamp) {
-
+            // Do nothing
         }
 
         @Override
