@@ -22,6 +22,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 
+import net.kyori.adventure.title.Title;
+
 import world.bentobox.aoneblock.AOneBlock;
 import world.bentobox.aoneblock.CommonTestSetup;
 import world.bentobox.aoneblock.dataobjects.OneBlockIslands;
@@ -151,7 +153,7 @@ public class CheckPhaseTest extends CommonTestSetup {
         // Verify phase name change
         assertEquals("Next Phase", is.getPhaseName());
         // Verify title shown
-        verify(mockPlayer).sendTitle("Next Phase", null, -1, -1, -1);
+        verify(mockPlayer).showTitle(any(Title.class));
 
     }
 
@@ -184,7 +186,7 @@ public class CheckPhaseTest extends CommonTestSetup {
         // Verify phase name change
         assertEquals("Next Phase", is.getPhaseName());
         // Verify title shown
-        verify(mockPlayer).sendTitle("Next Phase", null, -1, -1, -1);
+        verify(mockPlayer).showTitle(any(Title.class));
 
     }
 
@@ -217,7 +219,7 @@ public class CheckPhaseTest extends CommonTestSetup {
         // Verify phase name change
         assertEquals("Next Phase", is.getPhaseName());
         // Verify title shown
-        verify(mockPlayer).sendTitle("Next Phase", null, -1, -1, -1);
+        verify(mockPlayer).showTitle(any(Title.class));
 
     }
 
@@ -250,7 +252,7 @@ public class CheckPhaseTest extends CommonTestSetup {
         // Verify phase name change
         assertEquals("Next Phase", is.getPhaseName());
         // Verify title shown
-        verify(mockPlayer).sendTitle("Next Phase", null, -1, -1, -1);
+        verify(mockPlayer).showTitle(any(Title.class));
 
     }
 
