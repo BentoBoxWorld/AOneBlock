@@ -353,7 +353,7 @@ public class PhasesPanel
         // Strip out or replace formatting
         descriptionText = descriptionText.replaceAll("(?m)^[ \\t]*\\r?\\n", "")
                 .replaceAll("(?<!\\\\)\\|", "\n")
-                .replaceAll("\\\\\\|", "|");
+                .replace("\\|", "|");
 
         builder.description(descriptionText);
         builder.glow(this.oneBlockIsland != null && this.oneBlockIsland.getPhaseName().equals(phase.getPhaseName()));
