@@ -190,9 +190,9 @@ public class CheckPhaseTest extends CommonTestSetup {
         // Verify phase name change
         assertEquals("Next Phase", is.getPhaseName());
         // Verify title shown with correct phase name
-        ArgumentCaptor<Title> titleCaptor2 = ArgumentCaptor.forClass(Title.class);
-        verify(mockPlayer).showTitle(titleCaptor2.capture());
-        assertEquals(Component.text("Next Phase"), titleCaptor2.getValue().title());
+        ArgumentCaptor<Title> titleCaptor = ArgumentCaptor.forClass(Title.class);
+        verify(mockPlayer).showTitle(titleCaptor.capture());
+        assertEquals(Component.text("Next Phase"), titleCaptor.getValue().title());
 
     }
 
@@ -225,9 +225,9 @@ public class CheckPhaseTest extends CommonTestSetup {
         // Verify phase name change
         assertEquals("Next Phase", is.getPhaseName());
         // Verify title shown with correct phase name
-        ArgumentCaptor<Title> titleCaptor3 = ArgumentCaptor.forClass(Title.class);
-        verify(mockPlayer).showTitle(titleCaptor3.capture());
-        assertEquals(Component.text("Next Phase"), titleCaptor3.getValue().title());
+        ArgumentCaptor<Title> titleCaptor = ArgumentCaptor.forClass(Title.class);
+        verify(mockPlayer).showTitle(titleCaptor.capture());
+        assertEquals(Component.text("Next Phase"), titleCaptor.getValue().title());
 
     }
 
@@ -260,9 +260,9 @@ public class CheckPhaseTest extends CommonTestSetup {
         // Verify phase name change
         assertEquals("Next Phase", is.getPhaseName());
         // Verify title shown with correct phase name
-        ArgumentCaptor<Title> titleCaptor4 = ArgumentCaptor.forClass(Title.class);
-        verify(mockPlayer).showTitle(titleCaptor4.capture());
-        assertEquals(Component.text("Next Phase"), titleCaptor4.getValue().title());
+        ArgumentCaptor<Title> titleCaptor = ArgumentCaptor.forClass(Title.class);
+        verify(mockPlayer).showTitle(titleCaptor.capture());
+        assertEquals(Component.text("Next Phase"), titleCaptor.getValue().title());
 
     }
 
