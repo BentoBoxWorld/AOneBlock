@@ -522,8 +522,8 @@ public class PhasesPanel
                 : this.user.getTranslationOrNothing(REFERENCE + "biome",
                         BIOME, LangUtilsHook.getBiomeName(phase.getPhaseBiome(), this.user));
         return this.user.getTranslationOrNothing(REFERENCE + "description",
-                "[starting-block]", biomeText,
-                BIOME, blockText,
+                "[starting-block]", blockText,
+                BIOME, biomeText,
                 BANK, reqs.bank(),
                 ECONOMY, reqs.economy(),
                 LEVEL, reqs.level(),
