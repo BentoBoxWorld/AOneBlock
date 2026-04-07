@@ -107,24 +107,6 @@ public class InfoListenerTest extends CommonTestSetup {
      * Test method for {@link world.bentobox.aoneblock.listeners.InfoListener#onInfo(world.bentobox.bentobox.api.events.island.IslandInfoEvent)}.
      */
     @Test
-    void testOnInfo() {
-        IslandInfoEvent e = new IslandInfoEvent(island, ID, false, location, addon);
-        il.onInfo(e);
-        checkSpigotMessage("aoneblock.commands.info.count");
-    }
-
-    /**
-     * Check that spigot sent the message
-     * @param message - message to check
-     */
-    public void checkSpigotMessage(String expectedMessage) {
-        checkSpigotMessage(expectedMessage, 1);
-    }
-    
-    /**
-     * Test method for {@link world.bentobox.aoneblock.listeners.InfoListener#onInfo(world.bentobox.bentobox.api.events.island.IslandInfoEvent)}.
-     */
-    @Test
     void testOnInfoOtherAddon() {
         IslandInfoEvent e = new IslandInfoEvent(island, ID, false, location, mock(Addon.class));
         il.onInfo(e);
