@@ -114,8 +114,11 @@
   #    underlying-block: STONE
   #    probability: 10
   #
+  #  # Spawner gotcha: without the Delay/MinSpawnDelay/... timing fields,
+  #  # vanilla 1.21 places the spawner inactive (Delay:-1 = never tick).
+  #  # Set them explicitly or the spawner appears but does nothing.
   #  - type: block
-  #    data: 'spawner{SpawnData:{entity:{id:breeze,CustomName:[{text:"Breezy Generator",color:"#f90606"}],CustomNameVisible:1b,Glowing:1b,active_effects:[{id:unluck,duration:200,ambient:1b,show_particles:1b}],attributes:[{id:scale,base:2f}]}}} replace'
+  #    data: 'spawner{Delay:20,MinSpawnDelay:200,MaxSpawnDelay:800,SpawnCount:1,SpawnRange:4,MaxNearbyEntities:6,RequiredPlayerRange:16,SpawnData:{entity:{id:breeze,CustomName:[{text:"Breezy Generator",color:"#f90606"}],CustomNameVisible:1b,Glowing:1b,active_effects:[{id:unluck,duration:200,ambient:1b,show_particles:1b}],attributes:[{id:scale,base:2f}]}}} replace'
   #    probability: 5
   #
   #  - type: mythic-mob
