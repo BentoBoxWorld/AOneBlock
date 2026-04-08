@@ -126,8 +126,12 @@ public class MythicMobCustomBlock implements OneBlockCustomBlock {
                 }
             };
 
-            // Prefer the 3-arg overload (BentoBox >= 3.14.0) so MakeSpace can run after
-            // the 40-tick spawn delay. Fall back to the 2-arg method on older BentoBox.
+            // Prefer the 4-arg overload (BentoBox >= 3.15.0) with delayTicks=0 so the
+            // boss appears on the current tick instead of after the hook's historical
+            // 40-tick delay — that delay exists for blueprint-paste callers and is
+            // unnecessary for AOneBlock's synchronous block replace. Fall back to the
+            // 3-arg overload (BentoBox >= 3.14.0, 40-tick delay) and finally the 2-arg
+            // method on older BentoBox. MakeSpace still runs from the callback.
             if (!invokeWithCallback(hook, record, spawnLoc, onSpawn)) {
                 hook.spawnMythicMob(record, spawnLoc);
             }
@@ -139,14 +143,36 @@ public class MythicMobCustomBlock implements OneBlockCustomBlock {
     }
 
     /**
-     * Attempts to call the 3-arg {@code spawnMythicMob(record, location, Consumer)}
-     * via reflection so this class still compiles and runs against BentoBox versions
-     * that don't yet ship the callback overload.
+     * Attempts to call the MythicMobsHook overload with a {@code Consumer<Entity>}
+     * callback via reflection so this class still compiles and runs against
+     * BentoBox versions that don't yet ship the overload.
+     * <p>
+     * Tries the 4-arg {@code spawnMythicMob(record, location, Consumer, long)}
+     * form first with {@code delayTicks=0} so the boss spawns on the current
+     * tick (BentoBox >= 3.15.0). If that isn't available, falls back to the
+     * 3-arg {@code spawnMythicMob(record, location, Consumer)} form with its
+     * built-in 40-tick delay (BentoBox >= 3.14.0). If neither is found, returns
+     * {@code false} so the caller can dispatch the 2-arg form.
      *
-     * @return true if the callback overload was invoked successfully
+     * @return true if either callback overload was invoked successfully
      */
     private boolean invokeWithCallback(MythicMobsHook hook, MythicMobRecord record, Location spawnLoc,
             Consumer<Entity> onSpawn) {
+        // Preferred: 4-arg overload with explicit zero delay.
+        try {
+            Method m = MythicMobsHook.class.getMethod("spawnMythicMob",
+                    MythicMobRecord.class, Location.class, Consumer.class, long.class);
+            m.invoke(hook, record, spawnLoc, onSpawn, 0L);
+            return true;
+        } catch (NoSuchMethodException ignored) {
+            // fall through to the 3-arg form
+        } catch (Exception e) {
+            BentoBox.getInstance().logError(
+                    "Failed to invoke MythicMobsHook 4-arg callback overload: " + e.getMessage());
+            return false;
+        }
+
+        // Fallback: 3-arg overload (40-tick built-in delay).
         try {
             Method m = MythicMobsHook.class.getMethod("spawnMythicMob",
                     MythicMobRecord.class, Location.class, Consumer.class);
@@ -155,7 +181,8 @@ public class MythicMobCustomBlock implements OneBlockCustomBlock {
         } catch (NoSuchMethodException e) {
             return false;
         } catch (Exception e) {
-            BentoBox.getInstance().logError("Failed to invoke MythicMobsHook callback overload: " + e.getMessage());
+            BentoBox.getInstance().logError(
+                    "Failed to invoke MythicMobsHook 3-arg callback overload: " + e.getMessage());
             return false;
         }
     }
