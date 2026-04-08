@@ -10,6 +10,8 @@ import java.util.function.Function;
 
 import world.bentobox.aoneblock.oneblocks.customblock.BlockDataCustomBlock;
 import world.bentobox.aoneblock.oneblocks.customblock.MobCustomBlock;
+import world.bentobox.aoneblock.oneblocks.customblock.MobDataCustomBlock;
+import world.bentobox.aoneblock.oneblocks.customblock.MythicMobCustomBlock;
 
 /**
  * A creator for {@link OneBlockCustomBlock}
@@ -23,6 +25,8 @@ public final class OneBlockCustomBlockCreator {
     static {
         register("block-data", BlockDataCustomBlock::fromMap);
         register("mob", MobCustomBlock::fromMap);
+        register("mob-data", MobDataCustomBlock::fromMap);
+        register("mythic-mob", MythicMobCustomBlock::fromMap);
         register("short", map -> {
             String type = Objects.toString(map.get("data"), null);
             if (type == null) {

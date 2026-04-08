@@ -189,6 +189,35 @@ If CHEST is listed in the blocks section, then it will be randomly filled accord
 
 Be very careful when editing the chest items and check that the material is a true Bukkit material and spelled correctly.
 
+### Custom block entries
+
+Phase `blocks:` sections can also be written as a YAML list, which unlocks four
+custom entry types:
+
+```yaml
+blocks:
+  - type: block-data
+    data: redstone_wire[power=15]
+    probability: 20
+
+  # #488: summon an entity with vanilla NBT/component data, same syntax as /summon.
+  # After spawning, blocks inside the mob's (scaled) bounding box are cleared.
+  - type: mob-data
+    data: minecraft:breeze{Glowing:1b,attributes:[{id:"minecraft:generic.scale",base:2}]}
+    underlying-block: STONE
+    probability: 15
+
+  # #303: spawn a MythicMob via BentoBox's MythicMobs hook. Requires the MythicMobs
+  # plugin to be installed; otherwise the entry is logged and skipped at runtime.
+  - type: mythic-mob
+    mob: SkeletalKnight
+    level: 3
+    power: 1.0
+    display-name: "Boss"
+    underlying-block: STONE
+    probability: 5
+```
+
 ### Other Add-ons
 
 OneBlock is an add-on that uses the BentoBox API. Here are some other ones that you may be interested in:
