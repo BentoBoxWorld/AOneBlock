@@ -61,6 +61,7 @@ public class OneBlocksManager {
     private static final String CONTENTS = "contents";
     private static final String MOBS = "mobs";
     private static final String BLOCKS = "blocks";
+    private static final String CUSTOM_BLOCKS = "custom-blocks";
     private static final String PHASES = "phases";
     private static final String GOTO_BLOCK = "gotoBlock";
     private static final String START_COMMANDS = "start-commands";
@@ -500,14 +501,27 @@ public class OneBlocksManager {
                     }
                 }
 
-                int probability = Integer.parseInt(Objects.toString(map.get("probability"), "0"));
-                Optional<OneBlockCustomBlock> customBlock = OneBlockCustomBlockCreator.create(map);
-                if (customBlock.isPresent()) {
-                    obPhase.addCustomBlock(customBlock.get(), probability);
-                } else {
-                    addon.logError("Bad custom block in " + obPhase.getPhaseName() + ": " + map);
-                }
+                addCustomBlockFromMap(obPhase, map);
             }
+        }
+
+        // Optional sibling list holding only custom entries. Lets admins keep the
+        // existing map-form `blocks:` section untouched while still registering
+        // custom block types like `mob-data` or `mythic-mob`.
+        if (phase.isList(CUSTOM_BLOCKS)) {
+            for (Map<?, ?> map : phase.getMapList(CUSTOM_BLOCKS)) {
+                addCustomBlockFromMap(obPhase, map);
+            }
+        }
+    }
+
+    private void addCustomBlockFromMap(OneBlockPhase obPhase, Map<?, ?> map) {
+        int probability = Integer.parseInt(Objects.toString(map.get("probability"), "0"));
+        Optional<OneBlockCustomBlock> customBlock = OneBlockCustomBlockCreator.create(map);
+        if (customBlock.isPresent()) {
+            obPhase.addCustomBlock(customBlock.get(), probability);
+        } else {
+            addon.logError("Bad custom block in " + obPhase.getPhaseName() + ": " + map);
         }
     }
 
