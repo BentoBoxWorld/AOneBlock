@@ -191,7 +191,7 @@ Be very careful when editing the chest items and check that the material is a tr
 
 ### Custom block entries
 
-Phase `blocks:` sections can also be written as a YAML list, which unlocks four
+Phase `blocks:` sections can also be written as a YAML list, which unlocks
 custom entry types:
 
 ```yaml
@@ -203,7 +203,7 @@ blocks:
   # #488: summon an entity with vanilla NBT/component data, same syntax as /summon.
   # After spawning, blocks inside the mob's (scaled) bounding box are cleared.
   - type: mob-data
-    data: minecraft:breeze{Glowing:1b,attributes:[{id:"minecraft:generic.scale",base:2}]}
+    data: breeze{CustomName:[{text:Breezy,color:"#f90606"}],CustomNameVisible:1b,Glowing:1b,attributes:[{id:scale,base:2f}]}
     underlying-block: STONE
     probability: 15
 
@@ -215,6 +215,38 @@ blocks:
     power: 1.0
     display-name: "Boss"
     underlying-block: STONE
+    probability: 5
+```
+
+> **Note:** the `mob-data` string is passed straight to the vanilla `/summon`
+> command, so it must be valid NBT for your server version. A few 1.21 gotchas:
+> attribute ids no longer use the `generic.`/`player.` prefix (`scale`, not
+> `generic.scale`), numeric attribute bases need a float suffix (`base:2f`),
+> and `CustomName` must be a text-component list (`[{text:Breezy}]`), not a
+> plain string. Test the command in-game first with `/summon <your data>` —
+> if it works there it will work here. Bad NBT is logged and the spawn is
+> skipped.
+
+If you'd rather leave your existing `blocks:` map-form section untouched, you
+can put custom entries in a sibling `custom-blocks:` list. Both sections are
+read and their entries merged into the same weighted pool, so probabilities in
+the two sections are directly comparable:
+
+```yaml
+blocks:
+  PODZOL: 40
+  DIRT: 1000
+  OAK_LOG: 2000
+
+custom-blocks:
+  - type: mob-data
+    data: breeze{CustomName:[{text:Breezy,color:"#f90606"}],CustomNameVisible:1b,Glowing:1b,attributes:[{id:scale,base:2f}]}
+    underlying-block: STONE
+    probability: 50
+
+  - type: mythic-mob
+    mob: SkeletalKnight
+    level: 3
     probability: 5
 ```
 

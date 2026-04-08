@@ -402,6 +402,38 @@ public class OneBlocksManagerTest3 extends CommonTestSetup {
 	}
 
 	/**
+	 * Verifies that a phase can keep its existing map-form {@code blocks:} section
+	 * untouched while adding custom entries via a sibling {@code custom-blocks:}
+	 * list. This is the backwards-compatible entry point for mob-data / mythic-mob.
+	 */
+	@Test
+	void testAddBlocksWithCustomBlocksSibling() throws InvalidConfigurationException {
+		String yaml = """
+                name: Plains
+                blocks:
+                  PODZOL: 40
+                  DIRT: 1000
+                custom-blocks:
+                  - type: mob-data
+                    data: minecraft:breeze{Glowing:1b}
+                    underlying-block: STONE
+                    probability: 50
+                """;
+		YamlConfiguration cfg = new YamlConfiguration();
+		cfg.loadFromString(yaml);
+
+		obm.addBlocks(obPhase, cfg);
+
+		// Two vanilla materials registered via the map form...
+		assertEquals(2, obPhase.getBlocks().size());
+		assertTrue(obPhase.getBlocks().containsKey(Material.PODZOL));
+		assertTrue(obPhase.getBlocks().containsKey(Material.DIRT));
+		// ...plus one custom block from the sibling list. Vanilla totals (40 + 1000)
+		// plus the custom block probability (50) should appear in blockTotal.
+		assertEquals(40 + 1000 + 50, obPhase.getBlockTotal());
+	}
+
+	/**
 	 * Test method for
 	 * {@link world.bentobox.aoneblock.oneblocks.OneBlocksManager#getPhase(int)}.
 	 */

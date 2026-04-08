@@ -85,6 +85,42 @@ class MobDataCustomBlockTest {
     }
 
     @Test
+    void buildSummonCommandPlacesNbtAfterCoordinates() {
+        // Regression: the vanilla /summon grammar is `summon <entity> <x> <y> <z> [nbt]`.
+        // Previously we glued NBT to the entity id, producing an "Unhandled exception"
+        // in VanillaCommandWrapper. This test locks in the corrected ordering.
+        String data = "breeze{CustomName:[{text:Breezy}],Glowing:1b,attributes:[{id:scale,base:2f}]}";
+        String command = MobDataCustomBlock.buildSummonCommand(data, "minecraft:oneblock_world",
+                "1600.5", "81.0", "1600.5");
+
+        assertEquals(
+                "execute in minecraft:oneblock_world run summon breeze 1600.5 81.0 1600.5 "
+                        + "{CustomName:[{text:Breezy}],Glowing:1b,attributes:[{id:scale,base:2f}]}",
+                command);
+    }
+
+    @Test
+    void buildSummonCommandWithNoNbt() {
+        // A bare entity id (no NBT or components) should still produce a valid command.
+        String command = MobDataCustomBlock.buildSummonCommand("minecraft:zombie",
+                "minecraft:world", "0.5", "65.0", "0.5");
+
+        assertEquals("execute in minecraft:world run summon minecraft:zombie 0.5 65.0 0.5", command);
+    }
+
+    @Test
+    void buildSummonCommandWithComponentBrackets() {
+        // Modern component syntax uses `[` instead of `{` (e.g. `pig[minecraft:rotation=...]`).
+        // The split must handle whichever comes first.
+        String command = MobDataCustomBlock.buildSummonCommand("pig[minecraft:rotation={yaw:90f}]",
+                "minecraft:world", "1.5", "64.0", "1.5");
+
+        assertEquals(
+                "execute in minecraft:world run summon pig 1.5 64.0 1.5 [minecraft:rotation={yaw:90f}]",
+                command);
+    }
+
+    @Test
     void registeredUnderMobDataType() {
         // Sanity check: ensure the OneBlockCustomBlockCreator routes "mob-data"
         // to MobDataCustomBlock::fromMap.
