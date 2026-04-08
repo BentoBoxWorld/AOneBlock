@@ -200,6 +200,15 @@ blocks:
     data: redstone_wire[power=15]
     probability: 20
 
+  # `type: block` runs the vanilla /setblock command at the magic-block
+  # position. The data string may include block states `[…]`, NBT `{…}`,
+  # and a trailing destroy|keep|replace mode — anything valid after
+  # `setblock <x> <y> <z>`. Use single quotes around the data so any
+  # double quotes inside the NBT don't clash with YAML string delimiters.
+  - type: block
+    data: 'spawner{SpawnData:{entity:{id:breeze,CustomName:[{text:"Breezy Generator",color:"#f90606"}],CustomNameVisible:1b,Glowing:1b,active_effects:[{id:unluck,duration:200,ambient:1b,show_particles:1b}],attributes:[{id:scale,base:2f}]}}} replace'
+    probability: 10
+
   # #488: summon an entity with vanilla NBT/component data, same syntax as /summon.
   # After spawning, blocks inside the mob's (scaled) bounding box are cleared.
   - type: mob-data
@@ -217,6 +226,11 @@ blocks:
     underlying-block: STONE
     probability: 5
 ```
+
+`type: block` is an alias for `type: block-data` — both route to the same
+handler. Use `block-data` when you only need simple block states
+(`redstone_wire[power=15]`); use `block` when the data contains NBT or a
+setblock mode flag so the intent is obvious at a glance.
 
 > **Note:** the `mob-data` string is passed straight to the vanilla `/summon`
 > command, so it must be valid NBT for your server version. A few 1.21 gotchas:
@@ -243,6 +257,10 @@ custom-blocks:
     data: breeze{CustomName:[{text:Breezy,color:"#f90606"}],CustomNameVisible:1b,Glowing:1b,attributes:[{id:scale,base:2f}]}
     underlying-block: STONE
     probability: 50
+
+  - type: block
+    data: 'spawner{SpawnData:{entity:{id:breeze,CustomName:[{text:"Breezy Generator",color:"#f90606"}],CustomNameVisible:1b,Glowing:1b,active_effects:[{id:unluck,duration:200,ambient:1b,show_particles:1b}],attributes:[{id:scale,base:2f}]}}} replace'
+    probability: 10
 
   - type: mythic-mob
     mob: SkeletalKnight
