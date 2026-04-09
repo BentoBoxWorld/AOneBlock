@@ -38,7 +38,7 @@ aoneblock:
   actionbar:
     status: '<green>Фаза: <aqua>[phase-name]</aqua> <light_purple>|</light_purple>
       Блоков: <aqua>[done] <light_purple>/</light_purple> [total]</aqua> <light_purple>|</light_purple>
-      Прогресс: <aqua>[percent-done]</aqua>'
+      Прогресс: <aqua>[percent-done]</aqua></green>'
     not-active: <red>Панель действий отключена на этом острове.</red>
   commands:
     admin:
@@ -52,13 +52,11 @@ aoneblock:
         description: поместить сундук, на который смотрите, в фазу с указанной редкостью
         chest-is-empty: <red>Этот сундук пуст, поэтому его нельзя добавить.</red>
         unknown-phase: <red>Неизвестная фаза. Используйте Tab для подсказки.</red>
-        unknown-rarity: <red>Неизвестная редкость. Используйте COMMON, UNCOMMON, RARE
-          или EPIC</red>
+        unknown-rarity: <red>Неизвестная редкость. Используйте COMMON, UNCOMMON, RARE или EPIC</red>
         look-at-chest: <red>Посмотрите на заполненный сундук, чтобы установить его.</red>
         only-single-chest: <red>Можно устанавливать только одиночные сундуки.</red>
         success: <green>Сундук успешно добавлен в фазу!</green>
-        failure: <red>Не удалось добавить сундук в фазу! Проверьте консоль на наличие
-          ошибок.</red>
+        failure: <red>Не удалось добавить сундук в фазу! Проверьте консоль на наличие ошибок.</red>
       sanity:
         parameters: <фаза>
         description: вывести в консоль проверку вероятностей фазы
@@ -67,8 +65,7 @@ aoneblock:
       description: показать количество вскопано блоков и фазу
       info: <green>Вскопано <aqua>[number]</aqua> блоков на фазе [name]</green>
     info:
-      count: <green>Вскопано <aqua>[number]</aqua> блоков на фазе <aqua>[name]</aqua>.
-        Всего сломано <aqua>[lifetime]</aqua>.</green>
+      count: <green>Вскопано <aqua>[number]</aqua> блоков на фазе <aqua>[name]</aqua>. Всего сломано <aqua>[lifetime]</aqua>.</green>
     phases:
       description: показать список всех фаз
       title: <dark_green>Фазы OneBlock</dark_green>
@@ -93,14 +90,10 @@ aoneblock:
       block-exist: <green>Блок существует, восстановление не требовалось.</green>
       block-respawned: <green>Блок восстановлен.</green>
   phase:
-    insufficient-level: <red>Уровень вашего острова слишком низок для продолжения!
-      Требуется [number].</red>
-    insufficient-funds: <red>Ваши средства слишком малы для продолжения! Требуется
-      [number].</red>
-    insufficient-bank-balance: <red>Баланс банка острова слишком низок для продолжения!
-      Требуется [number].</red>
-    insufficient-permission: <red>Вы не можете продолжать, пока не получите разрешение
-      [name]!</red>
+    insufficient-level: <red>Уровень вашего острова слишком низок для продолжения! Требуется [number].</red>
+    insufficient-funds: <red>Ваши средства слишком малы для продолжения! Требуется [number].</red>
+    insufficient-bank-balance: <red>Баланс банка острова слишком низок для продолжения! Требуется [number].</red>
+    insufficient-permission: <red>Вы не можете продолжать, пока не получите разрешение [name]!</red>
     cooldown: <red>Следующая фаза станет доступна через [number] секунд!</red>
   placeholders:
     infinite: Бесконечность
@@ -124,21 +117,19 @@ aoneblock:
           [level]
           [permission]
           [blocks]
-        starting-block: <gray>Начинается после разрушения <yellow>[number]</yellow>
-          блоков.</gray>
+        starting-block: <gray>Начинается после разрушения <yellow>[number] </yellow>блоков.</gray>
         biome: '<gray>Биом: <yellow>[biome]</yellow></gray>'
-        bank: <gray>Требуется <yellow>$[number]</yellow> на счету банка.</gray>
-        economy: <gray>Требуется <yellow>$[number]</yellow> на счёте игрока.</gray>
-        level: <gray>Требуется <yellow>[number]</yellow> уровень острова.</gray>
+        bank: <gray>Требуется <yellow>$[number] </yellow>на счету банка.</gray>
+        economy: <gray>Требуется <yellow>$[number] </yellow>на счёте игрока.</gray>
+        level: <gray>Требуется <yellow>[number] </yellow>уровень острова.</gray>
         permission: <gray>Требуется разрешение <yellow>[permission]</yellow>.</gray>
-        blocks-prefix: <gray>Блоки в фазе - </gray>
-        blocks: <yellow>[name], </yellow>
+        blocks-prefix: <gray>Блоки - </gray>
+        blocks: '<yellow>[name], '
         wrap-at: '50'
     tips:
-      click-to-previous: <gray><yellow>Нажмите</yellow> для перехода на предыдущую
-        страницу.</gray>
-      click-to-next: <gray><yellow>Нажмите</yellow> для перехода на следующую страницу.</gray>
-      click-to-change: <gray><yellow>Нажмите</yellow> для изменения.</gray>
+      click-to-previous: <gray><yellow>Нажмите </yellow>для перехода на предыдущую страницу.</gray>
+      click-to-next: <gray><yellow>Нажмите </yellow>для перехода на следующую страницу.</gray>
+      click-to-change: <gray><yellow>Нажмите</yellow>, чтобы изменить.</gray>
   island:
     starting-hologram: |-
       <green>Добро пожаловать в AOneBlock</green>
