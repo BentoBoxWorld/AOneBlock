@@ -10,6 +10,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Random;
 import java.util.TreeMap;
+import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
 import org.bukkit.Bukkit;
@@ -46,10 +47,12 @@ import org.bukkit.event.entity.EntitySpawnEvent;
 import org.bukkit.event.entity.ItemSpawnEvent;
 import org.bukkit.event.player.PlayerBucketFillEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.loot.LootContext;
 import org.bukkit.loot.LootTable;
+import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.Vector;
 import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jdt.annotation.Nullable;
@@ -96,6 +99,17 @@ public class BlockListener extends FlagListener implements Listener {
      * In-memory cache for OneBlock island data to reduce database lookups.
      */
     private final Map<String, OneBlockIslands> cache;
+
+    /**
+     * Active continuous-brushing sessions, keyed by player UUID. Each session
+     * holds the repeating task driving dust progression and the block being brushed.
+     */
+    private final Map<UUID, BrushSession> brushSessions = new HashMap<>();
+
+    /**
+     * Per-player brushing session state.
+     */
+    private record BrushSession(BukkitTask task, Block block) {}
 
     /**
      * Helper class to check phase requirements.
@@ -711,21 +725,110 @@ public class BlockListener extends FlagListener implements Listener {
         if (block.getBlockData() instanceof Brushable bb) {
             int dusted = bb.getDusted() + 1;
             if (dusted > bb.getMaximumDusted()) {
-                completeBrush(e, block);
-            } else {
-                bb.setDusted(dusted);
-                block.setBlockData(bb);
+                completeBrush(e.getPlayer(), block);
+                return;
+            }
+            bb.setDusted(dusted);
+            block.setBlockData(bb);
+            playBrushFeedback(block);
+            // Kick off a continuous-brush session so the player can hold right-click
+            // and have dusting advance automatically (vanilla feel). The kickoff click
+            // above already advances one stage; the timer picks up from there.
+            Player player = e.getPlayer();
+            UUID uuid = player.getUniqueId();
+            BrushSession existing = brushSessions.get(uuid);
+            if (existing != null && !existing.block().equals(block)) {
+                cancelBrushSession(uuid);
+                existing = null;
+            }
+            if (existing == null) {
+                brushSessions.put(uuid, startContinuousBrush(player, block));
             }
         }
     }
 
     /**
-     * Completes the brushing of a suspicious block: drops loot (if available), plays the
-     * break sound, removes the block, fires a BlockBreakEvent, and damages the brush.
-     * @param e     The originating PlayerInteractEvent.
+     * Schedules a repeating task that advances brushing on the given block while the
+     * player keeps holding right-click with the brush. Period of 10 ticks per dust stage
+     * matches the vanilla brush cadence.
+     * @param player The brushing player.
+     * @param block  The suspicious block being brushed.
+     * @return A new BrushSession holding the scheduled task.
+     */
+    private BrushSession startContinuousBrush(Player player, Block block) {
+        UUID uuid = player.getUniqueId();
+        BukkitTask task = Bukkit.getScheduler().runTaskTimer(addon.getPlugin(), new Runnable() {
+            @Override
+            public void run() {
+                // Validate that the player is still actively brushing this block.
+                if (!player.isOnline()
+                        || player.getInventory().getItemInMainHand().getType() != Material.BRUSH
+                        || !player.isHandRaised()
+                        || !block.equals(player.getTargetBlockExact(5))
+                        || (block.getType() != Material.SUSPICIOUS_GRAVEL
+                                && block.getType() != Material.SUSPICIOUS_SAND)
+                        || !(block.getBlockData() instanceof Brushable bb)) {
+                    cancelBrushSession(uuid);
+                    return;
+                }
+                int dusted = bb.getDusted() + 1;
+                if (dusted > bb.getMaximumDusted()) {
+                    completeBrush(player, block);
+                    cancelBrushSession(uuid);
+                    return;
+                }
+                bb.setDusted(dusted);
+                block.setBlockData(bb);
+                playBrushFeedback(block);
+            }
+        }, 10L, 10L);
+        return new BrushSession(task, block);
+    }
+
+    /**
+     * Cancels any active brushing session for the given player UUID.
+     * @param uuid The player's UUID.
+     */
+    private void cancelBrushSession(UUID uuid) {
+        BrushSession session = brushSessions.remove(uuid);
+        if (session != null) {
+            session.task().cancel();
+        }
+    }
+
+    /**
+     * Clean up any brushing session when a player disconnects.
+     * @param e The PlayerQuitEvent.
+     */
+    @EventHandler
+    public void onPlayerQuit(PlayerQuitEvent e) {
+        cancelBrushSession(e.getPlayer().getUniqueId());
+    }
+
+    /**
+     * Plays brushing particles and sound at a suspicious block to give visible/audible
+     * progress feedback. Needed because the block is placed programmatically rather than
+     * spawning naturally, so the vanilla brush animation is not triggered on clients.
      * @param block The suspicious block being brushed.
      */
-    private void completeBrush(PlayerInteractEvent e, Block block) {
+    private void playBrushFeedback(Block block) {
+        World world = block.getWorld();
+        Location center = block.getLocation().add(0.5, 0.5, 0.5);
+        // Dust particles using the block's own data so they match sand/gravel colour.
+        world.spawnParticle(Particle.BLOCK, center, 10, 0.25, 0.25, 0.25, 0.0, block.getBlockData());
+        Sound brushSound = (block.getType() == Material.SUSPICIOUS_GRAVEL)
+                ? Sound.ITEM_BRUSH_BRUSHING_GRAVEL
+                : Sound.ITEM_BRUSH_BRUSHING_SAND;
+        world.playSound(center, brushSound, 0.8f, 1.0f);
+    }
+
+    /**
+     * Completes the brushing of a suspicious block: drops loot (if available), plays the
+     * break sound, removes the block, fires a BlockBreakEvent, and damages the brush.
+     * @param player The brushing player.
+     * @param block  The suspicious block being brushed.
+     */
+    private void completeBrush(Player player, Block block) {
         Location loc = block.getLocation().add(0.5, 0.5, 0.5);
         World world = block.getWorld();
 
@@ -733,7 +836,7 @@ public class BlockListener extends FlagListener implements Listener {
             LootTable lootTable = suspiciousBlock.getLootTable();
             if (lootTable != null) {
                 LootContext context = new LootContext.Builder(loc)
-                        .lootedEntity(e.getPlayer()).killer(e.getPlayer()).build();
+                        .lootedEntity(player).killer(player).build();
                 Collection<ItemStack> items = lootTable.populateLoot(new Random(), context);
                 for (ItemStack item : items) {
                     world.dropItemNaturally(loc, item);
@@ -746,8 +849,8 @@ public class BlockListener extends FlagListener implements Listener {
                 : Sound.BLOCK_SUSPICIOUS_SAND_BREAK;
         world.playSound(loc, breakSound, 1.0f, 1.0f);
         block.setType(Material.AIR);
-        Bukkit.getPluginManager().callEvent(new BlockBreakEvent(block, e.getPlayer()));
-        e.getPlayer().getInventory().getItemInMainHand().damage(1, e.getPlayer());
+        Bukkit.getPluginManager().callEvent(new BlockBreakEvent(block, player));
+        player.getInventory().getItemInMainHand().damage(1, player);
     }
 
     /**
