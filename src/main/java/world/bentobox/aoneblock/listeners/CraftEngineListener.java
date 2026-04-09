@@ -18,7 +18,7 @@ public class CraftEngineListener implements Listener {
     }
 
     /**
-     * Handle CraftEngineReloadEvent then reload the addon if it gets triggered
+     * Handle CraftEngineReloadEvent and reload the addon when triggered
      * @param e - CraftEngineReloadEvent
      */
     @EventHandler
