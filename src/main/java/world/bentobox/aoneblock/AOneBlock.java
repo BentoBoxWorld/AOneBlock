@@ -22,6 +22,7 @@ import world.bentobox.aoneblock.listeners.BlockProtect;
 import world.bentobox.aoneblock.listeners.BossBarListener;
 import world.bentobox.aoneblock.listeners.HoloListener;
 import world.bentobox.aoneblock.listeners.InfoListener;
+import world.bentobox.aoneblock.listeners.CraftEngineListener;
 import world.bentobox.aoneblock.listeners.ItemsAdderListener;
 import world.bentobox.aoneblock.listeners.JoinLeaveListener;
 import world.bentobox.aoneblock.listeners.NexoListener;
@@ -29,6 +30,7 @@ import world.bentobox.aoneblock.listeners.NoBlockHandler;
 import world.bentobox.aoneblock.listeners.StartSafetyListener;
 import world.bentobox.aoneblock.oneblocks.OneBlockCustomBlockCreator;
 import world.bentobox.aoneblock.oneblocks.OneBlocksManager;
+import world.bentobox.aoneblock.oneblocks.customblock.CraftEngineCustomBlock;
 import world.bentobox.aoneblock.oneblocks.customblock.ItemsAdderCustomBlock;
 import world.bentobox.aoneblock.oneblocks.customblock.NexoCustomBlock;
 import world.bentobox.aoneblock.requests.IslandStatsHandler;
@@ -57,6 +59,8 @@ public class AOneBlock extends GameModeAddon {
     private boolean hasItemsAdder = false;
     /** Whether Nexo is present on the server */
     private boolean hasNexo = false;
+    /** Whether CraftEngine is present on the server */
+    private boolean hasCraftEngine = false;
 
     /** The addon settings */
     private Settings settings;
@@ -126,6 +130,13 @@ public class AOneBlock extends GameModeAddon {
             OneBlockCustomBlockCreator.register(NexoCustomBlock::fromId);
             OneBlockCustomBlockCreator.register("nexo", NexoCustomBlock::fromMap);
             hasNexo = true;
+        }
+        // Check if CraftEngine exists, if yes register listener
+        if (Bukkit.getPluginManager().getPlugin("CraftEngine") != null) {
+            registerListener(new CraftEngineListener(this));
+            OneBlockCustomBlockCreator.register(CraftEngineCustomBlock::fromId);
+            OneBlockCustomBlockCreator.register("craftengine", CraftEngineCustomBlock::fromMap);
+            hasCraftEngine = true;
         }
         // Save the default config from config.yml
         saveDefaultConfig();
@@ -414,6 +425,13 @@ public class AOneBlock extends GameModeAddon {
      */
     public boolean hasNexo() {
         return hasNexo;
+    }
+
+    /**
+     * @return true if CraftEngine is on the server
+     */
+    public boolean hasCraftEngine() {
+        return hasCraftEngine;
     }
 
     /**

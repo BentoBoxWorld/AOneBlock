@@ -59,6 +59,7 @@
         <bentobox.version>3.13.0</bentobox.version>
         <items-adder.version>4.0.10</items-adder.version>
         <nexo.version>1.8.0</nexo.version>
+        <craftengine.version>0.0.67</craftengine.version>
         <level.version>2.6.2</level.version>
         <bank.version>1.3.0</bank.version>
         <!-- Revision variable removes warning about dynamic version -->
@@ -156,6 +157,13 @@
         <repository>
             <id>nexomc</id>
             <url>https://repo.nexomc.com/releases/</url>
+            <releases><enabled>true</enabled></releases>
+            <snapshots><enabled>false</enabled></snapshots>
+        </repository>
+        <!-- CraftEngine API -->
+        <repository>
+            <id>momirealms-releases</id>
+            <url>https://repo.momirealms.net/releases/</url>
             <releases><enabled>true</enabled></releases>
             <snapshots><enabled>false</enabled></snapshots>
         </repository>
@@ -263,6 +271,18 @@
             <groupId>com.nexomc</groupId>
             <artifactId>nexo</artifactId>
             <version>${nexo.version}</version>
+            <scope>provided</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>net.momirealms</groupId>
+            <artifactId>craft-engine-bukkit</artifactId>
+            <version>${craftengine.version}</version>
             <scope>provided</scope>
             <exclusions>
                 <exclusion>
