@@ -219,11 +219,12 @@ blocks:
   # #303: spawn a MythicMob via BentoBox's MythicMobs hook. Requires the MythicMobs
   # plugin to be installed; otherwise the entry is logged and skipped at runtime.
   - type: mythic-mob
-    mob: SkeletalKnight
-    level: 3
-    power: 1.0
-    display-name: "Boss"
-    underlying-block: STONE
+    mob: SkeletalKnight        # MythicMob internal type ID (required)
+    level: 3                   # mob level (optional, default: 1)
+    power: 1.0                 # mob power multiplier (optional, default: 0)
+    display-name: "Boss"       # override display name (optional)
+    stance: ""                 # MythicMobs stance string (optional)
+    underlying-block: STONE    # block placed under the mob (optional, default: STONE)
     probability: 5
 ```
 
@@ -250,6 +251,83 @@ setblock mode flag so the intent is obvious at a glance.
 > plain string. Test the command in-game first with `/summon <your data>` —
 > if it works there it will work here. Bad NBT is logged and the spawn is
 > skipped.
+
+#### MythicMobs configuration
+
+To use `type: mythic-mob` you need:
+1. [MythicMobs](https://www.spigotmc.org/resources/mythicmobs.5702/) (free or premium) installed on the server.
+2. BentoBox's built-in MythicMobs hook active (it registers automatically when MythicMobs is detected).
+
+**Fields:**
+
+| Field | Required | Default | Description |
+|---|---|---|---|
+| `mob` | ✅ | — | The internal MythicMobs mob type ID as defined in your MythicMobs config (case-sensitive). |
+| `level` | ❌ | `1` | The level at which to spawn the mob. |
+| `power` | ❌ | `0` | The power multiplier for the mob. |
+| `display-name` | ❌ | mob ID | Override the mob's display name. |
+| `stance` | ❌ | `""` | An optional MythicMobs stance string. |
+| `underlying-block` | ❌ | `STONE` | The vanilla block placed at the magic-block position before the mob spawns. |
+| `probability` | ❌ | — | The relative spawn weight in the phase pool. |
+
+**Alternative approach using commands:**
+
+If you experience any issues with MythicMobs skills or abilities when spawning
+via `type: mythic-mob`, you can use the MythicMobs `/mm mobs spawn` command
+inside the phase's `start-commands` or `end-commands` instead. This spawns the
+mob through MythicMobs directly, which ensures all skills and behaviours work
+exactly as configured:
+
+```yaml
+start-commands:
+  # Spawn mob at the island's magic-block position using MythicMobs command.
+  # Replace <world>, <x>, <y>, <z> with the actual coordinates, or use a
+  # console command that targets the player's location.
+  - 'mm mobs spawn MY_MYTHIC_MOB 1 [world],[x],[y],[z]'
+```
+
+> **Tip:** When spawning MythicMobs via commands you have full control over
+> the exact spawn location and can still use all MythicMobs features without
+> any compatibility limitations.
+
+#### ItemsAdder custom blocks
+
+Requires the [ItemsAdder](https://www.spigotmc.org/resources/itemsadder.73355/)
+plugin to be installed. ItemsAdder blocks can be referenced in two ways:
+
+**Map form** (inside a `blocks:` or `custom-blocks:` list):
+```yaml
+blocks:
+  - type: itemsadder
+    id: namespace:block_id   # ItemsAdder block ID (required)
+    probability: 20
+```
+
+**Short form** — place the ItemsAdder block ID directly as a map key (same as
+vanilla materials):
+```yaml
+blocks:
+  namespace:block_id: 20
+```
+
+#### Nexo custom blocks
+
+Requires the [Nexo](https://www.spigotmc.org/resources/nexo.112709/) plugin to
+be installed. Nexo blocks can be referenced in two ways:
+
+**Map form** (inside a `blocks:` or `custom-blocks:` list):
+```yaml
+blocks:
+  - type: nexo
+    id: nexo_block_id   # Nexo block ID (required)
+    probability: 20
+```
+
+**Short form** — place the Nexo block ID directly as a map key:
+```yaml
+blocks:
+  nexo_block_id: 20
+```
 
 If you'd rather leave your existing `blocks:` map-form section untouched, you
 can put custom entries in a sibling `custom-blocks:` list. Both sections are
