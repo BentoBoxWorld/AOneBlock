@@ -337,28 +337,53 @@ public class PhasesPanel
     {
         if (phaseEntry == null || phaseEntry.getValue() == null)
         {
-            // return as island has no owner. Empty button will be created.
             return null;
         }
 
         OneBlockPhase phase = phaseEntry.getValue();
-        /* Example in locale:
-         *       phase:
-                    name: "&f&l [phase]"
-                    description: |-
-                      [starting-block]
-                      [biome]
-                      [bank]
-                      [economy]
-                      [level]
-                      [permission]
-         */
-
-
-        // Get settings for island.
         PanelItemBuilder builder = new PanelItemBuilder();
 
-        // Set the icon of the button
+        applyIcon(builder, template, phase);
+        applyTitle(builder, template, phase);
+
+        RequirementTexts reqs = buildRequirementsText(phase);
+        String blocksText = buildBlocksText(phase);
+        String descriptionText = buildDescriptionText(template, phase, reqs, blocksText);
+
+        // Strip out or replace formatting
+        descriptionText = descriptionText.replaceAll("(?m)^[ \\t]*\\r?\\n", "")
+                .replaceAll("(?<!\\\\)\\|", "\n")
+                .replace("\\|", "|");
+
+        builder.description(descriptionText);
+        builder.glow(this.oneBlockIsland != null && this.oneBlockIsland.getPhaseName().equals(phase.getPhaseName()));
+
+        boolean canApply = canApplyPhase(phase);
+        List<ItemTemplateRecord.ActionRecords> actions = template.actions().stream()
+                .filter(action -> switch (action.actionType().toUpperCase()) {
+                    case "SELECT" -> canApply;
+                    case "VIEW" -> true;
+                    default -> false;
+                })
+                .toList();
+
+        builder.clickHandler(buildClickHandler(actions, phase));
+
+        List<String> tooltips = collectTooltips(actions);
+        if (!tooltips.isEmpty())
+        {
+            builder.description("");
+            builder.description(tooltips);
+        }
+
+        return builder.build();
+    }
+
+    /**
+     * Applies the icon to the panel item builder from the template or phase data.
+     */
+    private void applyIcon(PanelItemBuilder builder, ItemTemplateRecord template, OneBlockPhase phase)
+    {
         if (template.icon() != null)
         {
             builder.icon(template.icon().clone());
@@ -367,184 +392,191 @@ public class PhasesPanel
         {
             ItemStack firstBlock = phase.getFirstBlock() == null ?
                     new ItemStack(Material.STONE) :
-                        new ItemStack(phase.getFirstBlock().getMaterial());
-
+                    new ItemStack(phase.getFirstBlock().getMaterial());
             builder.icon(phase.getIconBlock() == null ? firstBlock : phase.getIconBlock());
         }
-        // Set the title of the button
+    }
+
+    /**
+     * Applies the title to the panel item builder from the template or phase data.
+     */
+    private void applyTitle(PanelItemBuilder builder, ItemTemplateRecord template, OneBlockPhase phase)
+    {
         if (template.title() != null)
         {
-            builder.name(this.user.getTranslation(this.world, template.title(),
-                    PHASE2, phase.getPhaseName()));
+            builder.name(this.user.getTranslation(this.world, template.title(), PHASE2, phase.getPhaseName()));
         }
         else
         {
-            builder.name(this.user.getTranslation(REFERENCE + "name",
-                    PHASE2, phase.getPhaseName()));
+            builder.name(this.user.getTranslation(REFERENCE + "name", PHASE2, phase.getPhaseName()));
         }
+    }
 
-        // Process Description of the button.
-        String descriptionText;
+    /**
+     * Holds the pre-built requirement description strings for a phase.
+     */
+    private record RequirementTexts(String bank, String economy, String level, String permission) {}
 
-        final StringBuilder bankText = new StringBuilder();
-        final StringBuilder economyText = new StringBuilder();
-        final StringBuilder permissionText = new StringBuilder();
-        final StringBuilder levelText = new StringBuilder();
+    /**
+     * Builds the requirement text strings for bank, economy, level, and permission requirements.
+     */
+    private RequirementTexts buildRequirementsText(OneBlockPhase phase)
+    {
+        StringBuilder bankText = new StringBuilder();
+        StringBuilder economyText = new StringBuilder();
+        StringBuilder permissionText = new StringBuilder();
+        StringBuilder levelText = new StringBuilder();
 
-        // Build the requirements description
         phase.getRequirements().forEach(requirement -> {
             switch (requirement.getType())
             {
-            case ECO -> economyText.append(this.user.getTranslationOrNothing(REFERENCE + "economy",
-                    TextVariables.NUMBER, String.valueOf(requirement.getEco())));
-
-            case BANK -> bankText.append(this.user.getTranslationOrNothing(REFERENCE + "bank",
-                    TextVariables.NUMBER, String.valueOf(requirement.getBank())));
-
-            case LEVEL -> levelText.append(this.user.getTranslationOrNothing(REFERENCE + "level",
-                    TextVariables.NUMBER, String.valueOf(requirement.getLevel())));
-
-            case PERMISSION -> permissionText.append(this.user.getTranslationOrNothing(REFERENCE + "permission",
-                    PERMISSION, requirement.getPermission()));
-            case COOLDOWN -> {
-                // do nothing
-            }
-            default -> throw new IllegalArgumentException("Unexpected value: " + requirement.getType());
-
+                case ECO -> economyText.append(this.user.getTranslationOrNothing(REFERENCE + "economy",
+                        TextVariables.NUMBER, String.valueOf(requirement.getEco())));
+                case BANK -> bankText.append(this.user.getTranslationOrNothing(REFERENCE + "bank",
+                        TextVariables.NUMBER, String.valueOf(requirement.getBank())));
+                case LEVEL -> levelText.append(this.user.getTranslationOrNothing(REFERENCE + "level",
+                        TextVariables.NUMBER, String.valueOf(requirement.getLevel())));
+                case PERMISSION -> permissionText.append(this.user.getTranslationOrNothing(REFERENCE + "permission",
+                        PERMISSION, requirement.getPermission()));
+                case COOLDOWN -> { /* do nothing */ }
+                default -> throw new IllegalArgumentException("Unexpected value: " + requirement.getType());
             }
         });
 
-        // Blocks Text
+        return new RequirementTexts(bankText.toString(), economyText.toString(),
+                levelText.toString(), permissionText.toString());
+    }
+
+    /**
+     * Builds the blocks text with word-wrapped newlines inserted.
+     */
+    private String buildBlocksText(OneBlockPhase phase)
+    {
         String blocksText = user.getTranslation(REFERENCE + "blocks-prefix") + phase.getBlocks().keySet().stream()
                 .map(m -> getMaterialName(user, m))
                 .map(string -> user.getTranslation(REFERENCE + "blocks", TextVariables.NAME, string))
                 .collect(Collectors.joining());
-        // Removing the last newline character or comma if it exists
         blocksText = blocksText.trim();
-        if (blocksText.endsWith("\n") || blocksText.endsWith(",")) {
+        if (blocksText.endsWith("\n") || blocksText.endsWith(","))
+        {
             blocksText = blocksText.substring(0, blocksText.length() - 1);
         }
-        // Insert newlines every x characters
-        int wrapAt = 50; // Set default value
-        try {
-            // Attempt to parse the value from getTranslation
-            wrapAt = Integer.parseInt(user.getTranslation(REFERENCE + "wrap-at"));
+        return insertNewlines(blocksText, parseWrapAt());
+    }
 
-        } catch (NumberFormatException e) {
-            // If parsing fails, keep default value of 40
-            addon.logError("Warning: Unable to parse 'wrap-at' value, using default of 50.");
+    /**
+     * Parses the wrap-at translation value, defaulting to 50 on parse failure.
+     */
+    private int parseWrapAt()
+    {
+        try
+        {
+            return Integer.parseInt(user.getTranslation(REFERENCE + "wrap-at"));
         }
+        catch (NumberFormatException e)
+        {
+            addon.logError("Warning: Unable to parse 'wrap-at' value, using default of 50.");
+            return 50;
+        }
+    }
 
-        String formattedText = insertNewlines(blocksText, wrapAt);
-
+    /**
+     * Builds the full description text, delegating to the templated or default branch.
+     */
+    private String buildDescriptionText(ItemTemplateRecord template, OneBlockPhase phase,
+            RequirementTexts reqs, String blocksText)
+    {
         if (template.description() != null)
         {
-            String biomeText = phase.getPhaseBiome() == null ? "" : LangUtilsHook.getBiomeName(phase.getPhaseBiome(), this.user);
-
-            descriptionText = this.user.getTranslationOrNothing(template.description(),
-                    TextVariables.NUMBER, phase.getBlockNumber(),
-                    BIOME, biomeText,
-                    BANK, bankText.toString(),
-                    ECONOMY, economyText.toString(),
-                    LEVEL, levelText.toString(),
-                    PERMISSION, permissionText.toString(), BLOCKS, formattedText);
+            return buildTemplatedDescription(template, phase, reqs, blocksText);
         }
-        else
-        {
-            // Null description, so we make our own
-            String blockText = this.user.getTranslationOrNothing(REFERENCE + "starting-block",
-                    TextVariables.NUMBER, phase.getBlockNumber());
-            String biomeText = phase.getPhaseBiome() == null ? ""
-                    : this.user.getTranslationOrNothing(REFERENCE + "biome",
-                            BIOME, LangUtilsHook.getBiomeName(phase.getPhaseBiome(), this.user));
+        return buildDefaultDescription(phase, reqs, blocksText);
+    }
 
-            descriptionText = this.user.getTranslationOrNothing(REFERENCE + "description",
-                    "[starting-block]", biomeText,
-                    BIOME, blockText,
-                    BANK, bankText.toString(),
-                    ECONOMY, economyText.toString(),
-                    LEVEL, levelText.toString(),
-                    PERMISSION, permissionText.toString(), BLOCKS, formattedText);
+    /**
+     * Builds the description text when a template description key is present.
+     */
+    private String buildTemplatedDescription(ItemTemplateRecord template, OneBlockPhase phase,
+            RequirementTexts reqs, String blocksText)
+    {
+        String biomeText = phase.getPhaseBiome() == null ? ""
+                : LangUtilsHook.getBiomeName(phase.getPhaseBiome(), this.user);
+        return this.user.getTranslationOrNothing(template.description(),
+                TextVariables.NUMBER, phase.getBlockNumber(),
+                BIOME, biomeText,
+                BANK, reqs.bank(),
+                ECONOMY, reqs.economy(),
+                LEVEL, reqs.level(),
+                PERMISSION, reqs.permission(),
+                BLOCKS, blocksText);
+    }
+
+    /**
+     * Builds the description text when no template description key is present.
+     */
+    private String buildDefaultDescription(OneBlockPhase phase, RequirementTexts reqs, String blocksText)
+    {
+        String blockText = this.user.getTranslationOrNothing(REFERENCE + "starting-block",
+                TextVariables.NUMBER, phase.getBlockNumber());
+        String biomeText = phase.getPhaseBiome() == null ? ""
+                : this.user.getTranslationOrNothing(REFERENCE + "biome",
+                        BIOME, LangUtilsHook.getBiomeName(phase.getPhaseBiome(), this.user));
+        return this.user.getTranslationOrNothing(REFERENCE + "description",
+                "[starting-block]", blockText,
+                BIOME, biomeText,
+                BANK, reqs.bank(),
+                ECONOMY, reqs.economy(),
+                LEVEL, reqs.level(),
+                PERMISSION, reqs.permission(),
+                BLOCKS, blocksText);
+    }
+
+    /**
+     * Determines whether the player can jump to (apply) the given phase.
+     */
+    private boolean canApplyPhase(OneBlockPhase phase)
+    {
+        if (this.island == null || this.oneBlockIsland == null)
+        {
+            return false;
         }
-
-        // Strip out or replace formating
-        descriptionText = descriptionText.replaceAll("(?m)^[ \\t]*\\r?\\n", "").
-                replaceAll("(?<!\\\\)\\|", "\n").
-                replaceAll("\\\\\\|", "|");
-
-        builder.description(descriptionText);
-
-        // Glow icon if user can select phase.
-
-        boolean canApply;
-
-        if (this.island != null && this.oneBlockIsland != null)
+        if (phase.getBlockNumberValue() >= this.oneBlockIsland.getLifetime())
         {
-            long lifetime = this.oneBlockIsland.getLifetime();
+            return false;
+        }
+        return !this.phaseRequirementsFail(phase, this.oneBlockIsland);
+    }
 
-            if (phase.getBlockNumberValue() < lifetime)
+    /**
+     * Builds the click handler for a phase button.
+     */
+    private PanelItem.ClickHandler buildClickHandler(List<ItemTemplateRecord.ActionRecords> actions,
+            OneBlockPhase phase)
+    {
+        return (panel, user, clickType, i) ->
+        {
+            actions.forEach(action ->
             {
-                // Check if phase requirements are met.
-                canApply = !this.phaseRequirementsFail(phase, this.oneBlockIsland);
-            }
-            else
-            {
-                canApply = false;
-            }
-        }
-        else
-        {
-            canApply = false;
-        }
-
-        List<ItemTemplateRecord.ActionRecords> actions = template.actions().stream().
-                filter(action -> switch (action.actionType().toUpperCase()) {
-                case "SELECT" -> canApply;
-                case "VIEW" -> true;
-                default -> false;
-                }).
-                toList();
-
-        builder.glow(this.oneBlockIsland != null && this.oneBlockIsland.getPhaseName().equals(phase.getPhaseName()));
-
-        // Add ClickHandler
-        builder.clickHandler((panel, user, clickType, i) ->
-        {
-            actions.forEach(action -> {
-                if (clickType == action.clickType() || action.clickType() == ClickType.UNKNOWN)
+                if ((clickType == action.clickType() || action.clickType() == ClickType.UNKNOWN)
+                        && "SELECT".equalsIgnoreCase(action.actionType()))
                 {
-                    if ("SELECT".equalsIgnoreCase(action.actionType()))
-                    {
-                        this.runCommandCall(this.addon.getSettings().getSetCountCommand().split(" ")[0], phase);
-                    }
-                    else
-                    {
-                        // TODO: implement view phase panel and command.
-                        //this.runCommandCall("view", phase);
-                    }
+                    this.runCommandCall(this.addon.getSettings().getSetCountCommand().split(" ")[0], phase);
                 }
             });
-
-            // Always return true.
             return true;
-        });
+        };
+    }
 
-        // Collect tooltips.
-        List<String> tooltips = actions.stream().
-                filter(action -> action.tooltip() != null).
-                map(action -> this.user.getTranslation(this.world, action.tooltip())).
-                filter(text -> !text.isBlank()).
-                collect(Collectors.toCollection(() -> new ArrayList<>(actions.size())));
-
-        // Add tooltips.
-        if (!tooltips.isEmpty())
-        {
-            // Empty line and tooltips.
-            builder.description("");
-            builder.description(tooltips);
-        }
-
-        return builder.build();
+    /**
+     * Collects non-blank tooltip strings from a list of action records.
+     */
+    private List<String> collectTooltips(List<ItemTemplateRecord.ActionRecords> actions)
+    {
+        return actions.stream()
+                .filter(action -> action.tooltip() != null)
+                .map(action -> this.user.getTranslation(this.world, action.tooltip()))
+                .filter(text -> !text.isBlank())
+                .collect(Collectors.toCollection(() -> new ArrayList<>(actions.size())));
     }
 
     private String getMaterialName(User user, Material m) {

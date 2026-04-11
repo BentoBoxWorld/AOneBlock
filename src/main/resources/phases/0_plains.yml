@@ -89,6 +89,47 @@
     EMERALD_ORE: 10
     DIRT_PATH: 100
     COPPER_ORE: 200
+  # Optional sibling list for custom entries. Lets you keep the map-form
+  # `blocks:` section above untouched while registering custom spawns.
+  # Entries here join the same weighted pool as `blocks:` — probabilities
+  # are directly comparable. Uncomment and tweak to try them out.
+  #
+  # Supported custom types:
+  #   - type: block        — runs /setblock with full data (block states,
+  #                          NBT, and an optional destroy|keep|replace mode).
+  #                          Alias of `block-data`; prefer `block` for NBT.
+  #   - type: mob-data     — runs /summon with vanilla NBT/components.
+  #                          Blocks inside the (scaled) bounding box are
+  #                          cleared one tick after spawn so the mob fits.
+  #   - type: mythic-mob   — spawns a MythicMob via BentoBox's hook.
+  #                          Requires the MythicMobs plugin; otherwise
+  #                          logged and skipped at runtime.
+  #
+  # YAML caveat: because these data strings contain `{`, `}`, `[`, `]`,
+  # and double quotes, wrap the value in SINGLE quotes so the inner
+  # double quotes don't clash with YAML string delimiters.
+  #custom-blocks:
+  #  - type: mob-data
+  #    data: 'breeze{CustomName:[{text:"Breezy",color:"#f90606"}],CustomNameVisible:1b,Glowing:1b,attributes:[{id:scale,base:2f}]}'
+  #    underlying-block: STONE
+  #    probability: 10
+  #
+  #  # Spawner gotcha: without the Delay/MinSpawnDelay/... timing fields,
+  #  # vanilla 1.21 places the spawner inactive (Delay:-1 = never tick).
+  #  # Set them explicitly or the spawner appears but does nothing.
+  #  # Delay:0 makes the first spawn happen on the very next tick (instant);
+  #  # use Delay:N to wait N ticks before the first spawn instead.
+  #  - type: block
+  #    data: 'spawner{Delay:0,MinSpawnDelay:200,MaxSpawnDelay:800,SpawnCount:1,SpawnRange:4,MaxNearbyEntities:6,RequiredPlayerRange:16,SpawnData:{entity:{id:breeze,CustomName:[{text:"Breezy Generator",color:"#f90606"}],CustomNameVisible:1b,Glowing:1b,active_effects:[{id:unluck,duration:200,ambient:1b,show_particles:1b}],attributes:[{id:scale,base:2f}]}}} replace'
+  #    probability: 5
+  #
+  #  - type: mythic-mob
+  #    mob: SkeletalKnight
+  #    level: 3
+  #    power: 1.0
+  #    display-name: "Boss"
+  #    underlying-block: STONE
+  #    probability: 2
   mobs:
     COW: 150
     SPIDER: 75

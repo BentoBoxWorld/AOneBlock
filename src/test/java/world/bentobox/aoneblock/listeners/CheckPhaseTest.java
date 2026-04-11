@@ -20,7 +20,11 @@ import org.eclipse.jdt.annotation.NonNull;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
+
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.title.Title;
 
 import world.bentobox.aoneblock.AOneBlock;
 import world.bentobox.aoneblock.CommonTestSetup;
@@ -150,8 +154,10 @@ public class CheckPhaseTest extends CommonTestSetup {
         verify(previous).getFirstTimeEndCommands();
         // Verify phase name change
         assertEquals("Next Phase", is.getPhaseName());
-        // Verify title shown
-        verify(mockPlayer).sendTitle("Next Phase", null, -1, -1, -1);
+        // Verify title shown with correct phase name
+        ArgumentCaptor<Title> titleCaptor = ArgumentCaptor.forClass(Title.class);
+        verify(mockPlayer).showTitle(titleCaptor.capture());
+        assertEquals(Component.text("Next Phase"), titleCaptor.getValue().title());
 
     }
 
@@ -183,8 +189,10 @@ public class CheckPhaseTest extends CommonTestSetup {
         verify(previous, never()).getFirstTimeEndCommands();
         // Verify phase name change
         assertEquals("Next Phase", is.getPhaseName());
-        // Verify title shown
-        verify(mockPlayer).sendTitle("Next Phase", null, -1, -1, -1);
+        // Verify title shown with correct phase name
+        ArgumentCaptor<Title> titleCaptor = ArgumentCaptor.forClass(Title.class);
+        verify(mockPlayer).showTitle(titleCaptor.capture());
+        assertEquals(Component.text("Next Phase"), titleCaptor.getValue().title());
 
     }
 
@@ -216,8 +224,10 @@ public class CheckPhaseTest extends CommonTestSetup {
         verify(previous).getFirstTimeEndCommands();
         // Verify phase name change
         assertEquals("Next Phase", is.getPhaseName());
-        // Verify title shown
-        verify(mockPlayer).sendTitle("Next Phase", null, -1, -1, -1);
+        // Verify title shown with correct phase name
+        ArgumentCaptor<Title> titleCaptor = ArgumentCaptor.forClass(Title.class);
+        verify(mockPlayer).showTitle(titleCaptor.capture());
+        assertEquals(Component.text("Next Phase"), titleCaptor.getValue().title());
 
     }
 
@@ -249,8 +259,10 @@ public class CheckPhaseTest extends CommonTestSetup {
         verify(previous).getFirstTimeEndCommands();
         // Verify phase name change
         assertEquals("Next Phase", is.getPhaseName());
-        // Verify title shown
-        verify(mockPlayer).sendTitle("Next Phase", null, -1, -1, -1);
+        // Verify title shown with correct phase name
+        ArgumentCaptor<Title> titleCaptor = ArgumentCaptor.forClass(Title.class);
+        verify(mockPlayer).showTitle(titleCaptor.capture());
+        assertEquals(Component.text("Next Phase"), titleCaptor.getValue().title());
 
     }
 

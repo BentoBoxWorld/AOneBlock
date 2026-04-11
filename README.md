@@ -189,6 +189,95 @@ If CHEST is listed in the blocks section, then it will be randomly filled accord
 
 Be very careful when editing the chest items and check that the material is a true Bukkit material and spelled correctly.
 
+### Custom block entries
+
+Phase `blocks:` sections can also be written as a YAML list, which unlocks
+custom entry types:
+
+```yaml
+blocks:
+  - type: block-data
+    data: redstone_wire[power=15]
+    probability: 20
+
+  # `type: block` runs the vanilla /setblock command at the magic-block
+  # position. The data string may include block states `[…]`, NBT `{…}`,
+  # and a trailing destroy|keep|replace mode — anything valid after
+  # `setblock <x> <y> <z>`. Use single quotes around the data so any
+  # double quotes inside the NBT don't clash with YAML string delimiters.
+  - type: block
+    data: 'spawner{Delay:0,MinSpawnDelay:200,MaxSpawnDelay:800,SpawnCount:1,SpawnRange:4,MaxNearbyEntities:6,RequiredPlayerRange:16,SpawnData:{entity:{id:breeze,CustomName:[{text:"Breezy Generator",color:"#f90606"}],CustomNameVisible:1b,Glowing:1b,active_effects:[{id:unluck,duration:200,ambient:1b,show_particles:1b}],attributes:[{id:scale,base:2f}]}}} replace'
+    probability: 10
+
+  # #488: summon an entity with vanilla NBT/component data, same syntax as /summon.
+  # After spawning, blocks inside the mob's (scaled) bounding box are cleared.
+  - type: mob-data
+    data: breeze{CustomName:[{text:Breezy,color:"#f90606"}],CustomNameVisible:1b,Glowing:1b,attributes:[{id:scale,base:2f}]}
+    underlying-block: STONE
+    probability: 15
+
+  # #303: spawn a MythicMob via BentoBox's MythicMobs hook. Requires the MythicMobs
+  # plugin to be installed; otherwise the entry is logged and skipped at runtime.
+  - type: mythic-mob
+    mob: SkeletalKnight
+    level: 3
+    power: 1.0
+    display-name: "Boss"
+    underlying-block: STONE
+    probability: 5
+```
+
+`type: block` is an alias for `type: block-data` — both route to the same
+handler. Use `block-data` when you only need simple block states
+(`redstone_wire[power=15]`); use `block` when the data contains NBT or a
+setblock mode flag so the intent is obvious at a glance.
+
+> **Spawner gotcha:** placing a `spawner` via `/setblock` only sets the fields
+> you provide — everything else defaults to `0`/`-1`, which leaves the spawner
+> **inactive** (`Delay:-1` means "never tick"). If you want it to actually spawn
+> mobs, set `Delay`, `MinSpawnDelay`, `MaxSpawnDelay`, `SpawnCount`, `SpawnRange`,
+> `MaxNearbyEntities`, and `RequiredPlayerRange` explicitly, as shown in the
+> example above. `Delay:0` spawns on the very next tick (visually instant),
+> `Delay:N` waits N ticks before the first spawn, and `Delay:-1` never ticks.
+> Test your full data string in-game with `/setblock ~ ~ ~ <data>` first — if
+> the spawner ticks there, it will tick from `custom-blocks:` too.
+
+> **Note:** the `mob-data` string is passed straight to the vanilla `/summon`
+> command, so it must be valid NBT for your server version. A few 1.21 gotchas:
+> attribute ids no longer use the `generic.`/`player.` prefix (`scale`, not
+> `generic.scale`), numeric attribute bases need a float suffix (`base:2f`),
+> and `CustomName` must be a text-component list (`[{text:Breezy}]`), not a
+> plain string. Test the command in-game first with `/summon <your data>` —
+> if it works there it will work here. Bad NBT is logged and the spawn is
+> skipped.
+
+If you'd rather leave your existing `blocks:` map-form section untouched, you
+can put custom entries in a sibling `custom-blocks:` list. Both sections are
+read and their entries merged into the same weighted pool, so probabilities in
+the two sections are directly comparable:
+
+```yaml
+blocks:
+  PODZOL: 40
+  DIRT: 1000
+  OAK_LOG: 2000
+
+custom-blocks:
+  - type: mob-data
+    data: breeze{CustomName:[{text:Breezy,color:"#f90606"}],CustomNameVisible:1b,Glowing:1b,attributes:[{id:scale,base:2f}]}
+    underlying-block: STONE
+    probability: 50
+
+  - type: block
+    data: 'spawner{Delay:0,MinSpawnDelay:200,MaxSpawnDelay:800,SpawnCount:1,SpawnRange:4,MaxNearbyEntities:6,RequiredPlayerRange:16,SpawnData:{entity:{id:breeze,CustomName:[{text:"Breezy Generator",color:"#f90606"}],CustomNameVisible:1b,Glowing:1b,active_effects:[{id:unluck,duration:200,ambient:1b,show_particles:1b}],attributes:[{id:scale,base:2f}]}}} replace'
+    probability: 10
+
+  - type: mythic-mob
+    mob: SkeletalKnight
+    level: 3
+    probability: 5
+```
+
 ### Other Add-ons
 
 OneBlock is an add-on that uses the BentoBox API. Here are some other ones that you may be interested in:
