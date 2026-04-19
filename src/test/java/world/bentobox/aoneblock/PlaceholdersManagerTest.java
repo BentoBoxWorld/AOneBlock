@@ -40,6 +40,7 @@ public class PlaceholdersManagerTest extends CommonTestSetup {
         // User
         when(user.getLocation()).thenReturn(location);
         when(user.getTranslation("aoneblock.placeholders.infinite")).thenReturn("Infinite");
+        when(user.getTranslation("aoneblock.placeholders.my-island-phase-default")).thenReturn("Unknown");
         when(user.getWorld()).thenReturn(world);
         // Addon
         when(addon.getIslands()).thenReturn(im);
@@ -103,7 +104,7 @@ public class PlaceholdersManagerTest extends CommonTestSetup {
         assertEquals("first", pm.getPhase(user));
         when(im.getIsland(world, user)).thenReturn(null);
         when(im.getIslands(world, user)).thenReturn(List.of());
-        assertEquals("", pm.getPhase(user));
+        assertEquals("Unknown", pm.getPhase(user));
     }
 
     /**
@@ -117,7 +118,7 @@ public class PlaceholdersManagerTest extends CommonTestSetup {
         assertEquals("1000", pm.getCount(user));
         when(im.getIsland(world, user)).thenReturn(null);
         when(im.getIslands(world, user)).thenReturn(List.of());
-        assertEquals("", pm.getCount(user));
+        assertEquals("0", pm.getCount(user));
     }
 
     /**
@@ -202,7 +203,7 @@ public class PlaceholdersManagerTest extends CommonTestSetup {
         assertEquals("70%", pm.getPercentDone(user));
         when(im.getIsland(world, user)).thenReturn(null);
         when(im.getIslands(world, user)).thenReturn(List.of());
-        assertEquals("", pm.getPercentDone(user));
+        assertEquals("0%", pm.getPercentDone(user));
     }
 
     /**
