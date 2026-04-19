@@ -731,19 +731,22 @@ public class BlockListener extends FlagListener implements Listener {
             bb.setDusted(dusted);
             block.setBlockData(bb);
             playBrushFeedback(block);
-            // Kick off a continuous-brush session so the player can hold right-click
-            // and have dusting advance automatically (vanilla feel). The kickoff click
-            // above already advances one stage; the timer picks up from there.
-            Player player = e.getPlayer();
-            UUID uuid = player.getUniqueId();
-            BrushSession existing = brushSessions.get(uuid);
-            if (existing != null && !existing.block().equals(block)) {
-                cancelBrushSession(uuid);
-                existing = null;
-            }
-            if (existing == null) {
-                brushSessions.put(uuid, startContinuousBrush(player, block));
-            }
+            updateBrushSession(e.getPlayer(), block);
+        }
+    }
+
+    private void updateBrushSession(Player player, Block block) {
+        // Kick off a continuous-brush session so the player can hold right-click
+        // and have dusting advance automatically (vanilla feel). The kickoff click
+        // above already advances one stage; the timer picks up from there.
+        UUID uuid = player.getUniqueId();
+        BrushSession existing = brushSessions.get(uuid);
+        if (existing != null && !existing.block().equals(block)) {
+            cancelBrushSession(uuid);
+            existing = null;
+        }
+        if (existing == null) {
+            brushSessions.put(uuid, startContinuousBrush(player, block));
         }
     }
 
