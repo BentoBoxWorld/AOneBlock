@@ -56,7 +56,7 @@ jobs:
       #                            project page under the three-dot menu ("Copy ID")
       #
       - name: Publish to Modrinth
-        uses: cloudnode-pro/modrinth-publish@v2
+        uses: cloudnode-pro/modrinth-publish@0be4916ad5f081d936eb5615aa35ce3f0949979c # v2
         with:
           token: ${{ secrets.MODRINTH_TOKEN }}
           project: ${{ secrets.MODRINTH_PROJECT_ID }}
