@@ -406,7 +406,7 @@ public class BlockListener extends FlagListener implements Listener {
         }
 
         String currPhaseName = phase.getPhaseName() == null ? "" : phase.getPhaseName();
-        handlePhaseChange(is, phase, currPhaseName);
+        handlePhaseChange(is, currPhaseName);
 
         boolean isCurrPhaseNew = !is.getPhaseName().equalsIgnoreCase(currPhaseName);
         if (isCurrPhaseNew) {
@@ -452,10 +452,9 @@ public class BlockListener extends FlagListener implements Listener {
      * Handles phase transition mechanics including setting timestamps for phase changes.
      *
      * @param is - oneblock island data
-     * @param phase - current phase
      * @param currPhaseName - name of current phase
      */
-    private void handlePhaseChange(OneBlockIslands is, OneBlockPhase phase, String currPhaseName) {
+    private void handlePhaseChange(OneBlockIslands is, String currPhaseName) {
         OneBlockPhase nextPhase = oneBlocksManager.getPhase(is.getBlockNumber() + 1);
         if (Objects.requireNonNull(nextPhase).getGotoBlock() != null) {
             nextPhase = oneBlocksManager.getPhase(nextPhase.getGotoBlock());
@@ -742,12 +741,9 @@ public class BlockListener extends FlagListener implements Listener {
         UUID uuid = player.getUniqueId();
         BrushSession existing = brushSessions.get(uuid);
         if (existing != null && !existing.block().equals(block)) {
-            cancelBrushSession(uuid);
-            existing = null;
+            cancelBrushSession(uuid); // also removes the key from brushSessions
         }
-        if (existing == null) {
-            brushSessions.put(uuid, startContinuousBrush(player, block));
-        }
+        brushSessions.computeIfAbsent(uuid, k -> startContinuousBrush(player, block));
     }
 
     /**
@@ -760,30 +756,27 @@ public class BlockListener extends FlagListener implements Listener {
      */
     private BrushSession startContinuousBrush(Player player, Block block) {
         UUID uuid = player.getUniqueId();
-        BukkitTask task = Bukkit.getScheduler().runTaskTimer(addon.getPlugin(), new Runnable() {
-            @Override
-            public void run() {
-                // Validate that the player is still actively brushing this block.
-                if (!player.isOnline()
-                        || player.getInventory().getItemInMainHand().getType() != Material.BRUSH
-                        || !player.isHandRaised()
-                        || !block.equals(player.getTargetBlockExact(5))
-                        || (block.getType() != Material.SUSPICIOUS_GRAVEL
-                                && block.getType() != Material.SUSPICIOUS_SAND)
-                        || !(block.getBlockData() instanceof Brushable bb)) {
-                    cancelBrushSession(uuid);
-                    return;
-                }
-                int dusted = bb.getDusted() + 1;
-                if (dusted > bb.getMaximumDusted()) {
-                    completeBrush(player, block);
-                    cancelBrushSession(uuid);
-                    return;
-                }
-                bb.setDusted(dusted);
-                block.setBlockData(bb);
-                playBrushFeedback(block);
+        BukkitTask task = Bukkit.getScheduler().runTaskTimer(addon.getPlugin(), () -> {
+            // Validate that the player is still actively brushing this block.
+            if (!player.isOnline()
+                    || player.getInventory().getItemInMainHand().getType() != Material.BRUSH
+                    || !player.isHandRaised()
+                    || !block.equals(player.getTargetBlockExact(5))
+                    || (block.getType() != Material.SUSPICIOUS_GRAVEL
+                            && block.getType() != Material.SUSPICIOUS_SAND)
+                    || !(block.getBlockData() instanceof Brushable bb)) {
+                cancelBrushSession(uuid);
+                return;
             }
+            int dusted = bb.getDusted() + 1;
+            if (dusted > bb.getMaximumDusted()) {
+                completeBrush(player, block);
+                cancelBrushSession(uuid);
+                return;
+            }
+            bb.setDusted(dusted);
+            block.setBlockData(bb);
+            playBrushFeedback(block);
         }, 10L, 10L);
         return new BrushSession(task, block);
     }

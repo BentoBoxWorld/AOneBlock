@@ -59,7 +59,7 @@ public class StartSafetyListener implements Listener {
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onPlayerMove(PlayerMoveEvent e) {
         if (addon.inWorld(e.getPlayer().getWorld()) && newIslands.containsKey(e.getPlayer().getUniqueId())
-                && e.getTo() != null && !e.getPlayer().isSneaking()
+                && !e.getPlayer().isSneaking()
                 && (e.getFrom().getX() != e.getTo().getX() || e.getFrom().getZ() != e.getTo().getZ())) {
             // Do not allow x or z movement
             e.setTo(new Location(e.getFrom().getWorld(), e.getFrom().getX(), e.getTo().getY(), e.getFrom().getZ(),

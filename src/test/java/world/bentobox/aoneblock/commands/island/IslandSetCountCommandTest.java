@@ -113,7 +113,6 @@ public class IslandSetCountCommandTest extends CommonTestSetup {
         when(ac.getAddon()).thenReturn(addon);
 
         // Islands
-        //when(plugin.getIslands()).thenReturn(im);
         when(im.getIsland(world, user)).thenReturn(island);
         when(im.hasIsland(world, user)).thenReturn(true);
         when(im.inTeam(world, uuid)).thenReturn(true);
@@ -121,7 +120,6 @@ public class IslandSetCountCommandTest extends CommonTestSetup {
         when(island.getRank(user)).thenReturn(RanksManager.MEMBER_RANK);
 
         // IWM
-        //when(plugin.getIWM()).thenReturn(iwm);
         when(iwm.getPermissionPrefix(any())).thenReturn("bskyblock.");
 
         // Settings

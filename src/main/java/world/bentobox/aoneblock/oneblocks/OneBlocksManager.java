@@ -573,7 +573,7 @@ public class OneBlocksManager {
      */
     public List<String> getPhaseList() {
         return blockProbs.values().stream().map(OneBlockPhase::getPhaseName).filter(Objects::nonNull)
-                .map(n -> n.replace(" ", "_")).collect(Collectors.toList());
+                .map(n -> n.replace(" ", "_")).toList();
     }
 
     /**
@@ -646,7 +646,7 @@ public class OneBlocksManager {
                 phSec.set(FIRST_BLOCK, p.getFirstBlock().getMaterial().name());
             }
             if (p.getPhaseBiome() != null) {
-                phSec.set(BIOME, p.getPhaseBiome().name());
+                phSec.set(BIOME, p.getPhaseBiome().getKey().getKey());
             }
             saveBlocks(phSec, p);
             saveEntities(phSec, p);

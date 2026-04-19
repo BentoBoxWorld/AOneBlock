@@ -831,8 +831,7 @@ public class Settings implements WorldSettings {
      * @since 1.21
      */
     @Override
-
-    @Deprecated
+    @Deprecated(since = "1.21", forRemoval = true)
     public Map<Flag, Integer> getDefaultIslandFlags() {
         return Collections.emptyMap();
     }
@@ -843,7 +842,7 @@ public class Settings implements WorldSettings {
      * @since 1.21
      */
     @Override
-    @Deprecated
+    @Deprecated(since = "1.21", forRemoval = true)
     public Map<Flag, Integer> getDefaultIslandSettings() {
         return Collections.emptyMap();
     }

@@ -65,11 +65,6 @@ public class OneBlocksManagerTest3 extends CommonTestSetup {
 	public static void beforeClass() throws IOException, InvalidConfigurationException {
 		// Make the addon jar
 		jFile = new File("addon.jar");
-		// Copy over config file from src folder
-		/*
-		 * Path fromPath = Paths.get("src/main/resources/config.yml"); Path path =
-		 * Paths.get("config.yml"); Files.copy(fromPath, path);
-		 */
 		// Dummy oneblocks.yml
 		String oneblocks = """
                 '0':
@@ -105,11 +100,6 @@ public class OneBlocksManagerTest3 extends CommonTestSetup {
 		File obFile = new File(obFileDir, "0_plains.yml");
 		obFileDir.mkdirs();
 		oneBlocks.save(obFile);
-		/*
-		 * // Copy over block config file from src folder fromPath =
-		 * Paths.get("src/main/resources/oneblocks.yml"); path =
-		 * Paths.get("oneblocks.yml"); Files.copy(fromPath, path);
-		 */
 		try (JarOutputStream tempJarOutputStream = new JarOutputStream(new FileOutputStream(jFile))) {
 			// Added the new files to the jar.
 			try (FileInputStream fis = new FileInputStream(obFile)) {
@@ -310,7 +300,7 @@ public class OneBlocksManagerTest3 extends CommonTestSetup {
 	 * @throws IOException
 	 */
 	@Test
-	@Disabled
+	@Disabled("TODO: fix initBlock test setup to work with new config structure")
 	void testInitBlock() throws IOException {
 		System.out.println(oneBlocks);
 		obm.initBlock("0", obPhase, oneBlocks);

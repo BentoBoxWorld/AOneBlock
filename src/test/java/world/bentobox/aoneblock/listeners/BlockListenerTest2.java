@@ -1,7 +1,10 @@
 package world.bentobox.aoneblock.listeners;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyBoolean;
@@ -988,7 +991,6 @@ class BlockListenerTest2 extends CommonTestSetup {
      */
     @Test
     void testOnBlockBreakByMinionNotArmorStand() {
-        Entity zombie = mock(Entity.class);
         EntityInteractEvent e = mock(EntityInteractEvent.class);
         when(e.getBlock()).thenReturn(magicBlock);
         when(e.getEntityType()).thenReturn(EntityType.ZOMBIE);
@@ -1009,7 +1011,6 @@ class BlockListenerTest2 extends CommonTestSetup {
     void testOnBlockBreakByMinionNotInWorld() {
         when(addon.inWorld(world)).thenReturn(false);
 
-        Entity armorStand = mock(Entity.class);
         EntityInteractEvent e = mock(EntityInteractEvent.class);
         when(e.getBlock()).thenReturn(magicBlock);
         when(e.getEntityType()).thenReturn(EntityType.ARMOR_STAND);
@@ -1059,12 +1060,12 @@ class BlockListenerTest2 extends CommonTestSetup {
         OneBlockIslands result = bl.getIsland(island);
 
         // Should return a valid, non-null result
-        assertTrue(result != null);
-        assertTrue(result.getUniqueId().equals(island.getUniqueId()));
+        assertNotNull(result);
+        assertEquals(island.getUniqueId(), result.getUniqueId());
 
         // Second call should return the same cached object
         OneBlockIslands cached = bl.getIsland(island);
-        assertTrue(result == cached);
+        assertSame(result, cached);
     }
 
     /**
@@ -1078,7 +1079,7 @@ class BlockListenerTest2 extends CommonTestSetup {
         bl.getIsland(island);
 
         var future = bl.saveIsland(island);
-        assertTrue(future != null);
+        assertNotNull(future);
     }
 
     /**

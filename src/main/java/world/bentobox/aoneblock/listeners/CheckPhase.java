@@ -2,8 +2,6 @@ package world.bentobox.aoneblock.listeners;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
-
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.eclipse.jdt.annotation.NonNull;
@@ -224,6 +222,6 @@ public class CheckPhase {
 		    .replace("[eco-balance]", String.valueOf(ecoBalance));
 
 	}).map(c -> addon.getPlugin().getPlaceholdersManager().replacePlaceholders(player, c))
-		.collect(Collectors.toList());
+		.toList();
     }
 }
