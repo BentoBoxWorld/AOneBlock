@@ -35,14 +35,14 @@ public class WarningSounder {
     /**
      * Mob aspects.
      */
-    private Map<EntityType, MobAspects> MOB_ASPECTS;
+    private Map<EntityType, MobAspects> mobAspects;
 
     void play(@NonNull OneBlockIslands is, @NonNull Block block) {
-        if (MOB_ASPECTS == null) {
+        if (mobAspects == null) {
             initialize(); // Done to avoid static definition with Sound due to test issues
         }
         List<EntityType> opMob = is.getNearestMob(addon.getSettings().getMobWarning());
-        opMob.stream().filter(MOB_ASPECTS::containsKey).map(MOB_ASPECTS::get).forEach(s -> {
+        opMob.stream().filter(mobAspects::containsKey).map(mobAspects::get).forEach(s -> {
             block.getWorld().playSound(block.getLocation(), s.sound(), 1F, 1F);
             block.getWorld().spawnParticle(Particle.DUST, block.getLocation().add(new Vector(0.5, 1.0, 0.5)), 10, 0.5,
                     0, 0.5, 1, new Particle.DustOptions(s.color(), 1));
@@ -84,7 +84,7 @@ public class WarningSounder {
         m.put(EntityType.ZOMBIE, new MobAspects(Sound.ENTITY_ZOMBIE_AMBIENT, Color.fromRGB(74, 99, 53)));
         m.put(EntityType.ZOMBIE_VILLAGER, new MobAspects(Sound.ENTITY_ZOMBIE_VILLAGER_AMBIENT, Color.fromRGB(111, 104, 90)));
 
-        MOB_ASPECTS = Collections.unmodifiableMap(m);
+        mobAspects = Collections.unmodifiableMap(m);
 
     }
 

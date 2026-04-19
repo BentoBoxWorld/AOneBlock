@@ -22,8 +22,10 @@ import java.util.stream.Collectors;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
-import org.bukkit.Registry;
 import org.bukkit.block.Biome;
+
+import io.papermc.paper.registry.RegistryAccess;
+import io.papermc.paper.registry.RegistryKey;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.EntityType;
@@ -348,10 +350,11 @@ public class OneBlocksManager {
             return Biome.PLAINS;
         }
         NamespacedKey key = NamespacedKey.fromString(string.toLowerCase(Locale.ENGLISH));
-        Biome result = Registry.BIOME.get(key);
+        var biomeRegistry = RegistryAccess.registryAccess().getRegistry(RegistryKey.BIOME);
+        Biome result = biomeRegistry.get(key);
         if (result == null) {
             addon.logError("Biome " + string + " is invalid! Use one of these...");
-            Registry.BIOME.stream().sorted(Comparator.comparing(biome -> biome.getKey().getKey()))
+            biomeRegistry.stream().sorted(Comparator.comparing(biome -> biome.getKey().getKey()))
                     .forEach(biome -> addon.logError(biome.getKey().getKey()));
             return Biome.PLAINS;
         }

@@ -25,10 +25,8 @@ import org.bukkit.World;
 import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.block.BlockState;
 import org.bukkit.block.BrushableBlock;
 import org.bukkit.block.Chest;
-import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.Brushable;
 import org.bukkit.block.data.type.Leaves;
 import org.bukkit.entity.Entity;
@@ -630,7 +628,8 @@ public class BlockListener extends FlagListener implements Listener {
      */
     private void breakBlock(@Nullable Player player, Block block, @NonNull OneBlockObject nextBlock,
             @NonNull Island island) {
-        ItemStack tool = Objects.requireNonNull(player).getInventory().getItemInMainHand();
+        if (player == null) return;
+        ItemStack tool = player.getInventory().getItemInMainHand();
 
         // Break normally and lift the player up so they don't fall
         Bukkit.getScheduler().runTask(addon.getPlugin(), () -> this.spawnBlock(nextBlock, block));

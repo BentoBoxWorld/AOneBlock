@@ -130,6 +130,7 @@ public abstract class CommonTestSetup {
     protected PlaceholdersManager phm;
 
 
+    @SuppressWarnings("java:S1130") // subclasses override and declare checked exceptions
     @BeforeEach
     public void setUp() throws Exception {
         // Processes the @Mock annotations and initializes the field
@@ -206,6 +207,7 @@ public abstract class CommonTestSetup {
         when(island.getMemberSet()).thenReturn(ImmutableSet.of(uuid));
 
         // Enable reporting from Flags class
+        @SuppressWarnings("deprecation")
         MetadataValue mdv = new FixedMetadataValue(plugin, "_why_debug");
         when(mockPlayer.getMetadata(anyString())).thenReturn(Collections.singletonList(mdv));
 

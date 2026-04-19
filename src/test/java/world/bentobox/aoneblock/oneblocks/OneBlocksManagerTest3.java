@@ -50,6 +50,7 @@ import world.bentobox.bentobox.multilib.MultiLib;
  * @author tastybento
  *
  */
+@SuppressWarnings("java:S3577")
 public class OneBlocksManagerTest3 extends CommonTestSetup {
 
 	private static File jFile;
@@ -218,7 +219,7 @@ public class OneBlocksManagerTest3 extends CommonTestSetup {
 	 * @throws NumberFormatException
 	 */
 	@Test
-	void testGetPhaseList() throws NumberFormatException, IOException, InvalidConfigurationException {
+	void testGetPhaseList() throws NumberFormatException, IOException {
 		testLoadPhases();
 		List<String> l = obm.getPhaseList();
 		assertEquals(2, l.size());
@@ -236,7 +237,7 @@ public class OneBlocksManagerTest3 extends CommonTestSetup {
 	 * @throws NumberFormatException
 	 */
 	@Test
-	void testGetPhaseString() throws NumberFormatException, IOException, InvalidConfigurationException {
+	void testGetPhaseString() throws NumberFormatException, IOException {
 		testLoadPhases();
 		assertFalse(obm.getPhase("sdf").isPresent());
 		assertTrue(obm.getPhase("Plains").isPresent());
@@ -266,7 +267,7 @@ public class OneBlocksManagerTest3 extends CommonTestSetup {
 	 * @throws NumberFormatException
 	 */
 	@Test
-	void testGetNextPhase() throws NumberFormatException, IOException, InvalidConfigurationException {
+	void testGetNextPhase() throws NumberFormatException, IOException {
 		testLoadPhases();
 		OneBlockPhase plains = obm.getPhase("Plains").get();
 		OneBlockPhase underground = obm.getPhase("Underground").get();

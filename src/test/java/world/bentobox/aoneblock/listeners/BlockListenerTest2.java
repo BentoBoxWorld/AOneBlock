@@ -38,10 +38,8 @@ import org.bukkit.block.BrushableBlock;
 import org.bukkit.block.Chest;
 import org.bukkit.block.data.type.Leaves;
 import org.bukkit.block.data.Brushable;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Item;
-import org.bukkit.event.Event;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.EntityInteractEvent;
@@ -85,6 +83,7 @@ import world.bentobox.level.Level;
  *
  * @author tastybento
  */
+@SuppressWarnings("java:S3577")
 class BlockListenerTest2 extends CommonTestSetup {
 
     // Class under test
@@ -510,7 +509,7 @@ class BlockListenerTest2 extends CommonTestSetup {
         bl.onPlayerInteract(e);
 
         verify(magicBlock).setType(Material.AIR);
-        verify(world).dropItemNaturally(eq(blockCenter), eq(lootItem));
+        verify(world).dropItemNaturally(blockCenter, lootItem);
     }
 
     /**

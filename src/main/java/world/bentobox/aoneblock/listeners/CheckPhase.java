@@ -82,8 +82,9 @@ public class CheckPhase {
 	});
 	// Set the phase name
 	is.setPhaseName(newPhaseName);
-	if (user.isPlayer() && user.isOnline() && addon.inWorld(user.getWorld())) {
-	    user.getPlayer().showTitle(Title.title(Component.text(newPhaseName), Component.empty()));
+	Player onlinePlayer = user.getPlayer();
+	if (user.isPlayer() && user.isOnline() && addon.inWorld(user.getWorld()) && onlinePlayer != null) {
+	    onlinePlayer.showTitle(Title.title(Component.text(newPhaseName), Component.empty()));
 	}
 	// Run phase start commands
 	Util.runCommands(user,
