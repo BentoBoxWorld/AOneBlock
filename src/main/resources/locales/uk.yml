@@ -33,6 +33,9 @@ aoneblock:
     color: RED
     style: SEGMENTED_20
     not-active: '&c Boss Bar не активний для цього острова'
+  actionbar:
+    status: "&a Фаза: &b [phase-name] &d | &a Блоки: &b [done] &d / &b [total] &d | &a Прогрес: &b [percent-done]"
+    not-active: "&c Панель дій не активна для цього острова"
   commands:
     admin:
       setcount:
@@ -71,6 +74,10 @@ aoneblock:
         description: перемикає фазу боса
         status_on: '&b Bossbar &a увімкнув'
         status_off: '&b Bossbar &c вимкнувся'
+      actionbar:
+        description: перемикає панель дій фази
+        status_on: "&b Панель дій &a увімкнена"
+        status_off: "&b Панель дій &c вимкнена"
       setcount:
         parameters: <count>
         description: встановити кількість блоків до попередньо завершеного значення
@@ -92,6 +99,7 @@ aoneblock:
     cooldown: '&c Наступна фаза буде доступна через [number] секунд!'
   placeholders:
     infinite: Нескінченний
+    my-island-phase-default: Невідомо
   gui:
     titles:
       phases: '&0&l Фази одного блоку'

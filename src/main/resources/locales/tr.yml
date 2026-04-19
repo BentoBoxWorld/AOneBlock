@@ -33,6 +33,9 @@ aoneblock:
     color: RED
     style: SEGMENTED_20
     not-active: '&c Patron Bar bu ada için aktif değil'
+  actionbar:
+    status: "&a Aşama: &b [phase-name] &d | &a Bloklar: &b [done] &d / &b [total] &d | &a İlerleme: &b [percent-done]"
+    not-active: "&c Bu ada için eylem çubuğu aktif değil"
   commands:
     admin:
       setcount:
@@ -73,6 +76,10 @@ aoneblock:
         description: Faz patron çubuğunu değiştirir
         status_on: '&b Bossbar &a açıldı'
         status_off: '&b Bossbar &c kapandı'
+      actionbar:
+        description: aşama eylem çubuğunu açar/kapatır
+        status_on: "&b Eylem Çubuğu &a açıldı"
+        status_off: "&b Eylem Çubuğu &c kapatıldı"
       setcount:
         parameters: <say>
         description: blok sayısını önceden tamamlanmış değere ayarla
@@ -90,6 +97,7 @@ aoneblock:
     cooldown: '&c Bir sonraki aşama [number] saniye içinde hazır olacak!'
   placeholders:
     infinite: Sonsuz
+    my-island-phase-default: Bilinmiyor
   gui:
     titles:
       phases: '&0&l TekBlok Aşamaları'

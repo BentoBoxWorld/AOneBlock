@@ -34,6 +34,9 @@ aoneblock:
     color: RED
     style: SEGMENTED_20
     not-active: '&c A Boss Bar nem aktív ezen a szigeten'
+  actionbar:
+    status: "&a Fázis: &b [phase-name] &d | &a Blokkok: &b [done] &d / &b [total] &d | &a Haladás: &b [percent-done]"
+    not-active: "&c Az akciósáv nem aktív ezen a szigeten"
   commands:
     admin:
       setcount:
@@ -74,6 +77,10 @@ aoneblock:
         description: váltók fázisú főnök sáv
         status_on: '&b Bossbar &a bekapcsolt'
         status_off: '&b Bossbar &c kikapcsolt'
+      actionbar:
+        description: fázis akciósáv ki/bekapcsolása
+        status_on: "&b Akciósáv &a bekapcsolva"
+        status_off: "&b Akciósáv &c kikapcsolva"
       setcount:
         parameters: <szám>
         description: állítsa be a blokkszámot a korábban kitöltött értékre
@@ -95,6 +102,7 @@ aoneblock:
     cooldown: '&c A következő szakasz [number] másodpercen belül elérhető lesz!'
   placeholders:
     infinite: Végtelen
+    my-island-phase-default: Ismeretlen
   gui:
     titles:
       phases: '&0&l OneBlock fázisok'

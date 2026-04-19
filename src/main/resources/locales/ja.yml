@@ -33,6 +33,9 @@ aoneblock:
     color: RED
     style: SEGMENTED_20
     not-active: '&c この島ではボスバーがアクティブではありません'
+  actionbar:
+    status: "&a フェーズ: &b [phase-name] &d | &a ブロック数: &b [done] &d / &b [total] &d | &a 進行状況: &b [percent-done]"
+    not-active: "&c この島ではアクションバーが有効ではありません"
   commands:
     admin:
       setcount:
@@ -71,6 +74,10 @@ aoneblock:
         description: トグルフェーズボスバー
         status_on: '&b ボスバーが&a オン'
         status_off: '&b ボスバーが&aオフ'
+      actionbar:
+        description: フェーズアクションバーの切り替え
+        status_on: "&b アクションバーを &a オン &bにしました"
+        status_off: "&b アクションバーを &c オフ &bにしました"
       setcount:
         parameters: <カウント>
         description: ブロック数を以前に完了した値に設定する
@@ -88,6 +95,7 @@ aoneblock:
     cooldown: '&c [number] 秒で次のステージへ!'
   placeholders:
     infinite: 無限
+    my-island-phase-default: 不明
   gui:
     titles:
       phases: '&0&l ワンブロックフェーズ'

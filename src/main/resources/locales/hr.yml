@@ -33,6 +33,9 @@ aoneblock:
     color: RED
     style: SEGMENTED_20
     not-active: '&c Boss bar nije aktivan za ovaj otok'
+  actionbar:
+    status: "&a Faza: &b [phase-name] &d | &a Blokovi: &b [done] &d / &b [total] &d | &a Napredak: &b [percent-done]"
+    not-active: "&c Akcijska traka nije aktivna za ovaj otok"
   commands:
     admin:
       setcount:
@@ -73,6 +76,10 @@ aoneblock:
         description: prebacuje fazni boss bar
         status_on: '&b Bossbar se &a uključio'
         status_off: '&b Bossbar se &a isključio'
+      actionbar:
+        description: uključuje/isključuje akcijsku traku faze
+        status_on: "&b Akcijska traka &a uključena"
+        status_off: "&b Akcijska traka &c isključena"
       setcount:
         parameters: <count>
         description: postaviti broj blokova na prethodno dovršenu vrijednost
@@ -92,6 +99,7 @@ aoneblock:
     cooldown: '&c Sljedeća faza bit će dostupna za [number] sekundi!'
   placeholders:
     infinite: Beskonačno
+    my-island-phase-default: Nepoznato
   gui:
     titles:
       phases: '&0&l OneBlock faze'
