@@ -102,6 +102,7 @@ aoneblock:
     cooldown: "&c Next phase will be available in [number] seconds!"
   placeholders:
     infinite: Infinite
+    my-island-phase-default: Unknown
   gui:
     titles:
       phases: '&0&l OneBlock Phases'
