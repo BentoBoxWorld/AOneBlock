@@ -25,10 +25,8 @@ import org.bukkit.World;
 import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.block.BlockState;
 import org.bukkit.block.BrushableBlock;
 import org.bukkit.block.Chest;
-import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.Brushable;
 import org.bukkit.block.data.type.Leaves;
 import org.bukkit.entity.Entity;
@@ -406,7 +404,7 @@ public class BlockListener extends FlagListener implements Listener {
         }
 
         String currPhaseName = phase.getPhaseName() == null ? "" : phase.getPhaseName();
-        handlePhaseChange(is, phase, currPhaseName);
+        handlePhaseChange(is, currPhaseName);
 
         boolean isCurrPhaseNew = !is.getPhaseName().equalsIgnoreCase(currPhaseName);
         if (isCurrPhaseNew) {
@@ -452,10 +450,9 @@ public class BlockListener extends FlagListener implements Listener {
      * Handles phase transition mechanics including setting timestamps for phase changes.
      *
      * @param is - oneblock island data
-     * @param phase - current phase
      * @param currPhaseName - name of current phase
      */
-    private void handlePhaseChange(OneBlockIslands is, OneBlockPhase phase, String currPhaseName) {
+    private void handlePhaseChange(OneBlockIslands is, String currPhaseName) {
         OneBlockPhase nextPhase = oneBlocksManager.getPhase(is.getBlockNumber() + 1);
         if (Objects.requireNonNull(nextPhase).getGotoBlock() != null) {
             nextPhase = oneBlocksManager.getPhase(nextPhase.getGotoBlock());
@@ -631,7 +628,8 @@ public class BlockListener extends FlagListener implements Listener {
      */
     private void breakBlock(@Nullable Player player, Block block, @NonNull OneBlockObject nextBlock,
             @NonNull Island island) {
-        ItemStack tool = Objects.requireNonNull(player).getInventory().getItemInMainHand();
+        if (player == null) return;
+        ItemStack tool = player.getInventory().getItemInMainHand();
 
         // Break normally and lift the player up so they don't fall
         Bukkit.getScheduler().runTask(addon.getPlugin(), () -> this.spawnBlock(nextBlock, block));
@@ -731,20 +729,20 @@ public class BlockListener extends FlagListener implements Listener {
             bb.setDusted(dusted);
             block.setBlockData(bb);
             playBrushFeedback(block);
-            // Kick off a continuous-brush session so the player can hold right-click
-            // and have dusting advance automatically (vanilla feel). The kickoff click
-            // above already advances one stage; the timer picks up from there.
-            Player player = e.getPlayer();
-            UUID uuid = player.getUniqueId();
-            BrushSession existing = brushSessions.get(uuid);
-            if (existing != null && !existing.block().equals(block)) {
-                cancelBrushSession(uuid);
-                existing = null;
-            }
-            if (existing == null) {
-                brushSessions.put(uuid, startContinuousBrush(player, block));
-            }
+            updateBrushSession(e.getPlayer(), block);
         }
+    }
+
+    private void updateBrushSession(Player player, Block block) {
+        // Kick off a continuous-brush session so the player can hold right-click
+        // and have dusting advance automatically (vanilla feel). The kickoff click
+        // above already advances one stage; the timer picks up from there.
+        UUID uuid = player.getUniqueId();
+        BrushSession existing = brushSessions.get(uuid);
+        if (existing != null && !existing.block().equals(block)) {
+            cancelBrushSession(uuid); // also removes the key from brushSessions
+        }
+        brushSessions.computeIfAbsent(uuid, k -> startContinuousBrush(player, block));
     }
 
     /**
@@ -757,30 +755,27 @@ public class BlockListener extends FlagListener implements Listener {
      */
     private BrushSession startContinuousBrush(Player player, Block block) {
         UUID uuid = player.getUniqueId();
-        BukkitTask task = Bukkit.getScheduler().runTaskTimer(addon.getPlugin(), new Runnable() {
-            @Override
-            public void run() {
-                // Validate that the player is still actively brushing this block.
-                if (!player.isOnline()
-                        || player.getInventory().getItemInMainHand().getType() != Material.BRUSH
-                        || !player.isHandRaised()
-                        || !block.equals(player.getTargetBlockExact(5))
-                        || (block.getType() != Material.SUSPICIOUS_GRAVEL
-                                && block.getType() != Material.SUSPICIOUS_SAND)
-                        || !(block.getBlockData() instanceof Brushable bb)) {
-                    cancelBrushSession(uuid);
-                    return;
-                }
-                int dusted = bb.getDusted() + 1;
-                if (dusted > bb.getMaximumDusted()) {
-                    completeBrush(player, block);
-                    cancelBrushSession(uuid);
-                    return;
-                }
-                bb.setDusted(dusted);
-                block.setBlockData(bb);
-                playBrushFeedback(block);
+        BukkitTask task = Bukkit.getScheduler().runTaskTimer(addon.getPlugin(), () -> {
+            // Validate that the player is still actively brushing this block.
+            if (!player.isOnline()
+                    || player.getInventory().getItemInMainHand().getType() != Material.BRUSH
+                    || !player.isHandRaised()
+                    || !block.equals(player.getTargetBlockExact(5))
+                    || (block.getType() != Material.SUSPICIOUS_GRAVEL
+                            && block.getType() != Material.SUSPICIOUS_SAND)
+                    || !(block.getBlockData() instanceof Brushable bb)) {
+                cancelBrushSession(uuid);
+                return;
             }
+            int dusted = bb.getDusted() + 1;
+            if (dusted > bb.getMaximumDusted()) {
+                completeBrush(player, block);
+                cancelBrushSession(uuid);
+                return;
+            }
+            bb.setDusted(dusted);
+            block.setBlockData(bb);
+            playBrushFeedback(block);
         }, 10L, 10L);
         return new BrushSession(task, block);
     }

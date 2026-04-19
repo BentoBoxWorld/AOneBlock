@@ -97,6 +97,7 @@ aoneblock:
     cooldown: <red>Следующая фаза станет доступна через [number] секунд!</red>
   placeholders:
     infinite: Бесконечность
+    my-island-phase-default: Неизвестно
   gui:
     titles:
       phases: <black><bold>Фазы OneBlock</bold></black>

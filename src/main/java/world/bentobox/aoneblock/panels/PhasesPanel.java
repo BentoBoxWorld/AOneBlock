@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.event.inventory.ClickType;
@@ -591,7 +590,7 @@ public class PhasesPanel
         int lastAmpIndex = -2;
 
         while (index < input.length()) {
-            if (input.charAt(index) == ChatColor.COLOR_CHAR && index < (input.length() - 1)) {
+            if (input.charAt(index) == '\u00A7' && index < (input.length() - 1)) {
                 lastAmpIndex = index;
                 activeColor = input.charAt(index + 1);
             }
@@ -609,7 +608,7 @@ public class PhasesPanel
             result.append(input, index, breakPoint).append('\n');
             if (lastAmpIndex >= 0) {
                 // Append color code
-                result.append(ChatColor.COLOR_CHAR);
+                result.append('\u00A7');
                 result.append(activeColor);
                 result.append(" ");
             }

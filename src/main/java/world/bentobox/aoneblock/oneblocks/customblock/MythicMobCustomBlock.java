@@ -113,7 +113,7 @@ public class MythicMobCustomBlock implements OneBlockCustomBlock {
             }
 
             MythicMobsHook hook = hookOpt.get();
-            MythicMobRecord record = new MythicMobRecord(
+            MythicMobRecord mobRecord = new MythicMobRecord(
                     mob,
                     displayName != null ? displayName : mob,
                     level,
@@ -132,8 +132,8 @@ public class MythicMobCustomBlock implements OneBlockCustomBlock {
             // unnecessary for AOneBlock's synchronous block replace. Fall back to the
             // 3-arg overload (BentoBox >= 3.14.0, 40-tick delay) and finally the 2-arg
             // method on older BentoBox. MakeSpace still runs from the callback.
-            if (!invokeWithCallback(hook, record, spawnLoc, onSpawn)) {
-                hook.spawnMythicMob(record, spawnLoc);
+            if (!invokeWithCallback(hook, mobRecord, spawnLoc, onSpawn)) {
+                hook.spawnMythicMob(mobRecord, spawnLoc);
             }
 
             block.getWorld().playSound(block.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 1F, 2F);
@@ -156,13 +156,13 @@ public class MythicMobCustomBlock implements OneBlockCustomBlock {
      *
      * @return true if either callback overload was invoked successfully
      */
-    private boolean invokeWithCallback(MythicMobsHook hook, MythicMobRecord record, Location spawnLoc,
+    private boolean invokeWithCallback(MythicMobsHook hook, MythicMobRecord mobRecord, Location spawnLoc,
             Consumer<Entity> onSpawn) {
         // Preferred: 4-arg overload with explicit zero delay.
         try {
             Method m = MythicMobsHook.class.getMethod("spawnMythicMob",
                     MythicMobRecord.class, Location.class, Consumer.class, long.class);
-            m.invoke(hook, record, spawnLoc, onSpawn, 0L);
+            m.invoke(hook, mobRecord, spawnLoc, onSpawn, 0L);
             return true;
         } catch (NoSuchMethodException ignored) {
             // fall through to the 3-arg form
@@ -176,7 +176,7 @@ public class MythicMobCustomBlock implements OneBlockCustomBlock {
         try {
             Method m = MythicMobsHook.class.getMethod("spawnMythicMob",
                     MythicMobRecord.class, Location.class, Consumer.class);
-            m.invoke(hook, record, spawnLoc, onSpawn);
+            m.invoke(hook, mobRecord, spawnLoc, onSpawn);
             return true;
         } catch (NoSuchMethodException e) {
             return false;

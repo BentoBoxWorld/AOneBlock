@@ -149,7 +149,7 @@ public class AOneBlockTest extends CommonTestSetup {
 
     }
 
-    private void add(Path path, JarOutputStream tempJarOutputStream) throws FileNotFoundException, IOException {
+    private void add(Path path, JarOutputStream tempJarOutputStream) throws IOException {
         try (FileInputStream fis = new FileInputStream(path.toFile())) {
             byte[] buffer = new byte[1024];
             int bytesRead = 0;

@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
@@ -209,10 +210,11 @@ public class BossBarListener implements Listener {
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onJoin(PlayerJoinEvent e) {
         // If the player is on an island then show the bar
-        if (!addon.inWorld(e.getPlayer().getLocation())) {
+        Location playerLoc = e.getPlayer().getLocation();
+        if (!addon.inWorld(playerLoc)) {
             return;
         }
-        addon.getIslands().getIslandAt(e.getPlayer().getLocation())
+        addon.getIslands().getIslandAt(playerLoc)
         .ifPresent(is -> this.tryToShowBossBar(e.getPlayer().getUniqueId(), is));
     }
 

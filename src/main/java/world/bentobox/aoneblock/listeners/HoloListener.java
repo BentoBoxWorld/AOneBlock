@@ -15,13 +15,14 @@ import org.bukkit.event.Listener;
 import org.bukkit.util.Vector;
 import org.eclipse.jdt.annotation.NonNull;
 
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import world.bentobox.aoneblock.AOneBlock;
+import world.bentobox.bentobox.util.Util;
 import world.bentobox.aoneblock.dataobjects.OneBlockIslands;
 import world.bentobox.aoneblock.oneblocks.OneBlockPhase;
 import world.bentobox.bentobox.api.events.island.IslandDeleteEvent;
 import world.bentobox.bentobox.api.user.User;
 import world.bentobox.bentobox.database.objects.Island;
-import world.bentobox.bentobox.util.Util;
 
 /**
  * Handles Holographic elements
@@ -89,7 +90,7 @@ public class HoloListener implements Listener {
      */
     protected void process(@NonNull Island i, @NonNull OneBlockIslands is, @NonNull OneBlockPhase phase) {
         String holoText = phase.getHologramLine(is.getBlockNumber());
-        is.setHologram(holoText == null ? "" : Util.translateColorCodes(holoText));
+        is.setHologram(holoText == null ? "" : holoText);
         updateHologram(i, is.getHologram());
     }
 
@@ -139,7 +140,7 @@ public class HoloListener implements Listener {
         display.setAlignment(TextDisplay.TextAlignment.CENTER);
         display.setBillboard(Billboard.CENTER);
         display.setPersistent(true);
-        display.setText(text);
+        display.text(LegacyComponentSerializer.legacyAmpersand().deserialize(text));
         activeHolograms.add(pos);
     }
 

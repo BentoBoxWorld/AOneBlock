@@ -73,6 +73,7 @@ public class BlockListenerTest extends CommonTestSetup {
     /**
      * @throws java.lang.Exception
      */
+    @Override
     @SuppressWarnings("unchecked")
     @BeforeEach
     public void setUp() throws Exception {

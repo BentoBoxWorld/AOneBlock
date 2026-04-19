@@ -2,8 +2,6 @@ package world.bentobox.aoneblock.listeners;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
-
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.eclipse.jdt.annotation.NonNull;
@@ -84,8 +82,9 @@ public class CheckPhase {
 	});
 	// Set the phase name
 	is.setPhaseName(newPhaseName);
-	if (user.isPlayer() && user.isOnline() && addon.inWorld(user.getWorld())) {
-	    user.getPlayer().showTitle(Title.title(Component.text(newPhaseName), Component.empty()));
+	Player onlinePlayer = user.getPlayer();
+	if (user.isPlayer() && user.isOnline() && addon.inWorld(user.getWorld()) && onlinePlayer != null) {
+	    onlinePlayer.showTitle(Title.title(Component.text(newPhaseName), Component.empty()));
 	}
 	// Run phase start commands
 	Util.runCommands(user,
@@ -224,6 +223,6 @@ public class CheckPhase {
 		    .replace("[eco-balance]", String.valueOf(ecoBalance));
 
 	}).map(c -> addon.getPlugin().getPlaceholdersManager().replacePlaceholders(player, c))
-		.collect(Collectors.toList());
+		.toList();
     }
 }

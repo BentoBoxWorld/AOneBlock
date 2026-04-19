@@ -32,6 +32,9 @@ aoneblock:
     color: RED
     style: SEGMENTED_20
     not-active: '&c 老板酒吧对这个岛不活跃'
+  actionbar:
+    status: "&a 阶段: &b [phase-name] &d | &a 方块数: &b [done] &d / &b [total] &d | &a 进度: &b [percent-done]"
+    not-active: "&c 该岛屿的动作栏未激活"
   commands:
     admin:
       setcount:
@@ -68,6 +71,10 @@ aoneblock:
         description: 切换相位栏
         status_on: '&b Bossbar turned &a on'
         status_off: '&b Bossbar turned &c off'
+      actionbar:
+        description: 切换阶段动作栏
+        status_on: "&b 动作栏已 &a 开启"
+        status_off: "&b 动作栏已 &c 关闭"
       setcount:
         parameters: <count>
         description: 将块计数设置为先前完成的值
@@ -85,6 +92,7 @@ aoneblock:
     cooldown: '&c [number] 秒后即可进入下一阶段！'
   placeholders:
     infinite: 无限
+    my-island-phase-default: 未知
   gui:
     titles:
       phases: '&0&l OneBlock 阶段'

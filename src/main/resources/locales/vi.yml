@@ -33,6 +33,9 @@ aoneblock:
     color: RED
     style: SEGMENTED_20
     not-active: '&c Boss Bar không hoạt động cho hòn đảo này'
+  actionbar:
+    status: "&a Giai đoạn: &b [phase-name] &d | &a Khối: &b [done] &d / &b [total] &d | &a Tiến độ: &b [percent-done]"
+    not-active: "&c Thanh hành động không hoạt động cho hòn đảo này"
   commands:
     admin:
       setcount:
@@ -73,6 +76,10 @@ aoneblock:
         description: bật thanh Boss giai đoạn
         status_on: '&b Bossbar &a bật lên'
         status_off: '&b Bossbar &c tắt'
+      actionbar:
+        description: bật/tắt thanh hành động giai đoạn
+        status_on: "&b Thanh hành động đã &a bật"
+        status_off: "&b Thanh hành động đã &c tắt"
       setcount:
         parameters: <số lượng>
         description: đặt số khối thành giá trị đã hoàn thành trước đó
@@ -90,6 +97,7 @@ aoneblock:
     cooldown: Giai đoạn tiếp theo sẽ có sau [number] giây!
   placeholders:
     infinite: Vô hạn
+    my-island-phase-default: Không xác định
   gui:
     titles:
       phases: '&0&l Giai đoạn OneBlock'

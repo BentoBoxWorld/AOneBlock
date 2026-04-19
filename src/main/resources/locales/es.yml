@@ -33,6 +33,9 @@ aoneblock:
     color: RED
     style: SEGMENTED_20
     not-active: '&c Boss Bar no está activo para esta isla'
+  actionbar:
+    status: "&a Fase: &b [phase-name] &d | &a Bloques: &b [done] &d / &b [total] &d | &a Progreso: &b [percent-done]"
+    not-active: "&c La barra de acción no está activa para esta isla"
   commands:
     admin:
       setcount:
@@ -77,6 +80,10 @@ aoneblock:
         description: Barra de jefe de fase de alojamiento
         status_on: '&b Bossbar &a encendió'
         status_off: '&b Bossbar &a apagó'
+      actionbar:
+        description: alterna la barra de acción de fase
+        status_on: "&b Barra de acción &a activada"
+        status_off: "&b Barra de acción &c desactivada"
       setcount:
         parameters: <count>
         description: Establece la cantidad de bloques a un valor previamente completado
@@ -98,6 +105,7 @@ aoneblock:
     cooldown: '&c ¡La siguiente etapa estará disponible en [number] segundos!'
   placeholders:
     infinite: Infinito
+    my-island-phase-default: Desconocida
   gui:
     titles:
       phases: '&0&l Fases de OneBlock'

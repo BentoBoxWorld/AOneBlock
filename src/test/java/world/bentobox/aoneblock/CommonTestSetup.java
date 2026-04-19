@@ -130,6 +130,7 @@ public abstract class CommonTestSetup {
     protected PlaceholdersManager phm;
 
 
+    @SuppressWarnings("java:S1130") // subclasses override and declare checked exceptions
     @BeforeEach
     public void setUp() throws Exception {
         // Processes the @Mock annotations and initializes the field
@@ -206,6 +207,7 @@ public abstract class CommonTestSetup {
         when(island.getMemberSet()).thenReturn(ImmutableSet.of(uuid));
 
         // Enable reporting from Flags class
+        @SuppressWarnings("deprecation")
         MetadataValue mdv = new FixedMetadataValue(plugin, "_why_debug");
         when(mockPlayer.getMetadata(anyString())).thenReturn(Collections.singletonList(mdv));
 
@@ -228,9 +230,6 @@ public abstract class CommonTestSetup {
 
         // Util
         mockedUtil.when(() -> Util.findFirstMatchingEnum(any(), any())).thenCallRealMethod();
-        // Util translate color codes (used in user translate methods)
-        //mockedUtil.when(() -> translateColorCodes(anyString())).thenAnswer((Answer<String>) invocation -> invocation.getArgument(0, String.class));
-        
         // Server & Scheduler
         mockedBukkit.when(Bukkit::getScheduler).thenReturn(sch);
 
@@ -302,8 +301,7 @@ public abstract class CommonTestSetup {
      * @return
      */
     public EntityExplodeEvent getExplodeEvent(Entity entity, Location l, List<Block> list) {
-        //return new EntityExplodeEvent(entity, l, list, 0, null);
-        return new EntityExplodeEvent(entity, l, list, 0, null);
+        return new EntityExplodeEvent(entity, l, list, 0, org.bukkit.ExplosionResult.DESTROY);
     }
 
     public PlayerDeathEvent getPlayerDeathEvent(Player player, List<ItemStack> drops, int droppedExp, int newExp,

@@ -33,6 +33,9 @@ aoneblock:
     color: RED
     style: SEGMENTED_20
     not-active: '&c Boss Bar není pro tento ostrov aktivní'
+  actionbar:
+    status: "&a Fáze: &b [phase-name] &d | &a Bloky: &b [done] &d / &b [total] &d | &a Postup: &b [percent-done]"
+    not-active: "&c Action Bar není pro tento ostrov aktivní"
   commands:
     admin:
       setcount:
@@ -71,6 +74,10 @@ aoneblock:
         description: přepíná fázový šéfový bar
         status_on: '&b Bossbar se otočil &a zapnul'
         status_off: '&b Bossbar se &c otočil'
+      actionbar:
+        description: přepíná action bar fáze
+        status_on: "&b Action Bar &a zapnut"
+        status_off: "&b Action Bar &c vypnut"
       setcount:
         parameters: <count>
         description: nastavte počet bloků na dříve dokončenou hodnotu
@@ -88,6 +95,7 @@ aoneblock:
     cooldown: '&c Další fáze bude dostupná za [number] sekund!'
   placeholders:
     infinite: Nekonečný
+    my-island-phase-default: Neznámá
   gui:
     titles:
       phases: '&0&l Jednoblokové fáze'
