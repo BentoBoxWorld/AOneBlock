@@ -7,12 +7,10 @@ import java.util.Optional;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 
-import net.momirealms.craftengine.bukkit.api.CraftEngineBlocks;
-import net.momirealms.craftengine.core.block.CustomBlock;
-import net.momirealms.craftengine.core.util.Key;
 import world.bentobox.aoneblock.AOneBlock;
 import world.bentobox.aoneblock.oneblocks.OneBlockCustomBlock;
 import world.bentobox.bentobox.BentoBox;
+import world.bentobox.bentobox.hooks.CraftEngineHook;
 
 public class CraftEngineCustomBlock implements OneBlockCustomBlock {
     private final String blockId;
@@ -22,8 +20,7 @@ public class CraftEngineCustomBlock implements OneBlockCustomBlock {
     }
 
     public static Optional<CraftEngineCustomBlock> fromId(String id) {
-        CustomBlock block = CraftEngineBlocks.byId(Key.of(id));
-        if (block != null) {
+        if (CraftEngineHook.exists(id)) {
             return Optional.of(new CraftEngineCustomBlock(id));
         }
         return Optional.empty();
@@ -39,7 +36,10 @@ public class CraftEngineCustomBlock implements OneBlockCustomBlock {
     public void execute(AOneBlock addon, Block block) {
         try {
             block.setType(Material.AIR);
-            CraftEngineBlocks.place(block.getLocation(), Key.of(blockId), false);
+            if (!CraftEngineHook.placeBlock(block.getLocation(), blockId)) {
+                BentoBox.getInstance().logError("Could not place CraftEngine block " + blockId);
+                block.setType(Material.STONE);
+            }
         } catch (Exception e) {
             BentoBox.getInstance().logError("Could not place CraftEngine block " + blockId + ": " + e.getMessage());
             block.setType(Material.STONE);

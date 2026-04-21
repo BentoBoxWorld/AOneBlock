@@ -56,7 +56,7 @@
         <mockito.version>5.11.0</mockito.version>
         <mock-bukkit.version>v1.21-SNAPSHOT</mock-bukkit.version>
         <!-- More visible way how to change dependency versions -->
-        <bentobox.version>3.13.0</bentobox.version>
+        <bentobox.version>3.15.0-SNAPSHOT</bentobox.version>
         <items-adder.version>4.0.10</items-adder.version>
         <nexo.version>1.8.0</nexo.version>
         <craftengine.version>0.0.67</craftengine.version>
@@ -272,18 +272,6 @@
             <groupId>com.nexomc</groupId>
             <artifactId>nexo</artifactId>
             <version>${nexo.version}</version>
-            <scope>provided</scope>
-            <exclusions>
-                <exclusion>
-                    <groupId>*</groupId>
-                    <artifactId>*</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>net.momirealms</groupId>
-            <artifactId>craft-engine-core</artifactId>
-            <version>${craftengine.version}</version>
             <scope>provided</scope>
             <exclusions>
                 <exclusion>
