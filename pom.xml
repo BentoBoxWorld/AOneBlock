@@ -138,7 +138,7 @@
             <id>bentoboxworld</id>
             <url>https://repo.codemc.org/repository/bentoboxworld/</url>
             <releases><enabled>true</enabled></releases>
-            <snapshots><enabled>false</enabled></snapshots>
+            <snapshots><enabled>true</enabled></snapshots>
         </repository>
         <!-- Paper API snapshots -->
         <repository>
