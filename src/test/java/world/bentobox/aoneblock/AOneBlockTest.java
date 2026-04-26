@@ -1,6 +1,7 @@
 package world.bentobox.aoneblock;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -247,6 +248,19 @@ public class AOneBlockTest extends CommonTestSetup {
         @NonNull
         OneBlockIslands i = addon.getOneBlocksIsland(island);
         assertEquals(island.getUniqueId(), i.getUniqueId());
+    }
+
+    /**
+     * Test method for {@link world.bentobox.aoneblock.AOneBlock#loadData()} when
+     * oneBlockManager is null (addon not yet enabled). Should return false without
+     * throwing NullPointerException.
+     */
+    @Test
+    void testLoadDataWhenManagerIsNull() {
+        // oneBlockManager is null before onEnable() is called
+        assertNull(addon.getOneBlockManager());
+        // Should not throw NPE, should return false (no error)
+        assertFalse(addon.loadData());
     }
 
     /**

@@ -219,6 +219,10 @@ public class AOneBlock extends GameModeAddon {
      * @return true if there was an error, false otherwise.
      */
     public boolean loadData() {
+        if (oneBlockManager == null) {
+            // oneBlockManager is not yet initialized (addon not fully enabled)
+            return false;
+        }
         try {
             oneBlockManager.loadPhases();
         } catch (IOException e) {
