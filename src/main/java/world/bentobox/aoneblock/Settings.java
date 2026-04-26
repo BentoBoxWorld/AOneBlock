@@ -2468,6 +2468,7 @@ public class Settings implements WorldSettings {
         return switch (rarity) {
             case EPIC -> getChestColorEpic();
             case RARE -> getChestColorRare();
+            case UNCOMMON -> getChestColorUncommon();
             default -> getChestColorUncommon();
         };
     }
