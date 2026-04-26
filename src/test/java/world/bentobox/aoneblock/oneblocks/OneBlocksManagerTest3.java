@@ -527,4 +527,67 @@ public class OneBlocksManagerTest3 extends CommonTestSetup {
 		assertEquals(-1, obm.getPhaseBlocks(obi));
 	}
 
+	/**
+	 * Test that a valid {@code CHEST_WITH_X} entry in fixedBlocks produces a chest
+	 * OneBlockObject whose inventory contains the specified item at slot 0.
+	 */
+	@Test
+	void testLoadPhases_fixedBlockChestWithItem() throws Exception {
+		String yaml = """
+                name: Plains
+                biome: PLAINS
+                fixedBlocks:
+                  0: GRASS_BLOCK
+                  5: CHEST_WITH_WATER_BUCKET
+                blocks:
+                  GRASS_BLOCK: 1000
+                """;
+		YamlConfiguration cfg = new YamlConfiguration();
+		cfg.loadFromString(yaml);
+
+		// initBlock parses fixedBlocks and delegates to parseStringBlock -> parseChestWithItem
+		obm.initBlock("0", obPhase, cfg);
+
+		assertNotNull(obPhase.getFixedBlocks(), "fixedBlocks should not be null");
+
+		// Slot 5 should be a chest containing a WATER_BUCKET
+		OneBlockObject chest = obPhase.getFixedBlocks().get(5);
+		assertNotNull(chest, "fixedBlocks should contain an entry at position 5");
+		assertEquals(Material.CHEST, chest.getMaterial());
+		assertNotNull(chest.getChest(), "Chest contents should not be null");
+		assertFalse(chest.getChest().isEmpty(), "Chest should have contents");
+		assertEquals(Material.WATER_BUCKET, chest.getChest().get(0).getType());
+
+		// Slot 0 should be a regular GRASS_BLOCK (set as firstBlock via addFixedBlocks)
+		assertEquals(Material.GRASS_BLOCK, obPhase.getFirstBlock().getMaterial());
+
+		verify(plugin, never()).logError(anyString());
+	}
+
+	/**
+	 * Test that an invalid {@code CHEST_WITH_X} entry (unknown item) logs an error
+	 * and is ignored — it must not appear in fixedBlocks.
+	 */
+	@Test
+	void testLoadPhases_fixedBlockChestWithInvalidItem() throws Exception {
+		String yaml = """
+                name: Plains
+                biome: PLAINS
+                fixedBlocks:
+                  6: CHEST_WITH_INVALID_ITEM_XYZ
+                blocks:
+                  GRASS_BLOCK: 1000
+                """;
+		YamlConfiguration cfg = new YamlConfiguration();
+		cfg.loadFromString(yaml);
+
+		// initBlock parses fixedBlocks and delegates to parseStringBlock -> parseChestWithItem
+		obm.initBlock("0", obPhase, cfg);
+
+		// The invalid CHEST_WITH entry should be silently skipped (logged but not added)
+		assertTrue(obPhase.getFixedBlocks().isEmpty(),
+				"fixedBlocks should be empty because the item name is invalid");
+		verify(plugin).logError(org.mockito.ArgumentMatchers.contains("CHEST_WITH item is invalid"));
+	}
+
 }

@@ -66,6 +66,7 @@ public class OneBlocksManager {
     private static final String CUSTOM_BLOCKS = "custom-blocks";
     private static final String PHASES = "phases";
     private static final String GOTO_BLOCK = "gotoBlock";
+    private static final String CHEST_WITH_PREFIX = "CHEST_WITH_";
     private static final String START_COMMANDS = "start-commands";
     private static final String END_COMMANDS = "end-commands";
     private static final String END_COMMANDS_FIRST_TIME = "end-commands-first-time";
@@ -312,6 +313,13 @@ public class OneBlocksManager {
             return;
         }
 
+        // Check for CHEST_WITH_X notation
+        String matUpper = mat.toUpperCase(Locale.ENGLISH);
+        if (matUpper.startsWith(CHEST_WITH_PREFIX)) {
+            parseChestWithItem(result, key, k, matUpper.substring(CHEST_WITH_PREFIX.length()));
+            return;
+        }
+
         Optional<OneBlockCustomBlock> customBlock = OneBlockCustomBlockCreator.create(mat);
         if (customBlock.isPresent()) {
             result.put(k, new OneBlockObject(customBlock.get(), 0));
@@ -323,6 +331,27 @@ public class OneBlocksManager {
                 addon.logError("Fixed block key " + key + " material is invalid or not a block. Ignoring.");
             }
         }
+    }
+
+    /**
+     * Parses a {@code CHEST_WITH_X} shorthand entry and adds it to the result map.
+     * The produced chest block will contain a single item of the specified material
+     * in slot 0.
+     *
+     * @param result   the resulting fixed-blocks map
+     * @param key      the raw YAML key (used in error messages)
+     * @param k        the integer value of the key
+     * @param itemName the material name of the item to place in the chest
+     */
+    private void parseChestWithItem(Map<Integer, OneBlockObject> result, String key, int k, String itemName) {
+        Material item = Material.matchMaterial(itemName);
+        if (item == null) {
+            addon.logError("Fixed block key " + key + " CHEST_WITH item is invalid: " + itemName + ". Ignoring.");
+            return;
+        }
+        Map<Integer, ItemStack> chestContents = new HashMap<>();
+        chestContents.put(0, new ItemStack(item));
+        result.put(k, new OneBlockObject(chestContents, Rarity.COMMON));
     }
 
     private void addHologramLines(OneBlockPhase obPhase, ConfigurationSection fb) {
@@ -722,7 +751,18 @@ public class OneBlocksManager {
 
     private void saveBlocks(ConfigurationSection phSec, OneBlockPhase phase) {
         ConfigurationSection fixedBlocks = phSec.createSection(FIXED_BLOCKS);
-        phase.getFixedBlocks().forEach((k, v) -> fixedBlocks.set(String.valueOf(k), v.getMaterial().name()));
+        phase.getFixedBlocks().forEach((k, v) -> {
+            String value;
+            if (v.getChest() != null && v.getChest().size() == 1 && v.getChest().containsKey(0)) {
+                // Serialize as CHEST_WITH_X when there is exactly one item in slot 0
+                value = CHEST_WITH_PREFIX + v.getChest().get(0).getType().name();
+            } else if (v.getMaterial() != null) {
+                value = v.getMaterial().name();
+            } else {
+                value = Material.CHEST.name();
+            }
+            fixedBlocks.set(String.valueOf(k), value);
+        });
         ConfigurationSection blocks = phSec.createSection(BLOCKS);
         phase.getBlocks().forEach((k, v) -> blocks.set(k.name(), v));
 
