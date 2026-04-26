@@ -296,7 +296,7 @@ public class OneBlockPhase {
      * @return collection of all the chests
      */
     public Collection<OneBlockObject> getChests() {
-        return chests.values().stream().flatMap(List::stream).collect(Collectors.toList());
+        return chests.values().stream().flatMap(List::stream).toList();
     }
 
     /**

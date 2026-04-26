@@ -33,7 +33,7 @@ import world.bentobox.aoneblock.events.BlockClearEvent;
 /**
  * Tests for {@link MakeSpace}.
  */
-public class MakeSpaceTest extends CommonTestSetup {
+class MakeSpaceTest extends CommonTestSetup {
 
     @Mock
     private AOneBlock addon;

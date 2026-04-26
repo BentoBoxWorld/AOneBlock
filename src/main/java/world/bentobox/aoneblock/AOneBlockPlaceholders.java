@@ -21,6 +21,7 @@ public class AOneBlockPlaceholders {
 
     private static final TreeMap<Double, String> SCALE;
     private static final String INFINITE = "aoneblock.placeholders.infinite";
+    private static final String UNKNOWN_PHASE = "aoneblock.placeholders.my-island-phase-default";
     static {
         SCALE = new TreeMap<>();
         SCALE.put(0D, "&c╍╍╍╍╍╍╍╍");
@@ -163,7 +164,8 @@ public class AOneBlockPlaceholders {
     public String getPhase(User user) {
         if (user == null || user.getUniqueId() == null)
             return "";
-        return getUsersIsland(user).map(i -> addon.getOneBlocksIsland(i).getPhaseName()).orElse("");
+        return getUsersIsland(user).map(i -> addon.getOneBlocksIsland(i).getPhaseName())
+                .orElse(user.getTranslation(UNKNOWN_PHASE));
     }
 
     /**
@@ -175,7 +177,7 @@ public class AOneBlockPlaceholders {
     public String getCount(User user) {
         if (user == null || user.getUniqueId() == null)
             return "";
-        return getUsersIsland(user).map(i -> String.valueOf(addon.getOneBlocksIsland(i).getBlockNumber())).orElse("");
+        return getUsersIsland(user).map(i -> String.valueOf(addon.getOneBlocksIsland(i).getBlockNumber())).orElse("0");
     }
 
     /**
@@ -274,7 +276,7 @@ public class AOneBlockPlaceholders {
         return getUsersIsland(user).map(i -> {
             double num = addon.getOneBlockManager().getPercentageDone(addon.getOneBlocksIsland(i));
             return Math.round(num) + "%";
-        }).orElse("");
+        }).orElse("0%");
     }
 
     /**

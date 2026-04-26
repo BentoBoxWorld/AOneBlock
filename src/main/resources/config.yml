@@ -82,6 +82,38 @@ world:
       RED: 0
       BLUE: 0
       GREEN: 128
+  # Chest particle effects - particles that appear when a special chest spawns based on rarity.
+  # Valid particle names: https://jd.papermc.io/paper/1.21/org/bukkit/Particle.html
+  # Use NONE to disable particles for that rarity level.
+  # Note: The color setting is only used for DUST-type particles.
+  chest-particles:
+    # Particle type for UNCOMMON rarity chests.
+    uncommon-particle: DUST
+    # Color of UNCOMMON chest particles (only used for DUST-type particles). Default: yellow
+    uncommon-color:
+      ==: Color
+      ALPHA: 255
+      RED: 255
+      GREEN: 255
+      BLUE: 0
+    # Particle type for RARE rarity chests.
+    rare-particle: DUST
+    # Color of RARE chest particles (only used for DUST-type particles). Default: white
+    rare-color:
+      ==: Color
+      ALPHA: 255
+      RED: 255
+      GREEN: 255
+      BLUE: 255
+    # Particle type for EPIC rarity chests.
+    epic-particle: DUST
+    # Color of EPIC chest particles (only used for DUST-type particles). Default: fuchsia
+    epic-color:
+      ==: Color
+      ALPHA: 255
+      RED: 255
+      GREEN: 0
+      BLUE: 255
   # Clear blocks when spawning mobs.
   # Mobs break blocks when they spawn is to prevent players from building a box around the magic block,
   # having the mob spawn, and then die by suffocation, i.e., it's a cheat prevention.
@@ -199,7 +231,7 @@ world:
   # World flags. These are boolean settings for various flags for this world
   flags:
     CREEPER_DAMAGE: true
-    OBSIDIAN_SCOOPING: true
+    OBSIDIAN_SCOOPING: false
     ISLAND_RESPAWN: true
     CREEPER_GRIEFING: false
     VISITOR_KEEP_INVENTORY: false

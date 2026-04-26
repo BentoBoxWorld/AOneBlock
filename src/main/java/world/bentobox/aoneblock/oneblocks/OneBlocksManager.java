@@ -22,8 +22,10 @@ import java.util.stream.Collectors;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
-import org.bukkit.Registry;
 import org.bukkit.block.Biome;
+
+import io.papermc.paper.registry.RegistryAccess;
+import io.papermc.paper.registry.RegistryKey;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.EntityType;
@@ -64,6 +66,7 @@ public class OneBlocksManager {
     private static final String CUSTOM_BLOCKS = "custom-blocks";
     private static final String PHASES = "phases";
     private static final String GOTO_BLOCK = "gotoBlock";
+    private static final String CHEST_WITH_PREFIX = "CHEST_WITH_";
     private static final String START_COMMANDS = "start-commands";
     private static final String END_COMMANDS = "end-commands";
     private static final String END_COMMANDS_FIRST_TIME = "end-commands-first-time";
@@ -181,63 +184,55 @@ public class OneBlocksManager {
     void initBlock(String blockNumber, OneBlockPhase obPhase, ConfigurationSection phaseConfig) throws IOException {
         // Set name
         if (phaseConfig.contains(NAME, true)) {
-            if (obPhase.getPhaseName() != null) {
-                throw new IOException(
-                        BLOCK + blockNumber + ": Phase name trying to be set to " + phaseConfig.getString(NAME)
-                                + BUT_ALREADY_SET_TO + obPhase.getPhaseName() + ". Duplicate phase file?");
-            }
+            checkNotDuplicate(obPhase.getPhaseName() != null, blockNumber, "Phase name",
+                    phaseConfig.getString(NAME), obPhase.getPhaseName(), ". Duplicate phase file?");
             obPhase.setPhaseName(phaseConfig.getString(NAME, blockNumber));
         }
 
         // Set biome
         if (phaseConfig.contains(BIOME, true)) {
-            if (obPhase.getPhaseBiome() != null) {
-                throw new IOException(BLOCK + blockNumber + ": Biome trying to be set to "
-                        + phaseConfig.getString(BIOME) + BUT_ALREADY_SET_TO + obPhase.getPhaseBiome() + DUPLICATE);
-            }
+            checkNotDuplicate(obPhase.getPhaseBiome() != null, blockNumber, "Biome",
+                    phaseConfig.getString(BIOME), obPhase.getPhaseBiome(), DUPLICATE);
             obPhase.setPhaseBiome(getBiome(phaseConfig.getString(BIOME)));
         }
 
         // Set first block
         if (phaseConfig.contains(FIRST_BLOCK)) {
-            if (obPhase.getFirstBlock() != null) {
-                throw new IOException(
-                        BLOCK + blockNumber + ": First block trying to be set to " + phaseConfig.getString(FIRST_BLOCK)
-                                + BUT_ALREADY_SET_TO + obPhase.getFirstBlock() + DUPLICATE);
-            }
+            checkNotDuplicate(obPhase.getFirstBlock() != null, blockNumber, "First block",
+                    phaseConfig.getString(FIRST_BLOCK), obPhase.getFirstBlock(), DUPLICATE);
             addFirstBlock(obPhase, phaseConfig.getString(FIRST_BLOCK));
         }
 
         // Set icon
         if (phaseConfig.contains(ICON)) {
             ItemStack icon = ItemParser.parse(phaseConfig.getString(ICON));
-
             if (icon == null) {
                 throw new IOException("ItemParser failed to parse icon: '" + phaseConfig.getString(ICON)
                         + "' for phase " + obPhase.getFirstBlock() + ". Can you check if it is correct?");
             }
-
             obPhase.setIconBlock(icon);
         }
 
         // Add fixed blocks
         if (phaseConfig.contains(FIXED_BLOCKS)) {
-            if (!obPhase.getFixedBlocks().isEmpty()) {
-                throw new IOException(BLOCK + blockNumber + ": Fixed blocks trying to be set to "
-                        + phaseConfig.getString(FIXED_BLOCKS) + BUT_ALREADY_SET_TO + obPhase.getFixedBlocks()
-                        + DUPLICATE);
-            }
+            checkNotDuplicate(!obPhase.getFixedBlocks().isEmpty(), blockNumber, "Fixed blocks",
+                    phaseConfig.getString(FIXED_BLOCKS), obPhase.getFixedBlocks(), DUPLICATE);
             addFixedBlocks(obPhase, phaseConfig.getConfigurationSection(FIXED_BLOCKS));
         }
 
         // Add holograms
         if (phaseConfig.contains(HOLOGRAMS)) {
-            if (!obPhase.getHologramLines().isEmpty()) {
-                throw new IOException(
-                        BLOCK + blockNumber + ": Hologram Lines trying to be set to " + phaseConfig.getString(HOLOGRAMS)
-                                + BUT_ALREADY_SET_TO + obPhase.getHologramLines() + DUPLICATE);
-            }
+            checkNotDuplicate(!obPhase.getHologramLines().isEmpty(), blockNumber, "Hologram Lines",
+                    phaseConfig.getString(HOLOGRAMS), obPhase.getHologramLines(), DUPLICATE);
             addHologramLines(obPhase, phaseConfig.getConfigurationSection(HOLOGRAMS));
+        }
+    }
+
+    private void checkNotDuplicate(boolean alreadySet, String blockNumber, String field,
+            Object newValue, Object existingValue, String suffix) throws IOException {
+        if (alreadySet) {
+            throw new IOException(BLOCK + blockNumber + ": " + field + " trying to be set to "
+                    + newValue + BUT_ALREADY_SET_TO + existingValue + suffix);
         }
     }
 
@@ -318,6 +313,13 @@ public class OneBlocksManager {
             return;
         }
 
+        // Check for CHEST_WITH_X notation
+        String matUpper = mat.toUpperCase(Locale.ENGLISH);
+        if (matUpper.startsWith(CHEST_WITH_PREFIX)) {
+            parseChestWithItem(result, key, k, matUpper.substring(CHEST_WITH_PREFIX.length()));
+            return;
+        }
+
         Optional<OneBlockCustomBlock> customBlock = OneBlockCustomBlockCreator.create(mat);
         if (customBlock.isPresent()) {
             result.put(k, new OneBlockObject(customBlock.get(), 0));
@@ -329,6 +331,27 @@ public class OneBlocksManager {
                 addon.logError("Fixed block key " + key + " material is invalid or not a block. Ignoring.");
             }
         }
+    }
+
+    /**
+     * Parses a {@code CHEST_WITH_X} shorthand entry and adds it to the result map.
+     * The produced chest block will contain a single item of the specified material
+     * in slot 0.
+     *
+     * @param result   the resulting fixed-blocks map
+     * @param key      the raw YAML key (used in error messages)
+     * @param k        the integer value of the key
+     * @param itemName the material name of the item to place in the chest
+     */
+    private void parseChestWithItem(Map<Integer, OneBlockObject> result, String key, int k, String itemName) {
+        Material item = Material.matchMaterial(itemName);
+        if (item == null) {
+            addon.logError("Fixed block key " + key + " CHEST_WITH item is invalid: " + itemName + ". Ignoring.");
+            return;
+        }
+        Map<Integer, ItemStack> chestContents = new HashMap<>();
+        chestContents.put(0, new ItemStack(item));
+        result.put(k, new OneBlockObject(chestContents, Rarity.COMMON));
     }
 
     private void addHologramLines(OneBlockPhase obPhase, ConfigurationSection fb) {
@@ -356,10 +379,11 @@ public class OneBlocksManager {
             return Biome.PLAINS;
         }
         NamespacedKey key = NamespacedKey.fromString(string.toLowerCase(Locale.ENGLISH));
-        Biome result = Registry.BIOME.get(key);
+        var biomeRegistry = RegistryAccess.registryAccess().getRegistry(RegistryKey.BIOME);
+        Biome result = biomeRegistry.get(key);
         if (result == null) {
             addon.logError("Biome " + string + " is invalid! Use one of these...");
-            Registry.BIOME.stream().sorted(Comparator.comparing(biome -> biome.getKey().getKey()))
+            biomeRegistry.stream().sorted(Comparator.comparing(biome -> biome.getKey().getKey()))
                     .forEach(biome -> addon.logError(biome.getKey().getKey()));
             return Biome.PLAINS;
         }
@@ -455,33 +479,37 @@ public class OneBlocksManager {
         }
         ConfigurationSection mobs = phase.getConfigurationSection(MOBS);
         for (String entity : mobs.getKeys(false)) {
-            String name = entity.toUpperCase(Locale.ENGLISH);
-            EntityType et = null;
-            // Pig zombie handling
-            if (name.equals("PIG_ZOMBIE") || name.equals("ZOMBIFIED_PIGLIN")) {
-                et = Enums.getIfPresent(EntityType.class, "ZOMBIFIED_PIGLIN")
-                        .or(Enums.getIfPresent(EntityType.class, "PIG_ZOMBIE").or(EntityType.PIG));
-            } else {
-                et = Enums.getIfPresent(EntityType.class, name).orNull();
-            }
+            EntityType et = resolveEntityType(entity.toUpperCase(Locale.ENGLISH));
             if (et == null) {
-                // Does not exist
                 addon.logError("Bad entity type in " + obPhase.getPhaseName() + ": " + entity);
                 addon.logError("Try one of these...");
                 addon.logError(Arrays.stream(EntityType.values()).filter(EntityType::isSpawnable)
                         .filter(EntityType::isAlive).map(EntityType::name).collect(Collectors.joining(",")));
                 return;
             }
-            if (et.isSpawnable() && et.isAlive()) {
-                if (mobs.getInt(entity) > 0) {
-                    obPhase.addMob(et, mobs.getInt(entity));
-                } else {
-                    addon.logWarning("Bad entity weight for " + obPhase.getPhaseName() + ": " + entity
-                            + ". Must be positive number above 1.");
-                }
-            } else {
-                addon.logError("Entity type is not spawnable " + obPhase.getPhaseName() + ": " + entity);
-            }
+            processMobEntry(obPhase, mobs, entity, et);
+        }
+    }
+
+    private EntityType resolveEntityType(String name) {
+        // Pig zombie handling: accept both legacy and current name
+        if (name.equals("PIG_ZOMBIE") || name.equals("ZOMBIFIED_PIGLIN")) {
+            return Enums.getIfPresent(EntityType.class, "ZOMBIFIED_PIGLIN")
+                    .or(Enums.getIfPresent(EntityType.class, "PIG_ZOMBIE").or(EntityType.PIG));
+        }
+        return Enums.getIfPresent(EntityType.class, name).orNull();
+    }
+
+    private void processMobEntry(OneBlockPhase obPhase, ConfigurationSection mobs, String entity, EntityType et) {
+        if (!et.isSpawnable() || !et.isAlive()) {
+            addon.logError("Entity type is not spawnable " + obPhase.getPhaseName() + ": " + entity);
+            return;
+        }
+        if (mobs.getInt(entity) > 0) {
+            obPhase.addMob(et, mobs.getInt(entity));
+        } else {
+            addon.logWarning("Bad entity weight for " + obPhase.getPhaseName() + ": " + entity
+                    + ". Must be positive number above 1.");
         }
     }
 
@@ -492,16 +520,8 @@ public class OneBlocksManager {
                 addMaterial(obPhase, material, Objects.toString(blocks.get(material)));
             }
         } else if (phase.isList(BLOCKS)) {
-            List<Map<?, ?>> blocks = phase.getMapList(BLOCKS);
-            for (Map<?, ?> map : blocks) {
-                if (map.size() == 1) {
-                    Map.Entry<?, ?> entry = map.entrySet().iterator().next();
-                    if (addMaterial(obPhase, Objects.toString(entry.getKey()), Objects.toString(entry.getValue()))) {
-                        continue;
-                    }
-                }
-
-                addCustomBlockFromMap(obPhase, map);
+            for (Map<?, ?> map : phase.getMapList(BLOCKS)) {
+                processBlockMapEntry(obPhase, map);
             }
         }
 
@@ -513,6 +533,16 @@ public class OneBlocksManager {
                 addCustomBlockFromMap(obPhase, map);
             }
         }
+    }
+
+    private void processBlockMapEntry(OneBlockPhase obPhase, Map<?, ?> map) {
+        if (map.size() == 1) {
+            Map.Entry<?, ?> entry = map.entrySet().iterator().next();
+            if (addMaterial(obPhase, Objects.toString(entry.getKey()), Objects.toString(entry.getValue()))) {
+                return;
+            }
+        }
+        addCustomBlockFromMap(obPhase, map);
     }
 
     private void addCustomBlockFromMap(OneBlockPhase obPhase, Map<?, ?> map) {
@@ -575,7 +605,7 @@ public class OneBlocksManager {
      */
     public List<String> getPhaseList() {
         return blockProbs.values().stream().map(OneBlockPhase::getPhaseName).filter(Objects::nonNull)
-                .map(n -> n.replace(" ", "_")).collect(Collectors.toList());
+                .map(n -> n.replace(" ", "_")).toList();
     }
 
     /**
@@ -648,7 +678,7 @@ public class OneBlocksManager {
                 phSec.set(FIRST_BLOCK, p.getFirstBlock().getMaterial().name());
             }
             if (p.getPhaseBiome() != null) {
-                phSec.set(BIOME, p.getPhaseBiome().name());
+                phSec.set(BIOME, p.getPhaseBiome().getKey().getKey());
             }
             saveBlocks(phSec, p);
             saveEntities(phSec, p);
@@ -721,7 +751,18 @@ public class OneBlocksManager {
 
     private void saveBlocks(ConfigurationSection phSec, OneBlockPhase phase) {
         ConfigurationSection fixedBlocks = phSec.createSection(FIXED_BLOCKS);
-        phase.getFixedBlocks().forEach((k, v) -> fixedBlocks.set(String.valueOf(k), v.getMaterial().name()));
+        phase.getFixedBlocks().forEach((k, v) -> {
+            String value;
+            if (v.getChest() != null && v.getChest().size() == 1 && v.getChest().containsKey(0)) {
+                // Serialize as CHEST_WITH_X when there is exactly one item in slot 0
+                value = CHEST_WITH_PREFIX + v.getChest().get(0).getType().name();
+            } else if (v.getMaterial() != null) {
+                value = v.getMaterial().name();
+            } else {
+                value = Material.CHEST.name();
+            }
+            fixedBlocks.set(String.valueOf(k), value);
+        });
         ConfigurationSection blocks = phSec.createSection(BLOCKS);
         phase.getBlocks().forEach((k, v) -> blocks.set(k.name(), v));
 

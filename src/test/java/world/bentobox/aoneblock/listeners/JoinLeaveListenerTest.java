@@ -83,7 +83,7 @@ public class JoinLeaveListenerTest extends CommonTestSetup {
      */
     @Test
     void testOnPlayerQuit() {
-        PlayerQuitEvent event = new PlayerQuitEvent(mockPlayer, "nothing");
+        PlayerQuitEvent event = new PlayerQuitEvent(mockPlayer, (net.kyori.adventure.text.Component) null, null);
         jll.onPlayerQuit(event);
         verify(aob,never()).logError(anyString());
         verify(bl).saveIsland(island);
@@ -95,7 +95,7 @@ public class JoinLeaveListenerTest extends CommonTestSetup {
     @Test
     void testOnPlayerQuitNoIsland() {
         when(im.getIsland(world, ID)).thenReturn(null);
-        PlayerQuitEvent event = new PlayerQuitEvent(mockPlayer, "nothing");
+        PlayerQuitEvent event = new PlayerQuitEvent(mockPlayer, (net.kyori.adventure.text.Component) null, null);
         jll.onPlayerQuit(event);
         verify(aob,never()).logError(anyString());
         verify(bl, never()).saveIsland(island);
@@ -107,7 +107,7 @@ public class JoinLeaveListenerTest extends CommonTestSetup {
     @Test
     void testOnPlayerQuitSaveError() {
         when(bl.saveIsland(any())).thenReturn(CompletableFuture.completedFuture(Boolean.FALSE));
-        PlayerQuitEvent event = new PlayerQuitEvent(mockPlayer, "nothing");
+        PlayerQuitEvent event = new PlayerQuitEvent(mockPlayer, (net.kyori.adventure.text.Component) null, null);
         jll.onPlayerQuit(event);
         verify(aob).logError(anyString());
         verify(bl).saveIsland(island);

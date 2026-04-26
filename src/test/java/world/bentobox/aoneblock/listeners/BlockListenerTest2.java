@@ -1,7 +1,10 @@
 package world.bentobox.aoneblock.listeners;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyBoolean;
@@ -35,10 +38,8 @@ import org.bukkit.block.BrushableBlock;
 import org.bukkit.block.Chest;
 import org.bukkit.block.data.type.Leaves;
 import org.bukkit.block.data.Brushable;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Item;
-import org.bukkit.event.Event;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.EntityInteractEvent;
@@ -82,6 +83,7 @@ import world.bentobox.level.Level;
  *
  * @author tastybento
  */
+@SuppressWarnings("java:S3577")
 class BlockListenerTest2 extends CommonTestSetup {
 
     // Class under test
@@ -140,6 +142,9 @@ class BlockListenerTest2 extends CommonTestSetup {
         when(addonSettings.getMobWarning()).thenReturn(0);
         when(addonSettings.isDropOnTop()).thenReturn(true);
         when(addonSettings.isClearBlocks()).thenReturn(false);
+        // Chest particle defaults
+        when(addonSettings.resolveChestParticle(any())).thenReturn(org.bukkit.Particle.DUST);
+        when(addonSettings.resolveChestColor(any())).thenReturn(org.bukkit.Color.YELLOW);
 
         // Player
         when(mockPlayer.getUniqueId()).thenReturn(UUID.randomUUID());
@@ -507,7 +512,7 @@ class BlockListenerTest2 extends CommonTestSetup {
         bl.onPlayerInteract(e);
 
         verify(magicBlock).setType(Material.AIR);
-        verify(world).dropItemNaturally(eq(blockCenter), eq(lootItem));
+        verify(world).dropItemNaturally(blockCenter, lootItem);
     }
 
     /**
@@ -988,7 +993,6 @@ class BlockListenerTest2 extends CommonTestSetup {
      */
     @Test
     void testOnBlockBreakByMinionNotArmorStand() {
-        Entity zombie = mock(Entity.class);
         EntityInteractEvent e = mock(EntityInteractEvent.class);
         when(e.getBlock()).thenReturn(magicBlock);
         when(e.getEntityType()).thenReturn(EntityType.ZOMBIE);
@@ -1009,7 +1013,6 @@ class BlockListenerTest2 extends CommonTestSetup {
     void testOnBlockBreakByMinionNotInWorld() {
         when(addon.inWorld(world)).thenReturn(false);
 
-        Entity armorStand = mock(Entity.class);
         EntityInteractEvent e = mock(EntityInteractEvent.class);
         when(e.getBlock()).thenReturn(magicBlock);
         when(e.getEntityType()).thenReturn(EntityType.ARMOR_STAND);
@@ -1059,12 +1062,12 @@ class BlockListenerTest2 extends CommonTestSetup {
         OneBlockIslands result = bl.getIsland(island);
 
         // Should return a valid, non-null result
-        assertTrue(result != null);
-        assertTrue(result.getUniqueId().equals(island.getUniqueId()));
+        assertNotNull(result);
+        assertEquals(island.getUniqueId(), result.getUniqueId());
 
         // Second call should return the same cached object
         OneBlockIslands cached = bl.getIsland(island);
-        assertTrue(result == cached);
+        assertSame(result, cached);
     }
 
     /**
@@ -1078,7 +1081,7 @@ class BlockListenerTest2 extends CommonTestSetup {
         bl.getIsland(island);
 
         var future = bl.saveIsland(island);
-        assertTrue(future != null);
+        assertNotNull(future);
     }
 
     /**

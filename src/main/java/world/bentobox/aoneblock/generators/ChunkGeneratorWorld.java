@@ -28,8 +28,12 @@ public class ChunkGeneratorWorld extends ChunkGenerator {
         return createChunkData(world);
     }
 
+    /**
+     * @deprecated Paper 1.19+ uses the new ChunkGenerator API; override
+     *     {@link #generateChunks(World)} instead.
+     */
     @Override
-    @Deprecated
+    @Deprecated(since = "1.19", forRemoval = true)
     public ChunkData generateChunkData(World world, Random random, int chunkX, int chunkZ, BiomeGrid biomeGrid) {
         return generateChunks(world);
     }

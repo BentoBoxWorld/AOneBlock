@@ -50,6 +50,7 @@ class IslandRespawnBlockCommandTest extends CommonTestSetup {
     /**
      * @throws java.lang.Exception
      */
+    @Override
     @BeforeEach
     public void setUp() throws Exception {
         super.setUp();
@@ -75,6 +76,7 @@ class IslandRespawnBlockCommandTest extends CommonTestSetup {
     /**
      * @throws java.lang.Exception
      */
+    @Override
     @AfterEach
     public void tearDown() throws Exception {
         super.tearDown();
@@ -131,7 +133,6 @@ class IslandRespawnBlockCommandTest extends CommonTestSetup {
      */
     @Test
     void testExecuteUserStringListOfString() {
-       // when(block.getType()).thenReturn(Material.STONE);
        rbc.execute(user, "", List.of());
        verify(user).sendMessage("aoneblock.commands.respawn-block.block-respawned");
     }

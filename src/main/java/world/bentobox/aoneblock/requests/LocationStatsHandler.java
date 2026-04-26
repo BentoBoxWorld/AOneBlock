@@ -60,10 +60,9 @@ public class LocationStatsHandler extends AddonRequestHandler {
         }
 
         User user = User.getInstance((UUID)map.get(PLAYER));
-        if (user == null || !user.isOnline()) {
+        if (!user.isOnline()) {
             return Collections.emptyMap();
         }
-        // No null check required
         Map<String, String> result = new HashMap<>();
         result.put("count", addon.getPlaceholdersManager().getCountByLocation(user));
         result.put("doneScale", addon.getPlaceholdersManager().getDoneScaleByLocation(user));

@@ -50,6 +50,7 @@ import world.bentobox.bentobox.multilib.MultiLib;
  * @author tastybento
  *
  */
+@SuppressWarnings("java:S3577")
 public class OneBlocksManagerTest3 extends CommonTestSetup {
 
 	private static File jFile;
@@ -65,11 +66,6 @@ public class OneBlocksManagerTest3 extends CommonTestSetup {
 	public static void beforeClass() throws IOException, InvalidConfigurationException {
 		// Make the addon jar
 		jFile = new File("addon.jar");
-		// Copy over config file from src folder
-		/*
-		 * Path fromPath = Paths.get("src/main/resources/config.yml"); Path path =
-		 * Paths.get("config.yml"); Files.copy(fromPath, path);
-		 */
 		// Dummy oneblocks.yml
 		String oneblocks = """
                 '0':
@@ -105,11 +101,6 @@ public class OneBlocksManagerTest3 extends CommonTestSetup {
 		File obFile = new File(obFileDir, "0_plains.yml");
 		obFileDir.mkdirs();
 		oneBlocks.save(obFile);
-		/*
-		 * // Copy over block config file from src folder fromPath =
-		 * Paths.get("src/main/resources/oneblocks.yml"); path =
-		 * Paths.get("oneblocks.yml"); Files.copy(fromPath, path);
-		 */
 		try (JarOutputStream tempJarOutputStream = new JarOutputStream(new FileOutputStream(jFile))) {
 			// Added the new files to the jar.
 			try (FileInputStream fis = new FileInputStream(obFile)) {
@@ -228,7 +219,7 @@ public class OneBlocksManagerTest3 extends CommonTestSetup {
 	 * @throws NumberFormatException
 	 */
 	@Test
-	void testGetPhaseList() throws NumberFormatException, IOException, InvalidConfigurationException {
+	void testGetPhaseList() throws NumberFormatException, IOException {
 		testLoadPhases();
 		List<String> l = obm.getPhaseList();
 		assertEquals(2, l.size());
@@ -246,7 +237,7 @@ public class OneBlocksManagerTest3 extends CommonTestSetup {
 	 * @throws NumberFormatException
 	 */
 	@Test
-	void testGetPhaseString() throws NumberFormatException, IOException, InvalidConfigurationException {
+	void testGetPhaseString() throws NumberFormatException, IOException {
 		testLoadPhases();
 		assertFalse(obm.getPhase("sdf").isPresent());
 		assertTrue(obm.getPhase("Plains").isPresent());
@@ -276,7 +267,7 @@ public class OneBlocksManagerTest3 extends CommonTestSetup {
 	 * @throws NumberFormatException
 	 */
 	@Test
-	void testGetNextPhase() throws NumberFormatException, IOException, InvalidConfigurationException {
+	void testGetNextPhase() throws NumberFormatException, IOException {
 		testLoadPhases();
 		OneBlockPhase plains = obm.getPhase("Plains").get();
 		OneBlockPhase underground = obm.getPhase("Underground").get();
@@ -310,7 +301,7 @@ public class OneBlocksManagerTest3 extends CommonTestSetup {
 	 * @throws IOException
 	 */
 	@Test
-	@Disabled
+	@Disabled("TODO: fix initBlock test setup to work with new config structure")
 	void testInitBlock() throws IOException {
 		System.out.println(oneBlocks);
 		obm.initBlock("0", obPhase, oneBlocks);
@@ -534,6 +525,69 @@ public class OneBlocksManagerTest3 extends CommonTestSetup {
 	@Test
 	void testGetPhaseBlocks() {
 		assertEquals(-1, obm.getPhaseBlocks(obi));
+	}
+
+	/**
+	 * Test that a valid {@code CHEST_WITH_X} entry in fixedBlocks produces a chest
+	 * OneBlockObject whose inventory contains the specified item at slot 0.
+	 */
+	@Test
+	void testLoadPhases_fixedBlockChestWithItem() throws Exception {
+		String yaml = """
+                name: Plains
+                biome: PLAINS
+                fixedBlocks:
+                  0: GRASS_BLOCK
+                  5: CHEST_WITH_WATER_BUCKET
+                blocks:
+                  GRASS_BLOCK: 1000
+                """;
+		YamlConfiguration cfg = new YamlConfiguration();
+		cfg.loadFromString(yaml);
+
+		// initBlock parses fixedBlocks and delegates to parseStringBlock -> parseChestWithItem
+		obm.initBlock("0", obPhase, cfg);
+
+		assertNotNull(obPhase.getFixedBlocks(), "fixedBlocks should not be null");
+
+		// Slot 5 should be a chest containing a WATER_BUCKET
+		OneBlockObject chest = obPhase.getFixedBlocks().get(5);
+		assertNotNull(chest, "fixedBlocks should contain an entry at position 5");
+		assertEquals(Material.CHEST, chest.getMaterial());
+		assertNotNull(chest.getChest(), "Chest contents should not be null");
+		assertFalse(chest.getChest().isEmpty(), "Chest should have contents");
+		assertEquals(Material.WATER_BUCKET, chest.getChest().get(0).getType());
+
+		// Slot 0 should be a regular GRASS_BLOCK (set as firstBlock via addFixedBlocks)
+		assertEquals(Material.GRASS_BLOCK, obPhase.getFirstBlock().getMaterial());
+
+		verify(plugin, never()).logError(anyString());
+	}
+
+	/**
+	 * Test that an invalid {@code CHEST_WITH_X} entry (unknown item) logs an error
+	 * and is ignored — it must not appear in fixedBlocks.
+	 */
+	@Test
+	void testLoadPhases_fixedBlockChestWithInvalidItem() throws Exception {
+		String yaml = """
+                name: Plains
+                biome: PLAINS
+                fixedBlocks:
+                  6: CHEST_WITH_INVALID_ITEM_XYZ
+                blocks:
+                  GRASS_BLOCK: 1000
+                """;
+		YamlConfiguration cfg = new YamlConfiguration();
+		cfg.loadFromString(yaml);
+
+		// initBlock parses fixedBlocks and delegates to parseStringBlock -> parseChestWithItem
+		obm.initBlock("0", obPhase, cfg);
+
+		// The invalid CHEST_WITH entry should be silently skipped (logged but not added)
+		assertTrue(obPhase.getFixedBlocks().isEmpty(),
+				"fixedBlocks should be empty because the item name is invalid");
+		verify(plugin).logError(org.mockito.ArgumentMatchers.contains("CHEST_WITH item is invalid"));
 	}
 
 }

@@ -33,6 +33,9 @@ aoneblock:
     color: RED
     style: SEGMENTED_20
     not-active: '&c Bos Bar tidak aktif untuk pulau ini'
+  actionbar:
+    status: "&a Fase: &b [phase-name] &d | &a Blok: &b [done] &d / &b [total] &d | &a Kemajuan: &b [percent-done]"
+    not-active: "&c Action Bar tidak aktif untuk pulau ini"
   commands:
     admin:
       setcount:
@@ -71,6 +74,10 @@ aoneblock:
         description: Mengalogkan Bar Bos Fase
         status_on: '&b Bos bar &a dihidupkan'
         status_off: '&b Bos bar &c dimatikan'
+      actionbar:
+        description: mengaktifkan/menonaktifkan action bar fase
+        status_on: "&b Action Bar &a diaktifkan"
+        status_off: "&b Action Bar &c dinonaktifkan"
       setcount:
         parameters: <count>
         description: Setel jumlah blok ke nilai yang sebelumnya selesai
@@ -90,6 +97,7 @@ aoneblock:
     cooldown: Fase berikutnya akan tersedia dalam detik [number]!
   placeholders:
     infinite: Tak terbatas
+    my-island-phase-default: Tidak diketahui
   gui:
     titles:
       phases: OneBlock Phases
