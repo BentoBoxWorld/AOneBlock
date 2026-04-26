@@ -875,23 +875,20 @@ public class BlockListener extends FlagListener implements Listener {
     private void fillChest(@NonNull OneBlockObject nextBlock, @NonNull Block block) {
         Chest chest = (Chest) block.getState();
         nextBlock.getChest().forEach(chest.getBlockInventory()::setItem);
-        Color color = Color.fromBGR(0, 255, 255); // yellow
-        switch (nextBlock.getRarity()) {
-        case EPIC:
-            color = Color.fromBGR(255, 0, 255); // magenta
-            break;
-        case RARE:
-            color = Color.fromBGR(255, 255, 255); // cyan
-            break;
-        case UNCOMMON:
-            // Yellow
-            break;
-        default:
+        OneBlockObject.Rarity rarity = nextBlock.getRarity();
+        if (rarity == OneBlockObject.Rarity.COMMON) {
             // No sparkles for regular chests
             return;
         }
-        block.getWorld().spawnParticle(Particle.DUST, block.getLocation().add(new Vector(0.5, 1.0, 0.5)), 50, 0.5,
-                0, 0.5, 1, new Particle.DustOptions(color, 1));
+        Particle particle = addon.getSettings().resolveChestParticle(rarity);
+        if (particle == null) {
+            // Particles disabled for this rarity
+            return;
+        }
+        Color color = addon.getSettings().resolveChestColor(rarity);
+        Object particleData = Particle.DUST.equals(particle) ? new Particle.DustOptions(color, 1) : null;
+        block.getWorld().spawnParticle(particle, block.getLocation().add(new Vector(0.5, 1.0, 0.5)), 50, 0.5,
+                0, 0.5, 1, particleData);
     }
 
     /**
