@@ -629,17 +629,19 @@ public class BlockListener extends FlagListener implements Listener {
     private void breakBlock(@Nullable Player player, Block block, @NonNull OneBlockObject nextBlock,
             @NonNull Island island) {
         if (player == null) return;
+        Location playerLoc = player.getLocation();
+        if (playerLoc == null) return;
         ItemStack tool = player.getInventory().getItemInMainHand();
 
         // Break normally and lift the player up so they don't fall
         Bukkit.getScheduler().runTask(addon.getPlugin(), () -> this.spawnBlock(nextBlock, block));
 
-        if (player.getLocation().getBlock().equals(block)) {
-            double delta = 1 - (player.getLocation().getY() - block.getY());
-            player.teleport(player.getLocation().add(new Vector(0, delta, 0)));
+        if (playerLoc.getBlock().equals(block)) {
+            double delta = 1 - (playerLoc.getY() - block.getY());
+            player.teleport(playerLoc.add(new Vector(0, delta, 0)));
             player.setVelocity(new Vector(0, 0, 0));
-        } else if (player.getLocation().getBlock().equals(block.getRelative(BlockFace.UP))) {
-            player.teleport(player.getLocation());
+        } else if (playerLoc.getBlock().equals(block.getRelative(BlockFace.UP))) {
+            player.teleport(playerLoc);
             player.setVelocity(new Vector(0, 0, 0));
         }
 

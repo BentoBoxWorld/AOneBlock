@@ -1,7 +1,6 @@
 package world.bentobox.aoneblock.listeners;
 
 import java.util.List;
-import java.util.Objects;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.eclipse.jdt.annotation.NonNull;
@@ -64,7 +63,8 @@ public class CheckPhase {
 	    user = User.getInstance(player);
 	}
 
-	String newPhaseName = Objects.requireNonNullElse(phase.getPhaseName(), "");
+	String rawPhaseName = phase.getPhaseName();
+	String newPhaseName = rawPhaseName == null ? "" : rawPhaseName;
 
 	// Run previous phase end commands
 	oneBlocksManager.getPhase(is.getPhaseName()).ifPresent(oldPhase -> {

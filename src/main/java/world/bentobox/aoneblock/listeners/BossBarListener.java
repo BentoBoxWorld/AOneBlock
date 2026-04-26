@@ -211,7 +211,7 @@ public class BossBarListener implements Listener {
     public void onJoin(PlayerJoinEvent e) {
         // If the player is on an island then show the bar
         Location playerLoc = e.getPlayer().getLocation();
-        if (!addon.inWorld(playerLoc)) {
+        if (playerLoc == null || !addon.inWorld(playerLoc)) {
             return;
         }
         addon.getIslands().getIslandAt(playerLoc)
