@@ -142,6 +142,9 @@ class BlockListenerTest2 extends CommonTestSetup {
         when(addonSettings.getMobWarning()).thenReturn(0);
         when(addonSettings.isDropOnTop()).thenReturn(true);
         when(addonSettings.isClearBlocks()).thenReturn(false);
+        // Chest particle defaults
+        when(addonSettings.resolveChestParticle(any())).thenReturn(org.bukkit.Particle.DUST);
+        when(addonSettings.resolveChestColor(any())).thenReturn(org.bukkit.Color.YELLOW);
 
         // Player
         when(mockPlayer.getUniqueId()).thenReturn(UUID.randomUUID());

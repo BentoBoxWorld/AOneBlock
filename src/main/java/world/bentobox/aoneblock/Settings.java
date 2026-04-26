@@ -11,8 +11,10 @@ import java.util.Set;
 import org.bukkit.Color;
 import org.bukkit.Difficulty;
 import org.bukkit.GameMode;
+import org.bukkit.Particle;
 import org.bukkit.block.Biome;
 import org.bukkit.entity.EntityType;
+import org.eclipse.jdt.annotation.Nullable;
 
 import world.bentobox.aoneblock.listeners.BlockListener;
 import world.bentobox.bentobox.BentoBox;
@@ -153,6 +155,34 @@ public class Settings implements WorldSettings {
     @ConfigComment("Color of particles")
     @ConfigEntry(path = "world.block-id.particle-color")
     private Color particleColor = Color.GREEN;
+
+    @ConfigComment("Chest particle effects - particles that appear when a special chest spawns based on rarity.")
+    @ConfigComment("Valid particle names: https://jd.papermc.io/paper/1.21/org/bukkit/Particle.html")
+    @ConfigComment("Use NONE to disable particles for that rarity level.")
+    @ConfigComment("Note: The color setting is only used for DUST-type particles.")
+    @ConfigComment("Particle type for UNCOMMON rarity chests.")
+    @ConfigEntry(path = "world.chest-particles.uncommon-particle")
+    private String chestParticleUncommon = "DUST";
+
+    @ConfigComment("Color of UNCOMMON chest particles (only used for DUST-type particles). Default: yellow")
+    @ConfigEntry(path = "world.chest-particles.uncommon-color")
+    private Color chestColorUncommon = Color.YELLOW;
+
+    @ConfigComment("Particle type for RARE rarity chests.")
+    @ConfigEntry(path = "world.chest-particles.rare-particle")
+    private String chestParticleRare = "DUST";
+
+    @ConfigComment("Color of RARE chest particles (only used for DUST-type particles). Default: white")
+    @ConfigEntry(path = "world.chest-particles.rare-color")
+    private Color chestColorRare = Color.WHITE;
+
+    @ConfigComment("Particle type for EPIC rarity chests.")
+    @ConfigEntry(path = "world.chest-particles.epic-particle")
+    private String chestParticleEpic = "DUST";
+
+    @ConfigComment("Color of EPIC chest particles (only used for DUST-type particles). Default: fuchsia")
+    @ConfigEntry(path = "world.chest-particles.epic-color")
+    private Color chestColorEpic = Color.FUCHSIA;
 
 
     @ConfigComment("Clear blocks when spawning mobs.")
@@ -2304,6 +2334,142 @@ public class Settings implements WorldSettings {
      */
     public void setActionBarCommand(String actionBarCommand) {
         this.actionBarCommand = actionBarCommand;
+    }
+
+    /**
+     * Parses a particle name string to a {@link Particle} enum value.
+     * Returns {@code null} if the name is {@code "NONE"} or {@code null} (disables particle spawning).
+     * Falls back to {@code defaultParticle} if the name cannot be matched.
+     *
+     * @param name            the particle name (case-insensitive)
+     * @param defaultParticle the fallback particle if parsing fails
+     * @return the parsed {@link Particle}, or {@code null} if disabled
+     */
+    @Nullable
+    private Particle parseParticle(@Nullable String name, Particle defaultParticle) {
+        if (name == null || name.equalsIgnoreCase("NONE")) {
+            return null;
+        }
+        try {
+            return Particle.valueOf(name.toUpperCase(java.util.Locale.ENGLISH));
+        } catch (IllegalArgumentException e) {
+            return defaultParticle;
+        }
+    }
+
+    /**
+     * @return the particle type string for UNCOMMON rarity chests
+     */
+    public String getChestParticleUncommon() {
+        return chestParticleUncommon;
+    }
+
+    /**
+     * @param chestParticleUncommon the particle type string for UNCOMMON chests (use "NONE" to disable)
+     */
+    public void setChestParticleUncommon(String chestParticleUncommon) {
+        this.chestParticleUncommon = chestParticleUncommon;
+    }
+
+    /**
+     * @return the color for UNCOMMON chest particles
+     */
+    public Color getChestColorUncommon() {
+        return chestColorUncommon == null ? Color.YELLOW : chestColorUncommon;
+    }
+
+    /**
+     * @param chestColorUncommon the color for UNCOMMON chest particles
+     */
+    public void setChestColorUncommon(Color chestColorUncommon) {
+        this.chestColorUncommon = chestColorUncommon;
+    }
+
+    /**
+     * @return the particle type string for RARE rarity chests
+     */
+    public String getChestParticleRare() {
+        return chestParticleRare;
+    }
+
+    /**
+     * @param chestParticleRare the particle type string for RARE chests (use "NONE" to disable)
+     */
+    public void setChestParticleRare(String chestParticleRare) {
+        this.chestParticleRare = chestParticleRare;
+    }
+
+    /**
+     * @return the color for RARE chest particles
+     */
+    public Color getChestColorRare() {
+        return chestColorRare == null ? Color.WHITE : chestColorRare;
+    }
+
+    /**
+     * @param chestColorRare the color for RARE chest particles
+     */
+    public void setChestColorRare(Color chestColorRare) {
+        this.chestColorRare = chestColorRare;
+    }
+
+    /**
+     * @return the particle type string for EPIC rarity chests
+     */
+    public String getChestParticleEpic() {
+        return chestParticleEpic;
+    }
+
+    /**
+     * @param chestParticleEpic the particle type string for EPIC chests (use "NONE" to disable)
+     */
+    public void setChestParticleEpic(String chestParticleEpic) {
+        this.chestParticleEpic = chestParticleEpic;
+    }
+
+    /**
+     * @return the color for EPIC chest particles
+     */
+    public Color getChestColorEpic() {
+        return chestColorEpic == null ? Color.FUCHSIA : chestColorEpic;
+    }
+
+    /**
+     * @param chestColorEpic the color for EPIC chest particles
+     */
+    public void setChestColorEpic(Color chestColorEpic) {
+        this.chestColorEpic = chestColorEpic;
+    }
+
+    /**
+     * Resolves the configured chest particle for a given rarity to a {@link Particle} enum value.
+     * Returns {@code null} if the particle is set to "NONE" (disabling it for that rarity).
+     *
+     * @param rarity the chest rarity
+     * @return the resolved {@link Particle}, or {@code null} if disabled for this rarity
+     */
+    @Nullable
+    public Particle resolveChestParticle(world.bentobox.aoneblock.oneblocks.OneBlockObject.Rarity rarity) {
+        return switch (rarity) {
+            case EPIC -> parseParticle(chestParticleEpic, Particle.DUST);
+            case RARE -> parseParticle(chestParticleRare, Particle.DUST);
+            case UNCOMMON -> parseParticle(chestParticleUncommon, Particle.DUST);
+            default -> null;
+        };
+    }
+
+    /**
+     * Returns the configured chest particle color for a given rarity.
+     *
+     * @param rarity the chest rarity
+     * @return the {@link Color} for that rarity's chest particles
+     */
+    public Color resolveChestColor(world.bentobox.aoneblock.oneblocks.OneBlockObject.Rarity rarity) {
+        return switch (rarity) {
+            case EPIC -> getChestColorEpic();
+            case RARE -> getChestColorRare();
+            default -> getChestColorUncommon();
+        };
     }
 
 }
