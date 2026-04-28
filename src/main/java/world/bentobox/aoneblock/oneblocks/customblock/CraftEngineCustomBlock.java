@@ -27,9 +27,11 @@ public class CraftEngineCustomBlock implements OneBlockCustomBlock {
     }
 
     public static Optional<CraftEngineCustomBlock> fromMap(Map<?, ?> map) {
-        return Optional
-                .ofNullable(Objects.toString(map.get("id"), null))
-                .flatMap(CraftEngineCustomBlock::fromId);
+        String id = Objects.toString(map.get("id"), null);
+        if (id == null) {
+            return Optional.empty();
+        }
+        return Optional.of(new CraftEngineCustomBlock(id));
     }
 
     @Override
