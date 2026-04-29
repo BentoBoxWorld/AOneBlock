@@ -1,5 +1,6 @@
 package world.bentobox.aoneblock.oneblocks.customblock;
 
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.LinkedHashMap;
@@ -26,5 +27,24 @@ class CraftEngineCustomBlockTest {
         var result = CraftEngineCustomBlock.fromMap(map);
 
         assertTrue(result.isEmpty(), "Should return empty when 'id' is missing");
+    }
+
+    /**
+     * {@code fromMap} must succeed even when CraftEngine has not yet loaded its
+     * block registry (i.e. without calling {@code CraftEngineHook.exists}).
+     * This prevents false "Bad custom block" errors during the initial server
+     * start-up phase that occurs before CraftEngine fires its reload event.
+     */
+    @Test
+    void fromMapReturnsPresentWhenIdProvided() {
+        Map<String, Object> map = new LinkedHashMap<>();
+        map.put("type", "craftengine");
+        map.put("id", "oneblock:common_loot_block");
+        map.put("probability", 300);
+
+        var result = CraftEngineCustomBlock.fromMap(map);
+
+        assertTrue(result.isPresent(), "Should return a block when 'id' is present, regardless of CraftEngine load state");
+        assertInstanceOf(CraftEngineCustomBlock.class, result.get());
     }
 }
