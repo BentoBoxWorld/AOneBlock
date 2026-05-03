@@ -527,12 +527,18 @@ public class BlockListener extends FlagListener implements Listener {
      * @param nextBlock - next block object containing entity info
      */
     private void handleEntitySpawn(Cancellable e, Island i, Player player, Block block, OneBlockObject nextBlock) {
-        if (!(e instanceof EntitySpawnEvent)) {
+        boolean cancelled = !(e instanceof EntitySpawnEvent);
+        if (cancelled) {
             e.setCancelled(true);
         }
         spawnEntity(nextBlock, block);
+        // Cancelling BlockBreakEvent at HIGHEST priority leaves the client with a
+        // mispredicted "block gone" state; resync the actual block to clear it.
+        if (cancelled && player != null) {
+            player.sendBlockChange(block.getLocation(), block.getBlockData());
+        }
         Bukkit.getPluginManager().callEvent(new MagicBlockEntityEvent(i,
-                player == null ? null : player.getUniqueId(), 
+                player == null ? null : player.getUniqueId(),
                         block, nextBlock.getEntityType()));
     }
 
