@@ -1,7 +1,6 @@
 package world.bentobox.aoneblock.oneblocks.customblock;
 
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 
 import org.bukkit.Material;
@@ -26,10 +25,29 @@ public class CraftEngineCustomBlock implements OneBlockCustomBlock {
         return Optional.empty();
     }
 
+    /**
+     * Checks whether {@code id} is a syntactically valid namespaced key
+     * ({@code namespace:key} with both parts non-blank).
+     */
+    static boolean isValidNamespacedKey(String id) {
+        int colon = id.indexOf(':');
+        if (colon <= 0 || colon == id.length() - 1) {
+            return false;
+        }
+        String namespace = id.substring(0, colon);
+        String key = id.substring(colon + 1);
+        return !namespace.isBlank() && !key.isBlank();
+    }
+
     public static Optional<CraftEngineCustomBlock> fromMap(Map<?, ?> map) {
-        return Optional
-                .ofNullable(Objects.toString(map.get("id"), null))
-                .flatMap(CraftEngineCustomBlock::fromId);
+        Object raw = map.get("id");
+        if (!(raw instanceof String id)) {
+            return Optional.empty();
+        }
+        if (id.isBlank() || !isValidNamespacedKey(id)) {
+            return Optional.empty();
+        }
+        return Optional.of(new CraftEngineCustomBlock(id));
     }
 
     @Override

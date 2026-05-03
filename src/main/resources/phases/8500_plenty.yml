@@ -45,6 +45,10 @@
     DIRT_PATH: 1
     LIGHT_GRAY_TERRACOTTA: 1
     SUSPICIOUS_SAND: 1
+  custom-blocks:
+    - type: block
+      data: 'minecraft:bee_nest[honey_level=0,facing=north]{bees:[{entity_data:{id:"minecraft:bee"},min_ticks_in_hive:600,ticks_in_hive:0},{entity_data:{id:"minecraft:bee"},min_ticks_in_hive:600,ticks_in_hive:0},{entity_data:{id:"minecraft:bee"},min_ticks_in_hive:600,ticks_in_hive:0}]}'
+      probability: 1
   mobs:
     COW: 1
     DONKEY: 1
