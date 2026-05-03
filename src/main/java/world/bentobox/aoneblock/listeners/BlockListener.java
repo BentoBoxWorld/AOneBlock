@@ -892,7 +892,14 @@ public class BlockListener extends FlagListener implements Listener {
             return;
         }
         Color color = addon.getSettings().resolveChestColor(rarity);
-        Object particleData = Particle.DUST.equals(particle) ? new Particle.DustOptions(color, 1) : null;
+        Object particleData = null;
+        if (Particle.DUST.equals(particle)) {
+            particleData = new Particle.DustOptions(color, 1);
+        } else if (!Void.class.equals(particle.getDataType())) {
+            // Particle requires typed data we can't provide — skip rather than crash
+            addon.logWarning("Chest particle " + particle.name() + " requires extra data and cannot be used. Use DUST or a void-data particle.");
+            return;
+        }
         block.getWorld().spawnParticle(particle, block.getLocation().add(new Vector(0.5, 1.0, 0.5)), 50, 0.5,
                 0, 0.5, 1, particleData);
     }
