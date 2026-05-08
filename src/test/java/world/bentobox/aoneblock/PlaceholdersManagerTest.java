@@ -2,10 +2,13 @@ package world.bentobox.aoneblock;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.UUID;
 
 import org.eclipse.jdt.annotation.NonNull;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,6 +18,7 @@ import org.mockito.Mock;
 import world.bentobox.aoneblock.dataobjects.OneBlockIslands;
 import world.bentobox.aoneblock.oneblocks.OneBlocksManager;
 import world.bentobox.bentobox.api.user.User;
+import world.bentobox.bentobox.database.objects.Island;
 
 /**
  * @author tastybento
@@ -231,6 +235,54 @@ public class PlaceholdersManagerTest extends CommonTestSetup {
         when(im.getIsland(world, user)).thenReturn(null);
         when(im.getIslands(world, user)).thenReturn(List.of());
         assertEquals("", pm.getDoneScale(user));
+    }
+
+    /**
+     * Test method for {@link world.bentobox.aoneblock.AOneBlockPlaceholders#getLifetime(world.bentobox.bentobox.api.user.User)}.
+     */
+    @Test
+    void testGetLifetime() {
+        assertEquals("", pm.getLifetime(user));
+        assertEquals("", pm.getLifetime(null));
+        when(user.getUniqueId()).thenReturn(uuid);
+        // Default setup: island is owned by uuid, getIsland returns island
+        assertEquals("1000", pm.getLifetime(user));
+        // No island found
+        when(im.getIsland(world, user)).thenReturn(null);
+        when(im.getOwnedIslands(world, user)).thenReturn(Set.of());
+        assertEquals("", pm.getLifetime(user));
+    }
+
+    /**
+     * Test that my_island_lifetime_count returns the player's OWN island's count,
+     * not the team island they are currently visiting as a member.
+     */
+    @Test
+    void testGetLifetimeTeamMember() {
+        when(user.getUniqueId()).thenReturn(uuid);
+        // Set up a team island owned by someone else
+        Island teamIsland = mock(Island.class);
+        UUID teamOwnerUUID = UUID.randomUUID();
+        when(teamIsland.getOwner()).thenReturn(teamOwnerUUID);
+        // The user's primary island (via getIsland) is the team island they are visiting
+        when(im.getIsland(world, user)).thenReturn(teamIsland);
+        // The user owns a separate island, returned by getOwnedIslands
+        when(im.getOwnedIslands(world, user)).thenReturn(Set.of(island));
+        // island is the user's own island (owned by uuid), with blockNumber=1000 (lifetime >= blockNumber)
+        assertEquals("1000", pm.getLifetime(user));
+    }
+
+    /**
+     * Test method for {@link world.bentobox.aoneblock.AOneBlockPlaceholders#getLifetimeByLocation(world.bentobox.bentobox.api.user.User)}.
+     */
+    @Test
+    void testGetLifetimeByLocation() {
+        assertEquals("", pm.getLifetimeByLocation(user));
+        assertEquals("", pm.getLifetimeByLocation(null));
+        when(user.getUniqueId()).thenReturn(uuid);
+        assertEquals("1000", pm.getLifetimeByLocation(user));
+        when(im.getProtectedIslandAt(location)).thenReturn(Optional.empty());
+        assertEquals("", pm.getLifetimeByLocation(user));
     }
 
 }

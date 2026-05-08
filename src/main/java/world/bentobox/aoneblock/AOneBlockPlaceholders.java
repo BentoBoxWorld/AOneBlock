@@ -1,6 +1,5 @@
 package world.bentobox.aoneblock;
 
-import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
@@ -65,29 +64,22 @@ public class AOneBlockPlaceholders {
     }
 
     /**
-     * Get the user's island. Will get either the user's active island, or the island they own.
-     * If they own more than one, then one owned island is picked.
+     * Get the user's owned island. Returns the island owned by the user, not a team
+     * island they may be visiting as a member. If the user owns more than one island,
+     * one is picked.
      * @param user user
-     * @return island
+     * @return island owned by the user, or empty if they own none
      */
     private Optional<Island> getUsersIsland(User user) {
         // Get the active island for the user
         Island i = addon.getIslands().getIsland(addon.getOverWorld(), user);
         if (i != null && i.getOwner() != null && user.getUniqueId().equals(i.getOwner())) {
-            // Owner of this island and currently on this island
-            return Optional.ofNullable(i);
+            // User is the owner of their primary island
+            return Optional.of(i);
         }
 
-        // Check for other owned islands
-        List<Island> ownedIslands = addon.getIslands().getIslands(addon.getOverWorld(), user).stream()
-                .filter(is -> user.getUniqueId().equals(is.getOwner())).toList();
-        if (ownedIslands.size() == 1) {
-            // Replace with the owned island
-            i = ownedIslands.getFirst(); // pick one
-        }
-        // Return what we have found
-        return Optional.ofNullable(i);
-
+        // Find an island the user actually owns (not just a team island they are visiting)
+        return addon.getIslands().getOwnedIslands(addon.getOverWorld(), user).stream().findFirst();
     }
 
     public String getPhaseBlocksNames(User user) {
