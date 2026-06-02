@@ -330,6 +330,9 @@ public class CheckPhaseTest extends CommonTestSetup {
         // Neither the title nor any sound should be sent to an out-of-world player
         verify(mockPlayer, never()).showTitle(any(Title.class));
         verify(mockPlayer, never()).playSound(any(Location.class), anyString(), anyFloat(), anyFloat());
+        // ...but end-commands still run: command execution must NOT be coupled to the
+        // online/in-world notify gate that sounds and the title use.
+        verify(previous).getEndCommands();
         // Phase change still happens
         assertEquals("Next Phase", is.getPhaseName());
     }
