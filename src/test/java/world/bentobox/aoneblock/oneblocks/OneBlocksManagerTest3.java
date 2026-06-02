@@ -22,8 +22,8 @@ import java.util.jar.JarOutputStream;
 
 import org.bukkit.Material;
 import org.bukkit.block.Biome;
-import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jdt.annotation.Nullable;
