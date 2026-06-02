@@ -110,6 +110,8 @@ Each phase also has a name, an icon, a biome and the following sections:
 - start-commands
 - end-commands
 - end-commands-first-time
+- start-sound
+- end-sound
 - requirements
 - blocks
 - mobs
@@ -160,6 +162,31 @@ Examples:
   end-commands-first-time:
   - 'broadcast &c&l[!] &b[player] &fhas completed the &d&n[phase]&f phase for the first time.'
 ```
+### Sounds
+A sound can be played to the player when a phase starts (`start-sound`) and/or
+when a phase is completed (`end-sound`). The `end-sound` is played to the player
+who completes the phase at the moment they move on to the next one; the
+`start-sound` is played when they enter the new phase.
+
+The sound key is passed through verbatim, so in addition to the vanilla
+Minecraft sound keys you can use **custom resource-pack sounds** declared in your
+pack's `sounds.json` (e.g. `myresourcepack:phase.complete`). The pack must of
+course be applied to the player.
+
+The simplest form is just the sound key (volume and pitch default to `1.0`):
+```
+  start-sound: minecraft:ui.toast.challenge_complete
+  end-sound: myresourcepack:phase.complete
+```
+
+You can also specify volume and pitch with the expanded form:
+```
+  end-sound:
+    sound: myresourcepack:phase.complete
+    volume: 1.0
+    pitch: 1.2
+```
+
 ### Requirements
 
 You can stipulate a set of requirements to start the phase:

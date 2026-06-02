@@ -590,4 +590,80 @@ public class OneBlocksManagerTest3 extends CommonTestSetup {
 		verify(plugin).logError(org.mockito.ArgumentMatchers.contains("CHEST_WITH item is invalid"));
 	}
 
+	/**
+	 * Test that a plain-string start-sound / end-sound is parsed with default
+	 * volume and pitch, and supports custom resource-pack sound keys.
+	 */
+	@Test
+	void testInitBlockParsesStringSounds() throws InvalidConfigurationException, IOException {
+		String yaml = """
+                name: Plains
+                biome: PLAINS
+                blocks:
+                  GRASS_BLOCK: 1000
+                start-sound: minecraft:ui.toast.challenge_complete
+                end-sound: myresourcepack:phase.complete
+                """;
+		YamlConfiguration cfg = new YamlConfiguration();
+		cfg.loadFromString(yaml);
+
+		obm.initBlock("0", obPhase, cfg);
+
+		assertNotNull(obPhase.getStartSound());
+		assertEquals("minecraft:ui.toast.challenge_complete", obPhase.getStartSound().sound());
+		assertEquals(1F, obPhase.getStartSound().volume());
+		assertEquals(1F, obPhase.getStartSound().pitch());
+
+		assertNotNull(obPhase.getEndSound());
+		assertEquals("myresourcepack:phase.complete", obPhase.getEndSound().sound());
+	}
+
+	/**
+	 * Test that a section-form sound with explicit volume and pitch is parsed.
+	 */
+	@Test
+	void testInitBlockParsesSectionSound() throws InvalidConfigurationException, IOException {
+		String yaml = """
+                name: Plains
+                biome: PLAINS
+                blocks:
+                  GRASS_BLOCK: 1000
+                start-sound:
+                  sound: myresourcepack:fanfare
+                  volume: 0.5
+                  pitch: 1.5
+                """;
+		YamlConfiguration cfg = new YamlConfiguration();
+		cfg.loadFromString(yaml);
+
+		obm.initBlock("0", obPhase, cfg);
+
+		assertNotNull(obPhase.getStartSound());
+		assertEquals("myresourcepack:fanfare", obPhase.getStartSound().sound());
+		assertEquals(0.5F, obPhase.getStartSound().volume());
+		assertEquals(1.5F, obPhase.getStartSound().pitch());
+		assertNull(obPhase.getEndSound());
+	}
+
+	/**
+	 * Test that no sounds are set when the keys are absent or empty.
+	 */
+	@Test
+	void testInitBlockNoSounds() throws InvalidConfigurationException, IOException {
+		String yaml = """
+                name: Plains
+                biome: PLAINS
+                blocks:
+                  GRASS_BLOCK: 1000
+                start-sound: ""
+                """;
+		YamlConfiguration cfg = new YamlConfiguration();
+		cfg.loadFromString(yaml);
+
+		obm.initBlock("0", obPhase, cfg);
+
+		assertNull(obPhase.getStartSound());
+		assertNull(obPhase.getEndSound());
+	}
+
 }

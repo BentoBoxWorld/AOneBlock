@@ -70,6 +70,11 @@ public class OneBlocksManager {
     private static final String START_COMMANDS = "start-commands";
     private static final String END_COMMANDS = "end-commands";
     private static final String END_COMMANDS_FIRST_TIME = "end-commands-first-time";
+    private static final String START_SOUND = "start-sound";
+    private static final String END_SOUND = "end-sound";
+    private static final String SOUND = "sound";
+    private static final String VOLUME = "volume";
+    private static final String PITCH = "pitch";
     private static final String REQUIREMENTS = "requirements";
     private static final String BLOCK = "Block ";
     private static final String BUT_ALREADY_SET_TO = " but already set to ";
@@ -226,6 +231,42 @@ public class OneBlocksManager {
                     phaseConfig.getString(HOLOGRAMS), obPhase.getHologramLines(), DUPLICATE);
             addHologramLines(obPhase, phaseConfig.getConfigurationSection(HOLOGRAMS));
         }
+
+        // Add phase sounds (supports custom resource-pack sounds)
+        if (phaseConfig.contains(START_SOUND)) {
+            obPhase.setStartSound(parseSound(phaseConfig, START_SOUND));
+        }
+        if (phaseConfig.contains(END_SOUND)) {
+            obPhase.setEndSound(parseSound(phaseConfig, END_SOUND));
+        }
+    }
+
+    /**
+     * Parses a {@link PhaseSound} from a config key. The key may be a plain
+     * string holding the (namespaced) sound key, or a section with
+     * {@code sound}, {@code volume} and {@code pitch} entries. Custom
+     * resource-pack sound keys are supported because the value is passed
+     * through verbatim.
+     *
+     * @param phaseConfig the phase configuration section
+     * @param key         the config key to read (start-sound / end-sound)
+     * @return a PhaseSound, or {@code null} if no usable sound key was supplied
+     */
+    PhaseSound parseSound(ConfigurationSection phaseConfig, String key) {
+        if (phaseConfig.isConfigurationSection(key)) {
+            ConfigurationSection section = phaseConfig.getConfigurationSection(key);
+            String sound = section.getString(SOUND);
+            if (sound == null || sound.isEmpty()) {
+                return null;
+            }
+            return new PhaseSound(sound, (float) section.getDouble(VOLUME, 1.0D),
+                    (float) section.getDouble(PITCH, 1.0D));
+        }
+        String sound = phaseConfig.getString(key);
+        if (sound == null || sound.isEmpty()) {
+            return null;
+        }
+        return new PhaseSound(sound, 1F, 1F);
     }
 
     private void checkNotDuplicate(boolean alreadySet, String blockNumber, String field,
@@ -684,6 +725,7 @@ public class OneBlocksManager {
             saveEntities(phSec, p);
             saveHolos(phSec, p);
             saveCommands(phSec, p);
+            saveSounds(phSec, p);
         }
         try {
             // Save
@@ -700,6 +742,21 @@ public class OneBlocksManager {
         phSec.set(START_COMMANDS, p.getStartCommands());
         phSec.set(END_COMMANDS, p.getEndCommands());
 
+    }
+
+    private void saveSounds(ConfigurationSection phSec, OneBlockPhase p) {
+        saveSound(phSec, START_SOUND, p.getStartSound());
+        saveSound(phSec, END_SOUND, p.getEndSound());
+    }
+
+    private void saveSound(ConfigurationSection phSec, String key, PhaseSound sound) {
+        if (sound == null) {
+            return;
+        }
+        ConfigurationSection section = phSec.createSection(key);
+        section.set(SOUND, sound.sound());
+        section.set(VOLUME, (double) sound.volume());
+        section.set(PITCH, (double) sound.pitch());
     }
 
     private void saveHolos(ConfigurationSection phSec, OneBlockPhase p) {

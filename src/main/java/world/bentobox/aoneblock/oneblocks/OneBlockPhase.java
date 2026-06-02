@@ -58,6 +58,8 @@ public class OneBlockPhase {
     private List<Requirement> requirements;
     private Map<Integer, OneBlockObject> fixedBlocks;
     private Map<Integer, String> holograms;
+    private PhaseSound startSound;
+    private PhaseSound endSound;
 
     /**
      * Construct a phase that starts at blockNumber. Phase continues forever until
@@ -445,6 +447,34 @@ public class OneBlockPhase {
         this.holograms = hologramLines;
     }
 
+    /**
+     * @return the sound played when this phase starts, or {@code null} if none
+     */
+    public PhaseSound getStartSound() {
+        return startSound;
+    }
+
+    /**
+     * @param startSound the sound to play when this phase starts
+     */
+    public void setStartSound(PhaseSound startSound) {
+        this.startSound = startSound;
+    }
+
+    /**
+     * @return the sound played when this phase is completed, or {@code null} if none
+     */
+    public PhaseSound getEndSound() {
+        return endSound;
+    }
+
+    /**
+     * @param endSound the sound to play when this phase is completed
+     */
+    public void setEndSound(PhaseSound endSound) {
+        this.endSound = endSound;
+    }
+
     @Override
     public String toString() {
         return "OneBlockPhase [" + (phaseName != null ? "phaseName=" + phaseName + ", " : "")
@@ -458,6 +488,8 @@ public class OneBlockPhase {
                 + (endCommands != null ? "endCommands=" + endCommands + ", " : "")
                 + (requirements != null ? "requirements=" + requirements + ", " : "")
                 + (fixedBlocks != null ? "fixedBlocks=" + fixedBlocks + ", " : "")
+                + (startSound != null ? "startSound=" + startSound + ", " : "")
+                + (endSound != null ? "endSound=" + endSound + ", " : "")
                 + (holograms != null ? "holograms=" + holograms : "") + "]";
     }
 

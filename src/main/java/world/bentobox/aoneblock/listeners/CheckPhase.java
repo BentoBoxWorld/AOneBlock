@@ -79,6 +79,10 @@ public class CheckPhase {
 				oldPhase.getFirstTimeEndCommands()),
 			"Commands run for first time completing " + oldPhaseName);
 	    }
+	    // Play the previous phase's completion sound
+	    if (oldPhase.getEndSound() != null) {
+		oldPhase.getEndSound().play(user.getPlayer());
+	    }
 	});
 	// Set the phase name
 	is.setPhaseName(newPhaseName);
@@ -90,6 +94,10 @@ public class CheckPhase {
 	Util.runCommands(user,
 		replacePlaceholders(player, newPhaseName, phase.getBlockNumber(), i, phase.getStartCommands()),
 		"Commands run for start of " + newPhaseName);
+	// Play the new phase's start sound
+	if (phase.getStartSound() != null) {
+	    phase.getStartSound().play(onlinePlayer);
+	}
 
 	blockListener.saveIsland(i);
     }
