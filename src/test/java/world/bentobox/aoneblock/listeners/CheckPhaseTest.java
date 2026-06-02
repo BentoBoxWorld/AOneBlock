@@ -338,6 +338,49 @@ public class CheckPhaseTest extends CommonTestSetup {
     }
 
     /**
+     * Test that a phase transition triggered by an NPC/minion while the island owner
+     * is offline does not throw (User.getPlayer() would NPE on a non-player user), and
+     * that end-commands and the phase change still happen with no sound or title.
+     * Test method for
+     * {@link world.bentobox.aoneblock.listeners.CheckPhase#setNewPhase(Player, Island, world.bentobox.aoneblock.dataobjects.OneBlockIslands, world.bentobox.aoneblock.oneblocks.OneBlockPhase)}
+     */
+    @Test
+    void testSetNewPhaseOfflineOwnerNpcPath() {
+        // NPC/minion breaks the block; user resolves to the island owner, who is offline.
+        // BentoBox's User.getPlayer() throws "User is not a player!" for a non-player user,
+        // so this mock reproduces that contract - the code must never call getPlayer() here.
+        when(mockPlayer.hasMetadata("NPC")).thenReturn(true);
+        User offlineOwner = mock(User.class);
+        when(offlineOwner.isPlayer()).thenReturn(false);
+        when(offlineOwner.getPlayer()).thenThrow(new NullPointerException("User is not a player!"));
+        when(pm.getUser(any(UUID.class))).thenReturn(offlineOwner);
+
+        is = new OneBlockIslands(UUID.randomUUID().toString());
+        is.setPhaseName("Previous");
+        is.setBlockNumber(500);
+        is.setLifetime(500L);
+        phase = new OneBlockPhase("500");
+        phase.setPhaseName("Next Phase");
+        phase.setStartCommands(List.of());
+        phase.setStartSound(new PhaseSound("minecraft:ui.toast.challenge_complete", 1F, 1F));
+
+        OneBlockPhase previous = mock(OneBlockPhase.class);
+        when(previous.getPhaseName()).thenReturn("Previous");
+        when(previous.getEndCommands()).thenReturn(List.of());
+        when(previous.getFirstTimeEndCommands()).thenReturn(List.of());
+        when(previous.getEndSound()).thenReturn(new PhaseSound("custompack:phase.complete", 1F, 1F));
+        when(obm.getPhase("Previous")).thenReturn(Optional.of(previous));
+
+        // Must not throw even though User.getPlayer() would NPE on the offline owner
+        bl.setNewPhase(mockPlayer, island, is, phase);
+
+        // End-commands still run and the phase advances; no sound/title to a non-player
+        verify(previous).getEndCommands();
+        assertEquals("Next Phase", is.getPhaseName());
+        verify(mockPlayer, never()).playSound(any(Location.class), anyString(), anyFloat(), anyFloat());
+    }
+
+    /**
      * Test method for
      * {@link world.bentobox.aoneblock.listeners.BlockListener#replacePlaceholders(org.bukkit.entity.Player, java.lang.String, java.lang.String, world.bentobox.bentobox.database.objects.Island, java.util.List)}.
      */

@@ -70,9 +70,10 @@ public class CheckPhase {
 	// Sounds are gated by the same guard as the phase title so that, e.g. on the NPC/minion
 	// path where user defaults to the island owner, we never play a phase sound to an owner
 	// who is offline or busy in another world.
-	final Player onlinePlayer = user.getPlayer();
-	final boolean canNotify = user.isPlayer() && user.isOnline() && addon.inWorld(user.getWorld())
-		&& onlinePlayer != null;
+	// User.getPlayer() throws if the user is not a player (offline owner on the NPC/minion
+	// path), so it must only be called once isPlayer() is known true.
+	final Player onlinePlayer = user.isPlayer() ? user.getPlayer() : null;
+	final boolean canNotify = onlinePlayer != null && user.isOnline() && addon.inWorld(user.getWorld());
 
 	// Run previous phase end commands
 	oneBlocksManager.getPhase(is.getPhaseName()).ifPresent(oldPhase -> {
