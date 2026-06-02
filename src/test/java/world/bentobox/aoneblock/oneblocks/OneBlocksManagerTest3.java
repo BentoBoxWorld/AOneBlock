@@ -23,6 +23,7 @@ import java.util.jar.JarOutputStream;
 import org.bukkit.Material;
 import org.bukkit.block.Biome;
 import org.bukkit.configuration.InvalidConfigurationException;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jdt.annotation.Nullable;
@@ -664,6 +665,104 @@ public class OneBlocksManagerTest3 extends CommonTestSetup {
 
 		assertNull(obPhase.getStartSound());
 		assertNull(obPhase.getEndSound());
+	}
+
+	/**
+	 * Test that the section form is parsed for end-sound too (not only start-sound).
+	 */
+	@Test
+	void testInitBlockParsesSectionEndSound() throws InvalidConfigurationException, IOException {
+		String yaml = """
+                name: Plains
+                biome: PLAINS
+                blocks:
+                  GRASS_BLOCK: 1000
+                end-sound:
+                  sound: custompack:phase.complete
+                  volume: 0.25
+                  pitch: 2.0
+                """;
+		YamlConfiguration cfg = new YamlConfiguration();
+		cfg.loadFromString(yaml);
+
+		obm.initBlock("0", obPhase, cfg);
+
+		assertNull(obPhase.getStartSound());
+		assertNotNull(obPhase.getEndSound());
+		assertEquals("custompack:phase.complete", obPhase.getEndSound().sound());
+		assertEquals(0.25F, obPhase.getEndSound().volume());
+		assertEquals(2.0F, obPhase.getEndSound().pitch());
+	}
+
+	/**
+	 * Test that a sound section without a 'sound' key is ignored (returns null).
+	 */
+	@Test
+	void testParseSoundSectionWithoutSoundKey() throws InvalidConfigurationException, IOException {
+		String yaml = """
+                start-sound:
+                  volume: 1.0
+                  pitch: 1.0
+                """;
+		YamlConfiguration cfg = new YamlConfiguration();
+		cfg.loadFromString(yaml);
+
+		assertNull(obm.parseSound(cfg, "start-sound"));
+	}
+
+	/**
+	 * Test that a non-string, non-section value (e.g. a list) is ignored.
+	 */
+	@Test
+	void testParseSoundInvalidTypeIsIgnored() throws InvalidConfigurationException, IOException {
+		String yaml = """
+                start-sound:
+                - one
+                - two
+                """;
+		YamlConfiguration cfg = new YamlConfiguration();
+		cfg.loadFromString(yaml);
+
+		assertNull(obm.parseSound(cfg, "start-sound"));
+	}
+
+	/**
+	 * Test that sounds survive a save and reload (string form is preserved
+	 * semantically, even though it is rewritten as the expanded section form).
+	 */
+	@Test
+	void testSaveSoundRoundTrip() throws InvalidConfigurationException, IOException {
+		// Use a block number that is not in the shipped phases so the written file
+		// cannot collide with a real phase if a later test scans the phases folder.
+		OneBlockPhase phase = new OneBlockPhase("999000");
+		phase.setPhaseName("Roundtrip Phase");
+		phase.setStartSound(new PhaseSound("minecraft:ui.toast.challenge_complete", 1F, 1F));
+		phase.setEndSound(new PhaseSound("custompack:phase.complete", 0.5F, 1.2F));
+
+		File saved = new File("addons/AOneBlock/phases/999000_roundtrip_phase.yml");
+		File savedChests = new File("addons/AOneBlock/phases/999000_roundtrip_phase_chests.yml");
+		try {
+			assertTrue(obm.savePhase(phase));
+			assertTrue(saved.exists());
+			YamlConfiguration cfg = new YamlConfiguration();
+			cfg.load(saved);
+			ConfigurationSection section = cfg.getConfigurationSection("999000");
+
+			PhaseSound start = obm.parseSound(section, "start-sound");
+			PhaseSound end = obm.parseSound(section, "end-sound");
+			assertNotNull(start);
+			assertEquals("minecraft:ui.toast.challenge_complete", start.sound());
+			assertEquals(1F, start.volume());
+			assertEquals(1F, start.pitch());
+			assertNotNull(end);
+			assertEquals("custompack:phase.complete", end.sound());
+			assertEquals(0.5F, end.volume());
+			assertEquals(1.2F, end.pitch());
+		} finally {
+			// Never leave the written files behind: loadPhases() in other tests scans this folder.
+			saved.delete();
+			savedChests.delete();
+		}
 	}
 
 }

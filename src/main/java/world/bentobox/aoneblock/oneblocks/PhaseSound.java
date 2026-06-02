@@ -11,9 +11,14 @@ import org.eclipse.jdt.annotation.Nullable;
  * vanilla Minecraft sound keys, e.g. {@code minecraft:ui.toast.challenge_complete}
  * or {@code myresourcepack:phase.complete}.
  *
+ * Values are passed straight through to Bukkit; this record does not clamp
+ * them. Minecraft itself treats a volume above 1.0 as an increased hearing
+ * radius (not louder) and clamps pitch client-side to the 0.5 - 2.0 range.
+ *
  * @param sound  the (namespaced) sound key to play
- * @param volume the volume, where 1.0 is normal
- * @param pitch  the pitch, where 1.0 is normal (valid range 0.5 - 2.0)
+ * @param volume the volume, where 1.0 is normal; values above 1.0 increase the
+ *               distance at which the sound can be heard
+ * @param pitch  the pitch, where 1.0 is normal (Minecraft clamps to 0.5 - 2.0)
  *
  * @author tastybento
  */

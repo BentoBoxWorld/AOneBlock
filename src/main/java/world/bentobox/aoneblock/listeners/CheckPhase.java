@@ -66,6 +66,14 @@ public class CheckPhase {
 	String rawPhaseName = phase.getPhaseName();
 	String newPhaseName = rawPhaseName == null ? "" : rawPhaseName;
 
+	// Whether the user can be notified (titles, sounds): online, a player, and in this world.
+	// Sounds are gated by the same guard as the phase title so that, e.g. on the NPC/minion
+	// path where user defaults to the island owner, we never play a phase sound to an owner
+	// who is offline or busy in another world.
+	final Player onlinePlayer = user.getPlayer();
+	final boolean canNotify = user.isPlayer() && user.isOnline() && addon.inWorld(user.getWorld())
+		&& onlinePlayer != null;
+
 	// Run previous phase end commands
 	oneBlocksManager.getPhase(is.getPhaseName()).ifPresent(oldPhase -> {
 	    String oldPhaseName = oldPhase.getPhaseName() == null ? "" : oldPhase.getPhaseName();
@@ -80,14 +88,13 @@ public class CheckPhase {
 			"Commands run for first time completing " + oldPhaseName);
 	    }
 	    // Play the previous phase's completion sound
-	    if (oldPhase.getEndSound() != null) {
-		oldPhase.getEndSound().play(user.getPlayer());
+	    if (canNotify && oldPhase.getEndSound() != null) {
+		oldPhase.getEndSound().play(onlinePlayer);
 	    }
 	});
 	// Set the phase name
 	is.setPhaseName(newPhaseName);
-	Player onlinePlayer = user.getPlayer();
-	if (user.isPlayer() && user.isOnline() && addon.inWorld(user.getWorld()) && onlinePlayer != null) {
+	if (canNotify) {
 	    onlinePlayer.showTitle(Title.title(Component.text(newPhaseName), Component.empty()));
 	}
 	// Run phase start commands
@@ -95,7 +102,7 @@ public class CheckPhase {
 		replacePlaceholders(player, newPhaseName, phase.getBlockNumber(), i, phase.getStartCommands()),
 		"Commands run for start of " + newPhaseName);
 	// Play the new phase's start sound
-	if (phase.getStartSound() != null) {
+	if (canNotify && phase.getStartSound() != null) {
 	    phase.getStartSound().play(onlinePlayer);
 	}
 

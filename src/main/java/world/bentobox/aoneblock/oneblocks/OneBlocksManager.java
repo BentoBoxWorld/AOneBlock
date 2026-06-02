@@ -234,9 +234,13 @@ public class OneBlocksManager {
 
         // Add phase sounds (supports custom resource-pack sounds)
         if (phaseConfig.contains(START_SOUND)) {
+            checkNotDuplicate(obPhase.getStartSound() != null, blockNumber, "Start sound",
+                    phaseConfig.getString(START_SOUND), obPhase.getStartSound(), DUPLICATE);
             obPhase.setStartSound(parseSound(phaseConfig, START_SOUND));
         }
         if (phaseConfig.contains(END_SOUND)) {
+            checkNotDuplicate(obPhase.getEndSound() != null, blockNumber, "End sound",
+                    phaseConfig.getString(END_SOUND), obPhase.getEndSound(), DUPLICATE);
             obPhase.setEndSound(parseSound(phaseConfig, END_SOUND));
         }
     }
@@ -257,13 +261,20 @@ public class OneBlocksManager {
             ConfigurationSection section = phaseConfig.getConfigurationSection(key);
             String sound = section.getString(SOUND);
             if (sound == null || sound.isEmpty()) {
+                addon.logWarning("Phase sound '" + key + "' has no '" + SOUND + "' key set - ignoring it.");
                 return null;
             }
             return new PhaseSound(sound, (float) section.getDouble(VOLUME, 1.0D),
                     (float) section.getDouble(PITCH, 1.0D));
         }
+        // Only a plain string is a valid scalar form; lists and other types are not.
+        if (!phaseConfig.isString(key)) {
+            addon.logWarning("Phase sound '" + key + "' must be a sound key string or a section with a '"
+                    + SOUND + "' key - ignoring it.");
+            return null;
+        }
         String sound = phaseConfig.getString(key);
-        if (sound == null || sound.isEmpty()) {
+        if (sound.isEmpty()) {
             return null;
         }
         return new PhaseSound(sound, 1F, 1F);

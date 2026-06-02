@@ -2,6 +2,7 @@ package world.bentobox.aoneblock.listeners;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyFloat;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
@@ -15,6 +16,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.eclipse.jdt.annotation.NonNull;
 import org.junit.jupiter.api.AfterEach;
@@ -31,6 +34,7 @@ import world.bentobox.aoneblock.CommonTestSetup;
 import world.bentobox.aoneblock.dataobjects.OneBlockIslands;
 import world.bentobox.aoneblock.oneblocks.OneBlockPhase;
 import world.bentobox.aoneblock.oneblocks.OneBlocksManager;
+import world.bentobox.aoneblock.oneblocks.PhaseSound;
 import world.bentobox.bank.Bank;
 import world.bentobox.bank.BankManager;
 import world.bentobox.bank.data.Money;
@@ -264,6 +268,70 @@ public class CheckPhaseTest extends CommonTestSetup {
         verify(mockPlayer).showTitle(titleCaptor.capture());
         assertEquals(Component.text("Next Phase"), titleCaptor.getValue().title());
 
+    }
+
+    /**
+     * Test that the previous phase's end-sound and the new phase's start-sound are
+     * both played to the player, with the configured volume and pitch.
+     * Test method for
+     * {@link world.bentobox.aoneblock.listeners.CheckPhase#setNewPhase(Player, Island, world.bentobox.aoneblock.dataobjects.OneBlockIslands, world.bentobox.aoneblock.oneblocks.OneBlockPhase)}
+     */
+    @Test
+    void testSetNewPhasePlaysSounds() {
+        is = new OneBlockIslands(UUID.randomUUID().toString());
+        is.setPhaseName("Previous");
+        is.setBlockNumber(500);
+        is.setLifetime(500L);
+        phase = new OneBlockPhase("500");
+        phase.setPhaseName("Next Phase");
+        phase.setStartSound(new PhaseSound("minecraft:ui.toast.challenge_complete", 1F, 1F));
+
+        OneBlockPhase previous = mock(OneBlockPhase.class);
+        when(previous.getPhaseName()).thenReturn("Previous");
+        when(previous.getEndSound()).thenReturn(new PhaseSound("custompack:phase.complete", 0.5F, 1.2F));
+        when(obm.getPhase("Previous")).thenReturn(Optional.of(previous));
+
+        bl.setNewPhase(mockPlayer, island, is, phase);
+
+        // End sound of the phase being completed, with its volume/pitch
+        verify(mockPlayer).playSound(any(Location.class), eq("custompack:phase.complete"), eq(0.5F), eq(1.2F));
+        // Start sound of the phase being entered
+        verify(mockPlayer).playSound(any(Location.class), eq("minecraft:ui.toast.challenge_complete"), eq(1F),
+                eq(1F));
+    }
+
+    /**
+     * Test that phase sounds are suppressed (like the title) when the resolved
+     * user - e.g. the island owner on the NPC/minion path - is online but in a
+     * different world. Test method for
+     * {@link world.bentobox.aoneblock.listeners.CheckPhase#setNewPhase(Player, Island, world.bentobox.aoneblock.dataobjects.OneBlockIslands, world.bentobox.aoneblock.oneblocks.OneBlockPhase)}
+     */
+    @Test
+    void testSetNewPhaseSoundSuppressedInOtherWorld() {
+        // Player is online but in another world (addon.inWorld(otherWorld) is false by default)
+        World otherWorld = mock(World.class);
+        when(mockPlayer.getWorld()).thenReturn(otherWorld);
+
+        is = new OneBlockIslands(UUID.randomUUID().toString());
+        is.setPhaseName("Previous");
+        is.setBlockNumber(500);
+        is.setLifetime(500L);
+        phase = new OneBlockPhase("500");
+        phase.setPhaseName("Next Phase");
+        phase.setStartSound(new PhaseSound("minecraft:ui.toast.challenge_complete", 1F, 1F));
+
+        OneBlockPhase previous = mock(OneBlockPhase.class);
+        when(previous.getPhaseName()).thenReturn("Previous");
+        when(previous.getEndSound()).thenReturn(new PhaseSound("custompack:phase.complete", 1F, 1F));
+        when(obm.getPhase("Previous")).thenReturn(Optional.of(previous));
+
+        bl.setNewPhase(mockPlayer, island, is, phase);
+
+        // Neither the title nor any sound should be sent to an out-of-world player
+        verify(mockPlayer, never()).showTitle(any(Title.class));
+        verify(mockPlayer, never()).playSound(any(Location.class), anyString(), anyFloat(), anyFloat());
+        // Phase change still happens
+        assertEquals("Next Phase", is.getPhaseName());
     }
 
     /**
