@@ -350,8 +350,11 @@ public class BlockListener extends FlagListener implements Listener {
      * @param world - world where the block is being broken
      */
     private void process(@NonNull Cancellable e, @NonNull Island island, @Nullable Player player, @NonNull World world) {
-        // Check if the player has authority to break the magic block
-        if (!checkIsland((@NonNull Event) e, player, island.getCenter(), addon.MAGIC_BLOCK)) {
+        // Check if the player has authority to break the magic block. When there is no
+        // player (e.g. the block is broken by a JetsMinions minion) the protection flag
+        // check is skipped: it requires a User and would otherwise throw an NPE inside
+        // BentoBox's FlagListener. See https://github.com/BentoBoxWorld/AOneBlock/issues/525
+        if (player != null && !checkIsland((@NonNull Event) e, player, island.getCenter(), addon.MAGIC_BLOCK)) {
             // Not allowed
             return;
         }
