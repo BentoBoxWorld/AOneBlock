@@ -9,8 +9,10 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.ArgumentMatchers.anyFloat;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -70,6 +72,7 @@ import world.bentobox.aoneblock.oneblocks.OneBlocksManager;
 import world.bentobox.bank.Bank;
 import world.bentobox.bank.BankManager;
 import world.bentobox.bank.data.Money;
+import world.bentobox.bentobox.api.events.island.IslandCreatedEvent;
 import world.bentobox.bentobox.api.user.User;
 import world.bentobox.bentobox.database.AbstractDatabaseHandler;
 import world.bentobox.bentobox.database.DatabaseSetup;
@@ -115,7 +118,6 @@ class BlockListenerTest2 extends CommonTestSetup {
     private MockedStatic<DatabaseSetup> mockDb;
 
     /**
-     * @throws java.lang.Exception
      */
     @SuppressWarnings("unchecked")
     @Override
@@ -1002,6 +1004,31 @@ class BlockListenerTest2 extends CommonTestSetup {
 
         // Not an armor stand → early return, no processing
         verify(im, never()).getIslandAt(any());
+    }
+
+    /**
+     * Test method for
+     * {@link world.bentobox.aoneblock.listeners.BlockListener#onBlockBreakByMinion(EntityInteractEvent)}
+     * Regression test for https://github.com/BentoBoxWorld/AOneBlock/issues/525 —
+     * a minion (armor stand) breaking the magic block has no associated player, so the
+     * protection-flag check must be skipped rather than passing a null player into
+     * BentoBox's FlagListener (which would throw an NPE). The break should be processed
+     * so the magic block respawns.
+     */
+    @Test
+    void testOnBlockBreakByMinionProcessesWithoutPlayer() {
+        when(obm.getPhase(anyInt())).thenReturn(phase);
+
+        EntityInteractEvent e = mock(EntityInteractEvent.class);
+        when(e.getBlock()).thenReturn(magicBlock);
+        when(e.getEntityType()).thenReturn(EntityType.ARMOR_STAND);
+        when(magicBlock.getWorld()).thenReturn(world);
+
+        // Must not throw an NPE from the flag check
+        assertDoesNotThrow(() -> bl.onBlockBreakByMinion(e));
+
+        // Processing proceeded past the (skipped) flag check into phase handling
+        verify(obm, atLeastOnce()).getPhase(anyInt());
     }
 
     /**
