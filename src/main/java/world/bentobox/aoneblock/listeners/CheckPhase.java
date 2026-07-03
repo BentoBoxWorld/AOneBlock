@@ -35,7 +35,6 @@ public class CheckPhase {
 
     /**
      * @param addon         AOneBlock
-     * @param blockListener
      */
     public CheckPhase(AOneBlock addon, BlockListener blockListener) {
 	this.addon = addon;
@@ -82,9 +81,10 @@ public class CheckPhase {
 	});
 	// Set the phase name
 	is.setPhaseName(newPhaseName);
-	Player onlinePlayer = user.getPlayer();
-	if (user.isPlayer() && user.isOnline() && addon.inWorld(user.getWorld()) && onlinePlayer != null) {
-	    onlinePlayer.showTitle(Title.title(Component.text(newPhaseName), Component.empty()));
+	// user.getPlayer() is @NonNull and throws for non-players, so it must be
+	// called only after isPlayer() has short-circuited.
+	if (user.isPlayer() && user.isOnline() && addon.inWorld(user.getWorld())) {
+	    user.getPlayer().showTitle(Title.title(Component.text(newPhaseName), Component.empty()));
 	}
 	// Run phase start commands
 	Util.runCommands(user,

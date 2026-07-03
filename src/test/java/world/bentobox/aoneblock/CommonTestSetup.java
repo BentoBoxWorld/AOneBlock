@@ -27,16 +27,13 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Player.Spigot;
 import org.bukkit.event.entity.EntityExplodeEvent;
-import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.inventory.ItemFactory;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.metadata.MetadataValue;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.util.Vector;
-import org.eclipse.jdt.annotation.Nullable;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.mockbukkit.mockbukkit.MockBukkit;
@@ -242,7 +239,6 @@ public abstract class CommonTestSetup {
     }
 
     /**
-     * @throws Exception
      */
     @AfterEach
     public void tearDown() throws Exception {
@@ -266,7 +262,7 @@ public abstract class CommonTestSetup {
 
     /**
      * Check that spigot sent the message
-     * @param message - message to check
+     * @param expectedMessage - message to check
      */
     public void checkSpigotMessage(String expectedMessage) {
         checkSpigotMessage(expectedMessage, 1);
@@ -284,7 +280,9 @@ public abstract class CommonTestSetup {
         List<TextComponent> capturedMessages = captor.getAllValues();
 
         // Count the number of occurrences of the expectedMessage in the captured messages
-        long actualOccurrences = capturedMessages.stream().map(component -> component.toLegacyText()) // Convert each TextComponent to plain text
+        // NOSONAR S1612: BaseComponent overloads toLegacyText() (instance) and toLegacyText(BaseComponent...) (static),
+        // so a method reference is ambiguous and will not compile; the lambda is required.
+        long actualOccurrences = capturedMessages.stream().map(component -> component.toLegacyText()) // NOSONAR
                 .filter(messageText -> messageText.contains(expectedMessage)) // Check if the message contains the expected text
                 .count(); // Count how many times the expected message appears
 
@@ -295,20 +293,9 @@ public abstract class CommonTestSetup {
 
     /**
      * Get the exploded event
-     * @param entity
-     * @param l
-     * @param list
-     * @return
      */
     public EntityExplodeEvent getExplodeEvent(Entity entity, Location l, List<Block> list) {
         return new EntityExplodeEvent(entity, l, list, 0, org.bukkit.ExplosionResult.DESTROY);
-    }
-
-    public PlayerDeathEvent getPlayerDeathEvent(Player player, List<ItemStack> drops, int droppedExp, int newExp,
-            int newTotalExp, int newLevel, @Nullable String deathMessage) {
-        //Technically this null is not allowed, but it works right now
-        return new PlayerDeathEvent(player, null, drops, droppedExp, newExp,
-                newTotalExp, newLevel, deathMessage);
     }
 
 }

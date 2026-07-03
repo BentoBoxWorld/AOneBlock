@@ -28,7 +28,6 @@ public class OneBlockIslandsTest extends CommonTestSetup {
     private String id;
 
     /**
-     * @throws java.lang.Exception
      */
     @Override
     @BeforeEach
@@ -39,7 +38,6 @@ public class OneBlockIslandsTest extends CommonTestSetup {
     }
 
     /**
-     * @throws java.lang.Exception
      */
     @Override
     @AfterEach

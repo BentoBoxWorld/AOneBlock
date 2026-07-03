@@ -72,7 +72,6 @@ public class IslandSetCountCommandTest extends CommonTestSetup {
     }
 
     /**
-     * @throws java.lang.Exception
      */
     @SuppressWarnings("unchecked")
     @Override

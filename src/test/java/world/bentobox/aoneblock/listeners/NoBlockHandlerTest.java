@@ -39,7 +39,6 @@ public class NoBlockHandlerTest extends CommonTestSetup {
     private BlockListener bl;
  
     /**
-     * @throws java.lang.Exception
      */
     @Override
     @BeforeEach
@@ -71,7 +70,6 @@ public class NoBlockHandlerTest extends CommonTestSetup {
     }
 
     /**
-     * @throws java.lang.Exception
      */
     @Override
     @AfterEach

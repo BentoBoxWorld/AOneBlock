@@ -46,7 +46,6 @@ public class StartSafetyListenerTest extends CommonTestSetup {
 
     private final @NonNull WSettings ws = new WSettings();
     /**
-     * @throws java.lang.Exception
      */
     @Override
     @BeforeEach
@@ -82,7 +81,6 @@ public class StartSafetyListenerTest extends CommonTestSetup {
     }
 
     /**
-     * @throws java.lang.Exception
      */
     @Override
     @AfterEach

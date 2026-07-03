@@ -6,8 +6,12 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 /**
  * Unit tests for {@link CraftEngineCustomBlock#fromMap(Map)}.
@@ -30,70 +34,29 @@ class CraftEngineCustomBlockTest {
         assertTrue(result.isEmpty(), "Should return empty when 'id' is missing");
     }
 
-    @Test
-    void fromMapReturnsEmptyWhenIdIsNull() {
+    /**
+     * A present-but-invalid {@code id} value must always yield an empty result.
+     */
+    @ParameterizedTest(name = "{1}")
+    @MethodSource("invalidIdValues")
+    void fromMapReturnsEmptyForInvalidId(Object idValue, String description) {
         Map<String, Object> map = new LinkedHashMap<>();
         map.put("type", "craftengine");
-        map.put("id", null);
+        map.put("id", idValue);
 
         var result = CraftEngineCustomBlock.fromMap(map);
 
-        assertTrue(result.isEmpty(), "Should return empty when 'id' is null");
+        assertTrue(result.isEmpty(), "Should return empty when " + description);
     }
 
-    @Test
-    void fromMapReturnsEmptyWhenIdIsBlank() {
-        Map<String, Object> map = new LinkedHashMap<>();
-        map.put("type", "craftengine");
-        map.put("id", "   ");
-
-        var result = CraftEngineCustomBlock.fromMap(map);
-
-        assertTrue(result.isEmpty(), "Should return empty when 'id' is blank");
-    }
-
-    @Test
-    void fromMapReturnsEmptyWhenIdIsNonStringValue() {
-        Map<String, Object> map = new LinkedHashMap<>();
-        map.put("type", "craftengine");
-        map.put("id", 42); // integer, not a String
-
-        var result = CraftEngineCustomBlock.fromMap(map);
-
-        assertTrue(result.isEmpty(), "Should return empty when 'id' is not a String");
-    }
-
-    @Test
-    void fromMapReturnsEmptyWhenIdHasNoColon() {
-        Map<String, Object> map = new LinkedHashMap<>();
-        map.put("type", "craftengine");
-        map.put("id", "nocolon");
-
-        var result = CraftEngineCustomBlock.fromMap(map);
-
-        assertTrue(result.isEmpty(), "Should return empty when 'id' has no colon");
-    }
-
-    @Test
-    void fromMapReturnsEmptyWhenIdHasEmptyNamespace() {
-        Map<String, Object> map = new LinkedHashMap<>();
-        map.put("type", "craftengine");
-        map.put("id", ":key");
-
-        var result = CraftEngineCustomBlock.fromMap(map);
-
-        assertTrue(result.isEmpty(), "Should return empty when namespace part is empty");
-    }
-
-    @Test
-    void fromMapReturnsEmptyWhenIdHasEmptyKey() {
-        Map<String, Object> map = new LinkedHashMap<>();
-        map.put("type", "craftengine");
-        map.put("id", "namespace:");
-
-        var result = CraftEngineCustomBlock.fromMap(map);
-
-        assertTrue(result.isEmpty(), "Should return empty when key part is empty");
+    static Stream<Arguments> invalidIdValues() {
+        return Stream.of(
+                Arguments.of(null, "'id' is null"),
+                Arguments.of("   ", "'id' is blank"),
+                Arguments.of(42, "'id' is not a String"),
+                Arguments.of("nocolon", "'id' has no colon"),
+                Arguments.of(":key", "namespace part is empty"),
+                Arguments.of("namespace:", "key part is empty"));
     }
 
     /**
