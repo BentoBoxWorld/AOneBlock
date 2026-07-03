@@ -71,7 +71,6 @@ public class BlockListenerTest extends CommonTestSetup {
     private @NonNull OneBlockPhase phase;
 
     /**
-     * @throws java.lang.Exception
      */
     @Override
     @SuppressWarnings("unchecked")

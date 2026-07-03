@@ -68,7 +68,6 @@ public class CheckPhaseTest extends CommonTestSetup {
     private Level level;
 
     /**
-     * @throws java.lang.Exception
      */
     @Override
     @BeforeEach
@@ -118,7 +117,6 @@ public class CheckPhaseTest extends CommonTestSetup {
     }
 
     /**
-     * @throws java.lang.Exception
      */
     @Override
     @AfterEach
@@ -266,10 +264,6 @@ public class CheckPhaseTest extends CommonTestSetup {
 
     }
 
-    /**
-     * Test method for
-     * {@link world.bentobox.aoneblock.listeners.BlockListener#replacePlaceholders(org.bukkit.entity.Player, java.lang.String, java.lang.String, world.bentobox.bentobox.database.objects.Island, java.util.List)}.
-     */
     @Test
     void testReplacePlaceholders() {
         // Commands

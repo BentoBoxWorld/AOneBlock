@@ -590,7 +590,7 @@ public class PhasesPanel
         int lastAmpIndex = -2;
 
         while (index < input.length()) {
-            if (input.charAt(index) == '\u00A7' && index < (input.length() - 1)) {
+            if (input.charAt(index) == '§' && index < (input.length() - 1)) {
                 lastAmpIndex = index;
                 activeColor = input.charAt(index + 1);
             }
@@ -608,7 +608,7 @@ public class PhasesPanel
             result.append(input, index, breakPoint).append('\n');
             if (lastAmpIndex >= 0) {
                 // Append color code
-                result.append('\u00A7');
+                result.append('§');
                 result.append(activeColor);
                 result.append(" ");
             }

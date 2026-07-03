@@ -41,7 +41,6 @@ class IslandBossBarCommandTest extends CommonTestSetup {
 
 
     /**
-     * @throws java.lang.Exception
      */
     @Override
     @BeforeEach
@@ -65,7 +64,6 @@ class IslandBossBarCommandTest extends CommonTestSetup {
     }
 
     /**
-     * @throws java.lang.Exception
      */
     @Override
     @AfterEach

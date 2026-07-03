@@ -35,7 +35,6 @@ public class PlaceholdersManagerTest extends CommonTestSetup {
     private OneBlocksManager obm;
 
     /**
-     * @throws java.lang.Exception
      */
     @Override
     @BeforeEach

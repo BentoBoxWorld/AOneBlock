@@ -38,7 +38,6 @@ class IslandActionBarCommandTest extends CommonTestSetup {
 
 
     /**
-     * @throws java.lang.Exception
      */
     @Override
     @BeforeEach
@@ -54,7 +53,6 @@ class IslandActionBarCommandTest extends CommonTestSetup {
     }
 
     /**
-     * @throws java.lang.Exception
      */
     @Override
     @AfterEach

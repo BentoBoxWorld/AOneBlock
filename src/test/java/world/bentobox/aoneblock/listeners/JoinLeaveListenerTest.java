@@ -34,7 +34,6 @@ public class JoinLeaveListenerTest extends CommonTestSetup {
     private static final UUID ID = UUID.randomUUID();
     private static final Vector VECTOR = new Vector(123,120,456);
     /**
-     * @throws java.lang.Exception
      */
     @Override
     @BeforeEach
@@ -62,7 +61,6 @@ public class JoinLeaveListenerTest extends CommonTestSetup {
     }
 
     /**
-     * @throws java.lang.Exception
      */
     @Override
     @AfterEach

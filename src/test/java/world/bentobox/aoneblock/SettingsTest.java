@@ -27,7 +27,6 @@ public class SettingsTest extends CommonTestSetup {
     private Settings s;
 
     /**
-     * @throws java.lang.Exception
      */
     @Override
     @BeforeEach
@@ -37,7 +36,6 @@ public class SettingsTest extends CommonTestSetup {
     }
 
     /**
-     * @throws java.lang.Exception
      */
     @Override
     @AfterEach
@@ -249,7 +247,8 @@ public class SettingsTest extends CommonTestSetup {
     /**
      * Test method for {@link world.bentobox.aoneblock.Settings#getDefaultIslandFlags()}.
      */
-    @SuppressWarnings("deprecation")
+    // Intentionally exercises a deprecated-for-removal override; keep until BentoBox drops it.
+    @SuppressWarnings({ "deprecation", "removal", "java:S5738" })
     @Test
     void testGetDefaultIslandFlags() {
         assertTrue(s.getDefaultIslandFlags().isEmpty());
@@ -258,7 +257,8 @@ public class SettingsTest extends CommonTestSetup {
     /**
      * Test method for {@link world.bentobox.aoneblock.Settings#getDefaultIslandSettings()}.
      */
-    @SuppressWarnings("deprecation")
+    // Intentionally exercises a deprecated-for-removal override; keep until BentoBox drops it.
+    @SuppressWarnings({ "deprecation", "removal", "java:S5738" })
     @Test
     void testGetDefaultIslandSettings() {
         assertTrue(s.getDefaultIslandSettings().isEmpty());

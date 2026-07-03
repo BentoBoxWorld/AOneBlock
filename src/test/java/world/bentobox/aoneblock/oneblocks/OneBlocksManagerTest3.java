@@ -116,8 +116,7 @@ public class OneBlocksManagerTest3 extends CommonTestSetup {
 	}
 
 	/**
-	 * @throws java.lang.Exception
-	 */
+     */
 	@SuppressWarnings("unchecked")
 	@Override
 	@BeforeEach
@@ -154,8 +153,7 @@ public class OneBlocksManagerTest3 extends CommonTestSetup {
 	}
 
 	/**
-	 * @throws java.lang.Exception
-	 */
+     */
 	@Override
 	@AfterEach
 	public void tearDown() throws Exception {
@@ -187,10 +185,8 @@ public class OneBlocksManagerTest3 extends CommonTestSetup {
 	/**
 	 * Test method for
 	 * {@link world.bentobox.aoneblock.oneblocks.OneBlocksManager#loadPhases()}.
-	 * 
-	 * @throws IOException
-	 * @throws NumberFormatException
-	 */
+	 *
+     */
 	// @Ignore("Cannot deserialize objects right now")
 	@Test
 	void testLoadPhases() throws NumberFormatException, IOException {
@@ -213,11 +209,8 @@ public class OneBlocksManagerTest3 extends CommonTestSetup {
 	/**
 	 * Test method for
 	 * {@link world.bentobox.aoneblock.oneblocks.OneBlocksManager#getPhaseList()}.
-	 * 
-	 * @throws InvalidConfigurationException
-	 * @throws IOException
-	 * @throws NumberFormatException
-	 */
+	 *
+     */
 	@Test
 	void testGetPhaseList() throws NumberFormatException, IOException {
 		testLoadPhases();
@@ -231,11 +224,8 @@ public class OneBlocksManagerTest3 extends CommonTestSetup {
 	/**
 	 * Test method for
 	 * {@link world.bentobox.aoneblock.oneblocks.OneBlocksManager#getPhase(java.lang.String)}.
-	 * 
-	 * @throws InvalidConfigurationException
-	 * @throws IOException
-	 * @throws NumberFormatException
-	 */
+	 *
+     */
 	@Test
 	void testGetPhaseString() throws NumberFormatException, IOException {
 		testLoadPhases();
@@ -247,10 +237,8 @@ public class OneBlocksManagerTest3 extends CommonTestSetup {
 	/**
 	 * Test method for
 	 * {@link world.bentobox.aoneblock.oneblocks.OneBlocksManager#saveOneBlockConfig()}.
-	 * 
-	 * @throws NumberFormatException
-	 * @throws IOException 
-	 */
+	 *
+     */
 	@Disabled("Not saving")
 	@Test
 	void testSaveOneBlockConfig() throws NumberFormatException, IOException {
@@ -261,11 +249,8 @@ public class OneBlocksManagerTest3 extends CommonTestSetup {
 	/**
 	 * Test method for
 	 * {@link world.bentobox.aoneblock.oneblocks.OneBlocksManager#getNextPhase(OneBlockPhase)}.
-	 * 
-	 * @throws InvalidConfigurationException
-	 * @throws IOException
-	 * @throws NumberFormatException
-	 */
+	 *
+     */
 	@Test
 	void testGetNextPhase() throws NumberFormatException, IOException {
 		testLoadPhases();
@@ -280,9 +265,8 @@ public class OneBlocksManagerTest3 extends CommonTestSetup {
 	/**
 	 * Test method for
 	 * {@link world.bentobox.aoneblock.oneblocks.OneBlocksManager#copyPhasesFromAddonJar(java.io.File)}.
-	 * 
-	 * @throws IOException
-	 */
+	 *
+     */
 	@Test
 	void testCopyPhasesFromAddonJar() throws IOException {
 		File dest = new File("dest");
@@ -297,9 +281,8 @@ public class OneBlocksManagerTest3 extends CommonTestSetup {
 	/**
 	 * Test method for
 	 * {@link world.bentobox.aoneblock.oneblocks.OneBlocksManager#initBlock(java.lang.String, world.bentobox.aoneblock.oneblocks.OneBlockPhase, org.bukkit.configuration.ConfigurationSection)}.
-	 * 
-	 * @throws IOException
-	 */
+	 *
+     */
 	@Test
 	@Disabled("TODO: fix initBlock test setup to work with new config structure")
 	void testInitBlock() throws IOException {
