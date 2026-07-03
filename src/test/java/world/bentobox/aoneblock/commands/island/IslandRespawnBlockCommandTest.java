@@ -48,7 +48,6 @@ class IslandRespawnBlockCommandTest extends CommonTestSetup {
     private @NotNull Block block;
 
     /**
-     * @throws java.lang.Exception
      */
     @Override
     @BeforeEach
@@ -74,7 +73,6 @@ class IslandRespawnBlockCommandTest extends CommonTestSetup {
     }
 
     /**
-     * @throws java.lang.Exception
      */
     @Override
     @AfterEach

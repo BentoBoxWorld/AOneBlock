@@ -27,7 +27,6 @@ public class SettingsTest extends CommonTestSetup {
     private Settings s;
 
     /**
-     * @throws java.lang.Exception
      */
     @Override
     @BeforeEach
@@ -37,7 +36,6 @@ public class SettingsTest extends CommonTestSetup {
     }
 
     /**
-     * @throws java.lang.Exception
      */
     @Override
     @AfterEach

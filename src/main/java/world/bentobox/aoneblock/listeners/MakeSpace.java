@@ -40,7 +40,6 @@ public class MakeSpace {
 
 
     /**
-     * @param addon
      */
     public MakeSpace(AOneBlock addon) {
         this.addon = addon;

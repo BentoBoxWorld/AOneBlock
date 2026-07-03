@@ -42,7 +42,6 @@ public class InfoListenerTest extends CommonTestSetup {
     private static final UUID ID = UUID.randomUUID();
 
     /**
-     * @throws java.lang.Exception
      */
     @Override
     @BeforeEach

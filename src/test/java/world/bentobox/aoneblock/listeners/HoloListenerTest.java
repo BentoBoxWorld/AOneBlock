@@ -58,7 +58,6 @@ public class HoloListenerTest extends CommonTestSetup {
 
 
     /**
-     * @throws java.lang.Exception
      */
     @Override
     @BeforeEach

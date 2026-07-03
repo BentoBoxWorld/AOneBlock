@@ -242,7 +242,6 @@ public abstract class CommonTestSetup {
     }
 
     /**
-     * @throws Exception
      */
     @AfterEach
     public void tearDown() throws Exception {
@@ -266,7 +265,7 @@ public abstract class CommonTestSetup {
 
     /**
      * Check that spigot sent the message
-     * @param message - message to check
+     * @param expectedMessage - message to check
      */
     public void checkSpigotMessage(String expectedMessage) {
         checkSpigotMessage(expectedMessage, 1);
@@ -295,10 +294,6 @@ public abstract class CommonTestSetup {
 
     /**
      * Get the exploded event
-     * @param entity
-     * @param l
-     * @param list
-     * @return
      */
     public EntityExplodeEvent getExplodeEvent(Entity entity, Location l, List<Block> list) {
         return new EntityExplodeEvent(entity, l, list, 0, org.bukkit.ExplosionResult.DESTROY);

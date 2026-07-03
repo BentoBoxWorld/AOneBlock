@@ -40,7 +40,6 @@ class IslandPhasesCommandTest extends CommonTestSetup {
     private IslandPhasesCommand ipc;
 
     /**
-     * @throws java.lang.Exception
      */
     @Override
     @BeforeEach
@@ -61,7 +60,6 @@ class IslandPhasesCommandTest extends CommonTestSetup {
     }
 
     /**
-     * @throws java.lang.Exception
      */
     @Override
     @AfterEach

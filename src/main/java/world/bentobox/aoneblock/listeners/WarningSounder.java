@@ -27,7 +27,6 @@ public class WarningSounder {
     private final AOneBlock addon;
 
     /**
-     * @param addon
      */
     public WarningSounder(AOneBlock addon) {
         this.addon = addon;

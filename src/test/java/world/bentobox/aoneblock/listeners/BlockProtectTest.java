@@ -56,7 +56,6 @@ public class BlockProtectTest extends CommonTestSetup {
     private Block block;
 
     /**
-     * @throws java.lang.Exception
      */
     @Override
     @BeforeEach
@@ -88,7 +87,6 @@ public class BlockProtectTest extends CommonTestSetup {
     }
 
     /**
-     * @throws java.lang.Exception
      */
     @Override
     @AfterEach

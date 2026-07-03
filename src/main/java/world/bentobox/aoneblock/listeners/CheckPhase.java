@@ -35,7 +35,6 @@ public class CheckPhase {
 
     /**
      * @param addon         AOneBlock
-     * @param blockListener
      */
     public CheckPhase(AOneBlock addon, BlockListener blockListener) {
 	this.addon = addon;
