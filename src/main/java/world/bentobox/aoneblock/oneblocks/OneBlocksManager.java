@@ -52,6 +52,7 @@ import world.bentobox.bentobox.util.Util;
 public class OneBlocksManager {
 
     private static final String ONE_BLOCKS_YML = "oneblocks.yml";
+    private static final String FIXED_BLOCK_KEY = "Fixed block key ";
     private static final String NAME = "name";
     private static final String BIOME = "biome";
     private static final String FIRST_BLOCK = "firstBlock";
@@ -292,7 +293,7 @@ public class OneBlocksManager {
         if (customBlock.isPresent()) {
             result.put(k, new OneBlockObject(customBlock.get(), 0));
         } else {
-            addon.logError("Fixed block key " + key + " material is not a valid custom block. Ignoring.");
+            addon.logError(FIXED_BLOCK_KEY + key + " material is not a valid custom block. Ignoring.");
         }
     }
 
@@ -328,7 +329,7 @@ public class OneBlocksManager {
             if (m != null && m.isBlock()) {
                 result.put(k, new OneBlockObject(m, 0));
             } else {
-                addon.logError("Fixed block key " + key + " material is invalid or not a block. Ignoring.");
+                addon.logError(FIXED_BLOCK_KEY + key + " material is invalid or not a block. Ignoring.");
             }
         }
     }
@@ -346,7 +347,7 @@ public class OneBlocksManager {
     private void parseChestWithItem(Map<Integer, OneBlockObject> result, String key, int k, String itemName) {
         Material item = Material.matchMaterial(itemName);
         if (item == null) {
-            addon.logError("Fixed block key " + key + " CHEST_WITH item is invalid: " + itemName + ". Ignoring.");
+            addon.logError(FIXED_BLOCK_KEY + key + " CHEST_WITH item is invalid: " + itemName + ". Ignoring.");
             return;
         }
         Map<Integer, ItemStack> chestContents = new HashMap<>();
