@@ -13,8 +13,11 @@ import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.atLeastOnce;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -1082,9 +1085,9 @@ class BlockListenerTest2 extends CommonTestSetup {
      */
     @Test
     void testOnBlockBreakDenyCancelsWhenNotAllowed() {
-        BlockListener spyBl = Mockito.spy(bl);
+        BlockListener spyBl = spy(bl);
         // Emulate FlagListener.checkIsland's deny behaviour: cancel the event and return false.
-        Mockito.doAnswer(inv -> {
+        doAnswer(inv -> {
             ((BlockBreakEvent) inv.getArgument(0)).setCancelled(true);
             return false;
         }).when(spyBl).checkIsland(any(), any(), any(), any());
@@ -1105,8 +1108,8 @@ class BlockListenerTest2 extends CommonTestSetup {
      */
     @Test
     void testOnBlockBreakDenyAllowsWhenPermitted() {
-        BlockListener spyBl = Mockito.spy(bl);
-        Mockito.doReturn(true).when(spyBl).checkIsland(any(), any(), any(), any());
+        BlockListener spyBl = spy(bl);
+        doReturn(true).when(spyBl).checkIsland(any(), any(), any(), any());
 
         BlockBreakEvent e = new BlockBreakEvent(magicBlock, mockPlayer);
         spyBl.onBlockBreakDeny(e);
@@ -1122,7 +1125,7 @@ class BlockListenerTest2 extends CommonTestSetup {
     @Test
     void testOnBlockBreakDenyNotInWorld() {
         when(addon.inWorld(world)).thenReturn(false);
-        BlockListener spyBl = Mockito.spy(bl);
+        BlockListener spyBl = spy(bl);
 
         BlockBreakEvent e = new BlockBreakEvent(magicBlock, mockPlayer);
         spyBl.onBlockBreakDeny(e);
@@ -1144,7 +1147,7 @@ class BlockListenerTest2 extends CommonTestSetup {
         Location otherLoc = mock(Location.class);
         when(other.getLocation()).thenReturn(otherLoc);
         when(im.getIslandAt(otherLoc)).thenReturn(Optional.of(island));
-        BlockListener spyBl = Mockito.spy(bl);
+        BlockListener spyBl = spy(bl);
 
         BlockBreakEvent e = new BlockBreakEvent(other, mockPlayer);
         spyBl.onBlockBreakDeny(e);
