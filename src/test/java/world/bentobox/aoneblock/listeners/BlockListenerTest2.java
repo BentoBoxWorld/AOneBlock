@@ -13,8 +13,11 @@ import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.atLeastOnce;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -42,6 +45,8 @@ import org.bukkit.block.data.type.Leaves;
 import org.bukkit.block.data.Brushable;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Item;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.EntityInteractEvent;
@@ -1048,6 +1053,107 @@ class BlockListenerTest2 extends CommonTestSetup {
         bl.onBlockBreakByMinion(e);
 
         verify(im, never()).getIslandAt(any());
+    }
+
+    // =========================================================================
+    // onBlockBreakDeny — early cancel to stop reward exploits (issue #534)
+    // =========================================================================
+
+    /**
+     * The early-deny handler must run at {@link EventPriority#LOWEST} with
+     * {@code ignoreCancelled = true}. Reward-granting plugins such as Jobs Reborn
+     * listen for the {@link BlockBreakEvent} at {@code HIGHEST} with
+     * {@code ignoreCancelled = true}; cancelling here, before them, guarantees they
+     * are skipped when the player lacks the magic-block permission.
+     * See https://github.com/BentoBoxWorld/AOneBlock/issues/534
+     */
+    @Test
+    void testOnBlockBreakDenyRegisteredAtLowestPriority() throws NoSuchMethodException {
+        EventHandler eh = BlockListener.class.getMethod("onBlockBreakDeny", BlockBreakEvent.class)
+                .getAnnotation(EventHandler.class);
+        assertNotNull(eh);
+        assertEquals(EventPriority.LOWEST, eh.priority());
+        assertTrue(eh.ignoreCancelled());
+    }
+
+    /**
+     * Test method for
+     * {@link world.bentobox.aoneblock.listeners.BlockListener#onBlockBreakDeny(BlockBreakEvent)}
+     * When the player lacks the MAGIC_BLOCK permission the break is cancelled at this
+     * early stage (via checkIsland), so later reward plugins are skipped. Regression
+     * test for https://github.com/BentoBoxWorld/AOneBlock/issues/534
+     */
+    @Test
+    void testOnBlockBreakDenyCancelsWhenNotAllowed() {
+        BlockListener spyBl = spy(bl);
+        // Emulate FlagListener.checkIsland's deny behaviour: cancel the event and return false.
+        doAnswer(inv -> {
+            ((BlockBreakEvent) inv.getArgument(0)).setCancelled(true);
+            return false;
+        }).when(spyBl).checkIsland(any(), any(), any(), any());
+
+        BlockBreakEvent e = new BlockBreakEvent(magicBlock, mockPlayer);
+        spyBl.onBlockBreakDeny(e);
+
+        assertTrue(e.isCancelled());
+        // The flag was checked against the island centre for the breaking player.
+        verify(spyBl).checkIsland(any(), eq(mockPlayer), eq(location), any());
+    }
+
+    /**
+     * Test method for
+     * {@link world.bentobox.aoneblock.listeners.BlockListener#onBlockBreakDeny(BlockBreakEvent)}
+     * When the player is allowed, the early handler leaves the event untouched so that
+     * normal magic-block processing and legitimate rewards proceed.
+     */
+    @Test
+    void testOnBlockBreakDenyAllowsWhenPermitted() {
+        BlockListener spyBl = spy(bl);
+        doReturn(true).when(spyBl).checkIsland(any(), any(), any(), any());
+
+        BlockBreakEvent e = new BlockBreakEvent(magicBlock, mockPlayer);
+        spyBl.onBlockBreakDeny(e);
+
+        assertFalse(e.isCancelled());
+    }
+
+    /**
+     * Test method for
+     * {@link world.bentobox.aoneblock.listeners.BlockListener#onBlockBreakDeny(BlockBreakEvent)}
+     * Not in an addon world → early return, the flag is never checked.
+     */
+    @Test
+    void testOnBlockBreakDenyNotInWorld() {
+        when(addon.inWorld(world)).thenReturn(false);
+        BlockListener spyBl = spy(bl);
+
+        BlockBreakEvent e = new BlockBreakEvent(magicBlock, mockPlayer);
+        spyBl.onBlockBreakDeny(e);
+
+        assertFalse(e.isCancelled());
+        verify(spyBl, never()).checkIsland(any(), any(), any(), any());
+    }
+
+    /**
+     * Test method for
+     * {@link world.bentobox.aoneblock.listeners.BlockListener#onBlockBreakDeny(BlockBreakEvent)}
+     * Block is in world but is not the island centre (magic block) → the flag is never
+     * checked, so ordinary block breaking elsewhere on the island is unaffected.
+     */
+    @Test
+    void testOnBlockBreakDenyNotCenterBlock() {
+        Block other = mock(Block.class);
+        when(other.getWorld()).thenReturn(world);
+        Location otherLoc = mock(Location.class);
+        when(other.getLocation()).thenReturn(otherLoc);
+        when(im.getIslandAt(otherLoc)).thenReturn(Optional.of(island));
+        BlockListener spyBl = spy(bl);
+
+        BlockBreakEvent e = new BlockBreakEvent(other, mockPlayer);
+        spyBl.onBlockBreakDeny(e);
+
+        assertFalse(e.isCancelled());
+        verify(spyBl, never()).checkIsland(any(), any(), any(), any());
     }
 
     // =========================================================================
