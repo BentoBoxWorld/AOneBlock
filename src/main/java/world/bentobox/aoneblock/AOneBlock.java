@@ -199,9 +199,9 @@ public class AOneBlock extends GameModeAddon {
         registerListener(new BlockProtect(this));
         registerListener(new JoinLeaveListener(this));
         registerListener(new InfoListener(this));
-        if (getSettings().isBossBar() && getSettings().isActionBar()) {
-            registerListener(bossBar);
-        }
+        // Note: bossBar is registered as a listener by the FlagsManager when the
+        // ONEBLOCK_BOSSBAR or ONEBLOCK_ACTIONBAR flag is registered in onLoad, so it
+        // must not be registered here too or events would be handled twice
         // Register placeholders
         phManager = new AOneBlockPlaceholders(this, getPlugin().getPlaceholdersManager());
 

@@ -220,6 +220,37 @@ public class BlockListener extends FlagListener implements Listener {
     }
 
     /**
+     * Cancels a magic-block break as early as possible when the player lacks the
+     * {@link AOneBlock#MAGIC_BLOCK} permission.
+     * <p>
+     * The full magic-block processing runs at {@link EventPriority#HIGHEST} so that
+     * other protection plugins get a chance to cancel first. However, reward-granting
+     * plugins such as Jobs Reborn also listen at {@code HIGHEST} with
+     * {@code ignoreCancelled = true}. Within a single priority the execution order is
+     * just plugin-registration order, so Jobs could pay out <em>before</em> our
+     * {@code HIGHEST} handler cancels the break. Because the magic block respawns when
+     * the break is cancelled, that let players mine it endlessly for infinite rewards.
+     * <p>
+     * Cancelling the denied break here, at {@link EventPriority#LOWEST}, guarantees it
+     * happens before any {@code ignoreCancelled = true} handler at a later priority, so
+     * those plugins are skipped and no reward is granted.
+     *
+     * @param e The BlockBreakEvent.
+     * @see <a href="https://github.com/BentoBoxWorld/AOneBlock/issues/534">Issue #534</a>
+     */
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+    public void onBlockBreakDeny(final BlockBreakEvent e) {
+        if (!addon.inWorld(e.getBlock().getWorld())) {
+            return;
+        }
+        Location l = e.getBlock().getLocation();
+        // checkIsland cancels the event and sends the protection message if the player
+        // is not allowed to break the magic block.
+        addon.getIslands().getIslandAt(l).filter(i -> l.equals(i.getCenter()))
+                .ifPresent(i -> checkIsland(e, e.getPlayer(), i.getCenter(), addon.MAGIC_BLOCK));
+    }
+
+    /**
      * Handles the breaking of the magic block by a player.
      * @param e The BlockBreakEvent.
      */

@@ -91,6 +91,11 @@ public class BossBarListener implements Listener {
     }
 
     private void tryToShowActionBar(UUID uuid, Island island) {
+        // The listener is registered whenever either the boss bar or action bar flag is
+        // registered, so the global setting must be checked here as well as the flag
+        if (!addon.getSettings().isActionBar()) {
+            return;
+        }
         User user = User.getInstance(uuid);
         Player player = Bukkit.getPlayer(uuid);
 
@@ -125,6 +130,11 @@ public class BossBarListener implements Listener {
      * @param island island they are on
      */
     private void tryToShowBossBar(UUID uuid, Island island) {
+        // The listener is registered whenever either the boss bar or action bar flag is
+        // registered, so the global setting must be checked here as well as the flag
+        if (!addon.getSettings().isBossBar()) {
+            return;
+        }
         User user = User.getInstance(uuid);
 
         // Only show if enabled for island
