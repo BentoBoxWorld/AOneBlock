@@ -785,6 +785,108 @@ public class OneBlocksManagerTest3 extends CommonTestSetup {
 	}
 
 	/**
+	 * After loading, the manager holds the live index model: every entry in phase
+	 * order with its length, plus the goto target.
+	 */
+	@Test
+	void testGetPhaseIndex() throws IOException {
+		obm.loadPhases();
+		List<PhaseIndexEntry> index = obm.getPhaseIndex();
+		assertEquals(2, index.size());
+		assertEquals("Plains", index.get(0).getName());
+		assertEquals(700, index.get(0).getLength());
+		assertEquals("Underground", index.get(1).getName());
+		assertEquals(10300, index.get(1).getLength());
+		assertTrue(index.get(0).isEnabled());
+		assertEquals(0, (int) obm.getGotoAtEnd());
+		// Loaded phases know their index entry
+		assertEquals(index.get(0), obm.getPhase(0).getIndexEntry());
+	}
+
+	/**
+	 * Reordering the live index, saving it, and reloading moves the phases: start
+	 * blocks are recomputed from the new order's lengths.
+	 */
+	@Test
+	void testReorderPhaseIndex() throws IOException {
+		cleanPhaseFiles();
+		PHASES_DIR.mkdirs();
+		java.nio.file.Files.writeString(new File(PHASES_DIR, "alpha.yml").toPath(), """
+                '0':
+                  name: Alpha
+                  biome: PLAINS
+                  blocks:
+                    GRASS_BLOCK: 100
+                """);
+		java.nio.file.Files.writeString(new File(PHASES_DIR, "beta.yml").toPath(), """
+                '100':
+                  name: Beta
+                  biome: PLAINS
+                  blocks:
+                    STONE: 100
+                """);
+		java.nio.file.Files.writeString(INDEX_FILE.toPath(), """
+                phases:
+                  - file: alpha
+                    section: '0'
+                    name: Alpha
+                    length: 100
+                  - file: beta
+                    section: '100'
+                    name: Beta
+                    length: 200
+                gotoAtEnd: 0
+                """);
+		obm.loadPhases();
+		assertEquals("Alpha", obm.getPhase(0).getPhaseName());
+		assertEquals("Beta", obm.getPhase(100).getPhaseName());
+		// Swap the two phases and apply
+		java.util.Collections.swap(obm.getPhaseIndex(), 0, 1);
+		assertTrue(obm.saveIndex());
+		obm.loadPhases();
+		assertEquals("Beta", obm.getPhase(0).getPhaseName());
+		assertEquals("Alpha", obm.getPhase(200).getPhaseName());
+		assertEquals(0, (int) obm.getPhase(300).getGotoBlock());
+		verify(plugin, never()).logError(anyString());
+	}
+
+	/**
+	 * Saving an indexed phase writes back to the file it came from, under its
+	 * stable section key - not to a file named after the computed start block.
+	 */
+	@Test
+	void testSavePhaseKeepsIndexedFileName() throws IOException, InvalidConfigurationException {
+		cleanPhaseFiles();
+		PHASES_DIR.mkdirs();
+		java.nio.file.Files.writeString(new File(PHASES_DIR, "alpha.yml").toPath(), """
+                '5000':
+                  name: Alpha
+                  biome: PLAINS
+                  blocks:
+                    GRASS_BLOCK: 100
+                """);
+		java.nio.file.Files.writeString(INDEX_FILE.toPath(), """
+                phases:
+                  - file: alpha
+                    section: '5000'
+                    name: Alpha
+                    length: 100
+                """);
+		obm.loadPhases();
+		OneBlockPhase phase = obm.getPhase(0);
+		assertNotNull(phase);
+		assertTrue(obm.savePhase(phase));
+		// Same file, same section key, no new file named after the start block
+		assertTrue(new File(PHASES_DIR, "alpha.yml").exists());
+		assertFalse(new File(PHASES_DIR, "0_alpha.yml").exists());
+		YamlConfiguration saved = new YamlConfiguration();
+		saved.load(new File(PHASES_DIR, "alpha.yml"));
+		assertTrue(saved.isConfigurationSection("5000"));
+		assertEquals("Alpha", saved.getString("5000.name"));
+		verify(plugin, never()).logError(anyString());
+	}
+
+	/**
 	 * A malformed index must not stop the addon: it logs an error and falls back
 	 * to loading the phase files directly, as before the index existed.
 	 */

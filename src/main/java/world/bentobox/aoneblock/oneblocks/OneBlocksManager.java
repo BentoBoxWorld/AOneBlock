@@ -86,10 +86,6 @@ public class OneBlocksManager {
     private static final Pattern VERSION_PATTERN = Pattern.compile("^(\\d+(?:\\.\\d+)*)");
     private static final String PHASES_INDEX_YML = "phases_index.yml";
     private static final String INDEX_PHASES = "phases";
-    private static final String INDEX_FILE = "file";
-    private static final String INDEX_SECTION = "section";
-    private static final String INDEX_LENGTH = "length";
-    private static final String INDEX_ENABLED = "enabled";
     private static final String GOTO_AT_END = "gotoAtEnd";
     private static final String CHESTS_YML_SUFFIX = "_chests.yml";
     private static final String WEIGHT = "weight";
@@ -101,6 +97,8 @@ public class OneBlocksManager {
     private static final String DUPLICATE = " Duplicate phase file?";
     private final AOneBlock addon;
     private TreeMap<Integer, OneBlockPhase> blockProbs;
+    private List<PhaseIndexEntry> phaseIndex = new ArrayList<>();
+    private Integer gotoAtEnd;
 
     /**
      * @param addon - addon
@@ -117,8 +115,10 @@ public class OneBlocksManager {
      * @throws IOException - if config file has bad syntax or migration fails
      */
     public void loadPhases() throws IOException {
-        // Clear block probabilities
+        // Clear block probabilities and the index model
         blockProbs = new TreeMap<>();
+        phaseIndex = new ArrayList<>();
+        gotoAtEnd = null;
         // Check for folder
         File check = new File(addon.getDataFolder(), PHASES);
         if (check.mkdirs()) {
@@ -183,7 +183,7 @@ public class OneBlocksManager {
      * @param indexFile   index file to write
      */
     void generateIndex(File phaseFolder, File indexFile) {
-        TreeMap<Integer, Map<String, Object>> scan = new TreeMap<>();
+        TreeMap<Integer, PhaseIndexEntry> scan = new TreeMap<>();
         Integer gotoTarget = null;
         int gotoStart = -1;
         FilenameFilter mainYmlFilter = (dir, name) -> name.toLowerCase(Locale.ENGLISH).endsWith(".yml")
@@ -213,25 +213,17 @@ public class OneBlocksManager {
         if (scan.isEmpty()) {
             return;
         }
-        List<Map<String, Object>> entries = new ArrayList<>();
+        List<PhaseIndexEntry> entries = new ArrayList<>();
         List<Integer> starts = new ArrayList<>(scan.keySet());
         for (int i = 0; i < starts.size(); i++) {
             int start = starts.get(i);
             int next = i + 1 < starts.size() ? starts.get(i + 1) : gotoStart;
-            Map<String, Object> entry = scan.get(start);
-            entry.put(INDEX_LENGTH, next > start ? next - start : DEFAULT_PHASE_LENGTH);
+            PhaseIndexEntry entry = scan.get(start);
+            entry.setLength(next > start ? next - start : DEFAULT_PHASE_LENGTH);
             entries.add(entry);
         }
-        YamlConfiguration index = new YamlConfiguration();
-        index.set(INDEX_PHASES, entries);
-        if (gotoTarget != null) {
-            index.set(GOTO_AT_END, gotoTarget);
-        }
-        try {
-            index.save(indexFile);
+        if (writeIndex(indexFile, entries, gotoTarget)) {
             addon.log("Created " + PHASES_INDEX_YML + " from the existing phase files.");
-        } catch (IOException e) {
-            addon.logError("Could not save " + PHASES_INDEX_YML + " " + e.getMessage());
         }
     }
 
@@ -242,7 +234,7 @@ public class OneBlocksManager {
      * @param base file name without the .yml extension
      * @param scan map of start block to index entry being built
      */
-    private void scanPhaseFile(YamlConfiguration cfg, String base, TreeMap<Integer, Map<String, Object>> scan) {
+    private void scanPhaseFile(YamlConfiguration cfg, String base, TreeMap<Integer, PhaseIndexEntry> scan) {
         for (String key : cfg.getKeys(false)) {
             if (!NumberUtils.isCreatable(key)) {
                 continue;
@@ -251,16 +243,77 @@ public class OneBlocksManager {
             if (section == null || section.contains(GOTO_BLOCK)) {
                 continue;
             }
-            Map<String, Object> entry = new LinkedHashMap<>();
-            entry.put(INDEX_FILE, base);
-            entry.put(INDEX_SECTION, key);
-            entry.put(NAME, section.getString(NAME, base));
+            PhaseIndexEntry entry = new PhaseIndexEntry();
+            entry.setFile(base);
+            entry.setSection(key);
+            entry.setName(section.getString(NAME, base));
             String requiredVersion = Objects.toString(section.get(REQUIRED_MC_VERSION), "");
             if (!requiredVersion.isEmpty()) {
-                entry.put(REQUIRED_MC_VERSION, requiredVersion);
+                entry.setRequiredMinecraftVersion(requiredVersion);
             }
             scan.put(Integer.parseInt(key), entry);
         }
+    }
+
+    /**
+     * Writes a phase index file.
+     *
+     * @param indexFile  file to write
+     * @param entries    index entries, in phase order
+     * @param gotoTarget block count to jump to after the last phase, or null
+     * @return true if written
+     */
+    private boolean writeIndex(File indexFile, List<PhaseIndexEntry> entries, @Nullable Integer gotoTarget) {
+        YamlConfiguration index = new YamlConfiguration();
+        index.set(INDEX_PHASES, entries.stream().map(PhaseIndexEntry::toMap).toList());
+        if (gotoTarget != null) {
+            index.set(GOTO_AT_END, gotoTarget);
+        }
+        try {
+            index.save(indexFile);
+            return true;
+        } catch (IOException e) {
+            addon.logError("Could not save " + PHASES_INDEX_YML + " " + e.getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Saves the in-memory phase index to disk. Call after changing the order,
+     * lengths, or enabled state of entries from {@link #getPhaseIndex()}, then
+     * call {@link #loadPhases()} to apply the changes.
+     *
+     * @return true if written
+     */
+    public boolean saveIndex() {
+        return writeIndex(new File(addon.getDataFolder(), PHASES_INDEX_YML), phaseIndex, gotoAtEnd);
+    }
+
+    /**
+     * @return the live phase index, in phase order, including entries that are
+     *         disabled or skipped on this server version. Mutate it and call
+     *         {@link #saveIndex()} then {@link #loadPhases()} to apply changes.
+     *         Empty when phases were loaded without an index.
+     */
+    public List<PhaseIndexEntry> getPhaseIndex() {
+        return phaseIndex;
+    }
+
+    /**
+     * @return block count the game jumps to after the last phase, or null if
+     *         there is no jump
+     */
+    @Nullable
+    public Integer getGotoAtEnd() {
+        return gotoAtEnd;
+    }
+
+    /**
+     * @param gotoAtEnd block count to jump to after the last phase, or null for
+     *                  no jump
+     */
+    public void setGotoAtEnd(@Nullable Integer gotoAtEnd) {
+        this.gotoAtEnd = gotoAtEnd;
     }
 
     /**
@@ -280,18 +333,28 @@ public class OneBlocksManager {
             addon.logError("Could not load " + PHASES_INDEX_YML + ": " + e.getMessage());
             return false;
         }
-        List<Map<?, ?>> entries = index.getMapList(INDEX_PHASES);
+        List<PhaseIndexEntry> entries = new ArrayList<>();
+        for (Map<?, ?> map : index.getMapList(INDEX_PHASES)) {
+            PhaseIndexEntry entry = PhaseIndexEntry.fromMap(map);
+            if (entry == null) {
+                addon.logError(PHASES_INDEX_YML + " entry is missing the file name. Skipping it.");
+            } else {
+                entries.add(entry);
+            }
+        }
         if (entries.isEmpty()) {
             addon.logError(PHASES_INDEX_YML + " contains no phases.");
             return false;
         }
+        phaseIndex = entries;
+        gotoAtEnd = index.contains(GOTO_AT_END) ? index.getInt(GOTO_AT_END, 0) : null;
         int startBlock = 0;
-        for (Map<?, ?> entry : entries) {
+        for (PhaseIndexEntry entry : entries) {
             startBlock = loadIndexedPhase(phaseFolder, entry, startBlock);
         }
-        if (index.contains(GOTO_AT_END)) {
+        if (gotoAtEnd != null) {
             OneBlockPhase gotoPhase = new OneBlockPhase(String.valueOf(startBlock));
-            gotoPhase.setGotoBlock(index.getInt(GOTO_AT_END, 0));
+            gotoPhase.setGotoBlock(gotoAtEnd);
             blockProbs.put(startBlock, gotoPhase);
         }
         return true;
@@ -306,37 +369,32 @@ public class OneBlocksManager {
      * @return the start block for the next phase - unchanged if this one was
      *         skipped
      */
-    private int loadIndexedPhase(File phaseFolder, Map<?, ?> entry, int startBlock) {
-        String fileBase = Objects.toString(entry.get(INDEX_FILE), null);
-        if (fileBase == null) {
-            addon.logError(PHASES_INDEX_YML + " entry is missing the file name. Skipping it.");
-            return startBlock;
-        }
-        String name = Objects.toString(entry.get(NAME), fileBase);
-        if (Boolean.FALSE.equals(entry.get(INDEX_ENABLED))) {
+    private int loadIndexedPhase(File phaseFolder, PhaseIndexEntry entry, int startBlock) {
+        String name = entry.getName();
+        if (!entry.isEnabled()) {
             addon.log("Skipping phase " + name + ": disabled in " + PHASES_INDEX_YML + ".");
             return startBlock;
         }
-        String requiredVersion = Objects.toString(entry.get(REQUIRED_MC_VERSION), "");
+        String requiredVersion = Objects.toString(entry.getRequiredMinecraftVersion(), "");
         if (!requiredVersion.isEmpty() && !isVersionAtLeast(Bukkit.getMinecraftVersion(), requiredVersion)) {
             addon.log("Skipping phase " + name + ": it requires Minecraft " + requiredVersion + " or later.");
             return startBlock;
         }
-        File mainFile = new File(phaseFolder, fileBase + ".yml");
+        File mainFile = new File(phaseFolder, entry.getFile() + ".yml");
         if (!mainFile.exists()) {
             addon.logError(PHASES_INDEX_YML + ": " + mainFile.getName() + " does not exist. Skipping phase " + name
                     + ".");
             return startBlock;
         }
-        String section = Objects.toString(entry.get(INDEX_SECTION), null);
         String blockNumber = String.valueOf(startBlock);
         OneBlockPhase obPhase = new OneBlockPhase(blockNumber);
+        obPhase.setIndexEntry(entry);
         if (!requiredVersion.isEmpty()) {
             obPhase.setRequiredMinecraftVersion(requiredVersion);
         }
         try {
             addon.log("Loading " + mainFile.getName());
-            ConfigurationSection phaseConfig = getPhaseSection(mainFile, section);
+            ConfigurationSection phaseConfig = getPhaseSection(mainFile, entry.getSection());
             if (phaseConfig == null) {
                 addon.logError(mainFile.getName() + " has no phase section. Skipping phase " + name + ".");
                 return startBlock;
@@ -346,9 +404,9 @@ public class OneBlocksManager {
             addon.logError("Could not load phase " + name + ": " + e.getMessage());
             return startBlock;
         }
-        loadIndexedChests(phaseFolder, fileBase, section, obPhase, name);
+        loadIndexedChests(phaseFolder, entry.getFile(), entry.getSection(), obPhase, name);
         blockProbs.put(startBlock, obPhase);
-        return startBlock + getIndexedLength(entry, name);
+        return startBlock + phaseLength(entry);
     }
 
     /**
@@ -451,11 +509,11 @@ public class OneBlocksManager {
         }
     }
 
-    private int getIndexedLength(Map<?, ?> entry, String name) {
-        if (entry.get(INDEX_LENGTH) instanceof Number number && number.intValue() > 0) {
-            return number.intValue();
+    private int phaseLength(PhaseIndexEntry entry) {
+        if (entry.getLength() > 0) {
+            return entry.getLength();
         }
-        addon.logWarning("Phase " + name + " has no valid length in " + PHASES_INDEX_YML + ". Using "
+        addon.logWarning("Phase " + entry.getName() + " has no valid length in " + PHASES_INDEX_YML + ". Using "
                 + DEFAULT_PHASE_LENGTH + ".");
         return DEFAULT_PHASE_LENGTH;
     }
@@ -1091,7 +1149,14 @@ public class OneBlocksManager {
         // Go through each phase
         boolean success = true;
         for (OneBlockPhase p : blockProbs.values()) {
+            if (p.isGotoPhase() && !phaseIndex.isEmpty()) {
+                // Indexed goto phases are synthetic - gotoAtEnd in the index covers them
+                continue;
+            }
             success = savePhase(p);
+        }
+        if (!phaseIndex.isEmpty()) {
+            success = saveIndex() && success;
         }
         return success;
     }
@@ -1117,7 +1182,7 @@ public class OneBlocksManager {
 
     private boolean saveMainPhase(OneBlockPhase p) {
         YamlConfiguration oneBlocks = new YamlConfiguration();
-        ConfigurationSection phSec = oneBlocks.createSection(p.getBlockNumber());
+        ConfigurationSection phSec = oneBlocks.createSection(getPhaseSectionKey(p));
         if (p.getRequiredMinecraftVersion() != null) {
             phSec.set(REQUIRED_MC_VERSION, p.getRequiredMinecraftVersion());
         }
@@ -1166,7 +1231,7 @@ public class OneBlocksManager {
 
     private boolean saveChestPhase(OneBlockPhase p) {
         YamlConfiguration oneBlocks = new YamlConfiguration();
-        ConfigurationSection phSec = oneBlocks.createSection(p.getBlockNumber());
+        ConfigurationSection phSec = oneBlocks.createSection(getPhaseSectionKey(p));
         if (p.getRequiredMinecraftVersion() != null) {
             phSec.set(REQUIRED_MC_VERSION, p.getRequiredMinecraftVersion());
         }
@@ -1184,11 +1249,27 @@ public class OneBlocksManager {
     }
 
     private String getPhaseFileName(OneBlockPhase p) {
+        if (p.getIndexEntry() != null) {
+            // The file base name is the phase's identity and stays stable no matter
+            // where the phase currently starts
+            return p.getIndexEntry().getFile();
+        }
         if (p.isGotoPhase()) {
             return p.getBlockNumber() + "_goto_" + p.getGotoBlock();
         }
         return p.getBlockNumber() + "_"
                 + (p.getPhaseName() == null ? "" : p.getPhaseName().toLowerCase().replace(' ', '_'));
+    }
+
+    /**
+     * @return the top-level YAML key to save a phase under - the stable section
+     *         key from the index when there is one, otherwise the start block
+     */
+    private String getPhaseSectionKey(OneBlockPhase p) {
+        if (p.getIndexEntry() != null && p.getIndexEntry().getSection() != null) {
+            return p.getIndexEntry().getSection();
+        }
+        return p.getBlockNumber();
     }
 
     private void saveChests(ConfigurationSection phSec, OneBlockPhase phase) {

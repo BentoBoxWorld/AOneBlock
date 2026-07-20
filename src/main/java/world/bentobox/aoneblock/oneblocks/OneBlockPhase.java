@@ -51,6 +51,7 @@ public class OneBlockPhase {
     private final String blockNumber;
     private Integer gotoBlock;
     private String requiredMinecraftVersion;
+    private PhaseIndexEntry indexEntry;
     private int blockTotal = 0;
     private int entityTotal = 0;
     private List<String> startCommands;
@@ -339,6 +340,21 @@ public class OneBlockPhase {
      */
     public void setGotoBlock(Integer gotoBlock) {
         this.gotoBlock = gotoBlock;
+    }
+
+    /**
+     * @return the phase index entry this phase was loaded from, or null when the
+     *         phase was loaded without an index
+     */
+    public PhaseIndexEntry getIndexEntry() {
+        return indexEntry;
+    }
+
+    /**
+     * @param indexEntry the phase index entry this phase was loaded from
+     */
+    public void setIndexEntry(PhaseIndexEntry indexEntry) {
+        this.indexEntry = indexEntry;
     }
 
     /**
