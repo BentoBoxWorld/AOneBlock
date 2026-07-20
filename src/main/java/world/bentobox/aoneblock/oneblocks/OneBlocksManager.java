@@ -3,11 +3,14 @@ package world.bentobox.aoneblock.oneblocks;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
+import java.io.Reader;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -17,9 +20,12 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.TreeMap;
 import java.util.jar.JarFile;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.math.NumberUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.block.Biome;
@@ -27,11 +33,15 @@ import org.bukkit.block.Biome;
 import io.papermc.paper.registry.RegistryAccess;
 import io.papermc.paper.registry.RegistryKey;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemStack;
 import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jdt.annotation.Nullable;
+import org.yaml.snakeyaml.LoaderOptions;
+import org.yaml.snakeyaml.Yaml;
+import org.yaml.snakeyaml.constructor.SafeConstructor;
 
 import com.google.common.base.Enums;
 import com.google.common.io.Files;
@@ -72,6 +82,20 @@ public class OneBlocksManager {
     private static final String END_COMMANDS = "end-commands";
     private static final String END_COMMANDS_FIRST_TIME = "end-commands-first-time";
     private static final String REQUIREMENTS = "requirements";
+    private static final String REQUIRED_MC_VERSION = "requiredMinecraftVersion";
+    private static final Pattern VERSION_PATTERN = Pattern.compile("^(\\d+(?:\\.\\d+)*)");
+    private static final String PHASES_INDEX_YML = "phases_index.yml";
+    private static final String INDEX_PHASES = "phases";
+    private static final String INDEX_FILE = "file";
+    private static final String INDEX_SECTION = "section";
+    private static final String INDEX_LENGTH = "length";
+    private static final String INDEX_ENABLED = "enabled";
+    private static final String GOTO_AT_END = "gotoAtEnd";
+    private static final String CHESTS_YML_SUFFIX = "_chests.yml";
+    private static final String WEIGHT = "weight";
+    private static final int DEFAULT_PHASE_LENGTH = 500;
+    private static final FilenameFilter YML_FILTER = (dir, name) -> name.toLowerCase(Locale.ENGLISH)
+            .endsWith(".yml");
     private static final String BLOCK = "Block ";
     private static final String BUT_ALREADY_SET_TO = " but already set to ";
     private static final String DUPLICATE = " Duplicate phase file?";
@@ -115,12 +139,376 @@ public class OneBlocksManager {
                 copyPhasesFromAddonJar(check);
             }
         }
-        // Get files in folder
-        // Filter for files ending with .yml
-        FilenameFilter ymlFilter = (dir, name) -> name.toLowerCase(java.util.Locale.ENGLISH).endsWith(".yml");
-        for (File phaseFile : Objects.requireNonNull(check.listFiles(ymlFilter))) {
+        // Phase index. It is read before any phase file so that phases needing a
+        // newer server version are skipped without their files ever being parsed.
+        File indexFile = new File(addon.getDataFolder(), PHASES_INDEX_YML);
+        if (!indexFile.exists()) {
+            copyIndexFromAddonJar();
+        }
+        if (!indexFile.exists()) {
+            // Legacy install - build the index from the phase files on disk
+            generateIndex(check, indexFile);
+        }
+        if (indexFile.exists() && loadPhasesFromIndex(indexFile, check)) {
+            return;
+        }
+        // Fallback - load every phase file directly as before the index existed
+        File[] phaseFiles = Objects.requireNonNull(check.listFiles(YML_FILTER));
+        if (phaseFiles.length > 0) {
+            addon.logWarning("Phase index could not be used - loading phase files directly.");
+        }
+        for (File phaseFile : phaseFiles) {
             loadPhase(phaseFile);
         }
+    }
+
+    /**
+     * Copies the shipped phase index from the addon jar, if it has one.
+     */
+    private void copyIndexFromAddonJar() {
+        try {
+            addon.saveResource(PHASES_INDEX_YML, false);
+        } catch (Exception e) {
+            // Not in the jar - the index will be generated from the phase files
+        }
+    }
+
+    /**
+     * Builds a phase index from the phase files already on disk. Only main phase
+     * files are read - they contain plain scalars, so this is safe on any server
+     * version. Chest files, which hold serialized items, are never touched.
+     * Lengths are derived from the gaps between consecutive start blocks.
+     *
+     * @param phaseFolder folder holding the phase files
+     * @param indexFile   index file to write
+     */
+    void generateIndex(File phaseFolder, File indexFile) {
+        TreeMap<Integer, Map<String, Object>> scan = new TreeMap<>();
+        Integer gotoTarget = null;
+        int gotoStart = -1;
+        FilenameFilter mainYmlFilter = (dir, name) -> name.toLowerCase(Locale.ENGLISH).endsWith(".yml")
+                && !name.toLowerCase(Locale.ENGLISH).endsWith(CHESTS_YML_SUFFIX);
+        File[] files = phaseFolder.listFiles(mainYmlFilter);
+        if (files == null) {
+            return;
+        }
+        for (File phaseFile : files) {
+            YamlConfiguration cfg = new YamlConfiguration();
+            try {
+                cfg.load(phaseFile);
+            } catch (Exception e) {
+                addon.logError("Could not scan " + phaseFile.getName() + " for the phase index: " + e.getMessage());
+                continue;
+            }
+            String base = phaseFile.getName().substring(0, phaseFile.getName().length() - ".yml".length());
+            scanPhaseFile(cfg, base, scan);
+            for (String key : cfg.getKeys(false)) {
+                ConfigurationSection section = cfg.getConfigurationSection(key);
+                if (NumberUtils.isCreatable(key) && section != null && section.contains(GOTO_BLOCK)) {
+                    gotoTarget = section.getInt(GOTO_BLOCK, 0);
+                    gotoStart = Integer.parseInt(key);
+                }
+            }
+        }
+        if (scan.isEmpty()) {
+            return;
+        }
+        List<Map<String, Object>> entries = new ArrayList<>();
+        List<Integer> starts = new ArrayList<>(scan.keySet());
+        for (int i = 0; i < starts.size(); i++) {
+            int start = starts.get(i);
+            int next = i + 1 < starts.size() ? starts.get(i + 1) : gotoStart;
+            Map<String, Object> entry = scan.get(start);
+            entry.put(INDEX_LENGTH, next > start ? next - start : DEFAULT_PHASE_LENGTH);
+            entries.add(entry);
+        }
+        YamlConfiguration index = new YamlConfiguration();
+        index.set(INDEX_PHASES, entries);
+        if (gotoTarget != null) {
+            index.set(GOTO_AT_END, gotoTarget);
+        }
+        try {
+            index.save(indexFile);
+            addon.log("Created " + PHASES_INDEX_YML + " from the existing phase files.");
+        } catch (IOException e) {
+            addon.logError("Could not save " + PHASES_INDEX_YML + " " + e.getMessage());
+        }
+    }
+
+    /**
+     * Adds an index entry for every non-goto phase section in a scanned file.
+     *
+     * @param cfg  loaded main phase file
+     * @param base file name without the .yml extension
+     * @param scan map of start block to index entry being built
+     */
+    private void scanPhaseFile(YamlConfiguration cfg, String base, TreeMap<Integer, Map<String, Object>> scan) {
+        for (String key : cfg.getKeys(false)) {
+            if (!NumberUtils.isCreatable(key)) {
+                continue;
+            }
+            ConfigurationSection section = cfg.getConfigurationSection(key);
+            if (section == null || section.contains(GOTO_BLOCK)) {
+                continue;
+            }
+            Map<String, Object> entry = new LinkedHashMap<>();
+            entry.put(INDEX_FILE, base);
+            entry.put(INDEX_SECTION, key);
+            entry.put(NAME, section.getString(NAME, base));
+            String requiredVersion = Objects.toString(section.get(REQUIRED_MC_VERSION), "");
+            if (!requiredVersion.isEmpty()) {
+                entry.put(REQUIRED_MC_VERSION, requiredVersion);
+            }
+            scan.put(Integer.parseInt(key), entry);
+        }
+    }
+
+    /**
+     * Loads the phases listed in the index, in order. Start blocks are the running
+     * sum of the lengths of the phases loaded so far, so a skipped phase takes up
+     * no blocks and the ones after it shift down to fill the gap.
+     *
+     * @param indexFile   index file
+     * @param phaseFolder folder holding the phase files
+     * @return true if the index was usable, false to fall back to direct loading
+     */
+    boolean loadPhasesFromIndex(File indexFile, File phaseFolder) {
+        YamlConfiguration index = new YamlConfiguration();
+        try {
+            index.load(indexFile);
+        } catch (Exception e) {
+            addon.logError("Could not load " + PHASES_INDEX_YML + ": " + e.getMessage());
+            return false;
+        }
+        List<Map<?, ?>> entries = index.getMapList(INDEX_PHASES);
+        if (entries.isEmpty()) {
+            addon.logError(PHASES_INDEX_YML + " contains no phases.");
+            return false;
+        }
+        int startBlock = 0;
+        for (Map<?, ?> entry : entries) {
+            startBlock = loadIndexedPhase(phaseFolder, entry, startBlock);
+        }
+        if (index.contains(GOTO_AT_END)) {
+            OneBlockPhase gotoPhase = new OneBlockPhase(String.valueOf(startBlock));
+            gotoPhase.setGotoBlock(index.getInt(GOTO_AT_END, 0));
+            blockProbs.put(startBlock, gotoPhase);
+        }
+        return true;
+    }
+
+    /**
+     * Loads one indexed phase.
+     *
+     * @param phaseFolder folder holding the phase files
+     * @param entry       index entry
+     * @param startBlock  start block for this phase
+     * @return the start block for the next phase - unchanged if this one was
+     *         skipped
+     */
+    private int loadIndexedPhase(File phaseFolder, Map<?, ?> entry, int startBlock) {
+        String fileBase = Objects.toString(entry.get(INDEX_FILE), null);
+        if (fileBase == null) {
+            addon.logError(PHASES_INDEX_YML + " entry is missing the file name. Skipping it.");
+            return startBlock;
+        }
+        String name = Objects.toString(entry.get(NAME), fileBase);
+        if (Boolean.FALSE.equals(entry.get(INDEX_ENABLED))) {
+            addon.log("Skipping phase " + name + ": disabled in " + PHASES_INDEX_YML + ".");
+            return startBlock;
+        }
+        String requiredVersion = Objects.toString(entry.get(REQUIRED_MC_VERSION), "");
+        if (!requiredVersion.isEmpty() && !isVersionAtLeast(Bukkit.getMinecraftVersion(), requiredVersion)) {
+            addon.log("Skipping phase " + name + ": it requires Minecraft " + requiredVersion + " or later.");
+            return startBlock;
+        }
+        File mainFile = new File(phaseFolder, fileBase + ".yml");
+        if (!mainFile.exists()) {
+            addon.logError(PHASES_INDEX_YML + ": " + mainFile.getName() + " does not exist. Skipping phase " + name
+                    + ".");
+            return startBlock;
+        }
+        String section = Objects.toString(entry.get(INDEX_SECTION), null);
+        String blockNumber = String.valueOf(startBlock);
+        OneBlockPhase obPhase = new OneBlockPhase(blockNumber);
+        if (!requiredVersion.isEmpty()) {
+            obPhase.setRequiredMinecraftVersion(requiredVersion);
+        }
+        try {
+            addon.log("Loading " + mainFile.getName());
+            ConfigurationSection phaseConfig = getPhaseSection(mainFile, section);
+            if (phaseConfig == null) {
+                addon.logError(mainFile.getName() + " has no phase section. Skipping phase " + name + ".");
+                return startBlock;
+            }
+            parsePhaseSection(obPhase, phaseConfig, blockNumber);
+        } catch (Exception e) {
+            addon.logError("Could not load phase " + name + ": " + e.getMessage());
+            return startBlock;
+        }
+        loadIndexedChests(phaseFolder, fileBase, section, obPhase, name);
+        blockProbs.put(startBlock, obPhase);
+        return startBlock + getIndexedLength(entry, name);
+    }
+
+    /**
+     * Loads the chest file for an indexed phase, if there is one. The file is read
+     * with plain SnakeYAML - not YamlConfiguration - so serialized items are never
+     * eagerly deserialized. Each item is built individually and an item that this
+     * server version does not know is skipped with a log line instead of a stack
+     * trace. A broken chest file loses its chests but does not lose the phase.
+     */
+    private void loadIndexedChests(File phaseFolder, String fileBase, String section, OneBlockPhase obPhase,
+            String name) {
+        File chestFile = new File(phaseFolder, fileBase + CHESTS_YML_SUFFIX);
+        if (!chestFile.exists()) {
+            return;
+        }
+        try (Reader reader = java.nio.file.Files.newBufferedReader(chestFile.toPath(), StandardCharsets.UTF_8)) {
+            addon.log("Loading " + chestFile.getName());
+            Yaml yaml = new Yaml(new SafeConstructor(new LoaderOptions()));
+            Object phaseMap = getRawSection(yaml.load(reader), section);
+            if (phaseMap instanceof Map<?, ?> map && map.get(CHESTS) instanceof Map<?, ?> chests) {
+                addChestsFromRaw(obPhase, chests, chestFile.getName());
+            }
+        } catch (Exception e) {
+            addon.logError("Could not load chests for phase " + name + ": " + e.getMessage());
+        }
+    }
+
+    /**
+     * Gets the named section of a raw YAML map, or its first map value if the
+     * named one is absent.
+     */
+    private Object getRawSection(Object root, String section) {
+        if (!(root instanceof Map<?, ?> rootMap)) {
+            return null;
+        }
+        if (section != null) {
+            for (Entry<?, ?> en : rootMap.entrySet()) {
+                if (section.equals(Objects.toString(en.getKey()))) {
+                    return en.getValue();
+                }
+            }
+        }
+        return rootMap.values().stream().filter(Map.class::isInstance).findFirst().orElse(null);
+    }
+
+    /**
+     * Adds the chests defined in a raw chests map to the phase.
+     *
+     * @param obPhase  phase to add chests to
+     * @param chests   raw map of chest id to chest definition
+     * @param fileName file the chests came from, for log messages
+     */
+    private void addChestsFromRaw(OneBlockPhase obPhase, Map<?, ?> chests, String fileName) {
+        for (Object chestDef : chests.values()) {
+            if (!(chestDef instanceof Map<?, ?> chest)) {
+                continue;
+            }
+            Rarity rarity = Enums.getIfPresent(Rarity.class,
+                    Objects.toString(chest.get(RARITY), "COMMON").toUpperCase(Locale.ENGLISH)).or(Rarity.COMMON);
+            Map<Integer, ItemStack> items = new HashMap<>();
+            if (chest.get(CONTENTS) instanceof Map<?, ?> contents) {
+                for (Entry<?, ?> slotEntry : contents.entrySet()) {
+                    if (!NumberUtils.isCreatable(Objects.toString(slotEntry.getKey()))
+                            || !(slotEntry.getValue() instanceof Map<?, ?> rawItem)) {
+                        continue;
+                    }
+                    ItemStack item = chestItem(rawItem, fileName);
+                    if (item != null) {
+                        items.put(Integer.parseInt(Objects.toString(slotEntry.getKey())), item);
+                    }
+                }
+            }
+            obPhase.addChest(items, rarity);
+        }
+    }
+
+    /**
+     * Builds one chest item from its raw serialized map. Items whose id is not in
+     * this server's registry are skipped with a log line. Everything else is
+     * handed to Bukkit's deserializer, with failures contained to the one item.
+     *
+     * @param raw      raw serialized item map
+     * @param fileName file the item came from, for log messages
+     * @return the item, or null if it cannot exist on this server
+     */
+    private @Nullable ItemStack chestItem(Map<?, ?> raw, String fileName) {
+        String id = Objects.toString(raw.get("id"), Objects.toString(raw.get("type"), null));
+        if (id != null && Material.matchMaterial(id) == null) {
+            addon.log("Skipping item " + id + " in " + fileName + ": it does not exist on this server version.");
+            return null;
+        }
+        try {
+            Map<String, Object> map = new LinkedHashMap<>();
+            raw.forEach((k, v) -> map.put(Objects.toString(k), v));
+            map.remove("==");
+            return ItemStack.deserialize(map);
+        } catch (Exception e) {
+            addon.log("Skipping item " + id + " in " + fileName + ": " + e.getMessage());
+            return null;
+        }
+    }
+
+    private int getIndexedLength(Map<?, ?> entry, String name) {
+        if (entry.get(INDEX_LENGTH) instanceof Number number && number.intValue() > 0) {
+            return number.intValue();
+        }
+        addon.logWarning("Phase " + name + " has no valid length in " + PHASES_INDEX_YML + ". Using "
+                + DEFAULT_PHASE_LENGTH + ".");
+        return DEFAULT_PHASE_LENGTH;
+    }
+
+    /**
+     * Gets the named section of a phase file, or its first section if the named
+     * one is absent.
+     */
+    private ConfigurationSection getPhaseSection(File file, String section) throws IOException, InvalidConfigurationException {
+        YamlConfiguration cfg = new YamlConfiguration();
+        cfg.load(file);
+        if (section != null && cfg.isConfigurationSection(section)) {
+            return cfg.getConfigurationSection(section);
+        }
+        return cfg.getKeys(false).stream().map(cfg::getConfigurationSection).filter(Objects::nonNull).findFirst()
+                .orElse(null);
+    }
+
+    /**
+     * Check that a server Minecraft version is the same as or newer than a required
+     * version. Only the leading dotted-numeric part of each string is compared, so
+     * "1.21.11-R0.1-SNAPSHOT" is read as 1.21.11; missing components count as 0.
+     *
+     * @param serverVersion   version the server is running, e.g. "1.21.11" or "26.2"
+     * @param requiredVersion minimum version needed
+     * @return true if serverVersion is at least requiredVersion; false if it is
+     *         older or if either version cannot be parsed
+     */
+    static boolean isVersionAtLeast(String serverVersion, String requiredVersion) {
+        int[] server = parseVersion(serverVersion);
+        int[] required = parseVersion(requiredVersion);
+        if (server.length == 0 || required.length == 0) {
+            return false;
+        }
+        for (int i = 0; i < Math.max(server.length, required.length); i++) {
+            int s = i < server.length ? server[i] : 0;
+            int r = i < required.length ? required[i] : 0;
+            if (s != r) {
+                return s > r;
+            }
+        }
+        return true;
+    }
+
+    private static int[] parseVersion(String version) {
+        if (version == null) {
+            return new int[0];
+        }
+        Matcher matcher = VERSION_PATTERN.matcher(version.trim());
+        if (!matcher.find()) {
+            return new int[0];
+        }
+        return Arrays.stream(matcher.group(1).split("\\.")).mapToInt(Integer::parseInt).toArray();
     }
 
     /**
@@ -149,29 +537,52 @@ public class OneBlocksManager {
         }
         for (String phaseStartBlockNumKey : oneBlocks.getKeys(false)) {
             Integer phaseStartBlockNum = Integer.valueOf(phaseStartBlockNumKey);
-            OneBlockPhase obPhase = blockProbs.computeIfAbsent(phaseStartBlockNum,
-                    k -> new OneBlockPhase(phaseStartBlockNumKey));
             // Get config Section
             ConfigurationSection phaseConfig = oneBlocks.getConfigurationSection(phaseStartBlockNumKey);
+            // Skip phases that need a newer Minecraft version than this server runs
+            String requiredVersion = Objects.toString(phaseConfig.get(REQUIRED_MC_VERSION), "");
+            if (!requiredVersion.isEmpty() && !isVersionAtLeast(Bukkit.getMinecraftVersion(), requiredVersion)) {
+                addon.log("Skipping phase " + phaseStartBlockNumKey + " in " + phaseFile.getName()
+                        + ": it requires Minecraft " + requiredVersion + " or later.");
+                continue;
+            }
+            OneBlockPhase obPhase = blockProbs.computeIfAbsent(phaseStartBlockNum,
+                    k -> new OneBlockPhase(phaseStartBlockNumKey));
+            if (!requiredVersion.isEmpty()) {
+                obPhase.setRequiredMinecraftVersion(requiredVersion);
+            }
             // goto
             if (phaseConfig.contains(GOTO_BLOCK)) {
                 obPhase.setGotoBlock(phaseConfig.getInt(GOTO_BLOCK, 0));
                 continue;
             }
-            initBlock(phaseStartBlockNumKey, obPhase, phaseConfig);
-            // Blocks
-            addBlocks(obPhase, phaseConfig);
-            // Mobs
-            addMobs(obPhase, phaseConfig);
-            // Chests
-            addChests(obPhase, phaseConfig);
-            // Commands
-            addCommands(obPhase, phaseConfig);
-            // Requirements
-            addRequirements(obPhase, phaseConfig);
+            parsePhaseSection(obPhase, phaseConfig, phaseStartBlockNumKey);
             // Add to the map
             blockProbs.put(phaseStartBlockNum, obPhase);
         }
+    }
+
+    /**
+     * Parses everything in one phase section into the phase.
+     *
+     * @param obPhase     phase to fill
+     * @param phaseConfig configuration section being read
+     * @param blockNumber string representation of this phase's start block
+     * @throws IOException if there's an error in the config file
+     */
+    void parsePhaseSection(OneBlockPhase obPhase, ConfigurationSection phaseConfig, String blockNumber)
+            throws IOException {
+        initBlock(blockNumber, obPhase, phaseConfig);
+        // Blocks
+        addBlocks(obPhase, phaseConfig);
+        // Mobs
+        addMobs(obPhase, phaseConfig);
+        // Chests
+        addChests(obPhase, phaseConfig);
+        // Commands
+        addCommands(obPhase, phaseConfig);
+        // Requirements
+        addRequirements(obPhase, phaseConfig);
     }
 
     /**
@@ -480,6 +891,17 @@ public class OneBlocksManager {
         }
         ConfigurationSection mobs = phase.getConfigurationSection(MOBS);
         for (String entity : mobs.getKeys(false)) {
+            int weight;
+            if (mobs.isConfigurationSection(entity)) {
+                // Object form - a weight plus an optional required version
+                ConfigurationSection def = Objects.requireNonNull(mobs.getConfigurationSection(entity));
+                if (entryIsForNewerServer(def, "mob " + entity, obPhase)) {
+                    continue;
+                }
+                weight = def.getInt(WEIGHT, 0);
+            } else {
+                weight = mobs.getInt(entity, 0);
+            }
             EntityType et = resolveEntityType(entity.toUpperCase(Locale.ENGLISH));
             if (et == null) {
                 addon.logError("Bad entity type in " + obPhase.getPhaseName() + ": " + entity);
@@ -488,8 +910,28 @@ public class OneBlocksManager {
                         .filter(EntityType::isAlive).map(EntityType::name).collect(Collectors.joining(",")));
                 return;
             }
-            processMobEntry(obPhase, mobs, entity, et);
+            processMobEntry(obPhase, entity, et, weight);
         }
+    }
+
+    /**
+     * Checks the optional required version of an object-form block or mob entry.
+     * A gated entry is skipped with a log line so phases can mix content from
+     * different Minecraft versions without errors on older servers.
+     *
+     * @param def     the entry's configuration section
+     * @param what    description of the entry for the log message
+     * @param obPhase phase being loaded
+     * @return true if the entry needs a newer server than this one
+     */
+    private boolean entryIsForNewerServer(ConfigurationSection def, String what, OneBlockPhase obPhase) {
+        String requiredVersion = Objects.toString(def.get(REQUIRED_MC_VERSION), "");
+        if (!requiredVersion.isEmpty() && !isVersionAtLeast(Bukkit.getMinecraftVersion(), requiredVersion)) {
+            addon.log("Skipping " + what + " in " + obPhase.getPhaseName() + ": it requires Minecraft "
+                    + requiredVersion + " or later.");
+            return true;
+        }
+        return false;
     }
 
     private EntityType resolveEntityType(String name) {
@@ -501,13 +943,13 @@ public class OneBlocksManager {
         return Enums.getIfPresent(EntityType.class, name).orNull();
     }
 
-    private void processMobEntry(OneBlockPhase obPhase, ConfigurationSection mobs, String entity, EntityType et) {
+    private void processMobEntry(OneBlockPhase obPhase, String entity, EntityType et, int weight) {
         if (!et.isSpawnable() || !et.isAlive()) {
             addon.logError("Entity type is not spawnable " + obPhase.getPhaseName() + ": " + entity);
             return;
         }
-        if (mobs.getInt(entity) > 0) {
-            obPhase.addMob(et, mobs.getInt(entity));
+        if (weight > 0) {
+            obPhase.addMob(et, weight);
         } else {
             addon.logWarning("Bad entity weight for " + obPhase.getPhaseName() + ": " + entity
                     + ". Must be positive number above 1.");
@@ -518,7 +960,16 @@ public class OneBlocksManager {
         if (phase.isConfigurationSection(BLOCKS)) {
             ConfigurationSection blocks = phase.getConfigurationSection(BLOCKS);
             for (String material : blocks.getKeys(false)) {
-                addMaterial(obPhase, material, Objects.toString(blocks.get(material)));
+                if (blocks.isConfigurationSection(material)) {
+                    // Object form - a weight plus an optional required version
+                    ConfigurationSection def = Objects.requireNonNull(blocks.getConfigurationSection(material));
+                    if (entryIsForNewerServer(def, "block " + material, obPhase)) {
+                        continue;
+                    }
+                    addMaterial(obPhase, material, Objects.toString(def.get(WEIGHT)));
+                } else {
+                    addMaterial(obPhase, material, Objects.toString(blocks.get(material)));
+                }
             }
         } else if (phase.isList(BLOCKS)) {
             for (Map<?, ?> map : phase.getMapList(BLOCKS)) {
@@ -667,6 +1118,9 @@ public class OneBlocksManager {
     private boolean saveMainPhase(OneBlockPhase p) {
         YamlConfiguration oneBlocks = new YamlConfiguration();
         ConfigurationSection phSec = oneBlocks.createSection(p.getBlockNumber());
+        if (p.getRequiredMinecraftVersion() != null) {
+            phSec.set(REQUIRED_MC_VERSION, p.getRequiredMinecraftVersion());
+        }
         // Check for a goto block
         if (p.isGotoPhase()) {
             phSec.set(GOTO_BLOCK, p.getGotoBlock());
@@ -713,6 +1167,9 @@ public class OneBlocksManager {
     private boolean saveChestPhase(OneBlockPhase p) {
         YamlConfiguration oneBlocks = new YamlConfiguration();
         ConfigurationSection phSec = oneBlocks.createSection(p.getBlockNumber());
+        if (p.getRequiredMinecraftVersion() != null) {
+            phSec.set(REQUIRED_MC_VERSION, p.getRequiredMinecraftVersion());
+        }
         saveChests(phSec, p);
         try {
             // Save
