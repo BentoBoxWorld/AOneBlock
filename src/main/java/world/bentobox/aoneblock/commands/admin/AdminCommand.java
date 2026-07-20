@@ -21,6 +21,8 @@ public class AdminCommand extends DefaultAdminCommand {
         new AdminSetChestCommand(this);
         // Sanity
         new AdminSanityCheck(this);
+        // Phase order editor
+        new AdminPhasesCommand(this);
     }
 
 }

@@ -89,7 +89,10 @@ public class OneBlocksManager {
     private static final String GOTO_AT_END = "gotoAtEnd";
     private static final String CHESTS_YML_SUFFIX = "_chests.yml";
     private static final String WEIGHT = "weight";
-    private static final int DEFAULT_PHASE_LENGTH = 500;
+    /**
+     * Length used for a phase whose index entry has no valid length.
+     */
+    public static final int DEFAULT_PHASE_LENGTH = 500;
     private static final FilenameFilter YML_FILTER = (dir, name) -> name.toLowerCase(Locale.ENGLISH)
             .endsWith(".yml");
     private static final String BLOCK = "Block ";
@@ -297,6 +300,19 @@ public class OneBlocksManager {
      */
     public List<PhaseIndexEntry> getPhaseIndex() {
         return phaseIndex;
+    }
+
+    /**
+     * Checks whether an index entry would load on this server - it is enabled and
+     * the server meets its required Minecraft version.
+     *
+     * @param entry index entry
+     * @return true if the phase would load
+     */
+    public boolean isPhaseAvailable(PhaseIndexEntry entry) {
+        String requiredVersion = Objects.toString(entry.getRequiredMinecraftVersion(), "");
+        return entry.isEnabled()
+                && (requiredVersion.isEmpty() || isVersionAtLeast(Bukkit.getMinecraftVersion(), requiredVersion));
     }
 
     /**
