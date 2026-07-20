@@ -1,0 +1,102 @@
+# Phase index for AOneBlock.
+#
+# This file is the source of truth for which phases load, in what order, and
+# how long each one is. It is read BEFORE any phase file is parsed, so phases
+# that need a newer Minecraft version are skipped without their files (and any
+# serialized items inside them) ever being touched.
+#
+# Each entry:
+#   file:    base name of the phase file in the phases folder (without .yml).
+#            The chest file is <file>_chests.yml.
+#   section: the top-level key inside the phase file (legacy start block).
+#   name:    display name, used in logs and admin tools.
+#   length:  number of blocks in the phase. Start blocks are computed by
+#            adding up the lengths of the enabled phases above, starting at 0.
+#   enabled: optional, defaults to true. Set false to leave a phase out.
+#   requiredMinecraftVersion: optional. The phase is skipped (taking up no
+#            blocks) when the server is older than this version.
+#
+# After the last phase, the block count jumps to gotoAtEnd.
+phases:
+  - file: 0_plains
+    section: '0'
+    name: Plains
+    length: 700
+  - file: 700_underground
+    section: '700'
+    name: Underground
+    length: 1300
+  - file: 2000_winter
+    section: '2000'
+    name: Winter
+    length: 1000
+  - file: 3000_ocean
+    section: '3000'
+    name: Ocean
+    length: 1000
+  - file: 4000_jungle
+    section: '4000'
+    name: Jungle
+    length: 1000
+  - file: 5000_swamp
+    section: '5000'
+    name: Swamp
+    length: 1000
+  - file: 6000_dungeon
+    section: '6000'
+    name: Dungeon
+    length: 1000
+  - file: 7000_desert
+    section: '7000'
+    name: Desert
+    length: 500
+  - file: '7500_the nether'
+    section: '7500'
+    name: The Nether
+    length: 1000
+  - file: 8500_plenty
+    section: '8500'
+    name: Plenty
+    length: 1000
+  - file: 9500_desolation
+    section: '9500'
+    name: Desolation
+    length: 1000
+  - file: 10500_deep_dark
+    section: '10500'
+    name: Deep Dark
+    length: 1000
+  - file: '11500_the end'
+    section: '11500'
+    name: The End
+    length: 500
+  - file: 12000_lush_caves
+    section: '12000'
+    name: Lush Caves
+    length: 500
+  - file: 12500_dripstone_caves
+    section: '12500'
+    name: Dripstone Caves
+    length: 500
+  - file: 13000_mangrove_swamp
+    section: '13000'
+    name: Mangrove Swamp
+    length: 500
+  - file: 13500_meadow
+    section: '13500'
+    name: Meadow
+    length: 500
+  - file: 14000_cherry_grove
+    section: '14000'
+    name: Cherry Grove
+    length: 500
+  - file: 14500_jagged_peaks
+    section: '14500'
+    name: Jagged Peaks
+    length: 500
+  - file: 15000_sulfur_caves
+    section: '15000'
+    name: Sulfur Caves
+    length: 500
+    requiredMinecraftVersion: '26.2'
+gotoAtEnd: 0

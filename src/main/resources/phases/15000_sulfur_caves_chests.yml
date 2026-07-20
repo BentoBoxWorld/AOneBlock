@@ -1,0 +1,110 @@
+# Chests for the Sulfur Caves phase. Contains 26.2-only items, so this file
+# carries the same required version tag as the main phase file.
+'15000':
+  requiredMinecraftVersion: '26.2'
+  chests:
+    '1':
+      contents:
+        4:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:sulfur
+          count: 2
+          schema_version: 1
+        12:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:gunpowder
+          count: 4
+          schema_version: 1
+        13:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:bread
+          count: 4
+          schema_version: 1
+        14:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:torch
+          count: 8
+          schema_version: 1
+        22:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:cinnabar
+          count: 2
+          schema_version: 1
+      rarity: COMMON
+    '2':
+      contents:
+        3:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:sulfur
+          count: 4
+          schema_version: 1
+        5:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:cinnabar
+          count: 4
+          schema_version: 1
+        11:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:gunpowder
+          count: 8
+          schema_version: 1
+        13:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:iron_ingot
+          count: 4
+          schema_version: 1
+        15:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:redstone
+          count: 8
+          schema_version: 1
+        21:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:sulfur_spike
+          count: 2
+          schema_version: 1
+      rarity: UNCOMMON
+    '3':
+      contents:
+        4:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:tnt
+          count: 2
+          schema_version: 1
+        11:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:potent_sulfur
+          count: 1
+          schema_version: 1
+        13:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:music_disc_bounce
+          count: 1
+          schema_version: 1
+        15:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:gold_ingot
+          count: 4
+          schema_version: 1
+        22:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 4438
+          id: minecraft:diamond
+          count: 2
+          schema_version: 1
+      rarity: RARE

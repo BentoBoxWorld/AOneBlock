@@ -319,4 +319,7 @@ permissions:
     default: OP
   aoneblock.admin.sanity:
     description: Allow use of '/obadmin sanity' command - display a sanity check of the phase probabilities in the console
+    default: OP
+  aoneblock.admin.phases:
+    description: Allow use of '/obadmin phases' command - open the phase order editor
     default: OP 

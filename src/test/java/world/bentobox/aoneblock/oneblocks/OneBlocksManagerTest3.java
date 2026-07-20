@@ -159,6 +159,7 @@ public class OneBlocksManagerTest3 extends CommonTestSetup {
 	public void tearDown() throws Exception {
 	    super.tearDown();
 		deleteAll(new File("database"));
+		cleanPhaseFiles();
 	}
 
 	@AfterAll
@@ -545,6 +546,365 @@ public class OneBlocksManagerTest3 extends CommonTestSetup {
 		assertEquals(Material.GRASS_BLOCK, obPhase.getFirstBlock().getMaterial());
 
 		verify(plugin, never()).logError(anyString());
+	}
+
+	/**
+	 * Test method for
+	 * {@link world.bentobox.aoneblock.oneblocks.OneBlocksManager#isVersionAtLeast(String, String)}.
+	 */
+	@Test
+	void testIsVersionAtLeast() {
+		assertTrue(OneBlocksManager.isVersionAtLeast("26.2", "26.2"));
+		assertTrue(OneBlocksManager.isVersionAtLeast("26.2.1", "26.2"));
+		assertTrue(OneBlocksManager.isVersionAtLeast("26.3", "26.2"));
+		assertTrue(OneBlocksManager.isVersionAtLeast("1.21.11", "1.21.2"));
+		assertTrue(OneBlocksManager.isVersionAtLeast("1.21.11-R0.1-SNAPSHOT", "1.21.11"));
+		assertFalse(OneBlocksManager.isVersionAtLeast("1.21.11", "26.2"));
+		assertFalse(OneBlocksManager.isVersionAtLeast("1.21", "1.21.11"));
+		assertFalse(OneBlocksManager.isVersionAtLeast("", "26.2"));
+		assertFalse(OneBlocksManager.isVersionAtLeast(null, "26.2"));
+		assertFalse(OneBlocksManager.isVersionAtLeast("1.21.11", "not-a-version"));
+	}
+
+	private static final File PHASES_DIR = new File("addons/AOneBlock/phases");
+	private static final File INDEX_FILE = new File("addons/AOneBlock/phases_index.yml");
+
+	/**
+	 * Removes the phases folder and index so each index test starts clean and
+	 * leaves nothing behind for the other tests.
+	 */
+	private void cleanPhaseFiles() throws IOException {
+		deleteAll(PHASES_DIR);
+		java.nio.file.Files.deleteIfExists(INDEX_FILE.toPath());
+	}
+
+	/**
+	 * A phase tagged with a newer Minecraft version than the server runs must be
+	 * skipped with a plain log entry and no errors - and its files must never be
+	 * parsed. The chest file here is deliberately invalid YAML: if the loader
+	 * touched it, an error would be logged. The test server is mocked as 1.21.10
+	 * in {@link CommonTestSetup}.
+	 */
+	@Test
+	void testLoadPhasesSkipsPhaseRequiringNewerVersion() throws IOException {
+		PHASES_DIR.mkdirs();
+		String yaml = """
+                '15000':
+                  name: Sulfur Caves
+                  requiredMinecraftVersion: '26.2'
+                  firstBlock: SULFUR
+                  biome: SULFUR_CAVES
+                  blocks:
+                    SULFUR: 100
+                  mobs:
+                    SULFUR_CUBE: 100
+                """;
+		java.nio.file.Files.writeString(new File(PHASES_DIR, "15000_sulfur_caves.yml").toPath(), yaml);
+		java.nio.file.Files.writeString(new File(PHASES_DIR, "15000_sulfur_caves_chests.yml").toPath(),
+				"{{{{ this is not YAML :::");
+		obm.loadPhases();
+		assertTrue(obm.getBlockProbs().isEmpty());
+		assertTrue(INDEX_FILE.exists(), "Index should have been generated from the phase files");
+		verify(plugin).log(org.mockito.ArgumentMatchers.contains("Skipping phase Sulfur Caves"));
+		verify(plugin, never()).logError(anyString());
+		verify(plugin, never()).logWarning(anyString());
+	}
+
+	/**
+	 * A phase whose required version is satisfied by the server must load normally
+	 * and keep the version tag. With the index, start blocks are the running sum
+	 * of lengths, so a single phase starts at 0 regardless of its legacy key.
+	 */
+	@Test
+	void testLoadPhasesLoadsPhaseWithSatisfiedVersion() throws IOException {
+		PHASES_DIR.mkdirs();
+		String yaml = """
+                '15000':
+                  name: Sulfur Caves
+                  requiredMinecraftVersion: '1.21'
+                  firstBlock: STONE
+                  biome: PLAINS
+                  blocks:
+                    STONE: 100
+                  mobs:
+                    CAVE_SPIDER: 20
+                """;
+		java.nio.file.Files.writeString(new File(PHASES_DIR, "15000_sulfur_caves.yml").toPath(), yaml);
+		obm.loadPhases();
+		assertTrue(obm.getBlockProbs().containsKey(0));
+		OneBlockPhase phase = obm.getPhase(0);
+		assertEquals("Sulfur Caves", phase.getPhaseName());
+		assertEquals(Material.STONE, phase.getFirstBlock().getMaterial());
+		assertEquals("1.21", phase.getRequiredMinecraftVersion());
+		verify(plugin, never()).logError(anyString());
+	}
+
+	/**
+	 * A disabled phase takes up no blocks: the next phase shifts down to fill the
+	 * gap and the goto lands right after the last loaded phase.
+	 */
+	@Test
+	void testLoadPhasesDisabledPhaseCollapses() throws IOException {
+		PHASES_DIR.mkdirs();
+		java.nio.file.Files.writeString(new File(PHASES_DIR, "alpha.yml").toPath(), """
+                '0':
+                  name: Alpha
+                  biome: PLAINS
+                  blocks:
+                    GRASS_BLOCK: 100
+                """);
+		java.nio.file.Files.writeString(new File(PHASES_DIR, "beta.yml").toPath(), """
+                '100':
+                  name: Beta
+                  biome: PLAINS
+                  blocks:
+                    STONE: 100
+                """);
+		java.nio.file.Files.writeString(INDEX_FILE.toPath(), """
+                phases:
+                  - file: alpha
+                    section: '0'
+                    name: Alpha
+                    length: 100
+                    enabled: false
+                  - file: beta
+                    section: '100'
+                    name: Beta
+                    length: 200
+                gotoAtEnd: 0
+                """);
+		obm.loadPhases();
+		assertEquals("Beta", obm.getPhase(0).getPhaseName());
+		assertEquals(0, (int) obm.getPhase(200).getGotoBlock());
+		assertEquals(2, obm.getBlockProbs().size());
+		verify(plugin).log(org.mockito.ArgumentMatchers.contains("Skipping phase Alpha"));
+		verify(plugin, never()).logError(anyString());
+	}
+
+	/**
+	 * Chest files are read without eager deserialization: an item that does not
+	 * exist on this server version is skipped with a log line, the rest of the
+	 * chest loads, and no errors are thrown.
+	 */
+	@Test
+	void testLoadPhasesChestWithUnknownItemSkipsItem() throws IOException {
+		PHASES_DIR.mkdirs();
+		java.nio.file.Files.writeString(new File(PHASES_DIR, "alpha.yml").toPath(), """
+                '0':
+                  name: Alpha
+                  biome: PLAINS
+                  blocks:
+                    GRASS_BLOCK: 100
+                """);
+		java.nio.file.Files.writeString(new File(PHASES_DIR, "alpha_chests.yml").toPath(), """
+                '0':
+                  chests:
+                    '1':
+                      contents:
+                        0:
+                          ==: org.bukkit.inventory.ItemStack
+                          DataVersion: 4438
+                          id: minecraft:sulfur
+                          count: 1
+                          schema_version: 1
+                        1:
+                          ==: org.bukkit.inventory.ItemStack
+                          DataVersion: 4438
+                          id: minecraft:iron_ingot
+                          count: 4
+                          schema_version: 1
+                      rarity: COMMON
+                """);
+		java.nio.file.Files.writeString(INDEX_FILE.toPath(), """
+                phases:
+                  - file: alpha
+                    section: '0'
+                    name: Alpha
+                    length: 100
+                """);
+		obm.loadPhases();
+		OneBlockPhase phase = obm.getPhase(0);
+		assertNotNull(phase);
+		assertEquals(1, phase.getChests().size());
+		assertEquals(1, phase.getChests().iterator().next().getChest().size());
+		verify(plugin).log(org.mockito.ArgumentMatchers.contains("Skipping item minecraft:sulfur"));
+		verify(plugin, never()).logError(anyString());
+	}
+
+	/**
+	 * Object-form block entries can carry a required Minecraft version; gated
+	 * entries are skipped with a log line, satisfied ones load with their weight.
+	 * The test server is mocked as 1.21.10.
+	 */
+	@Test
+	void testAddBlocksVersionedEntries() throws InvalidConfigurationException {
+		String yaml = """
+                blocks:
+                  STONE: 100
+                  GOLD_BLOCK:
+                    weight: 50
+                    requiredMinecraftVersion: '26.2'
+                  IRON_BLOCK:
+                    weight: 25
+                    requiredMinecraftVersion: '1.20'
+                """;
+		YamlConfiguration cfg = new YamlConfiguration();
+		cfg.loadFromString(yaml);
+		obm.addBlocks(obPhase, cfg);
+		assertTrue(obPhase.getBlocks().containsKey(Material.STONE));
+		assertFalse(obPhase.getBlocks().containsKey(Material.GOLD_BLOCK));
+		assertEquals(25, obPhase.getBlocks().get(Material.IRON_BLOCK));
+		verify(plugin).log(org.mockito.ArgumentMatchers.contains("Skipping block GOLD_BLOCK"));
+		verify(plugin, never()).logError(anyString());
+	}
+
+	/**
+	 * Object-form mob entries can carry a required Minecraft version, matching the
+	 * block behaviour.
+	 */
+	@Test
+	void testAddMobsVersionedEntries() throws InvalidConfigurationException, IOException {
+		String yaml = """
+                mobs:
+                  ZOMBIE: 20
+                  WITHER_SKELETON:
+                    weight: 10
+                    requiredMinecraftVersion: '26.2'
+                  CAVE_SPIDER:
+                    weight: 5
+                    requiredMinecraftVersion: '1.19'
+                """;
+		YamlConfiguration cfg = new YamlConfiguration();
+		cfg.loadFromString(yaml);
+		obm.addMobs(obPhase, cfg);
+		assertEquals(20, obPhase.getMobs().get(org.bukkit.entity.EntityType.ZOMBIE));
+		assertFalse(obPhase.getMobs().containsKey(org.bukkit.entity.EntityType.WITHER_SKELETON));
+		assertEquals(5, obPhase.getMobs().get(org.bukkit.entity.EntityType.CAVE_SPIDER));
+		verify(plugin).log(org.mockito.ArgumentMatchers.contains("Skipping mob WITHER_SKELETON"));
+		verify(plugin, never()).logError(anyString());
+	}
+
+	/**
+	 * After loading, the manager holds the live index model: every entry in phase
+	 * order with its length, plus the goto target.
+	 */
+	@Test
+	void testGetPhaseIndex() throws IOException {
+		obm.loadPhases();
+		List<PhaseIndexEntry> index = obm.getPhaseIndex();
+		assertEquals(2, index.size());
+		assertEquals("Plains", index.get(0).getName());
+		assertEquals(700, index.get(0).getLength());
+		assertEquals("Underground", index.get(1).getName());
+		assertEquals(10300, index.get(1).getLength());
+		assertTrue(index.get(0).isEnabled());
+		assertEquals(0, (int) obm.getGotoAtEnd());
+		// Loaded phases know their index entry
+		assertEquals(index.get(0), obm.getPhase(0).getIndexEntry());
+	}
+
+	/**
+	 * Reordering the live index, saving it, and reloading moves the phases: start
+	 * blocks are recomputed from the new order's lengths.
+	 */
+	@Test
+	void testReorderPhaseIndex() throws IOException {
+		cleanPhaseFiles();
+		PHASES_DIR.mkdirs();
+		java.nio.file.Files.writeString(new File(PHASES_DIR, "alpha.yml").toPath(), """
+                '0':
+                  name: Alpha
+                  biome: PLAINS
+                  blocks:
+                    GRASS_BLOCK: 100
+                """);
+		java.nio.file.Files.writeString(new File(PHASES_DIR, "beta.yml").toPath(), """
+                '100':
+                  name: Beta
+                  biome: PLAINS
+                  blocks:
+                    STONE: 100
+                """);
+		java.nio.file.Files.writeString(INDEX_FILE.toPath(), """
+                phases:
+                  - file: alpha
+                    section: '0'
+                    name: Alpha
+                    length: 100
+                  - file: beta
+                    section: '100'
+                    name: Beta
+                    length: 200
+                gotoAtEnd: 0
+                """);
+		obm.loadPhases();
+		assertEquals("Alpha", obm.getPhase(0).getPhaseName());
+		assertEquals("Beta", obm.getPhase(100).getPhaseName());
+		// Swap the two phases and apply
+		java.util.Collections.swap(obm.getPhaseIndex(), 0, 1);
+		assertTrue(obm.saveIndex());
+		obm.loadPhases();
+		assertEquals("Beta", obm.getPhase(0).getPhaseName());
+		assertEquals("Alpha", obm.getPhase(200).getPhaseName());
+		assertEquals(0, (int) obm.getPhase(300).getGotoBlock());
+		verify(plugin, never()).logError(anyString());
+	}
+
+	/**
+	 * Saving an indexed phase writes back to the file it came from, under its
+	 * stable section key - not to a file named after the computed start block.
+	 */
+	@Test
+	void testSavePhaseKeepsIndexedFileName() throws IOException, InvalidConfigurationException {
+		cleanPhaseFiles();
+		PHASES_DIR.mkdirs();
+		java.nio.file.Files.writeString(new File(PHASES_DIR, "alpha.yml").toPath(), """
+                '5000':
+                  name: Alpha
+                  biome: PLAINS
+                  blocks:
+                    GRASS_BLOCK: 100
+                """);
+		java.nio.file.Files.writeString(INDEX_FILE.toPath(), """
+                phases:
+                  - file: alpha
+                    section: '5000'
+                    name: Alpha
+                    length: 100
+                """);
+		obm.loadPhases();
+		OneBlockPhase phase = obm.getPhase(0);
+		assertNotNull(phase);
+		assertTrue(obm.savePhase(phase));
+		// Same file, same section key, no new file named after the start block
+		assertTrue(new File(PHASES_DIR, "alpha.yml").exists());
+		assertFalse(new File(PHASES_DIR, "0_alpha.yml").exists());
+		YamlConfiguration saved = new YamlConfiguration();
+		saved.load(new File(PHASES_DIR, "alpha.yml"));
+		assertTrue(saved.isConfigurationSection("5000"));
+		assertEquals("Alpha", saved.getString("5000.name"));
+		verify(plugin, never()).logError(anyString());
+	}
+
+	/**
+	 * A malformed index must not stop the addon: it logs an error and falls back
+	 * to loading the phase files directly, as before the index existed.
+	 */
+	@Test
+	void testLoadPhasesMalformedIndexFallsBack() throws IOException {
+		PHASES_DIR.mkdirs();
+		java.nio.file.Files.writeString(new File(PHASES_DIR, "alpha.yml").toPath(), """
+                '0':
+                  name: Alpha
+                  biome: PLAINS
+                  blocks:
+                    GRASS_BLOCK: 100
+                """);
+		java.nio.file.Files.writeString(INDEX_FILE.toPath(), "{{{{ this is not YAML :::");
+		obm.loadPhases();
+		assertEquals("Alpha", obm.getPhase(0).getPhaseName());
+		verify(plugin).logError(org.mockito.ArgumentMatchers.contains("Could not load phases_index.yml"));
+		verify(plugin).logWarning(org.mockito.ArgumentMatchers.contains("Phase index could not be used"));
 	}
 
 	/**
