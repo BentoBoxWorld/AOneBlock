@@ -66,6 +66,27 @@ aoneblock:
         parameters: "<phase>"
         description: "display a sanity check of the phase probabilities in the console"
         see-console: "&a See the console for the report"
+      phases:
+        description: "open the phase order editor"
+        no-index: "&c No phase index is loaded, so phases cannot be reordered"
+        saved: "&a Phase order saved and applied"
+        save-failed: "&c Could not save the phase order! See console for errors"
+        gui:
+          title: "&2 Phase Order"
+          info-title: "&f How to use"
+          instructions: "&7 Click a phase to pick it up, then click where it should go. Right-click toggles a phase on or off."
+          repeat: "&7 After the last phase the count jumps to &b [number]"
+          phase-name: "&a [name]"
+          start: "&7 Starts at block &b [number]"
+          length: "&7 Length &b [number] &7 blocks"
+          disabled: "&c Disabled"
+          version-locked: "&c Needs Minecraft [version] or later"
+          pick-up: "&e Click to pick up and move"
+          toggle: "&e Right-click to enable or disable"
+          drop-here: "&e Click to drop the held phase here"
+          drop-at-end: "&a Drop at the end"
+          held: "&e Moving: [name]"
+          put-back: "&e Click to put it back"
     count:
       description: show the block count and phase
       info: "&a You are on block &b [number] in the &a [name] phase"

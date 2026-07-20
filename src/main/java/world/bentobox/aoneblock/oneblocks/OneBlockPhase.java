@@ -50,6 +50,8 @@ public class OneBlockPhase {
     private final Random chestRandom;
     private final String blockNumber;
     private Integer gotoBlock;
+    private String requiredMinecraftVersion;
+    private PhaseIndexEntry indexEntry;
     private int blockTotal = 0;
     private int entityTotal = 0;
     private List<String> startCommands;
@@ -338,6 +340,37 @@ public class OneBlockPhase {
      */
     public void setGotoBlock(Integer gotoBlock) {
         this.gotoBlock = gotoBlock;
+    }
+
+    /**
+     * @return the phase index entry this phase was loaded from, or null when the
+     *         phase was loaded without an index
+     */
+    public PhaseIndexEntry getIndexEntry() {
+        return indexEntry;
+    }
+
+    /**
+     * @param indexEntry the phase index entry this phase was loaded from
+     */
+    public void setIndexEntry(PhaseIndexEntry indexEntry) {
+        this.indexEntry = indexEntry;
+    }
+
+    /**
+     * @return the minimum Minecraft version this phase needs, or null if it can run
+     *         on any version
+     */
+    public String getRequiredMinecraftVersion() {
+        return requiredMinecraftVersion;
+    }
+
+    /**
+     * @param requiredMinecraftVersion the minimum Minecraft version this phase
+     *                                 needs, e.g. "26.2"
+     */
+    public void setRequiredMinecraftVersion(String requiredMinecraftVersion) {
+        this.requiredMinecraftVersion = requiredMinecraftVersion;
     }
 
     /**

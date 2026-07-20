@@ -1,0 +1,55 @@
+# Sulfur Caves phase. The sulfur_caves biome, sulfur/cinnabar blocks and the
+# sulfur cube mob only exist from Minecraft 26.2, so this phase declares a
+# required version and is skipped on older servers.
+'15000':
+  name: Sulfur Caves
+  icon: SULFUR
+  firstBlock: SULFUR
+  biome: SULFUR_CAVES
+  requiredMinecraftVersion: '26.2'
+  fixedBlocks:
+    '0': SULFUR
+    '1': SULFUR
+    '2': CINNABAR
+    '3': STONE
+    '4': DEEPSLATE
+  blocks:
+    SULFUR: 300
+    CINNABAR: 300
+    STONE: 250
+    DEEPSLATE: 150
+    COBBLESTONE: 100
+    TUFF: 80
+    ANDESITE: 80
+    GRANITE: 60
+    DIORITE: 60
+    GRAVEL: 60
+    SULFUR_SPIKE: 30
+    POTENT_SULFUR: 20
+    MAGMA_BLOCK: 20
+    OBSIDIAN: 15
+    AMETHYST_BLOCK: 10
+    COAL_ORE: 40
+    IRON_ORE: 40
+    COPPER_ORE: 30
+    REDSTONE_ORE: 25
+    GOLD_ORE: 20
+    LAPIS_ORE: 15
+    DIAMOND_ORE: 8
+    EMERALD_ORE: 5
+    CHEST: 40
+  mobs:
+    SULFUR_CUBE: 100
+    CREEPER: 50
+    SKELETON: 50
+    ZOMBIE: 50
+    SLIME: 25
+    CAVE_SPIDER: 20
+    ENDERMAN: 10
+    BAT: 10
+    WITCH: 5
+    ZOMBIE_VILLAGER: 5
+  holograms:
+    '0': '&eBeware the noxious fumes!'
+  start-commands: []
+  end-commands: []
