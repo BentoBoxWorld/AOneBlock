@@ -74,19 +74,28 @@ aoneblock:
         gui:
           title: "&2 Phase Order"
           info-title: "&f How to use"
-          instructions: "&7 Click a phase to pick it up, then click where it should go. Right-click toggles a phase on or off."
+          instructions: |-
+            &7 Click a phase to pick it up,
+            &7 then click where it should go.
+            &7 Right-click toggles a phase
+            &7 on or off.
           repeat: "&7 After the last phase the count jumps to &b [number]"
           phase-name: "&a [name]"
-          start: "&7 Starts at block &b [number]"
-          length: "&7 Length &b [number] &7 blocks"
+          start: "&7 Start: &b [number]"
+          length: "&7 Length: &b [number]"
           disabled: "&c Disabled"
-          version-locked: "&c Needs Minecraft [version] or later"
-          pick-up: "&e Click to pick up and move"
-          toggle: "&e Right-click to enable or disable"
-          drop-here: "&e Click to drop the held phase here"
+          version-locked: "&c Needs Minecraft [version]+"
+          pick-up: "&e Click to move"
+          toggle: "&e Right-click to toggle"
+          set-length: "&e Shift-left-click to set length"
+          drop-here: "&e Click to drop here"
           drop-at-end: "&a Drop at the end"
           held: "&e Moving: [name]"
-          put-back: "&e Click to put it back"
+          put-back: "&e Click to put back"
+          enter-length: "&e Enter a new length in chat for &a [name] &e - it is currently &b [number] &e blocks. Type &c cancel &e to keep it."
+          invalid-length: "&c The length must be a whole number above 0"
+          length-cancelled: "&c Length unchanged"
+          cancel-word: "cancel"
     count:
       description: show the block count and phase
       info: "&a You are on block &b [number] in the &a [name] phase"

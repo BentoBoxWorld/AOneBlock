@@ -144,6 +144,40 @@ class AdminPhasesPanelTest extends CommonTestSetup {
     }
 
     /**
+     * Setting a length applies the value, marks the index as holding admin-set
+     * lengths so reconciliation never overwrites them, and persists.
+     */
+    @Test
+    void testSetLength() throws IOException {
+        PhaseIndexEntry beta = index.get(1);
+        panel.setLength(beta, 1234);
+        assertEquals(1234, beta.getLength());
+        verify(obm).setAdminLengths();
+        verify(obm).saveIndex();
+        verify(obm).loadPhases();
+        verify(user).sendMessage("aoneblock.commands.admin.phases.saved");
+    }
+
+    /**
+     * The chat prompt shows the phase's current length and only accepts whole
+     * numbers above zero.
+     */
+    @Test
+    void testLengthPrompt() {
+        PhaseIndexEntry beta = index.get(1);
+        AdminPhasesPanel.LengthPrompt prompt = panel.new LengthPrompt(beta);
+        when(user.getTranslation(anyString(), anyString(), anyString(), anyString(), anyString()))
+                .thenAnswer(i -> i.getArgument(0, String.class) + ":" + i.getArgument(2, String.class) + ":"
+                        + i.getArgument(4, String.class));
+        assertEquals("aoneblock.commands.admin.phases.gui.enter-length:Beta:100", prompt.getPromptText(null));
+        assertTrue(prompt.isNumberValid(null, 1));
+        assertTrue(prompt.isNumberValid(null, 500));
+        assertFalse(prompt.isNumberValid(null, 0));
+        assertFalse(prompt.isNumberValid(null, -5));
+        assertFalse(prompt.isNumberValid(null, 2.5));
+    }
+
+    /**
      * A failed save tells the admin instead of failing silently.
      */
     @Test

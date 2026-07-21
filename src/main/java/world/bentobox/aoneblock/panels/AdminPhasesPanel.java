@@ -5,7 +5,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.conversations.ConversationContext;
+import org.bukkit.conversations.ConversationFactory;
+import org.bukkit.conversations.NumericPrompt;
+import org.bukkit.conversations.Prompt;
+import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
 
 import world.bentobox.aoneblock.AOneBlock;
@@ -23,8 +29,8 @@ import world.bentobox.bentobox.api.user.User;
  * shoves it and everything after it right and drops the held phase there;
  * clicking the slot after the last phase drops it at the end. Clicking
  * anywhere else, or closing the panel, puts the held phase back. Right-click
- * toggles a phase on or off. Changes are saved to the phase index and applied
- * immediately.
+ * toggles a phase on or off. Shift-left-click asks for a new phase length in
+ * chat. Changes are saved to the phase index and applied immediately.
  *
  * @author tastybento
  */
@@ -114,6 +120,7 @@ public class AdminPhasesPanel {
         } else {
             description.add(user.getTranslation(REF + "pick-up"));
             description.add(user.getTranslation(REF + "toggle"));
+            description.add(user.getTranslation(REF + "set-length"));
         }
         return new PanelItemBuilder().icon(phaseIcon(entry))
                 .name(user.getTranslation(REF + "phase-name", NAME_PLACEHOLDER, entry.getName()))
@@ -121,6 +128,8 @@ public class AdminPhasesPanel {
                 .clickHandler((panel, u, clickType, slot) -> {
                     if (heldIndex >= 0) {
                         dropAt(displayIndex);
+                    } else if (clickType == ClickType.SHIFT_LEFT) {
+                        promptForLength(entry);
                     } else if (clickType.isRightClick()) {
                         toggle(entry);
                     } else {
@@ -176,8 +185,23 @@ public class AdminPhasesPanel {
             return new ItemStack(Material.BARRIER);
         }
         return manager().getBlockProbs().values().stream().filter(p -> entry.equals(p.getIndexEntry()))
-                .map(OneBlockPhase::getIconBlock).filter(Objects::nonNull).findFirst().map(ItemStack::clone)
+                .map(this::loadedPhaseIcon).filter(Objects::nonNull).findFirst()
                 .orElseGet(() -> new ItemStack(Material.STONE));
+    }
+
+    /**
+     * @return the phase's configured icon, falling back to its first block, or
+     *         null if it has neither
+     */
+    private ItemStack loadedPhaseIcon(OneBlockPhase phase) {
+        if (phase.getIconBlock() != null) {
+            return phase.getIconBlock().clone();
+        }
+        if (phase.getFirstBlock() != null && phase.getFirstBlock().getMaterial() != null
+                && phase.getFirstBlock().getMaterial().isItem()) {
+            return new ItemStack(phase.getFirstBlock().getMaterial());
+        }
+        return null;
     }
 
     /**
@@ -223,6 +247,78 @@ public class AdminPhasesPanel {
      */
     void toggle(PhaseIndexEntry entry) {
         entry.setEnabled(!entry.isEnabled());
+        persist();
+    }
+
+    /**
+     * Closes the panel and asks the admin for a new length for this phase in
+     * chat. The prompt shows the current length. A valid number is applied and
+     * the panel reopens; typing the cancel word or timing out leaves the length
+     * unchanged.
+     */
+    void promptForLength(PhaseIndexEntry entry) {
+        user.closeInventory();
+        new ConversationFactory(addon.getPlugin())
+                .withLocalEcho(false)
+                .withTimeout(60)
+                .withEscapeSequence(user.getTranslation(REF + "cancel-word"))
+                .withFirstPrompt(new LengthPrompt(entry))
+                .addConversationAbandonedListener(event -> {
+                    if (!event.gracefulExit()) {
+                        user.sendMessage(REF + "length-cancelled");
+                    }
+                })
+                .buildConversation(user.getPlayer()).begin();
+    }
+
+    /**
+     * Asks for and applies a new phase length. Input handling runs on the chat
+     * thread, so applying the value is pushed back onto the server thread.
+     */
+    class LengthPrompt extends NumericPrompt {
+
+        private final PhaseIndexEntry entry;
+
+        LengthPrompt(PhaseIndexEntry entry) {
+            this.entry = entry;
+        }
+
+        @Override
+        public String getPromptText(ConversationContext context) {
+            return user.getTranslation(REF + "enter-length", NAME_PLACEHOLDER, entry.getName(),
+                    NUMBER_PLACEHOLDER, String.valueOf(entry.getLength()));
+        }
+
+        @Override
+        protected boolean isNumberValid(ConversationContext context, Number input) {
+            return input.intValue() > 0 && input.doubleValue() == input.intValue();
+        }
+
+        @Override
+        protected String getInputNotNumericText(ConversationContext context, String invalidInput) {
+            return user.getTranslation(REF + "invalid-length");
+        }
+
+        @Override
+        protected String getFailedValidationText(ConversationContext context, Number invalidInput) {
+            return user.getTranslation(REF + "invalid-length");
+        }
+
+        @Override
+        protected Prompt acceptValidatedInput(ConversationContext context, Number input) {
+            Bukkit.getScheduler().runTask(addon.getPlugin(), () -> setLength(entry, input.intValue()));
+            return Prompt.END_OF_CONVERSATION;
+        }
+    }
+
+    /**
+     * Applies a new length to a phase, marks the index as holding admin-set
+     * lengths so reconciliation never overwrites them, then saves, reloads, and
+     * reopens the panel.
+     */
+    void setLength(PhaseIndexEntry entry, int length) {
+        entry.setLength(length);
+        manager().setAdminLengths();
         persist();
     }
 
