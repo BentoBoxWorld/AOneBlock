@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -1126,8 +1127,7 @@ public class OneBlocksManagerTest3 extends CommonTestSetup {
 		// Second load claims the unkeyed section - nothing changes
 		obm.loadPhases();
 		assertEquals(2, obm.getPhaseIndex().size());
-		verify(plugin, org.mockito.Mockito.times(1))
-				.log(org.mockito.ArgumentMatchers.contains("added Custom"));
+		verify(plugin, times(1)).log(org.mockito.ArgumentMatchers.contains("added Custom"));
 		verify(plugin, never()).logError(anyString());
 	}
 

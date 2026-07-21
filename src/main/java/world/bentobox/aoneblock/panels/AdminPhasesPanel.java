@@ -7,12 +7,17 @@ import java.util.Objects;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.conversations.ConversationContext;
-import org.bukkit.conversations.ConversationFactory;
-import org.bukkit.conversations.NumericPrompt;
-import org.bukkit.conversations.Prompt;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.HandlerList;
+import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.scheduler.BukkitTask;
+import org.eclipse.jdt.annotation.Nullable;
+
+import io.papermc.paper.event.player.AsyncChatEvent;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 
 import world.bentobox.aoneblock.AOneBlock;
 import world.bentobox.aoneblock.oneblocks.OneBlockPhase;
@@ -42,6 +47,7 @@ public class AdminPhasesPanel {
     private static final int HAND_SLOT = 4;
     private static final int ROW_START = 9;
     private static final int PANEL_SIZE = 54;
+    private static final int LENGTH_PROMPT_TIMEOUT_SECONDS = 60;
 
     private final AOneBlock addon;
     private final User user;
@@ -254,61 +260,101 @@ public class AdminPhasesPanel {
      * Closes the panel and asks the admin for a new length for this phase in
      * chat. The prompt shows the current length. A valid number is applied and
      * the panel reopens; typing the cancel word or timing out leaves the length
-     * unchanged.
+     * unchanged. Bukkit's conversation API is deprecated for removal, so this
+     * listens for the admin's next chat message directly.
      */
     void promptForLength(PhaseIndexEntry entry) {
         user.closeInventory();
-        new ConversationFactory(addon.getPlugin())
-                .withLocalEcho(false)
-                .withTimeout(60)
-                .withEscapeSequence(user.getTranslation(REF + "cancel-word"))
-                .withFirstPrompt(new LengthPrompt(entry))
-                .addConversationAbandonedListener(event -> {
-                    if (!event.gracefulExit()) {
-                        user.sendMessage(REF + "length-cancelled");
-                    }
-                })
-                .buildConversation(user.getPlayer()).begin();
+        LengthChatListener listener = new LengthChatListener(entry);
+        Bukkit.getPluginManager().registerEvents(listener, addon.getPlugin());
+        listener.timeoutTask = Bukkit.getScheduler().runTaskLater(addon.getPlugin(), listener::timeout,
+                20L * LENGTH_PROMPT_TIMEOUT_SECONDS);
+        sendLengthPrompt(entry);
+    }
+
+    private void sendLengthPrompt(PhaseIndexEntry entry) {
+        user.sendMessage(REF + "enter-length", NAME_PLACEHOLDER, entry.getName(), NUMBER_PLACEHOLDER,
+                String.valueOf(entry.getLength()));
     }
 
     /**
-     * Asks for and applies a new phase length. Input handling runs on the chat
-     * thread, so applying the value is pushed back onto the server thread.
+     * Captures the admin's next chat message as the new phase length. Chat
+     * arrives off the server thread, so the input is applied on the main thread.
      */
-    class LengthPrompt extends NumericPrompt {
+    class LengthChatListener implements Listener {
 
         private final PhaseIndexEntry entry;
+        BukkitTask timeoutTask;
+        private boolean done;
 
-        LengthPrompt(PhaseIndexEntry entry) {
+        LengthChatListener(PhaseIndexEntry entry) {
             this.entry = entry;
         }
 
-        @Override
-        public String getPromptText(ConversationContext context) {
-            return user.getTranslation(REF + "enter-length", NAME_PLACEHOLDER, entry.getName(),
-                    NUMBER_PLACEHOLDER, String.valueOf(entry.getLength()));
+        @EventHandler(priority = EventPriority.LOWEST)
+        public void onChat(AsyncChatEvent event) {
+            if (!event.getPlayer().getUniqueId().equals(user.getUniqueId())) {
+                return;
+            }
+            event.setCancelled(true);
+            String input = PlainTextComponentSerializer.plainText().serialize(event.message()).trim();
+            Bukkit.getScheduler().runTask(addon.getPlugin(), () -> consume(input));
         }
 
-        @Override
-        protected boolean isNumberValid(ConversationContext context, Number input) {
-            return input.intValue() > 0 && input.doubleValue() == input.intValue();
+        /**
+         * Handles one line of chat input on the main thread: cancel word keeps
+         * the length, a valid number applies it, anything else re-prompts.
+         */
+        void consume(String input) {
+            if (done) {
+                return;
+            }
+            if (input.equalsIgnoreCase(user.getTranslation(REF + "cancel-word"))) {
+                finish();
+                user.sendMessage(REF + "length-cancelled");
+                return;
+            }
+            Integer length = parseLength(input);
+            if (length == null) {
+                user.sendMessage(REF + "invalid-length");
+                sendLengthPrompt(entry);
+                return;
+            }
+            finish();
+            setLength(entry, length);
         }
 
-        @Override
-        protected String getInputNotNumericText(ConversationContext context, String invalidInput) {
-            return user.getTranslation(REF + "invalid-length");
+        /**
+         * Gives up waiting for input.
+         */
+        void timeout() {
+            if (!done) {
+                timeoutTask = null;
+                finish();
+                user.sendMessage(REF + "length-cancelled");
+            }
         }
 
-        @Override
-        protected String getFailedValidationText(ConversationContext context, Number invalidInput) {
-            return user.getTranslation(REF + "invalid-length");
+        private void finish() {
+            done = true;
+            HandlerList.unregisterAll(this);
+            if (timeoutTask != null) {
+                timeoutTask.cancel();
+            }
         }
+    }
 
-        @Override
-        protected Prompt acceptValidatedInput(ConversationContext context, Number input) {
-            Bukkit.getScheduler().runTask(addon.getPlugin(), () -> setLength(entry, input.intValue()));
-            return Prompt.END_OF_CONVERSATION;
+    /**
+     * @return the input as a phase length, or null if it is not a whole number
+     *         above 0
+     */
+    @Nullable
+    static Integer parseLength(String input) {
+        if (!input.matches("\\d{1,8}")) {
+            return null;
         }
+        int length = Integer.parseInt(input);
+        return length > 0 ? length : null;
     }
 
     /**
