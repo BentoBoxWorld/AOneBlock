@@ -87,7 +87,9 @@ public class OneBlocksManager {
     private static final String END_COMMANDS_FIRST_TIME = "end-commands-first-time";
     private static final String REQUIREMENTS = "requirements";
     private static final String REQUIRED_MC_VERSION = "requiredMinecraftVersion";
-    private static final Pattern VERSION_PATTERN = Pattern.compile("^(\\d+(?:\\.\\d+)*)");
+    // Possessive quantifiers - version strings need no backtracking and this
+    // keeps pathological inputs from recursing deeply in the regex engine
+    private static final Pattern VERSION_PATTERN = Pattern.compile("^(\\d++(?:\\.\\d++)*+)");
     private static final String PHASES_INDEX_YML = "phases_index.yml";
     private static final String INDEX_PHASES = "phases";
     private static final String GOTO_AT_END = "gotoAtEnd";
@@ -1616,7 +1618,8 @@ public class OneBlocksManager {
         if (p.getIndexEntry() != null && p.getIndexEntry().getSection() != null) {
             return p.getIndexEntry().getSection();
         }
-        return p.getBlockNumber();
+        // Block number can be null when the phase came from the database via GSON
+        return Objects.toString(p.getBlockNumber(), "0");
     }
 
     private void saveChests(ConfigurationSection phSec, OneBlockPhase phase) {
