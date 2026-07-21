@@ -1615,11 +1615,14 @@ public class OneBlocksManager {
      *         key from the index when there is one, otherwise the start block
      */
     private String getPhaseSectionKey(OneBlockPhase p) {
-        if (p.getIndexEntry() != null && p.getIndexEntry().getSection() != null) {
-            return p.getIndexEntry().getSection();
+        PhaseIndexEntry indexEntry = p.getIndexEntry();
+        String section = indexEntry == null ? null : indexEntry.getSection();
+        if (section != null) {
+            return section;
         }
         // Block number can be null when the phase came from the database via GSON
-        return Objects.toString(p.getBlockNumber(), "0");
+        String blockNumber = p.getBlockNumber();
+        return blockNumber == null ? "0" : blockNumber;
     }
 
     private void saveChests(ConfigurationSection phSec, OneBlockPhase phase) {
