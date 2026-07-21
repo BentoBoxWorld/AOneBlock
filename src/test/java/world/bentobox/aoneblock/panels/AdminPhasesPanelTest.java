@@ -2,10 +2,12 @@ package world.bentobox.aoneblock.panels;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -141,6 +143,64 @@ class AdminPhasesPanelTest extends CommonTestSetup {
         verify(obm).loadPhases();
         panel.toggle(beta);
         assertTrue(beta.isEnabled());
+    }
+
+    /**
+     * Setting a length applies the value, marks the index as holding admin-set
+     * lengths so reconciliation never overwrites them, and persists.
+     */
+    @Test
+    void testSetLength() throws IOException {
+        PhaseIndexEntry beta = index.get(1);
+        panel.setLength(beta, 1234);
+        assertEquals(1234, beta.getLength());
+        verify(obm).setAdminLengths();
+        verify(obm).saveIndex();
+        verify(obm).loadPhases();
+        verify(user).sendMessage("aoneblock.commands.admin.phases.saved");
+    }
+
+    /**
+     * Chat input parsing only accepts whole numbers above zero.
+     */
+    @Test
+    void testParseLength() {
+        assertEquals(1, AdminPhasesPanel.parseLength("1"));
+        assertEquals(500, AdminPhasesPanel.parseLength("500"));
+        assertNull(AdminPhasesPanel.parseLength("0"));
+        assertNull(AdminPhasesPanel.parseLength("-5"));
+        assertNull(AdminPhasesPanel.parseLength("2.5"));
+        assertNull(AdminPhasesPanel.parseLength("abc"));
+        assertNull(AdminPhasesPanel.parseLength(""));
+    }
+
+    /**
+     * The chat listener applies a valid number, keeps listening on invalid
+     * input, and keeps the length on the cancel word.
+     */
+    @Test
+    void testLengthChatListenerConsume() {
+        when(user.getTranslation("aoneblock.commands.admin.phases.gui.cancel-word")).thenReturn("cancel");
+        PhaseIndexEntry beta = index.get(1);
+        // Invalid input re-prompts and keeps listening
+        AdminPhasesPanel.LengthChatListener listener = panel.new LengthChatListener(beta);
+        listener.consume("nonsense");
+        verify(user).sendMessage("aoneblock.commands.admin.phases.gui.invalid-length");
+        verify(obm, never()).saveIndex();
+        // Then a valid number applies
+        listener.consume("750");
+        assertEquals(750, beta.getLength());
+        verify(obm).setAdminLengths();
+        verify(obm).saveIndex();
+        // Further input is ignored once done
+        listener.consume("999");
+        assertEquals(750, beta.getLength());
+        // Cancel keeps the length
+        AdminPhasesPanel.LengthChatListener cancelled = panel.new LengthChatListener(beta);
+        cancelled.consume("cancel");
+        verify(user).sendMessage("aoneblock.commands.admin.phases.gui.length-cancelled");
+        assertEquals(750, beta.getLength());
+        verify(obm, times(1)).saveIndex();
     }
 
     /**

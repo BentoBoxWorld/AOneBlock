@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -905,6 +906,298 @@ public class OneBlocksManagerTest3 extends CommonTestSetup {
 		assertEquals("Alpha", obm.getPhase(0).getPhaseName());
 		verify(plugin).logError(org.mockito.ArgumentMatchers.contains("Could not load phases_index.yml"));
 		verify(plugin).logWarning(org.mockito.ArgumentMatchers.contains("Phase index could not be used"));
+	}
+
+	/**
+	 * An index entry whose file is missing is re-pointed at the folder file that
+	 * holds a phase with the same name, and its length is refreshed from the gaps
+	 * between the folder files' legacy start-block keys. This follows shipped
+	 * file renames across addon versions without losing the server's layout.
+	 */
+	@Test
+	void testReconcileRepointsRenamedFile() throws IOException {
+		PHASES_DIR.mkdirs();
+		java.nio.file.Files.writeString(new File(PHASES_DIR, "old_alpha.yml").toPath(), """
+                '0':
+                  name: Alpha
+                  biome: PLAINS
+                  blocks:
+                    GRASS_BLOCK: 100
+                """);
+		java.nio.file.Files.writeString(new File(PHASES_DIR, "beta.yml").toPath(), """
+                '500':
+                  name: Beta
+                  biome: PLAINS
+                  blocks:
+                    STONE: 100
+                """);
+		java.nio.file.Files.writeString(new File(PHASES_DIR, "1200_goto_0.yml").toPath(), """
+                '1200':
+                  gotoBlock: 0
+                """);
+		java.nio.file.Files.writeString(INDEX_FILE.toPath(), """
+                phases:
+                  - file: new_alpha
+                    section: '0'
+                    name: Alpha
+                    length: 100
+                  - file: beta
+                    section: '500'
+                    name: Beta
+                    length: 250
+                """);
+		obm.loadPhases();
+		List<PhaseIndexEntry> index = obm.getPhaseIndex();
+		assertEquals(2, index.size());
+		assertEquals("old_alpha", index.get(0).getFile());
+		assertEquals(500, index.get(0).getLength(), "Length should come from the folder's legacy keys");
+		assertEquals(700, index.get(1).getLength(),
+				"A matching entry's length should also be refreshed from the folder once repair was needed");
+		assertEquals("Alpha", obm.getPhase(0).getPhaseName());
+		assertEquals("Beta", obm.getPhase(500).getPhaseName());
+		assertEquals(0, (int) obm.getGotoAtEnd(), "The folder's goto should be adopted");
+		assertEquals(0, (int) obm.getPhase(1200).getGotoBlock());
+		// The repaired index was saved
+		String saved = java.nio.file.Files.readString(INDEX_FILE.toPath());
+		assertTrue(saved.contains("old_alpha"));
+		assertFalse(saved.contains("new_alpha"));
+		verify(plugin, never()).logError(anyString());
+	}
+
+	/**
+	 * A phase file in the folder that the index does not know about is added to
+	 * the index, positioned among the other entries by its legacy start-block
+	 * key. Custom phases always show up.
+	 */
+	@Test
+	void testReconcileAddsUnindexedFile() throws IOException {
+		PHASES_DIR.mkdirs();
+		java.nio.file.Files.writeString(new File(PHASES_DIR, "alpha.yml").toPath(), """
+                '0':
+                  name: Alpha
+                  biome: PLAINS
+                  blocks:
+                    GRASS_BLOCK: 100
+                """);
+		java.nio.file.Files.writeString(new File(PHASES_DIR, "gamma.yml").toPath(), """
+                '250':
+                  name: Gamma
+                  biome: PLAINS
+                  blocks:
+                    DIRT: 100
+                """);
+		java.nio.file.Files.writeString(new File(PHASES_DIR, "beta.yml").toPath(), """
+                '500':
+                  name: Beta
+                  biome: PLAINS
+                  blocks:
+                    STONE: 100
+                """);
+		java.nio.file.Files.writeString(INDEX_FILE.toPath(), """
+                phases:
+                  - file: alpha
+                    section: '0'
+                    name: Alpha
+                    length: 250
+                  - file: beta
+                    section: '500'
+                    name: Beta
+                    length: 300
+                """);
+		obm.loadPhases();
+		List<String> names = obm.getPhaseIndex().stream().map(PhaseIndexEntry::getName).toList();
+		assertEquals(List.of("Alpha", "Gamma", "Beta"), names);
+		assertEquals("Alpha", obm.getPhase(0).getPhaseName());
+		assertEquals("Gamma", obm.getPhase(250).getPhaseName());
+		assertEquals("Beta", obm.getPhase(500).getPhaseName());
+		verify(plugin).log(org.mockito.ArgumentMatchers.contains("added Gamma"));
+		verify(plugin, never()).logError(anyString());
+	}
+
+	/**
+	 * An index entry whose file is neither in the folder nor matched by name is
+	 * restored from the addon jar. This recovers shipped phases added by an
+	 * upgrade, whose files are never copied into an existing phases folder.
+	 */
+	@Test
+	void testReconcileRestoresShippedFileFromJar() throws IOException {
+		PHASES_DIR.mkdirs();
+		java.nio.file.Files.writeString(INDEX_FILE.toPath(), """
+                phases:
+                  - file: 0_plains
+                    section: '0'
+                    name: Plains
+                    length: 100
+                """);
+		obm.loadPhases();
+		assertTrue(new File(PHASES_DIR, "0_plains.yml").exists(), "Phase file should be restored from the jar");
+		assertEquals(1, obm.getPhaseIndex().size());
+		assertEquals("Plains", obm.getPhase(0).getPhaseName());
+		verify(plugin).log(org.mockito.ArgumentMatchers.contains("restored missing 0_plains.yml"));
+		verify(plugin, never()).logError(anyString());
+	}
+
+	/**
+	 * An index entry whose file is gone and cannot be recovered is removed with a
+	 * warning, so the index - and the admin panel built from it - never shows
+	 * phases that do not exist.
+	 */
+	@Test
+	void testReconcileRemovesDeadEntry() throws IOException {
+		PHASES_DIR.mkdirs();
+		java.nio.file.Files.writeString(new File(PHASES_DIR, "alpha.yml").toPath(), """
+                '0':
+                  name: Alpha
+                  biome: PLAINS
+                  blocks:
+                    GRASS_BLOCK: 100
+                """);
+		java.nio.file.Files.writeString(INDEX_FILE.toPath(), """
+                phases:
+                  - file: alpha
+                    section: '0'
+                    name: Alpha
+                    length: 100
+                  - file: ghost
+                    section: '900'
+                    name: Ghost
+                    length: 100
+                """);
+		obm.loadPhases();
+		assertEquals(1, obm.getPhaseIndex().size());
+		assertEquals("Alpha", obm.getPhaseIndex().get(0).getName());
+		verify(plugin).logWarning(org.mockito.ArgumentMatchers.contains("removed Ghost"));
+	}
+
+	/**
+	 * Section keys do not have to be numbers: a custom phase file with a plain
+	 * key is discovered, added at the end of the index with the default length,
+	 * its chest file loads (chests pair by file name, not by number), and a
+	 * second load leaves the index unchanged.
+	 */
+	@Test
+	void testReconcileAddsUnkeyedCustomFileWithChests() throws IOException {
+		PHASES_DIR.mkdirs();
+		java.nio.file.Files.writeString(new File(PHASES_DIR, "alpha.yml").toPath(), """
+                '0':
+                  name: Alpha
+                  biome: PLAINS
+                  blocks:
+                    GRASS_BLOCK: 100
+                """);
+		java.nio.file.Files.writeString(new File(PHASES_DIR, "custom.yml").toPath(), """
+                my_phase:
+                  name: Custom
+                  biome: PLAINS
+                  blocks:
+                    STONE: 100
+                """);
+		java.nio.file.Files.writeString(new File(PHASES_DIR, "custom_chests.yml").toPath(), """
+                my_phase:
+                  chests:
+                    '1':
+                      contents:
+                        0:
+                          ==: org.bukkit.inventory.ItemStack
+                          DataVersion: 4438
+                          id: minecraft:iron_ingot
+                          count: 4
+                          schema_version: 1
+                      rarity: COMMON
+                """);
+		java.nio.file.Files.writeString(INDEX_FILE.toPath(), """
+                phases:
+                  - file: alpha
+                    section: '0'
+                    name: Alpha
+                    length: 100
+                """);
+		obm.loadPhases();
+		List<PhaseIndexEntry> index = obm.getPhaseIndex();
+		assertEquals(2, index.size());
+		assertEquals("Custom", index.get(1).getName());
+		assertEquals("my_phase", index.get(1).getSection());
+		assertEquals(OneBlocksManager.DEFAULT_PHASE_LENGTH, index.get(1).getLength());
+		// Loads right after Alpha, with its chest
+		OneBlockPhase custom = obm.getPhase(100);
+		assertEquals("Custom", custom.getPhaseName());
+		assertEquals(1, custom.getChests().size());
+		verify(plugin).log(org.mockito.ArgumentMatchers.contains("added Custom"));
+		verify(plugin, never()).logError(anyString());
+		// Second load claims the unkeyed section - nothing changes
+		obm.loadPhases();
+		assertEquals(2, obm.getPhaseIndex().size());
+		verify(plugin, times(1)).log(org.mockito.ArgumentMatchers.contains("added Custom"));
+		verify(plugin, never()).logError(anyString());
+	}
+
+	/**
+	 * Once an admin has set lengths (adminLengths flag in the index), repair work
+	 * still happens but lengths are never refreshed from the files' legacy keys,
+	 * and the flag survives a save/reload round trip.
+	 */
+	@Test
+	void testReconcileKeepsAdminLengths() throws IOException {
+		PHASES_DIR.mkdirs();
+		java.nio.file.Files.writeString(new File(PHASES_DIR, "alpha.yml").toPath(), """
+                '0':
+                  name: Alpha
+                  biome: PLAINS
+                  blocks:
+                    GRASS_BLOCK: 100
+                """);
+		java.nio.file.Files.writeString(new File(PHASES_DIR, "gamma.yml").toPath(), """
+                '500':
+                  name: Gamma
+                  biome: PLAINS
+                  blocks:
+                    DIRT: 100
+                """);
+		// Admin-set length 123 differs from the 500 implied by the legacy keys
+		java.nio.file.Files.writeString(INDEX_FILE.toPath(), """
+                phases:
+                  - file: alpha
+                    section: '0'
+                    name: Alpha
+                    length: 123
+                adminLengths: true
+                """);
+		obm.loadPhases();
+		// Gamma was added (a repair) but Alpha's admin-set length stuck
+		assertEquals(2, obm.getPhaseIndex().size());
+		assertEquals(123, obm.getPhaseIndex().get(0).getLength());
+		// The flag survived the reconcile-triggered save
+		String saved = java.nio.file.Files.readString(INDEX_FILE.toPath());
+		assertTrue(saved.contains("adminLengths: true"));
+		verify(plugin, never()).logError(anyString());
+	}
+
+	/**
+	 * When index and folder already agree, reconciliation changes nothing and the
+	 * index is not rewritten - admin-set order, lengths, and enabled flags stick.
+	 */
+	@Test
+	void testReconcileNoChangeDoesNotRewriteIndex() throws IOException {
+		PHASES_DIR.mkdirs();
+		java.nio.file.Files.writeString(new File(PHASES_DIR, "alpha.yml").toPath(), """
+                '0':
+                  name: Alpha
+                  biome: PLAINS
+                  blocks:
+                    GRASS_BLOCK: 100
+                """);
+		java.nio.file.Files.writeString(INDEX_FILE.toPath(), """
+                phases:
+                  - file: alpha
+                    section: '0'
+                    name: Alpha
+                    length: 9999
+                """);
+		obm.loadPhases();
+		assertEquals(9999, obm.getPhaseIndex().get(0).getLength());
+		verify(plugin, never()).log(org.mockito.ArgumentMatchers.contains("Updated"));
+		verify(plugin, never()).logError(anyString());
+		verify(plugin, never()).logWarning(anyString());
 	}
 
 	/**
