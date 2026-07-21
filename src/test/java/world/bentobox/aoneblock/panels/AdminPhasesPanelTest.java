@@ -179,7 +179,7 @@ class AdminPhasesPanelTest extends CommonTestSetup {
      * input, and keeps the length on the cancel word.
      */
     @Test
-    void testLengthChatListenerConsume() throws IOException {
+    void testLengthChatListenerConsume() {
         when(user.getTranslation("aoneblock.commands.admin.phases.gui.cancel-word")).thenReturn("cancel");
         PhaseIndexEntry beta = index.get(1);
         // Invalid input re-prompts and keeps listening
