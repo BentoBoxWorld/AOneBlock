@@ -10,6 +10,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
@@ -18,7 +19,10 @@ import java.util.Map.Entry;
 import java.util.NavigableMap;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 import java.util.TreeMap;
+import java.util.function.Predicate;
+import java.util.stream.Stream;
 import java.util.jar.JarFile;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -83,10 +87,13 @@ public class OneBlocksManager {
     private static final String END_COMMANDS_FIRST_TIME = "end-commands-first-time";
     private static final String REQUIREMENTS = "requirements";
     private static final String REQUIRED_MC_VERSION = "requiredMinecraftVersion";
-    private static final Pattern VERSION_PATTERN = Pattern.compile("^(\\d+(?:\\.\\d+)*)");
+    // Possessive quantifiers - version strings need no backtracking and this
+    // keeps pathological inputs from recursing deeply in the regex engine
+    private static final Pattern VERSION_PATTERN = Pattern.compile("^(\\d++(?:\\.\\d++)*+)");
     private static final String PHASES_INDEX_YML = "phases_index.yml";
     private static final String INDEX_PHASES = "phases";
     private static final String GOTO_AT_END = "gotoAtEnd";
+    private static final String ADMIN_LENGTHS = "adminLengths";
     private static final String CHESTS_YML_SUFFIX = "_chests.yml";
     private static final String WEIGHT = "weight";
     /**
@@ -102,6 +109,11 @@ public class OneBlocksManager {
     private TreeMap<Integer, OneBlockPhase> blockProbs;
     private List<PhaseIndexEntry> phaseIndex = new ArrayList<>();
     private Integer gotoAtEnd;
+    /**
+     * True once an admin has set phase lengths through a tool. Reconciliation
+     * then never overwrites lengths from the files' legacy start-block keys.
+     */
+    private boolean adminLengths;
 
     /**
      * @param addon - addon
@@ -122,40 +134,17 @@ public class OneBlocksManager {
         blockProbs = new TreeMap<>();
         phaseIndex = new ArrayList<>();
         gotoAtEnd = null;
+        adminLengths = false;
         // Check for folder
         File check = new File(addon.getDataFolder(), PHASES);
         if (check.mkdirs()) {
-            addon.log(check.getAbsolutePath() + " does not exist, made folder.");
-            // Check for oneblock.yml
-            File oneblockFile = new File(addon.getDataFolder(), ONE_BLOCKS_YML);
-            if (oneblockFile.exists()) {
-                // Migrate to new folders
-                File renamedFile = new File(check, ONE_BLOCKS_YML);
-                Files.move(oneblockFile, renamedFile);
-                loadPhase(renamedFile);
-                this.saveOneBlockConfig();
-                java.nio.file.Files.delete(oneblockFile.toPath());
-                java.nio.file.Files.delete(renamedFile.toPath());
-                blockProbs.clear();
-            } else {
-                // Copy files from JAR
-                copyPhasesFromAddonJar(check);
-            }
+            setUpNewFolder(check);
         }
-        // Phase index. It is read before any phase file so that phases needing a
-        // newer server version are skipped without their files ever being parsed.
-        File indexFile = new File(addon.getDataFolder(), PHASES_INDEX_YML);
-        if (!indexFile.exists()) {
-            copyIndexFromAddonJar();
-        }
-        if (!indexFile.exists()) {
-            // Legacy install - build the index from the phase files on disk
-            generateIndex(check, indexFile);
-        }
-        if (indexFile.exists() && loadPhasesFromIndex(indexFile, check)) {
+        if (loadUsingIndex(check)) {
             return;
         }
         // Fallback - load every phase file directly as before the index existed
+        gotoAtEnd = null;
         File[] phaseFiles = Objects.requireNonNull(check.listFiles(YML_FILTER));
         if (phaseFiles.length > 0) {
             addon.logWarning("Phase index could not be used - loading phase files directly.");
@@ -163,6 +152,71 @@ public class OneBlocksManager {
         for (File phaseFile : phaseFiles) {
             loadPhase(phaseFile);
         }
+    }
+
+    /**
+     * Fills a freshly made phases folder: migrates a legacy single-file setup if
+     * one exists, otherwise copies the shipped phase files from the jar.
+     */
+    private void setUpNewFolder(File check) throws IOException {
+        addon.log(check.getAbsolutePath() + " does not exist, made folder.");
+        // Check for oneblock.yml
+        File oneblockFile = new File(addon.getDataFolder(), ONE_BLOCKS_YML);
+        if (oneblockFile.exists()) {
+            // Migrate to new folders
+            File renamedFile = new File(check, ONE_BLOCKS_YML);
+            Files.move(oneblockFile, renamedFile);
+            loadPhase(renamedFile);
+            this.saveOneBlockConfig();
+            java.nio.file.Files.delete(oneblockFile.toPath());
+            java.nio.file.Files.delete(renamedFile.toPath());
+            blockProbs.clear();
+        } else {
+            // Copy files from JAR
+            copyPhasesFromAddonJar(check);
+        }
+    }
+
+    /**
+     * Loads the phases via the phase index. The index is read before any phase
+     * file so that phases needing a newer server version are skipped without
+     * their files ever being parsed, and it is reconciled with the phases folder
+     * first - the folder is the source of truth for which phases exist, so
+     * custom or renamed phase files always load and the admin phases panel shows
+     * this server's reality, not a preset.
+     *
+     * @param check the phases folder
+     * @return true if the phases were loaded, false to fall back to loading the
+     *         phase files directly
+     */
+    private boolean loadUsingIndex(File check) {
+        File indexFile = new File(addon.getDataFolder(), PHASES_INDEX_YML);
+        boolean freshIndex = !indexFile.exists();
+        if (freshIndex) {
+            copyIndexFromAddonJar();
+        }
+        List<PhaseIndexEntry> entries = indexFile.exists() ? readIndex(indexFile) : new ArrayList<>();
+        if (entries == null) {
+            return false;
+        }
+        boolean changed = reconcileIndex(entries, check, freshIndex);
+        if (entries.isEmpty()) {
+            return false;
+        }
+        phaseIndex = entries;
+        if (changed && saveIndex()) {
+            addon.log("Updated " + PHASES_INDEX_YML + " to match the files in the phases folder.");
+        }
+        int startBlock = 0;
+        for (PhaseIndexEntry entry : entries) {
+            startBlock = loadIndexedPhase(check, entry, startBlock);
+        }
+        if (gotoAtEnd != null) {
+            OneBlockPhase gotoPhase = new OneBlockPhase(String.valueOf(startBlock));
+            gotoPhase.setGotoBlock(gotoAtEnd);
+            blockProbs.put(startBlock, gotoPhase);
+        }
+        return true;
     }
 
     /**
@@ -177,84 +231,393 @@ public class OneBlocksManager {
     }
 
     /**
-     * Builds a phase index from the phase files already on disk. Only main phase
-     * files are read - they contain plain scalars, so this is safe on any server
-     * version. Chest files, which hold serialized items, are never touched.
-     * Lengths are derived from the gaps between consecutive start blocks.
+     * Reads the phase index file and sets {@link #gotoAtEnd} from it.
      *
-     * @param phaseFolder folder holding the phase files
-     * @param indexFile   index file to write
+     * @param indexFile index file
+     * @return the entries, or null if the file cannot be parsed
      */
-    void generateIndex(File phaseFolder, File indexFile) {
-        TreeMap<Integer, PhaseIndexEntry> scan = new TreeMap<>();
-        Integer gotoTarget = null;
-        int gotoStart = -1;
-        FilenameFilter mainYmlFilter = (dir, name) -> name.toLowerCase(Locale.ENGLISH).endsWith(".yml")
-                && !name.toLowerCase(Locale.ENGLISH).endsWith(CHESTS_YML_SUFFIX);
-        File[] files = phaseFolder.listFiles(mainYmlFilter);
-        if (files == null) {
-            return;
-        }
-        for (File phaseFile : files) {
-            YamlConfiguration cfg = new YamlConfiguration();
-            try {
-                cfg.load(phaseFile);
-            } catch (Exception e) {
-                addon.logError("Could not scan " + phaseFile.getName() + " for the phase index: " + e.getMessage());
-                continue;
-            }
-            String base = phaseFile.getName().substring(0, phaseFile.getName().length() - ".yml".length());
-            scanPhaseFile(cfg, base, scan);
-            for (String key : cfg.getKeys(false)) {
-                ConfigurationSection section = cfg.getConfigurationSection(key);
-                if (NumberUtils.isCreatable(key) && section != null && section.contains(GOTO_BLOCK)) {
-                    gotoTarget = section.getInt(GOTO_BLOCK, 0);
-                    gotoStart = Integer.parseInt(key);
-                }
-            }
-        }
-        if (scan.isEmpty()) {
-            return;
+    @Nullable
+    private List<PhaseIndexEntry> readIndex(File indexFile) {
+        YamlConfiguration index = new YamlConfiguration();
+        try {
+            index.load(indexFile);
+        } catch (Exception e) {
+            addon.logError("Could not load " + PHASES_INDEX_YML + ": " + e.getMessage());
+            return null;
         }
         List<PhaseIndexEntry> entries = new ArrayList<>();
-        List<Integer> starts = new ArrayList<>(scan.keySet());
-        for (int i = 0; i < starts.size(); i++) {
-            int start = starts.get(i);
-            int next = i + 1 < starts.size() ? starts.get(i + 1) : gotoStart;
-            PhaseIndexEntry entry = scan.get(start);
-            entry.setLength(next > start ? next - start : DEFAULT_PHASE_LENGTH);
-            entries.add(entry);
+        for (Map<?, ?> map : index.getMapList(INDEX_PHASES)) {
+            PhaseIndexEntry entry = PhaseIndexEntry.fromMap(map);
+            if (entry == null) {
+                addon.logError(PHASES_INDEX_YML + " entry is missing the file name. Skipping it.");
+            } else {
+                entries.add(entry);
+            }
         }
-        if (writeIndex(indexFile, entries, gotoTarget)) {
-            addon.log("Created " + PHASES_INDEX_YML + " from the existing phase files.");
+        gotoAtEnd = index.contains(GOTO_AT_END) ? index.getInt(GOTO_AT_END, 0) : null;
+        adminLengths = index.getBoolean(ADMIN_LENGTHS, false);
+        return entries;
+    }
+
+    /**
+     * Result of scanning the main phase files in the phases folder: every phase
+     * section with a numeric (legacy start-block) key, phase sections with any
+     * other key, plus any goto found. Section keys only need to be numbers for
+     * the legacy fallback loader - for indexed phases they are just identifiers,
+     * so custom files may use keys like 'my_phase'.
+     */
+    private static class DiskScan {
+        final TreeMap<Integer, PhaseIndexEntry> phases = new TreeMap<>();
+        final List<PhaseIndexEntry> unkeyed = new ArrayList<>();
+        Integer gotoTarget;
+        int gotoStart = -1;
+
+        /**
+         * Length of the phase at this legacy start-block key, from the gap to the
+         * next scanned key (or the goto), or -1 if there is nothing after it.
+         */
+        int lengthAt(int start) {
+            Integer next = phases.higherKey(start);
+            int end = next != null ? next : gotoStart;
+            return end > start ? end - start : -1;
         }
     }
 
     /**
-     * Adds an index entry for every non-goto phase section in a scanned file.
+     * Scans the main phase files on disk. Only main files are read - they contain
+     * plain scalars, so this is safe on any server version. Chest files, which
+     * hold serialized items, are never touched.
      *
-     * @param cfg  loaded main phase file
-     * @param base file name without the .yml extension
-     * @param scan map of start block to index entry being built
+     * @param phaseFolder folder holding the phase files
+     * @return the scan
      */
-    private void scanPhaseFile(YamlConfiguration cfg, String base, TreeMap<Integer, PhaseIndexEntry> scan) {
+    private DiskScan scanPhaseFolder(File phaseFolder) {
+        DiskScan scan = new DiskScan();
+        FilenameFilter mainYmlFilter = (dir, name) -> name.toLowerCase(Locale.ENGLISH).endsWith(".yml")
+                && !name.toLowerCase(Locale.ENGLISH).endsWith(CHESTS_YML_SUFFIX);
+        File[] files = phaseFolder.listFiles(mainYmlFilter);
+        if (files != null) {
+            for (File phaseFile : files) {
+                scanPhaseFile(phaseFile, scan);
+            }
+        }
+        return scan;
+    }
+
+    /**
+     * Adds every phase section in one main phase file to the scan.
+     */
+    private void scanPhaseFile(File phaseFile, DiskScan scan) {
+        YamlConfiguration cfg = new YamlConfiguration();
+        try {
+            cfg.load(phaseFile);
+        } catch (Exception e) {
+            addon.logError("Could not scan " + phaseFile.getName() + " for the phase index: " + e.getMessage());
+            return;
+        }
+        String base = phaseFile.getName().substring(0, phaseFile.getName().length() - ".yml".length());
         for (String key : cfg.getKeys(false)) {
-            if (!NumberUtils.isCreatable(key)) {
-                continue;
-            }
             ConfigurationSection section = cfg.getConfigurationSection(key);
-            if (section == null || section.contains(GOTO_BLOCK)) {
+            if (section != null) {
+                scanPhaseSection(base, key, section, scan);
+            }
+        }
+    }
+
+    /**
+     * Adds one top-level section of a phase file to the scan - as the goto, a
+     * numeric-keyed phase, or an unkeyed phase.
+     */
+    private void scanPhaseSection(String base, String key, ConfigurationSection section, DiskScan scan) {
+        boolean numericKey = NumberUtils.isDigits(key);
+        if (section.contains(GOTO_BLOCK)) {
+            scan.gotoTarget = section.getInt(GOTO_BLOCK, 0);
+            if (numericKey) {
+                scan.gotoStart = Integer.parseInt(key);
+            }
+            return;
+        }
+        // Non-numeric keys are fine for indexed phases, but ask for some
+        // evidence that the section really is a phase so stray YAML in the
+        // folder does not become one
+        if (!numericKey && !looksLikePhase(section)) {
+            return;
+        }
+        PhaseIndexEntry entry = new PhaseIndexEntry();
+        entry.setFile(base);
+        entry.setSection(key);
+        entry.setName(section.getString(NAME, base));
+        String requiredVersion = Objects.toString(section.get(REQUIRED_MC_VERSION), "");
+        if (!requiredVersion.isEmpty()) {
+            entry.setRequiredMinecraftVersion(requiredVersion);
+        }
+        if (numericKey) {
+            scan.phases.put(Integer.parseInt(key), entry);
+        } else {
+            scan.unkeyed.add(entry);
+        }
+    }
+
+    private boolean looksLikePhase(ConfigurationSection section) {
+        return section.contains(NAME) || section.contains(BLOCKS) || section.contains(FIXED_BLOCKS)
+                || section.contains(MOBS);
+    }
+
+    /**
+     * Reconciles the index entries with the phase files actually in the phases
+     * folder, so the index - and everything driven by it, like the admin phases
+     * panel - reflects this server's reality rather than a shipped preset:
+     * <ul>
+     * <li>An entry whose file and section exist on disk keeps its place.</li>
+     * <li>An entry whose file is missing is re-pointed at a folder file holding a
+     * phase with the same name - this follows shipped file renames across addon
+     * versions (e.g. 11000_deep_dark to 10500_deep_dark).</li>
+     * <li>Failing that, a shipped file is restored from the addon jar - this
+     * recovers phases added by an addon upgrade, whose files are never copied
+     * into an existing folder.</li>
+     * <li>Failing that, the entry is removed.</li>
+     * <li>Folder files not in the index at all are added. Numeric section keys
+     * position an entry among the others by legacy start block and imply its
+     * length; non-numeric keys (fine for custom phases - keys are only start
+     * blocks for the legacy non-index loader) go to the end with the default
+     * length, to be arranged in the admin GUI.</li>
+     * </ul>
+     * When any of that repair work happened - or the index was only just copied
+     * from the jar over an existing folder - the index clearly did not describe
+     * this server, so entry lengths are also refreshed from the gaps between the
+     * files' legacy start-block keys, preserving the layout the server actually
+     * ran before the index existed. Once an admin has set lengths through a tool
+     * ({@link #setAdminLengths()}), lengths are never refreshed.
+     *
+     * @param entries        index entries, reconciled in place
+     * @param phaseFolder    folder holding the phase files
+     * @param refreshLengths true to refresh entry lengths from the folder even if
+     *                       no other repair was needed
+     * @return true if the entries or goto changed and the index should be saved
+     */
+    boolean reconcileIndex(List<PhaseIndexEntry> entries, File phaseFolder, boolean refreshLengths) {
+        DiskScan disk = scanPhaseFolder(phaseFolder);
+        boolean fromScratch = entries.isEmpty();
+        Reconciliation rec = new Reconciliation();
+        for (PhaseIndexEntry entry : entries) {
+            reconcileEntry(entry, disk, phaseFolder, rec);
+        }
+        addKeyedDiscoveries(disk, rec, fromScratch);
+        addUnkeyedDiscoveries(disk, rec);
+        if (gotoAtEnd == null && disk.gotoTarget != null) {
+            gotoAtEnd = disk.gotoTarget;
+            rec.changed = true;
+        }
+        if (refreshLengths || rec.repaired) {
+            refreshLengthsFromFolder(disk, rec);
+        }
+        entries.clear();
+        entries.addAll(rec.result);
+        return rec.changed;
+    }
+
+    /**
+     * Working state of one reconciliation run.
+     */
+    private static class Reconciliation {
+        final List<PhaseIndexEntry> result = new ArrayList<>();
+        /**
+         * Legacy start-block key of the folder section backing each kept entry.
+         * Null when an entry is not backed by a scanned numeric-keyed section.
+         */
+        final List<Integer> orderKeys = new ArrayList<>();
+        final Set<PhaseIndexEntry> claimedScans = new HashSet<>();
+        final Map<PhaseIndexEntry, Integer> claims = new HashMap<>();
+        boolean changed;
+        boolean repaired;
+
+        void keep(PhaseIndexEntry entry, @Nullable Integer orderKey) {
+            result.add(entry);
+            orderKeys.add(orderKey);
+        }
+    }
+
+    /**
+     * Reconciles one index entry: claims its backing folder section (re-pointing
+     * the entry if the phase moved), restores its file from the jar, or drops it.
+     */
+    private void reconcileEntry(PhaseIndexEntry entry, DiskScan disk, File phaseFolder, Reconciliation rec) {
+        PhaseIndexEntry scanned = matchOnDisk(entry, disk, phaseFolder, rec);
+        if (scanned != null) {
+            rec.claimedScans.add(scanned);
+            Integer start = sectionKeyOf(scanned);
+            if (start != null) {
+                rec.claims.put(entry, start);
+            }
+            rec.keep(entry, start);
+            return;
+        }
+        if (!mainFile(phaseFolder, entry.getFile()).exists()) {
+            restorePhaseFileFromJar(entry.getFile());
+            if (!mainFile(phaseFolder, entry.getFile()).exists()) {
+                addon.logWarning("Phase index: removed " + entry.getName() + " - " + entry.getFile()
+                        + ".yml is not in the phases folder or the addon jar.");
+                rec.repaired = true;
+                rec.changed = true;
+                return;
+            }
+            addon.log("Phase index: restored missing " + entry.getFile() + ".yml from the addon jar.");
+            rec.repaired = true;
+        }
+        // On disk but without a free scanned section - keep it as-is and let
+        // the loader's section fallback deal with it
+        rec.keep(entry, sectionKeyOf(entry));
+    }
+
+    /**
+     * Finds the scanned folder section backing this entry: its own file and
+     * section, else a free section of its file, else - only when its file is
+     * gone - a section holding a phase with the same name. In the latter two
+     * cases the entry is re-pointed at what was found.
+     */
+    @Nullable
+    private PhaseIndexEntry matchOnDisk(PhaseIndexEntry entry, DiskScan disk, File phaseFolder, Reconciliation rec) {
+        PhaseIndexEntry scanned = findScanned(disk, rec.claimedScans, en -> en.getFile().equals(entry.getFile())
+                && (entry.getSection() == null || Objects.equals(entry.getSection(), en.getSection())));
+        if (scanned != null) {
+            return scanned;
+        }
+        scanned = findScanned(disk, rec.claimedScans, en -> en.getFile().equals(entry.getFile()));
+        if (scanned == null && !mainFile(phaseFolder, entry.getFile()).exists()) {
+            scanned = findScanned(disk, rec.claimedScans,
+                    en -> en.getName() != null && en.getName().equalsIgnoreCase(entry.getName()));
+        }
+        if (scanned == null) {
+            return null;
+        }
+        // The same phase lives in a different file or section on disk
+        addon.log("Phase index: " + entry.getName() + " is " + scanned.getFile()
+                + ".yml in the phases folder. Using that file.");
+        entry.setFile(scanned.getFile());
+        entry.setSection(scanned.getSection());
+        entry.setName(scanned.getName());
+        entry.setRequiredMinecraftVersion(scanned.getRequiredMinecraftVersion());
+        rec.repaired = true;
+        rec.changed = true;
+        return scanned;
+    }
+
+    /**
+     * Adds numeric-keyed folder sections the index does not know about,
+     * positioned by legacy start block with the length its key gap implies.
+     */
+    private void addKeyedDiscoveries(DiskScan disk, Reconciliation rec, boolean fromScratch) {
+        for (Entry<Integer, PhaseIndexEntry> en : disk.phases.entrySet()) {
+            if (rec.claimedScans.contains(en.getValue())) {
                 continue;
             }
-            PhaseIndexEntry entry = new PhaseIndexEntry();
-            entry.setFile(base);
-            entry.setSection(key);
-            entry.setName(section.getString(NAME, base));
-            String requiredVersion = Objects.toString(section.get(REQUIRED_MC_VERSION), "");
-            if (!requiredVersion.isEmpty()) {
-                entry.setRequiredMinecraftVersion(requiredVersion);
+            PhaseIndexEntry entry = en.getValue();
+            int length = disk.lengthAt(en.getKey());
+            entry.setLength(length > 0 ? length : DEFAULT_PHASE_LENGTH);
+            int pos = insertPosition(rec.orderKeys, en.getKey());
+            rec.result.add(pos, entry);
+            rec.orderKeys.add(pos, en.getKey());
+            rec.claims.put(entry, en.getKey());
+            if (!fromScratch) {
+                addon.log("Phase index: added " + entry.getName() + " from " + entry.getFile()
+                        + ".yml found in the phases folder.");
             }
-            scan.put(Integer.parseInt(key), entry);
+            rec.repaired = true;
+            rec.changed = true;
+        }
+    }
+
+    /**
+     * Adds folder sections without numeric keys to the end of the phase order
+     * with the default length, for the admin to arrange in the GUI.
+     */
+    private void addUnkeyedDiscoveries(DiskScan disk, Reconciliation rec) {
+        for (PhaseIndexEntry entry : disk.unkeyed) {
+            if (rec.claimedScans.contains(entry)) {
+                continue;
+            }
+            entry.setLength(DEFAULT_PHASE_LENGTH);
+            rec.keep(entry, null);
+            addon.log("Phase index: added " + entry.getName() + " from " + entry.getFile()
+                    + ".yml at the end of the phase order. Move it with the admin phases GUI.");
+            rec.repaired = true;
+            rec.changed = true;
+        }
+    }
+
+    /**
+     * Refreshes claimed entries' lengths from the gaps between the folder
+     * files' legacy start-block keys, unless an admin owns the lengths.
+     */
+    private void refreshLengthsFromFolder(DiskScan disk, Reconciliation rec) {
+        if (adminLengths) {
+            return;
+        }
+        for (Entry<PhaseIndexEntry, Integer> claim : rec.claims.entrySet()) {
+            int length = disk.lengthAt(claim.getValue());
+            if (length > 0 && length != claim.getKey().getLength()) {
+                claim.getKey().setLength(length);
+                rec.changed = true;
+            }
+        }
+    }
+
+    /**
+     * Finds the first unclaimed scanned phase section that matches - numeric-keyed
+     * sections in start-block order first, then the unkeyed ones.
+     *
+     * @param disk    folder scan
+     * @param claimed scanned sections already claimed by an index entry
+     * @param test    match condition
+     * @return matching scanned section, or null
+     */
+    @Nullable
+    private PhaseIndexEntry findScanned(DiskScan disk, Set<PhaseIndexEntry> claimed,
+            Predicate<PhaseIndexEntry> test) {
+        return Stream.concat(disk.phases.values().stream(), disk.unkeyed.stream())
+                .filter(en -> !claimed.contains(en) && test.test(en)).findFirst().orElse(null);
+    }
+
+    /**
+     * @return the entry's section key as a legacy start block, or null if the
+     *         key is not numeric
+     */
+    @Nullable
+    private Integer sectionKeyOf(PhaseIndexEntry entry) {
+        return NumberUtils.isDigits(entry.getSection()) ? Integer.valueOf(entry.getSection()) : null;
+    }
+
+    /**
+     * @return the position in the reconciled list where a phase with this legacy
+     *         start-block key belongs - before the first entry with a higher key
+     */
+    private int insertPosition(List<Integer> orderKeys, int start) {
+        for (int i = 0; i < orderKeys.size(); i++) {
+            Integer key = orderKeys.get(i);
+            if (key != null && key > start) {
+                return i;
+            }
+        }
+        return orderKeys.size();
+    }
+
+    private File mainFile(File phaseFolder, String fileBase) {
+        return new File(phaseFolder, fileBase + ".yml");
+    }
+
+    /**
+     * Copies a phase's main and chest files from the addon jar, if it ships them.
+     */
+    private void restorePhaseFileFromJar(String fileBase) {
+        saveJarResource(PHASES + "/" + fileBase + ".yml");
+        saveJarResource(PHASES + "/" + fileBase + CHESTS_YML_SUFFIX);
+    }
+
+    private void saveJarResource(String jarPath) {
+        try {
+            addon.saveResource(jarPath, false);
+        } catch (Exception e) {
+            // Not shipped in the jar
         }
     }
 
@@ -271,6 +634,9 @@ public class OneBlocksManager {
         index.set(INDEX_PHASES, entries.stream().map(PhaseIndexEntry::toMap).toList());
         if (gotoTarget != null) {
             index.set(GOTO_AT_END, gotoTarget);
+        }
+        if (adminLengths) {
+            index.set(ADMIN_LENGTHS, true);
         }
         try {
             index.save(indexFile);
@@ -333,47 +699,14 @@ public class OneBlocksManager {
     }
 
     /**
-     * Loads the phases listed in the index, in order. Start blocks are the running
-     * sum of the lengths of the phases loaded so far, so a skipped phase takes up
-     * no blocks and the ones after it shift down to fill the gap.
-     *
-     * @param indexFile   index file
-     * @param phaseFolder folder holding the phase files
-     * @return true if the index was usable, false to fall back to direct loading
+     * Marks the index as holding admin-set phase lengths. Call before
+     * {@link #saveIndex()} when a tool changes an entry's length. From then on
+     * reconciliation never overwrites lengths from the phase files' legacy
+     * start-block keys, so the admin's values stick even when files are later
+     * added, renamed, or removed.
      */
-    boolean loadPhasesFromIndex(File indexFile, File phaseFolder) {
-        YamlConfiguration index = new YamlConfiguration();
-        try {
-            index.load(indexFile);
-        } catch (Exception e) {
-            addon.logError("Could not load " + PHASES_INDEX_YML + ": " + e.getMessage());
-            return false;
-        }
-        List<PhaseIndexEntry> entries = new ArrayList<>();
-        for (Map<?, ?> map : index.getMapList(INDEX_PHASES)) {
-            PhaseIndexEntry entry = PhaseIndexEntry.fromMap(map);
-            if (entry == null) {
-                addon.logError(PHASES_INDEX_YML + " entry is missing the file name. Skipping it.");
-            } else {
-                entries.add(entry);
-            }
-        }
-        if (entries.isEmpty()) {
-            addon.logError(PHASES_INDEX_YML + " contains no phases.");
-            return false;
-        }
-        phaseIndex = entries;
-        gotoAtEnd = index.contains(GOTO_AT_END) ? index.getInt(GOTO_AT_END, 0) : null;
-        int startBlock = 0;
-        for (PhaseIndexEntry entry : entries) {
-            startBlock = loadIndexedPhase(phaseFolder, entry, startBlock);
-        }
-        if (gotoAtEnd != null) {
-            OneBlockPhase gotoPhase = new OneBlockPhase(String.valueOf(startBlock));
-            gotoPhase.setGotoBlock(gotoAtEnd);
-            blockProbs.put(startBlock, gotoPhase);
-        }
-        return true;
+    public void setAdminLengths() {
+        adminLengths = true;
     }
 
     /**
@@ -1282,10 +1615,14 @@ public class OneBlocksManager {
      *         key from the index when there is one, otherwise the start block
      */
     private String getPhaseSectionKey(OneBlockPhase p) {
-        if (p.getIndexEntry() != null && p.getIndexEntry().getSection() != null) {
-            return p.getIndexEntry().getSection();
+        PhaseIndexEntry indexEntry = p.getIndexEntry();
+        String section = indexEntry == null ? null : indexEntry.getSection();
+        if (section != null) {
+            return section;
         }
-        return p.getBlockNumber();
+        // Block number can be null when the phase came from the database via GSON
+        String blockNumber = p.getBlockNumber();
+        return blockNumber == null ? "0" : blockNumber;
     }
 
     private void saveChests(ConfigurationSection phSec, OneBlockPhase phase) {

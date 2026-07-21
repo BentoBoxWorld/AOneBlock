@@ -5,6 +5,13 @@
 # that need a newer Minecraft version are skipped without their files (and any
 # serialized items inside them) ever being touched.
 #
+# The index is reconciled with the phases folder on every load: phase files
+# dropped into the folder are added to the index automatically, and entries
+# whose files are gone are repaired or removed. Custom phase files may use any
+# unique top-level key (e.g. 'my_phase') - numbers are only needed by very old
+# addon versions. Files with a numeric key slot in by that legacy start block;
+# any other key is added at the end for you to arrange with /oba phases.
+#
 # Each entry:
 #   file:    base name of the phase file in the phases folder (without .yml).
 #            The chest file is <file>_chests.yml.
@@ -15,6 +22,8 @@
 #   enabled: optional, defaults to true. Set false to leave a phase out.
 #   requiredMinecraftVersion: optional. The phase is skipped (taking up no
 #            blocks) when the server is older than this version.
+#   adminLengths: (top level) set automatically once lengths are edited in the
+#            admin GUI; stops reconciliation from recomputing lengths.
 #
 # After the last phase, the block count jumps to gotoAtEnd.
 phases:
