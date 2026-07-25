@@ -39,6 +39,7 @@ import io.papermc.paper.registry.RegistryKey;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemStack;
 import org.eclipse.jdt.annotation.NonNull;
@@ -848,14 +849,62 @@ public class OneBlocksManager {
             return null;
         }
         try {
-            Map<String, Object> map = new LinkedHashMap<>();
-            raw.forEach((k, v) -> map.put(Objects.toString(k), v));
-            map.remove("==");
-            return ItemStack.deserialize(map);
+            Object deserialized = deserializeRaw(raw, fileName);
+            if (deserialized instanceof ItemStack stack) {
+                return stack;
+            }
+            // No type key, so the map is a bare item definition. Its meta, if any, is
+            // already a real ItemMeta after the walk above.
+            if (deserialized instanceof Map<?, ?> map) {
+                Map<String, Object> args = new LinkedHashMap<>();
+                map.forEach((k, v) -> args.put(Objects.toString(k), v));
+                return ItemStack.deserialize(args);
+            }
+            addon.log("Skipping item " + id + " in " + fileName + ": it is not an item definition.");
+            return null;
         } catch (Exception e) {
             addon.log("Skipping item " + id + " in " + fileName + ": " + e.getMessage());
             return null;
         }
+    }
+
+    /**
+     * Walks a value parsed by plain SnakeYAML and turns any map carrying a
+     * serialized-type key into the object it describes, depth first.
+     * <p>
+     * Chest files are read with SnakeYAML rather than YamlConfiguration so that an
+     * item unknown to this server version can be skipped individually. The cost is
+     * that nothing is deserialized on the way in: an item's {@code meta} section
+     * arrives as a plain map, and {@link ItemStack#deserialize(Map)} silently
+     * ignores meta that is not already an {@link org.bukkit.inventory.meta.ItemMeta}.
+     * That is how stored enchantments, potion effects and custom names were being
+     * dropped. Deserializing here restores them while keeping per-item failures
+     * contained. A part that cannot be deserialized is left as a map and logged, so
+     * a bad meta section costs its meta rather than the whole item.
+     *
+     * @param value    raw value from the YAML parse
+     * @param fileName file the value came from, for log messages
+     * @return the deserialized value, or the value itself if there is nothing to do
+     */
+    private Object deserializeRaw(Object value, String fileName) {
+        if (value instanceof Map<?, ?> map) {
+            Map<String, Object> converted = new LinkedHashMap<>();
+            map.forEach((k, v) -> converted.put(Objects.toString(k), deserializeRaw(v, fileName)));
+            if (converted.get(ConfigurationSerialization.SERIALIZED_TYPE_KEY) instanceof String type) {
+                try {
+                    return ConfigurationSerialization.deserializeObject(converted);
+                } catch (Exception e) {
+                    addon.log("Could not read " + type + " in " + fileName + ": " + e.getMessage());
+                }
+            }
+            return converted;
+        }
+        if (value instanceof List<?> list) {
+            List<Object> converted = new ArrayList<>(list.size());
+            list.forEach(v -> converted.add(deserializeRaw(v, fileName)));
+            return converted;
+        }
+        return value;
     }
 
     private int phaseLength(PhaseIndexEntry entry) {
