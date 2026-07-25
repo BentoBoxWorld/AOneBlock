@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
@@ -16,6 +17,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 import java.util.NavigableMap;
 import java.util.concurrent.CompletableFuture;
 import java.util.jar.JarEntry;
@@ -25,6 +27,11 @@ import org.bukkit.Material;
 import org.bukkit.block.Biome;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.configuration.serialization.ConfigurationSerializable;
+import org.bukkit.configuration.serialization.ConfigurationSerialization;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.EnchantmentStorageMeta;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jdt.annotation.Nullable;
 import org.junit.jupiter.api.AfterAll;
@@ -730,6 +737,98 @@ public class OneBlocksManagerTest3 extends CommonTestSetup {
 		assertEquals(1, phase.getChests().iterator().next().getChest().size());
 		verify(plugin).log(org.mockito.ArgumentMatchers.contains("Skipping item minecraft:sulfur"));
 		verify(plugin, never()).logError(anyString());
+	}
+
+	/**
+	 * Item meta in a chest file survives loading. Chest files are parsed with plain
+	 * SnakeYAML, so nested meta has to be deserialized before the item is built -
+	 * ItemStack.deserialize ignores a meta section that is still a plain map, which
+	 * is how enchanted books arrived with nothing stored on them.
+	 * <p>
+	 * The server's own "ItemMeta" serialization alias does not exist under
+	 * MockBukkit, so a stand-in is registered that records what it is given and
+	 * returns a mock. The YAML is a copy of what the shipped phase files hold.
+	 */
+	@Test
+	void testLoadPhasesChestItemKeepsMeta() throws IOException {
+		PHASES_DIR.mkdirs();
+		java.nio.file.Files.writeString(new File(PHASES_DIR, "alpha.yml").toPath(), """
+                '0':
+                  name: Alpha
+                  biome: PLAINS
+                  blocks:
+                    GRASS_BLOCK: 100
+                """);
+		java.nio.file.Files.writeString(new File(PHASES_DIR, "alpha_chests.yml").toPath(), """
+                '0':
+                  chests:
+                    '1':
+                      contents:
+                        0:
+                          ==: org.bukkit.inventory.ItemStack
+                          v: 2230
+                          type: ENCHANTED_BOOK
+                          meta:
+                            ==: ItemMeta
+                            meta-type: ENCHANTED
+                            stored-enchants:
+                              PROTECTION_FALL: 1
+                      rarity: COMMON
+                """);
+		java.nio.file.Files.writeString(INDEX_FILE.toPath(), """
+                phases:
+                  - file: alpha
+                    section: '0'
+                    name: Alpha
+                    length: 100
+                """);
+		// The item factory has to accept the meta for ItemStack to keep it
+		when(itemFactory.isApplicable(any(ItemMeta.class), any(Material.class))).thenReturn(true);
+		when(itemFactory.asMetaFor(any(ItemMeta.class), any(Material.class)))
+				.thenAnswer(invocation -> invocation.getArgument(0));
+		StandInItemMeta.lastArgs = null;
+		ConfigurationSerialization.registerClass(StandInItemMeta.class, "ItemMeta");
+		try {
+			obm.loadPhases();
+		} finally {
+			ConfigurationSerialization.unregisterClass("ItemMeta");
+		}
+		OneBlockPhase phase = obm.getPhase(0);
+		assertNotNull(phase);
+		assertEquals(1, phase.getChests().size());
+		ItemStack loaded = phase.getChests().iterator().next().getChest().get(0);
+		assertNotNull(loaded, "Chest should contain the book");
+		// The meta section reached the meta deserializer intact, so a real ItemMeta -
+		// not a plain map - is what ItemStack.deserialize is given. Before the fix
+		// the deserializer was never called at all. Whether the stack then keeps the
+		// meta cannot be checked here: ItemStack delegates meta to a craftDelegate,
+		// which is a mock while Bukkit is statically mocked.
+		assertNotNull(StandInItemMeta.lastArgs, "Meta should have been deserialized");
+		assertEquals("ENCHANTED", StandInItemMeta.lastArgs.get("meta-type"));
+		assertEquals(Map.of("PROTECTION_FALL", 1), StandInItemMeta.lastArgs.get("stored-enchants"));
+		verify(plugin, never()).logError(anyString());
+	}
+
+	/**
+	 * Stands in for the server's ItemMeta deserializer. Records the map it is
+	 * handed and returns a mock, so a test can check what reached it.
+	 */
+	public static class StandInItemMeta implements ConfigurationSerializable {
+
+		static Map<String, Object> lastArgs;
+
+		public static EnchantmentStorageMeta deserialize(Map<String, Object> args) {
+			lastArgs = args;
+			EnchantmentStorageMeta meta = Mockito.mock(EnchantmentStorageMeta.class);
+			// ItemStack hands back a clone of its meta
+			when(meta.clone()).thenReturn(meta);
+			return meta;
+		}
+
+		@Override
+		public Map<String, Object> serialize() {
+			return Map.of();
+		}
 	}
 
 	/**
