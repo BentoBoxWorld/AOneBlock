@@ -539,11 +539,28 @@ public class PhasesPanel
         {
             return false;
         }
+        if (!this.hasSetCountPermission())
+        {
+            return false;
+        }
         if (phase.getBlockNumberValue() >= this.oneBlockIsland.getLifetime())
         {
             return false;
         }
         return !this.phaseRequirementsFail(phase, this.oneBlockIsland);
+    }
+
+    /**
+     * Checks that the player holds the permission of the setcount command that a phase
+     * click runs, so the "click to change" action is only offered when it can succeed.
+     */
+    private boolean hasSetCountPermission()
+    {
+        String label = this.addon.getSettings().getSetCountCommand().split(" ")[0];
+        return this.addon.getPlayerCommand()
+                .flatMap(mainCommand -> mainCommand.getSubCommand(label))
+                .map(subCommand -> this.user.hasPermission(subCommand.getPermission()))
+                .orElse(true);
     }
 
     /**

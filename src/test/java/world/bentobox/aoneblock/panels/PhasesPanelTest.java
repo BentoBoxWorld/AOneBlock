@@ -42,6 +42,7 @@ import world.bentobox.aoneblock.oneblocks.Requirement.ReqType;
 import world.bentobox.bank.Bank;
 import world.bentobox.bank.BankManager;
 import world.bentobox.bank.data.Money;
+import world.bentobox.bentobox.api.commands.CompositeCommand;
 import world.bentobox.bentobox.api.panels.TemplatedPanel;
 import world.bentobox.bentobox.api.panels.reader.ItemTemplateRecord;
 import world.bentobox.bentobox.api.user.User;
@@ -539,6 +540,84 @@ class PhasesPanelTest extends CommonTestSetup {
         when(im.getIsland(world, user)).thenReturn(testIsland);
         when(blockListener.getIsland(testIsland)).thenReturn(oneBlockIsland);
         when(oneBlockManager.getBlockProbs()).thenReturn(createBlockProbs());
+
+        Constructor<PhasesPanel> constructor = PhasesPanel.class.getDeclaredConstructor(AOneBlock.class, World.class, User.class);
+        constructor.setAccessible(true);
+        panel = constructor.newInstance(addon, world, user);
+
+        OneBlockPhase phase = createTestPhase("Plains");
+
+        Method method = PhasesPanel.class.getDeclaredMethod("canApplyPhase", OneBlockPhase.class);
+        method.setAccessible(true);
+
+        boolean result = (boolean) method.invoke(panel, phase);
+
+        assertTrue(result);
+    }
+
+    /**
+     * Test canApplyPhase returns false when the player lacks the setcount command
+     * permission — the "click to change" action must not be offered.
+     */
+    @Test
+    void testCanApplyPhaseNoSetCountPermission() throws Exception {
+        setUpAddonMocks();
+        Island testIsland = new Island();
+        testIsland.setOwner(uuid);
+        OneBlockIslands oneBlockIsland = new OneBlockIslands(testIsland.getUniqueId());
+        oneBlockIsland.setLifetime(100L);
+        oneBlockIsland.setLastPhaseChangeTime(System.currentTimeMillis());
+
+        User user = User.getInstance(mockPlayer);
+        when(im.getIsland(world, user)).thenReturn(testIsland);
+        when(blockListener.getIsland(testIsland)).thenReturn(oneBlockIsland);
+        when(oneBlockManager.getBlockProbs()).thenReturn(createBlockProbs());
+
+        // The setcount command exists and carries a permission the player does not have
+        CompositeCommand mainCommand = mock(CompositeCommand.class);
+        CompositeCommand setCountCommand = mock(CompositeCommand.class);
+        when(mainCommand.getSubCommand("setcount")).thenReturn(Optional.of(setCountCommand));
+        when(setCountCommand.getPermission()).thenReturn("aoneblock.island.setcount");
+        when(addon.getPlayerCommand()).thenReturn(Optional.of(mainCommand));
+        when(mockPlayer.hasPermission("aoneblock.island.setcount")).thenReturn(false);
+
+        Constructor<PhasesPanel> constructor = PhasesPanel.class.getDeclaredConstructor(AOneBlock.class, World.class, User.class);
+        constructor.setAccessible(true);
+        panel = constructor.newInstance(addon, world, user);
+
+        OneBlockPhase phase = createTestPhase("Plains");
+
+        Method method = PhasesPanel.class.getDeclaredMethod("canApplyPhase", OneBlockPhase.class);
+        method.setAccessible(true);
+
+        boolean result = (boolean) method.invoke(panel, phase);
+
+        assertFalse(result);
+    }
+
+    /**
+     * Test canApplyPhase returns true when the player holds the setcount permission.
+     */
+    @Test
+    void testCanApplyPhaseWithSetCountPermission() throws Exception {
+        setUpAddonMocks();
+        Island testIsland = new Island();
+        testIsland.setOwner(uuid);
+        OneBlockIslands oneBlockIsland = new OneBlockIslands(testIsland.getUniqueId());
+        oneBlockIsland.setLifetime(100L);
+        oneBlockIsland.setLastPhaseChangeTime(System.currentTimeMillis());
+
+        User user = User.getInstance(mockPlayer);
+        when(im.getIsland(world, user)).thenReturn(testIsland);
+        when(blockListener.getIsland(testIsland)).thenReturn(oneBlockIsland);
+        when(oneBlockManager.getBlockProbs()).thenReturn(createBlockProbs());
+
+        CompositeCommand mainCommand = mock(CompositeCommand.class);
+        CompositeCommand setCountCommand = mock(CompositeCommand.class);
+        when(mainCommand.getSubCommand("setcount")).thenReturn(Optional.of(setCountCommand));
+        when(setCountCommand.getPermission()).thenReturn("aoneblock.island.setcount");
+        when(addon.getPlayerCommand()).thenReturn(Optional.of(mainCommand));
+        when(mockPlayer.hasPermission("aoneblock.island.setcount")).thenReturn(true);
 
         Constructor<PhasesPanel> constructor = PhasesPanel.class.getDeclaredConstructor(AOneBlock.class, World.class, User.class);
         constructor.setAccessible(true);
