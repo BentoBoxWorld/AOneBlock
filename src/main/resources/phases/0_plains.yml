@@ -1,11 +1,107 @@
+# ============================================================================
+#  AOneBlock phase file - PLAINS
+# ============================================================================
+#  This file is the reference example. Every option AOneBlock supports is
+#  documented here, so read this one first before editing the others.
+#  Full docs: https://docs.bentobox.world/en/latest/gamemodes/AOneBlock/Phases/
+#
+#  ---------------------------------------------------------------------------
+#  WHAT DO THE NUMBERS MEAN?
+#  ---------------------------------------------------------------------------
+#  There are three completely different kinds of number in a phase file. Which
+#  one you are looking at depends on which section it is in.
+#
+#  1. NUMBERS IN `blocks:`, `mobs:` AND `custom-blocks:` ARE **WEIGHTS**.
+#
+#     They are NOT how many of that block will appear, and they are NOT a
+#     percentage. They are relative weights - tickets in a raffle.
+#
+#     Every time the magic block is broken, AOneBlock adds up every weight in
+#     the phase and picks one entry at random, in proportion to its weight:
+#
+#         chance of an entry = its weight / total of ALL weights in the phase
+#
+#     IMPORTANT: `blocks:`, `mobs:` and `custom-blocks:` all share ONE pool.
+#     A mob weight and a block weight are directly comparable, and mob weights
+#     count towards the same total. Adding a mob makes every block slightly
+#     rarer, and vice versa.
+#
+#     Worked example - the Winter phase:
+#
+#         blocks:
+#           COBBLESTONE: 900
+#           SAND: 100
+#           DIRT: 200
+#           STONE: 1000
+#           SPRUCE_LEAVES: 500
+#
+#     The total is 900 + 100 + 200 + 1000 + 500 = 2700, so:
+#
+#         STONE          1000 / 2700 = 37.0% of broken blocks
+#         COBBLESTONE     900 / 2700 = 33.3%
+#         SPRUCE_LEAVES   500 / 2700 = 18.5%
+#         DIRT            200 / 2700 =  7.4%
+#         SAND            100 / 2700 =  3.7%
+#
+#     Because only the ratio matters, `STONE: 1000, DIRT: 200` behaves exactly
+#     the same as `STONE: 10, DIRT: 2`. Big numbers are used in the shipped
+#     files simply so you can add or tune a rare entry (say weight 5) without
+#     having to rescale everything else.
+#
+#     Over a 1000-block phase you would therefore expect roughly 370 stone -
+#     but it is a fresh random roll each time, so the actual count varies.
+#
+#     A weight must be a whole number of 1 or more. Weight 0 or a negative
+#     number is rejected with a warning in the server log.
+#
+#  2. NUMBERS USED AS KEYS IN `fixedBlocks:` AND `holograms:` ARE **POSITIONS**.
+#
+#     They are the block count WITHIN this phase, counting from 0. So `0` is
+#     the very first block of the phase, `1` the second, and so on. They are
+#     not the player's overall block count. A position beyond the length of
+#     the phase is simply never reached.
+#
+#     Fixed blocks are guaranteed - they bypass the weighted pool entirely.
+#
+#  3. THE TOP-LEVEL KEY OF THIS FILE ('0' BELOW) IS THE PHASE'S START BLOCK.
+#
+#     Historically this was the overall block count at which the phase began,
+#     which is also why the shipped files are named `0_plains`, `2000_winter`
+#     and so on. Since 1.26.0 `phases_index.yml` is in charge of phase order
+#     and phase length, so this key is really just the section name - the
+#     index's `section:` field points at it. Custom phases may use any unique
+#     key, e.g. `my_phase:`. Keep the number if you like: it tells the index
+#     reconciler where a new file belongs in the running order.
+#
+#     To change how long a phase lasts, edit `length` in `phases_index.yml`
+#     or use the admin phases GUI - not this key.
+# ============================================================================
+
 '0':
+  # Display name of the phase. Shown in the phases GUI, the boss bar, logs and
+  # the [phase] command placeholder.
   name: Plains
-  # Icon in Phase GUI's. Icon uses BentoBox ItemParser: https://docs.bentobox.world/en/latest/BentoBox/ItemParser/
-  # It supports Custom Player heads and any displayable item.
+
+  # Icon in the Phases GUI. Uses the BentoBox ItemParser:
+  # https://docs.bentobox.world/en/latest/BentoBox/ItemParser/
+  # It supports custom player heads and any displayable item.
   icon: GRASS_BLOCK
-  # List of blocks that will generate at these specific block counts.
-  # The numbers are relative to the phase and not the overall player's count.
-  # If you define 0 here, then firstBlock is not required and firstBlock will be replaced with this block.
+
+  # -------------------------------------------------------------------------
+  # fixedBlocks - guaranteed blocks at exact positions in the phase.
+  # -------------------------------------------------------------------------
+  # KEY   = position within this phase, counting from 0 (NOT a weight, and not
+  #         the player's total block count).
+  # VALUE = a Bukkit Material, a CHEST_WITH_<ITEM> shorthand, or a custom block
+  #         definition (see custom-blocks further down).
+  #
+  # These always win over the random `blocks:` pool, so use them for scripted
+  # moments: the starting trees below, a guaranteed chest, a phase finale.
+  # Prefer blocks that do not need a supporting block - a torch or a sapling
+  # placed as the magic block will just pop off.
+  #
+  # If you define position 0 here, it replaces `firstBlock` and `firstBlock`
+  # is then not needed.
   fixedBlocks:
     0: GRASS_BLOCK
     1: GRASS_BLOCK
@@ -13,17 +109,45 @@
     3: OAK_LOG
     4: OAK_LOG
     5: OAK_LOG
+    # CHEST_WITH_<ITEM> places a chest holding one of that item - here the
+    # water bucket players need before the Ocean phase.
     700: CHEST_WITH_WATER_BUCKET
-  # Hologram Lines to Display
-  # The First (Before Phase 1) Hologram is Located in your Locale.
+
+  # -------------------------------------------------------------------------
+  # holograms - text shown above the magic block at set positions.
+  # -------------------------------------------------------------------------
+  # KEY   = position within this phase, counting from 0 - same numbering as
+  #         fixedBlocks above.
+  # VALUE = the text, with & colour codes.
+  # The very first hologram, shown before phase 1 starts, is in the locale file
+  # rather than here.
   holograms:
     0: "&aGood Luck!"
+
+  # -------------------------------------------------------------------------
+  # biome - the biome of the magic block location only.
+  # -------------------------------------------------------------------------
+  # This changes the biome at the magic block, not the whole island. To rebiome
+  # a whole island on phase change, use the Biomes addon from a start-command.
+  # An invalid name logs the full list of valid biomes on startup.
   biome: PLAINS
+
+  # -------------------------------------------------------------------------
+  # requiredMinecraftVersion - optional. Minimum Minecraft version this phase
+  # needs, e.g. '1.21.6'. Older servers skip the phase with a single log line
+  # instead of erroring on blocks or items they do not know. Set it in
+  # phases_index.yml too, and the file is not even parsed on an old server.
+  # Individual blocks and mobs can be gated as well - see `blocks:` below.
+  # -------------------------------------------------------------------------
+
+  # -------------------------------------------------------------------------
   # Commands
-  # A list of commands can be run at the start and end of a phase. Commands are run as the Console
-  # unless the command is prefixed with [SUDO], then the command is run as the player
-  # triggering the commands.
-  # These placeholders in the command string will be replaced with the appropriate value:
+  # -------------------------------------------------------------------------
+  # A list of commands can be run at the start and end of a phase. Commands are
+  # run as the Console unless the command is prefixed with [SUDO], then the
+  # command is run as the player triggering the commands.
+  # These placeholders in the command string will be replaced with the
+  # appropriate value:
   # [island] - Island name
   # [owner] - Island owner's name
   # [player] - The name of the player who broke the block triggering the commands
@@ -42,14 +166,18 @@
   # These are run only the first time a phase is completed
   # end-commands-first-time:
   # - 'broadcast &c&l[!] &b[player] &fhas completed the &d&n[phase]&f phase for the first time.'
-  #
+
+  # -------------------------------------------------------------------------
   # Requirements
-  # You can stipulate a set of requirements to start the phase:
-  # 
+  # -------------------------------------------------------------------------
+  # You can stipulate a set of requirements to start the phase. Until they are
+  # all met the player is held at the end of the previous phase.
+  #
   # economy-balance - the minimum player's economy balance (Requires Vault and an economy plugin)
   # bank-balance - the minimum island bank balance (requires Bank Addon)
   # level - the island level (Requires Levels Addon)
   # permission - a permission string
+  # cooldown - seconds that must pass since the phase was last started
   #
   # Example:
   # requirements:
@@ -57,7 +185,43 @@
   #   level: 10
   #   permission: ready.for.battle
   #   cooldown: 60 # seconds
-  
+
+  # -------------------------------------------------------------------------
+  # blocks - the weighted pool of blocks this phase can produce.
+  # -------------------------------------------------------------------------
+  # KEY   = a Bukkit Material that is a block. See
+  #         https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Material.html
+  # VALUE = a WEIGHT (see the explanation at the top of this file). Not a
+  #         count, not a percentage - just this entry's share of the pool.
+  #
+  # The weights below add up to 11450, and the `mobs:` weights add another 665,
+  # for a phase total of 12115. So in Plains:
+  #
+  #     GRASS_BLOCK  2000 / 12115 = 16.5% of broken blocks
+  #     CHEST         200 / 12115 =  1.7%
+  #     DIAMOND_ORE    30 / 12115 =  0.25%
+  #     EMERALD_ORE    10 / 12115 =  0.08%
+  #     COW  (a mob)  150 / 12115 =  1.2%
+  #
+  # To make something twice as common, double its weight. To add a new block
+  # without disturbing the existing balance much, give it a small weight - one
+  # of weight 100 added here would appear about 100/12215 = 0.8% of the time.
+  #
+  # CHEST is special: when CHEST is rolled, it is filled from the chest tables
+  # in 0_plains_chests.yml. The weight below is therefore the chance of getting
+  # *a* chest; which chest you get is a second, separate roll on rarity -
+  # COMMON 62%, UNCOMMON 25%, RARE 9%, EPIC 4% (these are fixed in code).
+  #
+  # An entry may also take an object form to gate it by server version:
+  #
+  #   blocks:
+  #     NETHERRACK: 300
+  #     DRIED_GHAST:
+  #       weight: 25
+  #       requiredMinecraftVersion: '1.21.6'
+  #
+  # On an older server that entry is skipped and the rest of the phase loads
+  # normally.
   blocks:
     PODZOL: 40
     MYCELIUM: 40
@@ -89,21 +253,33 @@
     EMERALD_ORE: 10
     DIRT_PATH: 100
     COPPER_ORE: 200
-  # Optional sibling list for custom entries. Lets you keep the map-form
-  # `blocks:` section above untouched while registering custom spawns.
-  # Entries here join the same weighted pool as `blocks:` — probabilities
-  # are directly comparable. Uncomment and tweak to try them out.
+
+  # -------------------------------------------------------------------------
+  # custom-blocks - optional sibling list for anything that is not a plain
+  # Material. Lets you keep the map-form `blocks:` section above untouched
+  # while registering custom spawns.
+  # -------------------------------------------------------------------------
+  # Each entry has a `probability:` field. Despite the name it is a WEIGHT,
+  # exactly like the numbers in `blocks:` and `mobs:`, and it joins the very
+  # same pool - so `probability: 10` here is as likely as `SOME_BLOCK: 10`
+  # above. Uncomment and tweak to try them out.
   #
   # Supported custom types:
-  #   - type: block        — runs /setblock with full data (block states,
+  #   - type: block        - runs /setblock with full data (block states,
   #                          NBT, and an optional destroy|keep|replace mode).
   #                          Alias of `block-data`; prefer `block` for NBT.
-  #   - type: mob-data     — runs /summon with vanilla NBT/components.
+  #   - type: block-data   - as above, using plain block data.
+  #   - type: mob          - spawns a vanilla entity. Requires `mob`, and
+  #                          optionally `underlying-block` (default STONE).
+  #   - type: mob-data     - runs /summon with vanilla NBT/components.
   #                          Blocks inside the (scaled) bounding box are
   #                          cleared one tick after spawn so the mob fits.
-  #   - type: mythic-mob   — spawns a MythicMob via BentoBox's hook.
+  #   - type: mythic-mob   - spawns a MythicMob via BentoBox's hook.
   #                          Requires the MythicMobs plugin; otherwise
   #                          logged and skipped at runtime.
+  #   - type: itemsadder   - block from ItemsAdder. Requires `id`.
+  #   - type: nexo         - block from Nexo. Requires `id`.
+  #   - type: craftengine  - block from CraftEngine. Requires `id`.
   #
   # YAML caveat: because these data strings contain `{`, `}`, `[`, `]`,
   # and double quotes, wrap the value in SINGLE quotes so the inner
@@ -130,6 +306,26 @@
   #    display-name: "Boss"
   #    underlying-block: STONE
   #    probability: 2
+
+  # -------------------------------------------------------------------------
+  # mobs - the weighted pool of mobs this phase can produce.
+  # -------------------------------------------------------------------------
+  # KEY   = an EntityType that is alive and spawnable. See
+  #         https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/entity/EntityType.html
+  # VALUE = a WEIGHT, in the SAME pool as `blocks:` above. CHICKEN: 200 below
+  #         is exactly as likely as a block of weight 200.
+  #
+  # When a mob is rolled the magic block becomes STONE if it was empty and the
+  # mob spawns on top of it. If `clear-blocks` is on in config.yml, blocks in
+  # the way are cleared so the mob fits.
+  #
+  # Mobs support the same object form as blocks for version gating:
+  #
+  #   mobs:
+  #     COW: 150
+  #     HAPPY_GHAST:
+  #       weight: 5
+  #       requiredMinecraftVersion: '1.21.6'
   mobs:
     COW: 150
     SPIDER: 75
