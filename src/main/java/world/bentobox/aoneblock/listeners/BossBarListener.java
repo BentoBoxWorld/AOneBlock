@@ -19,7 +19,6 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.eclipse.jdt.annotation.NonNull;
 
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import world.bentobox.aoneblock.AOneBlock;
 import world.bentobox.aoneblock.dataobjects.OneBlockIslands;
 import world.bentobox.aoneblock.events.MagicBlockEvent;
@@ -28,17 +27,13 @@ import world.bentobox.bentobox.api.events.island.IslandEnterEvent;
 import world.bentobox.bentobox.api.events.island.IslandExitEvent;
 import world.bentobox.bentobox.api.metadata.MetaDataValue;
 import world.bentobox.bentobox.api.user.User;
+import world.bentobox.bentobox.util.Util;
 import world.bentobox.bentobox.database.objects.Island;
 
 public class BossBarListener implements Listener {
 
     private static final String AONEBLOCK_BOSSBAR = "aoneblock.bossbar";
     public static final String AONEBLOCK_ACTIONBAR = "aoneblock.actionbar";
-
-    private static final LegacyComponentSerializer LEGACY_SERIALIZER = LegacyComponentSerializer.builder()
-            .character('&')
-            .hexColors() // Enables support for modern hex codes (e.g., &#FF0000) alongside legacy codes.
-            .build();
 
     public BossBarListener(AOneBlock addon) {
         super();
@@ -78,16 +73,21 @@ public class BossBarListener implements Listener {
     }
 
     /**
-     * Converts a string containing Bukkit color codes ('&') into an Adventure Component.
+     * Converts a formatted string into an Adventure Component.
+     * <p>
+     * Accepts MiniMessage tags, {@code &} or {@code §} legacy codes, hex ({@code &#RRGGBB}), or a
+     * mixture of them. Handling {@code §} matters here because translations arrive already
+     * converted to {@code §} codes by BentoBox - a serializer bound to {@code &} would leave those
+     * in the output as literal text.
      *
-     * @param legacyString The string with Bukkit color and format codes.
+     * @param text The string with color and format codes.
      * @return The resulting Adventure Component.
      */
-    public static Component bukkitToAdventure(String legacyString) {
-        if (legacyString == null) {
+    public static Component bukkitToAdventure(String text) {
+        if (text == null) {
             return Component.empty();
         }
-        return LEGACY_SERIALIZER.deserialize(legacyString);
+        return Util.parseMiniMessageOrLegacy(text);
     }
 
     private void tryToShowActionBar(UUID uuid, Island island) {
