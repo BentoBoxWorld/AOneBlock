@@ -15,7 +15,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.util.Vector;
 import org.eclipse.jdt.annotation.NonNull;
 
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import world.bentobox.aoneblock.AOneBlock;
 import world.bentobox.bentobox.util.Util;
 import world.bentobox.aoneblock.dataobjects.OneBlockIslands;
@@ -131,6 +130,10 @@ public class HoloListener implements Listener {
     /**
      * Creates a new hologram (TextDisplay) at the given location.
      * Caches the hologram for future reference.
+     * <p>
+     * The text may use MiniMessage tags, {@code &} or {@code §} legacy codes, hex
+     * ({@code &#RRGGBB}), or a mixture. Phase file hologram lines are read straight from YAML and
+     * never see BentoBox's translation, so this is the only place their formatting is resolved.
      *
      * @param pos the location to create the hologram at
      * @param text the text to display
@@ -140,7 +143,7 @@ public class HoloListener implements Listener {
         display.setAlignment(TextDisplay.TextAlignment.CENTER);
         display.setBillboard(Billboard.CENTER);
         display.setPersistent(true);
-        display.text(LegacyComponentSerializer.legacyAmpersand().deserialize(text));
+        display.text(Util.parseMiniMessageOrLegacy(text));
         activeHolograms.add(pos);
     }
 

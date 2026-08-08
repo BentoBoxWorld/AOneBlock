@@ -1,6 +1,8 @@
 package world.bentobox.aoneblock.listeners;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyDouble;
 import static org.mockito.ArgumentMatchers.anyInt;
@@ -24,6 +26,12 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.TextDisplay;
+import org.mockito.ArgumentCaptor;
+
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.TextColor;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.util.Vector;
 import org.eclipse.jdt.annotation.NonNull;
 import org.junit.jupiter.api.AfterEach;
@@ -196,6 +204,64 @@ public class HoloListenerTest extends CommonTestSetup {
         when(phase.getHologramLine(anyInt())).thenReturn("my Holo");
         hl.process(island, is, phase);
         verify(sch).runTaskLater(isNull(), any(Runnable.class), anyLong());
+    }
+
+    /**
+     * Captures the component the hologram was actually given.
+     */
+    private Component displayed(String hologramLine) {
+        when(phase.getHologramLine(anyInt())).thenReturn(hologramLine);
+        // process() writes the line to the data object then reads it straight back, and that
+        // object is a mock, so the read has to be stubbed too or it returns the setUp default.
+        when(is.getHologram()).thenReturn(hologramLine);
+        hl.process(island, is, phase);
+        ArgumentCaptor<Component> captor = ArgumentCaptor.forClass(Component.class);
+        verify(hologram).text(captor.capture());
+        return captor.getValue();
+    }
+
+    /**
+     * Phase file hologram lines are read straight from YAML, so this is the only place their
+     * formatting is resolved. MiniMessage tags used to appear as literal text.
+     */
+    @Test
+    void testHologramParsesMiniMessage() {
+        Component c = displayed("<green><bold>Plains</bold></green>");
+        assertEquals("Plains", PlainTextComponentSerializer.plainText().serialize(c));
+        String legacy = LegacyComponentSerializer.legacySection().serialize(c);
+        assertTrue(legacy.contains("\u00a7a"), "expected green in " + legacy);
+        assertTrue(legacy.contains("\u00a7l"), "expected bold in " + legacy);
+    }
+
+    /**
+     * Legacy '&' codes must keep working - every existing phase file uses them.
+     */
+    @Test
+    void testHologramParsesLegacyAmpersand() {
+        Component c = displayed("&aGood Luck!");
+        assertEquals("Good Luck!", PlainTextComponentSerializer.plainText().serialize(c));
+        assertTrue(LegacyComponentSerializer.legacySection().serialize(c).contains("\u00a7a"));
+    }
+
+    /**
+     * Hex was not supported here before - the serializer was built without hex enabled.
+     */
+    @Test
+    void testHologramParsesHex() {
+        Component c = displayed("&#55FF55Good Luck!");
+        assertEquals("Good Luck!", PlainTextComponentSerializer.plainText().serialize(c));
+        assertEquals(TextColor.fromHexString("#55FF55"), c.color());
+    }
+
+    /**
+     * The starting hologram comes from the locale file via User.getTranslation, which hands back
+     * section codes. A serializer bound to '&' left those in as literal text.
+     */
+    @Test
+    void testHologramParsesSectionCodes() {
+        Component c = displayed("\u00a7aWelcome");
+        assertEquals("Welcome", PlainTextComponentSerializer.plainText().serialize(c));
+        assertTrue(LegacyComponentSerializer.legacySection().serialize(c).contains("\u00a7a"));
     }
 
 }

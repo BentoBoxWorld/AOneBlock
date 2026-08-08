@@ -118,7 +118,13 @@
   # -------------------------------------------------------------------------
   # KEY   = position within this phase, counting from 0 - same numbering as
   #         fixedBlocks above.
-  # VALUE = the text, with & colour codes.
+  # VALUE = the text. Any of these work, and they can be mixed:
+  #           &a&lGood Luck!              legacy colour and format codes
+  #           &#55FF55Good Luck!          hex colour
+  #           <green><bold>Good Luck!     MiniMessage tags
+  #         MiniMessage also gives you gradients, e.g.
+  #           <gradient:#55FF55:#00AA00>Good Luck!</gradient>
+  # Use \n for a line break.
   # The very first hologram, shown before phase 1 starts, is in the locale file
   # rather than here.
   holograms:
