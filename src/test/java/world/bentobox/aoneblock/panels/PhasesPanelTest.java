@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.verify;
@@ -70,6 +71,24 @@ class PhasesPanelTest extends CommonTestSetup {
     private Level level;
 
     private PhasesPanel panel;
+
+    /**
+     * Sets what a locale reference translates to for these tests.
+     * <p>
+     * The {@code user} here is a real {@link User} wrapping a mock player, not a mock, so
+     * {@code when(user.getTranslation(...))} does not stub anything on it - it runs the real
+     * method and Mockito attaches the stub to whichever mock that method happened to touch last.
+     * That is an implementation detail of BentoBox and moves between versions. Stub the
+     * {@link world.bentobox.bentobox.managers.LocalesManager} that {@code getTranslation} actually
+     * reads from instead, which is stable.
+     *
+     * @param reference locale key, without any addon prefix
+     * @param value what it should translate to
+     */
+    private void stubTranslation(String reference, String value) {
+        when(lm.get(any(), eq(reference))).thenReturn(value);
+        when(lm.get(any(), eq("aoneblock." + reference))).thenReturn(value);
+    }
 
     private void setUpAddonMocks() {
         when(addon.getPlugin()).thenReturn(plugin);
@@ -325,10 +344,9 @@ class PhasesPanelTest extends CommonTestSetup {
 
         OneBlockPhase phase = createTestPhase("Plains");
 
-        when(user.getTranslation("aoneblock.gui.buttons.phase.blocks-prefix")).thenReturn("Blocks: ");
-        when(user.getTranslation("aoneblock.gui.buttons.phase.wrap-at")).thenReturn("50");
-        when(user.getTranslation("aoneblock.gui.buttons.phase.blocks", "name", "Stone")).thenReturn("Stone, ");
-        when(user.getTranslation("aoneblock.gui.buttons.phase.blocks", "name", "Dirt")).thenReturn("Dirt, ");
+        stubTranslation("aoneblock.gui.buttons.phase.blocks-prefix", "Blocks: ");
+        stubTranslation("aoneblock.gui.buttons.phase.wrap-at", "50");
+        stubTranslation("aoneblock.gui.buttons.phase.blocks", "[name], ");
         when(hooksManager.getHook("LangUtils")).thenReturn(Optional.empty());
         mockedUtil.when(() -> Util.prettifyText(anyString())).thenAnswer(i -> {
             String arg = i.getArgument(0);
@@ -827,7 +845,7 @@ class PhasesPanelTest extends CommonTestSetup {
                 new ItemTemplateRecord.ActionRecords(ClickType.LEFT, "SELECT", "content", "tooltip.key")
         );
 
-        when(user.getTranslation(world, "tooltip.key")).thenReturn("Real tooltip");
+        stubTranslation("tooltip.key", "Real tooltip");
 
         Method method = PhasesPanel.class.getDeclaredMethod("collectTooltips", List.class);
         method.setAccessible(true);
@@ -1482,8 +1500,8 @@ class PhasesPanelTest extends CommonTestSetup {
                 new ItemTemplateRecord.ActionRecords(ClickType.LEFT, "VIEW", "content", "tooltip2")
         );
 
-        when(user.getTranslation(world, "tooltip1")).thenReturn("   "); // Blank after translation
-        when(user.getTranslation(world, "tooltip2")).thenReturn(""); // Empty
+        stubTranslation("tooltip1", "   "); // Blank after translation
+        stubTranslation("tooltip2", ""); // Empty
 
         Method method = PhasesPanel.class.getDeclaredMethod("collectTooltips", List.class);
         method.setAccessible(true);
@@ -2144,8 +2162,7 @@ class PhasesPanelTest extends CommonTestSetup {
         try (MockedStatic<LangUtilsHook> ms = mockStatic(LangUtilsHook.class)) {
             ms.when(() -> LangUtilsHook.getBiomeName(biome, user)).thenReturn("Plains");
 
-            when(user.getTranslationOrNothing("custom.desc", "number", "0", "[biome]", "Plains", "[bank]", "", "[economy]", "", "[level]", "", "[permission]", "", "[blocks]", ""))
-                .thenReturn("Plains Description");
+            stubTranslation("custom.desc", "[biome] Description");
 
             Method method = PhasesPanel.class.getDeclaredMethod("buildDescriptionText", ItemTemplateRecord.class, OneBlockPhase.class, reqTextClass, String.class);
             method.setAccessible(true);
@@ -2179,9 +2196,8 @@ class PhasesPanelTest extends CommonTestSetup {
         reqConstructor.setAccessible(true);
         Object reqTexts = reqConstructor.newInstance("", "", "", "");
 
-        when(user.getTranslationOrNothing("aoneblock.gui.buttons.phase.starting-block", "number", "0")).thenReturn("Block 0");
-        when(user.getTranslationOrNothing("aoneblock.gui.buttons.phase.description", "[starting-block]", "Block 0", "[biome]", "", "[bank]", "", "[economy]", "", "[level]", "", "[permission]", "", "[blocks]", ""))
-            .thenReturn("Default Desc");
+        stubTranslation("aoneblock.gui.buttons.phase.starting-block", "Block [number]");
+        stubTranslation("aoneblock.gui.buttons.phase.description", "Default Desc [starting-block]");
 
         Method method = PhasesPanel.class.getDeclaredMethod("buildDefaultDescription", OneBlockPhase.class, reqTextClass, String.class);
         method.setAccessible(true);
@@ -2398,10 +2414,9 @@ class PhasesPanelTest extends CommonTestSetup {
         reqConstructor.setAccessible(true);
         Object reqTexts = reqConstructor.newInstance("", "", "", "");
 
-        when(user.getTranslationOrNothing("aoneblock.gui.buttons.phase.starting-block", "number", "0")).thenReturn("Block 0");
-        when(user.getTranslationOrNothing("aoneblock.gui.buttons.phase.biome", "[biome]", "Plains")).thenReturn("Biome: Plains");
-        when(user.getTranslationOrNothing("aoneblock.gui.buttons.phase.description", "[starting-block]", "Block 0", "[biome]", "Biome: Plains", "[bank]", "", "[economy]", "", "[level]", "", "[permission]", "", "[blocks]", ""))
-            .thenReturn("Description with biome");
+        stubTranslation("aoneblock.gui.buttons.phase.starting-block", "Block [number]");
+        stubTranslation("aoneblock.gui.buttons.phase.biome", "Biome: [biome]");
+        stubTranslation("aoneblock.gui.buttons.phase.description", "Description with biome [biome]");
 
         try (MockedStatic<LangUtilsHook> ms = mockStatic(LangUtilsHook.class)) {
             ms.when(() -> LangUtilsHook.getBiomeName(biome, user)).thenReturn("Plains");
@@ -2440,9 +2455,8 @@ class PhasesPanelTest extends CommonTestSetup {
         reqConstructor.setAccessible(true);
         Object reqTexts = reqConstructor.newInstance("", "", "", "");
 
-        when(user.getTranslationOrNothing("aoneblock.gui.buttons.phase.starting-block", "number", "0")).thenReturn("Block 0");
-        when(user.getTranslationOrNothing("aoneblock.gui.buttons.phase.description", "[starting-block]", "Block 0", "[biome]", "", "[bank]", "", "[economy]", "", "[level]", "", "[permission]", "", "[blocks]", ""))
-            .thenReturn("Default Description");
+        stubTranslation("aoneblock.gui.buttons.phase.starting-block", "Block [number]");
+        stubTranslation("aoneblock.gui.buttons.phase.description", "Default Description [starting-block]");
 
         Method method = PhasesPanel.class.getDeclaredMethod("buildDescriptionText", ItemTemplateRecord.class, OneBlockPhase.class, reqTextClass, String.class);
         method.setAccessible(true);

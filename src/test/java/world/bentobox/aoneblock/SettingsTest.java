@@ -1732,6 +1732,35 @@ public class SettingsTest extends CommonTestSetup {
         s.setHologramDuration(2345);
         assertEquals(2345, s.getHologramDuration());
     }
+
+    /**
+     * Test method for {@link world.bentobox.aoneblock.Settings#getSaveEvery()}.
+     */
+    @Test
+    void testGetSaveEveryDefault() {
+        assertEquals(10, s.getSaveEvery());
+    }
+
+    /**
+     * Test method for {@link world.bentobox.aoneblock.Settings#setSaveEvery(int)}.
+     */
+    @Test
+    void testSetSaveEvery() {
+        s.setSaveEvery(25);
+        assertEquals(25, s.getSaveEvery());
+    }
+
+    /**
+     * The value is used as a modulo divisor, so anything below 1 has to be clamped or
+     * the block break handler would throw an ArithmeticException on every block.
+     */
+    @Test
+    void testGetSaveEveryClampsZeroAndBelow() {
+        s.setSaveEvery(0);
+        assertEquals(1, s.getSaveEvery());
+        s.setSaveEvery(-50);
+        assertEquals(1, s.getSaveEvery());
+    }
     
     
     
