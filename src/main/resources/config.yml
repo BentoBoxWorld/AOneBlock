@@ -404,6 +404,11 @@ island:
   mob-warning: 5
   # Whether spawned mobs that need water to survive will spawn in a generated water block
   water-mob-protection: true
+  # How often island progress is written to the database, in blocks broken
+  # Progress is also saved whenever a phase changes, a player logs out and the server shuts down,
+  # so this only decides how much is lost if the server dies without shutting down cleanly.
+  # Lower is safer but writes more often. Minimum is 1 (save every block)
+  save-every: 10
   # Default max team size
   # Permission size cannot be less than the default below. 
   max-team-size: 4

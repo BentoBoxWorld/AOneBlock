@@ -5,6 +5,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.io.File;
@@ -49,6 +51,8 @@ public class BlockListenerTest extends CommonTestSetup {
     // Class under test
     private BlockListener bl;
 
+    private AbstractDatabaseHandler<Object> h;
+
     @Mock
     AOneBlock addon;
     @Mock
@@ -78,13 +82,14 @@ public class BlockListenerTest extends CommonTestSetup {
     public void setUp() throws Exception {
         super.setUp();
         // This has to be done beforeClass otherwise the tests will interfere with each other
-        AbstractDatabaseHandler<Object> h = mock(AbstractDatabaseHandler.class);
+        h = mock(AbstractDatabaseHandler.class);
         // Database
         MockedStatic<DatabaseSetup> mockDb = Mockito.mockStatic(DatabaseSetup.class);
         DatabaseSetup dbSetup = mock(DatabaseSetup.class);
         mockDb.when(DatabaseSetup::getDatabase).thenReturn(dbSetup);
         when(dbSetup.getHandler(any())).thenReturn(h);
         when(h.saveObject(any())).thenReturn(CompletableFuture.completedFuture(true));
+        when(h.saveObjectNow(any())).thenReturn(CompletableFuture.completedFuture(true));
 
         // Addon
         when(addon.getPlugin()).thenReturn(plugin);
@@ -185,6 +190,38 @@ public class BlockListenerTest extends CommonTestSetup {
         BlockFromToEvent e = new BlockFromToEvent(from, to);
         bl.onBlockFromTo(e);
         assertTrue(e.isCancelled());
+    }
+
+    /**
+     * Test method for {@link world.bentobox.aoneblock.listeners.BlockListener#saveCache()}.
+     */
+    @Test
+    void testSaveCacheQueuesTheWrite() throws Exception {
+        island.setUniqueId(UUID.randomUUID().toString());
+        bl.getIsland(island);
+
+        bl.saveCache();
+
+        verify(h).saveObject(any());
+        verify(h, never()).saveObjectNow(any());
+    }
+
+    /**
+     * The shutdown save has to write directly. This addon is a Pladdon, so the server disables it
+     * before BentoBox, and a queued write only lands if BentoBox drains the queue afterwards -
+     * which older BentoBox versions did not do, silently rolling islands back on every restart.
+     *
+     * Test method for {@link world.bentobox.aoneblock.listeners.BlockListener#saveCacheNow()}.
+     */
+    @Test
+    void testSaveCacheNowWritesDirectly() throws Exception {
+        island.setUniqueId(UUID.randomUUID().toString());
+        bl.getIsland(island);
+
+        bl.saveCacheNow();
+
+        verify(h).saveObjectNow(any());
+        verify(h, never()).saveObject(any());
     }
 
 }

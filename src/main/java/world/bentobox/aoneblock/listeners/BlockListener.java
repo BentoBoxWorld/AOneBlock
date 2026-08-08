@@ -124,11 +124,6 @@ public class BlockListener extends FlagListener implements Listener {
      */
     public static final int MAX_LOOK_AHEAD = 5;
 
-    /**
-     * How often island data is saved to the database (in blocks broken).
-     */
-    public static final int SAVE_EVERY = 50;
-
     /*
      * Loot tables for suspicious blocks
      */
@@ -161,9 +156,23 @@ public class BlockListener extends FlagListener implements Listener {
 
     /**
      * Saves all island data from the cache to the database asynchronously.
+     * <p>
+     * Only safe while the server is running. On shutdown use {@link #saveCacheNow()}.
      */
     public void saveCache() {
         cache.values().forEach(handler::saveObjectAsync);
+    }
+
+    /**
+     * Saves all island data from the cache to the database on the calling thread.
+     * <p>
+     * Used on shutdown, where an asynchronous save cannot be retried if it does not complete.
+     * BentoBox drains writes queued by addons as they are disabled, but this addon is a Pladdon,
+     * so the server disables it before BentoBox and that drain is the only thing standing between
+     * a queued block count and a rolled-back island. Writing directly removes the dependency.
+     */
+    public void saveCacheNow() {
+        cache.values().forEach(handler::saveObjectNow);
     }
 
     // ---------------------------------------------------------------------
@@ -448,7 +457,7 @@ public class BlockListener extends FlagListener implements Listener {
                 return new ProcessPhaseResult(phase, true, 0);
             }
             handleNewPhase(player, i, is, phase, block, prevPhaseName);
-        } else if (is.getBlockNumber() % SAVE_EVERY == 0) {
+        } else if (is.getBlockNumber() % addon.getSettings().getSaveEvery() == 0) {
             // Periodically save the island's progress.
             saveIsland(i);
         }

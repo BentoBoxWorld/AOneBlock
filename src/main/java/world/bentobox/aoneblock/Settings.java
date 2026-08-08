@@ -400,6 +400,13 @@ public class Settings implements WorldSettings {
     @ConfigEntry(path = "island.water-mob-protection")
     private boolean waterMobProtection = true;
 
+    @ConfigComment("How often island progress is written to the database, in blocks broken")
+    @ConfigComment("Progress is also saved whenever a phase changes, a player logs out and the server shuts down,")
+    @ConfigComment("so this only decides how much is lost if the server dies without shutting down cleanly.")
+    @ConfigComment("Lower is safer but writes more often. Minimum is 1 (save every block)")
+    @ConfigEntry(path = "island.save-every")
+    private int saveEvery = 10;
+
     @ConfigComment("Default max team size")
     @ConfigComment("Permission size cannot be less than the default below. ")
     @ConfigEntry(path = "island.max-team-size")
@@ -1863,6 +1870,25 @@ public class Settings implements WorldSettings {
      */
     public void setMobWarning(int mobWarning) {
         this.mobWarning = mobWarning;
+    }
+
+    /**
+     * How many blocks are broken between periodic saves of island progress.
+     * A value below 1 would make the modulo check throw, so it is clamped.
+     * @return the saveEvery value, never less than 1
+     */
+    public int getSaveEvery() {
+        if (saveEvery < 1) {
+            saveEvery = 1;
+        }
+        return saveEvery;
+    }
+
+    /**
+     * @param saveEvery the saveEvery to set
+     */
+    public void setSaveEvery(int saveEvery) {
+        this.saveEvery = saveEvery;
     }
 
     /**
