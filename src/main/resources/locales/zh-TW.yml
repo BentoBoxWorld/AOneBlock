@@ -6,14 +6,14 @@ protection:
         &b 如果玩家可以破壞方塊，
         &b 則該等級可以破壞
         &b 魔法方塊。
-      hint: "&c 您的等級無法破壞魔法方塊！"
+      hint: "&c 你的等級無法破壞魔法方塊！"
     START_SAFETY:
       name: 初始安全保護
       description: |-
         &b 阻止新玩家在1分鐘內
         &b 移動，以防他們跌落。
-      hint: "&c 出於安全考慮，移動已被阻止 [number] 秒！"
-      free-to-move: "&a 您可以自由移動了。請小心！"
+      hint: "&c 為了安全考量，移動已被阻止 [number] 秒！"
+      free-to-move: "&a 你可以自由移動了，請小心！"
     ONEBLOCK_BOSSBAR:
         name: Boss 血條
         description: |-
@@ -27,11 +27,11 @@ protection:
         &b 的狀態。
 aoneblock:
   bossbar:
-    title: 剩餘的塊
-    status: '&a 相位塊&b [done] &d / &b [total]'
+    title: 剩餘方塊數
+    status: '&a 階段方塊&b [done] &d / &b [total]'
     color: RED
     style: SEGMENTED_20
-    not-active: '&c 老闆酒吧對這個島不活躍'
+    not-active: '&c 此島嶼的 Boss 血條未啟用'
   actionbar:
     status: "&a 階段: &b [phase-name] &d | &a 方塊數: &b [done] &d / &b [total] &d | &a 進度: &b [percent-done]"
     not-active: "&c 該島嶼的動作欄未啟用"
@@ -39,36 +39,66 @@ aoneblock:
     admin:
       setcount:
         parameters: <名稱> <計數>
-        description: 設置玩家的蓋帽數
-        set: a [name]的計數設置為[number]
+        description: 設定玩家的方塊數量
+        set: '&a [name] 的計數設定為 [number]'
         set-lifetime: '&a [name] 的生命週期計數設定為 [number]'
       setchest:
         parameters: <階段> <稀有>
         description: 將所看的箱子放在指定稀有度的階段
-        chest-is-empty: ＆c該箱子為空，因此無法添加
-        unknown-phase: ＆c未知階段。使用製表符完成功能來查看它們
-        unknown-rarity: ＆c未知稀有。使用COMMON，UNCOMMON，RARE或EPIC
-        look-at-chest: ＆c看看裝滿的箱子
-        only-single-chest: ＆c只能設置單個箱子
+        chest-is-empty: '&c該箱子為空，因此無法添加'
+        unknown-phase: '&c未知階段。使用 Tab 鍵自動補全查看'
+        unknown-rarity: '&c未知稀有。使用COMMON，UNCOMMON，RARE或EPIC'
+        look-at-chest: '&c請看向裝滿的箱子'
+        only-single-chest: '&c只能設定單一箱子'
         success: '&a 箱子成功添加'
-        failure: ＆c 無法將胸部添加到該階段！ 請參閱控制台以獲取錯誤
+        failure: '&c 無法將箱子加入該階段！ 請參閱控制台以獲取錯誤'
       sanity:
         parameters: <階段>
-        description: 在控制台中顯示相概率的健全性檢查
-        see-console: ＆a請參閱控制台以獲取報告
+        description: 在主控台顯示各階段機率的健全性檢查
+        see-console: '&a請參閱控制台以獲取報告'
+      phases:
+        description: 開啟階段順序編輯器
+        no-index: '&c 尚未載入階段索引，因此無法重新排序階段'
+        save-failed: '&c 無法儲存階段順序！請查看主控台錯誤訊息'
+        saved: '&a 階段順序已儲存並套用'
+        gui:
+          cancel-word: 'cancel'
+          disabled: '&c 已停用'
+          drop-at-end: '&a 放到最後'
+          drop-here: '&e 點擊以放置於此'
+          enter-length: '&e 請在聊天室輸入 &a [name] &e 的新長度－目前為 &b [number] &e 個方塊。輸入 &c cancel &e 可保持不變。'
+          held: '&e 移動中：[name]'
+          info-title: '&f 使用方式'
+          instructions: |-
+            &7 點擊一個階段以拿起它，
+            &7 再點擊要放置的位置。
+            &7 右鍵點擊可切換
+            &7 階段的啟用/停用。
+          invalid-length: '&c 長度必須是大於 0 的整數'
+          length: '&7 長度：&b [number]'
+          length-cancelled: '&c 長度未變更'
+          phase-name: '&a [name]'
+          pick-up: '&e 點擊以移動'
+          put-back: '&e 點擊以放回'
+          repeat: '&7 最後一個階段結束後，計數將跳至 &b [number]'
+          set-length: '&e Shift + 左鍵點擊以設定長度'
+          start: '&7 起始：&b [number]'
+          title: '&2 階段順序'
+          toggle: '&e 右鍵點擊以切換'
+          version-locked: '&c 需要 Minecraft [version]+'
     count:
-      description: 顯示塊數和相位
-      info: '&a您正在&a[name]]階段中阻止&b[number]'
+      description: 顯示方塊數量與所在階段
+      info: '&a你目前在 &a[name] &r階段，已破壞 &b[number] &r個方塊'
     info:
       count: '&a 島位於 &b [names] &a 階段的 &b [number]&a 區塊。生命週期計數 &b [lifetime] &a。'
     phases:
       description: 顯示所有階段的列表
-      title: ＆2 OneBlock階段
+      title: '&2 OneBlock階段'
       name-syntax: '&a [name]'
       description-syntax: '&b [number]塊'
     island:
       bossbar:
-        description: 切換相位欄
+        description: 切換階段狀態列
         status_on: '&b Bossbar&a 打開'
         status_off: '&b Bossbar&c 關閉'
       actionbar:
@@ -79,16 +109,16 @@ aoneblock:
         parameters: <計數>
         description: 將區塊計數設定為之前完成的值
         set: '&a 計數設定為 [number]。'
-        too-high: '&c 您可以設定的最大值是[number]！'
+        too-high: '&c 你可以設定的最大值是 [number]！'
     respawn-block:
       description: 在魔法塊消失的情況下重生
-      block-exist: '&a 塊存在，不需要重生。我給你標記了。'
-      block-respawned: '&a 塊重生。'
+      block-exist: '&a 方塊已存在，不需要重生，已為你標記位置。'
+      block-respawned: '&a 方塊已重生。'
   phase:
     insufficient-level: '&c 你的島嶼等級太低，無法繼續！必須是[number]。'
-    insufficient-funds: '&c 您的資金太低，無法繼續！他們必須是[數字]。'
+    insufficient-funds: '&c 你的資金太低，無法繼續！至少需要 [number]。'
     insufficient-bank-balance: '&c 島上銀行餘額太低，無法繼續！必須是[number]。'
-    insufficient-permission: '&c 在獲得 [name] 許可之前，您不能繼續操作！'
+    insufficient-permission: '&c 在獲得 [name] 許可之前，你不能繼續操作！'
     cooldown: '&c [number] 秒後即可進入下一階段！'
   placeholders:
     infinite: 無窮
@@ -113,7 +143,7 @@ aoneblock:
           [level]
           [permission]
         starting-block: '&7 在破壞 &e [number] 區塊後開始。'
-        biome: '&7 生物群落：&e [biome]'
+        biome: '&7 生態域：&e [biome]'
         bank: '&7 需要銀行帳戶中有 &e $[number] &7。'
         economy: '&7 需要玩家帳號中有 &e $[number] &7。'
         level: '&7 需要 &e [number] &7 島嶼等級。'
