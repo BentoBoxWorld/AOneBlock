@@ -3,138 +3,138 @@ protection:
     MAGIC_BLOCK:
       name: 魔法方塊保護
       description: |-
-        &b 如果玩家可以破壞方塊，
-        &b 則該等級可以破壞
-        &b 魔法方塊。
-      hint: "&c 你的等級無法破壞魔法方塊！"
+        <aqua>如果玩家可以破壞方塊，
+        則該等級可以破壞
+        魔法方塊。</aqua>
+      hint: "<red>你的等級無法破壞魔法方塊！</red>"
     START_SAFETY:
       name: 初始安全保護
       description: |-
-        &b 阻止新玩家在1分鐘內
-        &b 移動，以防他們跌落。
-      hint: "&c 為了安全考量，移動已被阻止 [number] 秒！"
-      free-to-move: "&a 你可以自由移動了，請小心！"
+        <aqua>阻止新玩家在1分鐘內
+        移動，以防他們跌落。</aqua>
+      hint: "<red>為了安全考量，移動已被阻止 [number] 秒！</red>"
+      free-to-move: "<green>你可以自由移動了，請小心！</green>"
     ONEBLOCK_BOSSBAR:
-        name: Boss 血條
-        description: |-
-          &b 為每個階段
-          &b 顯示一個狀態條。
+      name: Boss 血條
+      description: |-
+        <aqua>為每個階段
+        顯示一個狀態條。</aqua>
     ONEBLOCK_ACTIONBAR:
       name: 動作欄
       description: |-
-        &b 在動作欄中
-        &b 顯示每個階段
-        &b 的狀態。
+        <aqua>在動作欄中
+        顯示每個階段
+        的狀態。</aqua>
 aoneblock:
   bossbar:
     title: 剩餘方塊數
-    status: '&a 階段方塊&b [done] &d / &b [total]'
+    status: '<green>階段方塊</green><aqua> [done] </aqua><light_purple>/ </light_purple><aqua>[total]</aqua>'
     color: RED
     style: SEGMENTED_20
-    not-active: '&c 此島嶼的 Boss 血條未啟用'
+    not-active: '<red>此島嶼的 Boss 血條未啟用</red>'
   actionbar:
-    status: "&a 階段: &b [phase-name] &d | &a 方塊數: &b [done] &d / &b [total] &d | &a 進度: &b [percent-done]"
-    not-active: "&c 該島嶼的動作欄未啟用"
+    status: "<green>階段: </green><aqua>[phase-name] </aqua><light_purple>| </light_purple><green>方塊數: </green><aqua>[done] </aqua><light_purple>/ </light_purple><aqua>[total] </aqua><light_purple>| </light_purple><green>進度: </green><aqua>[percent-done]</aqua>"
+    not-active: "<red>該島嶼的動作欄未啟用</red>"
   commands:
     admin:
       setcount:
         parameters: <名稱> <計數>
         description: 設定玩家的方塊數量
-        set: '&a [name] 的計數設定為 [number]'
-        set-lifetime: '&a [name] 的生命週期計數設定為 [number]'
+        set: '<green>[name] 的計數設定為 [number]</green>'
+        set-lifetime: '<green>[name] 的生命週期計數設定為 [number]</green>'
       setchest:
         parameters: <階段> <稀有>
         description: 將所看的箱子放在指定稀有度的階段
-        chest-is-empty: '&c該箱子為空，因此無法添加'
-        unknown-phase: '&c未知階段。使用 Tab 鍵自動補全查看'
-        unknown-rarity: '&c未知稀有。使用COMMON，UNCOMMON，RARE或EPIC'
-        look-at-chest: '&c請看向裝滿的箱子'
-        only-single-chest: '&c只能設定單一箱子'
-        success: '&a 箱子成功添加'
-        failure: '&c 無法將箱子加入該階段！ 請參閱控制台以獲取錯誤'
+        chest-is-empty: '<red>該箱子為空，因此無法添加</red>'
+        unknown-phase: '<red>未知階段。使用 Tab 鍵自動補全查看</red>'
+        unknown-rarity: '<red>未知稀有。使用COMMON，UNCOMMON，RARE或EPIC</red>'
+        look-at-chest: '<red>請看向裝滿的箱子</red>'
+        only-single-chest: '<red>只能設定單一箱子</red>'
+        success: '<green>箱子成功添加</green>'
+        failure: '<red>無法將箱子加入該階段！ 請參閱控制台以獲取錯誤</red>'
       sanity:
         parameters: <階段>
         description: 在主控台顯示各階段機率的健全性檢查
-        see-console: '&a請參閱控制台以獲取報告'
+        see-console: '<green>請參閱控制台以獲取報告</green>'
       phases:
         description: 開啟階段順序編輯器
-        no-index: '&c 尚未載入階段索引，因此無法重新排序階段'
-        save-failed: '&c 無法儲存階段順序！請查看主控台錯誤訊息'
-        saved: '&a 階段順序已儲存並套用'
+        no-index: '<red>尚未載入階段索引，因此無法重新排序階段</red>'
+        save-failed: '<red>無法儲存階段順序！請查看主控台錯誤訊息</red>'
+        saved: '<green>階段順序已儲存並套用</green>'
         gui:
           cancel-word: 'cancel'
-          disabled: '&c 已停用'
-          drop-at-end: '&a 放到最後'
-          drop-here: '&e 點擊以放置於此'
-          enter-length: '&e 請在聊天室輸入 &a [name] &e 的新長度－目前為 &b [number] &e 個方塊。輸入 &c cancel &e 可保持不變。'
-          held: '&e 移動中：[name]'
-          info-title: '&f 使用方式'
+          disabled: '<red>已停用</red>'
+          drop-at-end: '<green>放到最後</green>'
+          drop-here: '<yellow>點擊以放置於此</yellow>'
+          enter-length: '<yellow>請在聊天室輸入 </yellow><green>[name] </green><yellow>的新長度－目前為 </yellow><aqua>[number] </aqua><yellow>個方塊。輸入 </yellow><red>cancel </red><yellow>可保持不變。</yellow>'
+          held: '<yellow>移動中：[name]</yellow>'
+          info-title: '<white>使用方式</white>'
           instructions: |-
-            &7 點擊一個階段以拿起它，
-            &7 再點擊要放置的位置。
-            &7 右鍵點擊可切換
-            &7 階段的啟用/停用。
-          invalid-length: '&c 長度必須是大於 0 的整數'
-          length: '&7 長度：&b [number]'
-          length-cancelled: '&c 長度未變更'
-          phase-name: '&a [name]'
-          pick-up: '&e 點擊以移動'
-          put-back: '&e 點擊以放回'
-          repeat: '&7 最後一個階段結束後，計數將跳至 &b [number]'
-          set-length: '&e Shift + 左鍵點擊以設定長度'
-          start: '&7 起始：&b [number]'
-          title: '&2 階段順序'
-          toggle: '&e 右鍵點擊以切換'
-          version-locked: '&c 需要 Minecraft [version]+'
+            <gray>點擊一個階段以拿起它，
+            再點擊要放置的位置。
+            右鍵點擊可切換
+            階段的啟用/停用。</gray>
+          invalid-length: '<red>長度必須是大於 0 的整數</red>'
+          length: '<gray>長度：</gray><aqua> [number]</aqua>'
+          length-cancelled: '<red>長度未變更</red>'
+          phase-name: '<green>[name]</green>'
+          pick-up: '<yellow>點擊以移動</yellow>'
+          put-back: '<yellow>點擊以放回</yellow>'
+          repeat: '<gray>最後一個階段結束後，計數將跳至 </gray><aqua>[number]</aqua>'
+          set-length: '<yellow>Shift + 左鍵點擊以設定長度</yellow>'
+          start: '<gray>起始：</gray><aqua> [number]</aqua>'
+          title: '<dark_green>階段順序</dark_green>'
+          toggle: '<yellow>右鍵點擊以切換</yellow>'
+          version-locked: '<red>需要 Minecraft [version]+</red>'
     count:
       description: 顯示方塊數量與所在階段
-      info: '&a你目前在 &a[name] &r階段，已破壞 &b[number] &r個方塊'
+      info: '<green>你目前在 [name] </green>階段，已破壞 <aqua>[number] </aqua>個方塊'
     info:
-      count: '&a 島位於 &b [names] &a 階段的 &b [number]&a 區塊。生命週期計數 &b [lifetime] &a。'
+      count: '<green>島位於 </green><aqua>[names] </aqua><green>階段的 </green><aqua>[number]</aqua><green> 區塊。生命週期計數 </green><aqua>[lifetime] </aqua><green>。</green>'
     phases:
       description: 顯示所有階段的列表
-      title: '&2 OneBlock階段'
-      name-syntax: '&a [name]'
-      description-syntax: '&b [number]塊'
+      title: '<dark_green>OneBlock階段</dark_green>'
+      name-syntax: '<green>[name]</green>'
+      description-syntax: '<aqua>[number]塊</aqua>'
     island:
       bossbar:
         description: 切換階段狀態列
-        status_on: '&b Bossbar&a 打開'
-        status_off: '&b Bossbar&c 關閉'
+        status_on: '<aqua>Bossbar</aqua><green> 打開</green>'
+        status_off: '<aqua>Bossbar</aqua><red> 關閉</red>'
       actionbar:
         description: 切換階段動作欄
-        status_on: "&b 動作欄已 &a 開啟"
-        status_off: "&b 動作欄已 &c 關閉"
+        status_on: "<aqua>動作欄已 </aqua><green>開啟</green>"
+        status_off: "<aqua>動作欄已 </aqua><red>關閉</red>"
       setcount:
         parameters: <計數>
         description: 將區塊計數設定為之前完成的值
-        set: '&a 計數設定為 [number]。'
-        too-high: '&c 你可以設定的最大值是 [number]！'
+        set: '<green>計數設定為 [number]。</green>'
+        too-high: '<red>你可以設定的最大值是 [number]！</red>'
     respawn-block:
       description: 在魔法塊消失的情況下重生
-      block-exist: '&a 方塊已存在，不需要重生，已為你標記位置。'
-      block-respawned: '&a 方塊已重生。'
+      block-exist: '<green>方塊已存在，不需要重生，已為你標記位置。</green>'
+      block-respawned: '<green>方塊已重生。</green>'
   phase:
-    insufficient-level: '&c 你的島嶼等級太低，無法繼續！必須是[number]。'
-    insufficient-funds: '&c 你的資金太低，無法繼續！至少需要 [number]。'
-    insufficient-bank-balance: '&c 島上銀行餘額太低，無法繼續！必須是[number]。'
-    insufficient-permission: '&c 在獲得 [name] 許可之前，你不能繼續操作！'
-    cooldown: '&c [number] 秒後即可進入下一階段！'
+    insufficient-level: '<red>你的島嶼等級太低，無法繼續！必須是[number]。</red>'
+    insufficient-funds: '<red>你的資金太低，無法繼續！至少需要 [number]。</red>'
+    insufficient-bank-balance: '<red>島上銀行餘額太低，無法繼續！必須是[number]。</red>'
+    insufficient-permission: '<red>在獲得 [name] 許可之前，你不能繼續操作！</red>'
+    cooldown: '<red>[number] 秒後即可進入下一階段！</red>'
   placeholders:
     infinite: 無窮
     my-island-phase-default: 未知
   gui:
     titles:
-      phases: '&0&l OneBlock 階段'
+      phases: '<black><bold>OneBlock 階段</bold></black>'
     buttons:
       previous:
-        name: '&f&l 上一頁'
-        description: '&7 切換到[number]頁'
+        name: '<white><bold>上一頁</bold></white>'
+        description: '<gray>切換到[number]頁</gray>'
       next:
-        name: '&f&l 下一頁'
-        description: '&7 切換到[number]頁'
+        name: '<white><bold>下一頁</bold></white>'
+        description: '<gray>切換到[number]頁</gray>'
       phase:
-        name: '&f&l [階段]'
+        name: '<white><bold>[階段]</bold></white>'
         description: |-
           [starting-block]
           [biome]
@@ -142,20 +142,20 @@ aoneblock:
           [economy]
           [level]
           [permission]
-        starting-block: '&7 在破壞 &e [number] 區塊後開始。'
-        biome: '&7 生態域：&e [biome]'
-        bank: '&7 需要銀行帳戶中有 &e $[number] &7。'
-        economy: '&7 需要玩家帳號中有 &e $[number] &7。'
-        level: '&7 需要 &e [number] &7 島嶼等級。'
-        permission: '&7 需要 `&e[permission]&7` 權限。'
-        blocks-prefix: '&7 階段塊 - '
-        blocks: '&e [name], '
+        starting-block: '<gray>在破壞 </gray><yellow>[number] 區塊後開始。</yellow>'
+        biome: '<gray>生態域：</gray><yellow> [biome]</yellow>'
+        bank: '<gray>需要銀行帳戶中有 </gray><yellow>$[number] </yellow><gray>。</gray>'
+        economy: '<gray>需要玩家帳號中有 </gray><yellow>$[number] </yellow><gray>。</gray>'
+        level: '<gray>需要 </gray><yellow>[number] </yellow><gray>島嶼等級。</gray>'
+        permission: '<gray>需要 `</gray><yellow>[permission]</yellow><gray>` 權限。</gray>'
+        blocks-prefix: '<gray>階段塊 - </gray>'
+        blocks: '<yellow>[name], </yellow>'
         wrap-at: '50'
     tips:
-      click-to-previous: '&e 點選&7 查看上一頁。'
-      click-to-next: '&e 點選&7 查看下一頁。'
-      click-to-change: '&e 點選 &7 進行更改。'
+      click-to-previous: '<yellow>點選</yellow><gray> 查看上一頁。</gray>'
+      click-to-next: '<yellow>點選</yellow><gray> 查看下一頁。</gray>'
+      click-to-change: '<yellow>點選 </yellow><gray>進行更改。</gray>'
   island:
     starting-hologram: |-
-      &a歡迎來到 AOneBlock
-      打破此區塊以開始(&E)
+      <green>歡迎來到 AOneBlock
+      打破此區塊以開始(</green><yellow>)</yellow>

@@ -3,90 +3,86 @@ protection:
     MAGIC_BLOCK:
       name: Protection du Bloc Magique
       description: |-
-        &b Rang qui peut casser le bloc
-        &b magique s'il peut casser
-        &b des blocs.
-      hint: "&c Votre rang ne peut pas casser le bloc magique!"
+        <aqua>Rang qui peut casser le bloc
+        magique s'il peut casser
+        des blocs.</aqua>
+      hint: "<red>Votre rang ne peut pas casser le bloc magique!</red>"
     START_SAFETY:
       name: Sécurité de Départ
       description: |-
-        &b Empêche les nouveaux joueurs
-        &b de bouger pendant 1 minute
-        &b pour qu'ils ne tombent pas.
-      hint: "&c Mouvement bloqué par sécurité pendant [number] secondes supplémentaires!"
-      free-to-move: "&a Vous êtes libre de bouger. Faites attention!"
+        <aqua>Empêche les nouveaux joueurs
+        de bouger pendant 1 minute
+        pour qu'ils ne tombent pas.</aqua>
+      hint: "<red>Mouvement bloqué par sécurité pendant [number] secondes supplémentaires!</red>"
+      free-to-move: "<green>Vous êtes libre de bouger. Faites attention!</green>"
     ONEBLOCK_BOSSBAR:
-        name: Barre de Boss
-        description: |-
-          &b Affiche une barre de statut
-          &b pour chaque phase.
+      name: Barre de Boss
+      description: |-
+        <aqua>Affiche une barre de statut
+        pour chaque phase.</aqua>
     ONEBLOCK_ACTIONBAR:
       name: Barre d'Action
       description: |-
-        &b Affiche un statut
-        &b pour chaque phase
-        &b dans la Barre d'Action.
+        <aqua>Affiche un statut
+        pour chaque phase
+        dans la Barre d'Action.</aqua>
 aoneblock:
   bossbar:
     title: Blocs restants
-    status: '&a Blocs de phase &b [done] &d / &b [total]'
+    status: '<green>Blocs de phase </green><aqua>[done] </aqua><light_purple>/ </light_purple><aqua>[total]</aqua>'
     color: RED
     style: SEGMENTED_20
-    not-active: '&c Boss Bar n''est pas actif pour cette île'
+    not-active: '<red>Boss Bar n''est pas actif pour cette île</red>'
   actionbar:
-    status: "&a Phase : &b [phase-name] &d | &a Blocs : &b [done] &d / &b [total] &d | &a Progression : &b [percent-done]"
-    not-active: "&c La barre d'action n'est pas active pour cette île"
+    status: "<green>Phase : </green><aqua>[phase-name] </aqua><light_purple>| </light_purple><green>Blocs : </green><aqua>[done] </aqua><light_purple>/ </light_purple><aqua>[total] </aqua><light_purple>| </light_purple><green>Progression : </green><aqua>[percent-done]</aqua>"
+    not-active: "<red>La barre d'action n'est pas active pour cette île</red>"
   commands:
     admin:
       setcount:
         parameters: <nom> <nombre> [DuréeDeVie]
         description: Définir le nombre de blocks du joueur
-        set: '&a Le compte de [name] est défini sur [number].'
-        set-lifetime: '&a La durée de vie de [name] est de [number]'
+        set: '<green>Le compte de [name] est défini sur [number].</green>'
+        set-lifetime: '<green>La durée de vie de [name] est de [number]</green>'
       setchest:
         parameters: <phase> <rareté>
         description: mettre le coffre regardé dans une phase avec la rareté spécifiée
-        chest-is-empty: '&c Ce coffre est vide donc il ne peut pas être ajouté'
-        unknown-phase: '&c Phase inconnue. Utilisez tab-complete pour les voir'
-        unknown-rarity: '&c Rareté inconnue. Utilisez COMMON, UNCOMMON, RARE ou EPIC'
-        look-at-chest: '&c Regardez un coffre rempli pour le placer'
-        only-single-chest: '&c Seuls les coffres simples peuvent être définis'
-        success: '&a Le coffre a été ajouté avec succès à la phase'
-        failure: >-
-          &c Le coffre n'a pas pu être ajouté à la phase! Voir la console pour
-          les erreurs
+        chest-is-empty: '<red>Ce coffre est vide donc il ne peut pas être ajouté</red>'
+        unknown-phase: '<red>Phase inconnue. Utilisez tab-complete pour les voir</red>'
+        unknown-rarity: '<red>Rareté inconnue. Utilisez COMMON, UNCOMMON, RARE ou EPIC</red>'
+        look-at-chest: '<red>Regardez un coffre rempli pour le placer</red>'
+        only-single-chest: '<red>Seuls les coffres simples peuvent être définis</red>'
+        success: '<green>Le coffre a été ajouté avec succès à la phase</green>'
+        failure: '<red>Le coffre n''a pas pu être ajouté à la phase! Voir la console pour les erreurs</red>'
       sanity:
         parameters: <phase>
         description: >-
           afficher un contrôle d'intégrité des probabilités de phase dans la
           console
-        see-console: '&a Voir la console pour le rapport'
+        see-console: '<green>Voir la console pour le rapport</green>'
     count:
       description: afficher le nombre de blocs et la phase
-      info: '&a Vous êtes sur le bloc &b [number] dans la phase &a [name]'
+      info: '<green>Vous êtes sur le bloc </green><aqua>[number] dans la phase </aqua><green>[name]</green>'
     info:
-      count: >-
-        &a L'île est sur le bloc &b [number]&a dans la phase &b [name] &a.
-        Nombre de durée de vie &b [lifetime] &a.
+      count: '<green>L''île est sur le bloc </green><aqua>[number]</aqua><green> dans la phase </green><aqua>[name] </aqua><green>. Nombre de durée de vie </green><aqua>[lifetime] </aqua><green>.</green>'
     phases:
       description: afficher une liste de toutes les phases
-      title: '&2 Phases OneBlock'
-      name-syntax: '&a [name]'
-      description-syntax: '&b [number] blocs'
+      title: '<dark_green>Phases OneBlock</dark_green>'
+      name-syntax: '<green>[name]</green>'
+      description-syntax: '<aqua>[number] blocs</aqua>'
     island:
       bossbar:
         description: bascule la barre de boss de phase
-        status_on: '&b Bossbar a &a activé'
-        status_off: '&b Bossbar &a désactivé'
+        status_on: '<aqua>Bossbar a </aqua><green>activé</green>'
+        status_off: '<aqua>Bossbar </aqua><green>désactivé</green>'
       actionbar:
         description: "active/désactive la barre d'action de phase"
-        status_on: "&b Barre d'action &a activée"
-        status_off: "&b Barre d'action &c désactivée"
+        status_on: "<aqua>Barre d'action </aqua><green>activée</green>"
+        status_off: "<aqua>Barre d'action </aqua><red>désactivée</red>"
       setcount:
         parameters: <compte>
         description: définir le nombre de blocs à la valeur précédemment terminée
-        set: '&a Nombre défini sur [number].'
-        too-high: "&c Le maximum que vous pouvez définir est [number]\_!"
+        set: '<green>Nombre défini sur [number].</green>'
+        too-high: "<red>Le maximum que vous pouvez définir est [number] !</red>"
     respawn-block:
       description: réapparaît le bloc magique dans les situations où il disparaît
       block-exist: >-
@@ -99,21 +95,21 @@ aoneblock:
     insufficient-bank-balance: >-
       Ta banque d'île n'a pas les fonds nécessaire ! Vous devez au moins avoir
       [number].
-    insufficient-permission: "&c Vous ne pouvez pas continuer jusqu'à ce que vous obteniez l'autorisation de [name]\_!"
-    cooldown: '&c La prochaine étape sera disponible dans [number] secondes!'
+    insufficient-permission: "<red>Vous ne pouvez pas continuer jusqu'à ce que vous obteniez l'autorisation de [name] !</red>"
+    cooldown: '<red>La prochaine étape sera disponible dans [number] secondes!</red>'
   placeholders:
     infinite: Infini
     my-island-phase-default: Inconnue
   gui:
     titles:
-      phases: '&0&l Phases OneBlock'
+      phases: '<black><bold>Phases OneBlock</bold></black>'
     buttons:
       previous:
-        name: '&f&l Page Précédente'
-        description: '&7 Aller à la page [number]'
+        name: '<white><bold>Page Précédente</bold></white>'
+        description: '<gray>Aller à la page [number]</gray>'
       next:
-        name: '&f&l Page Suivante'
-        description: '&7 Aller à la page [number]'
+        name: '<white><bold>Page Suivante</bold></white>'
+        description: '<gray>Aller à la page [number]</gray>'
       phase:
         name: '& l [phase]'
         description: |-
@@ -123,20 +119,20 @@ aoneblock:
           [economy]
           [level]
           [permission]
-        starting-block: '&7 Commence après avoir détruit &e [number] blocs.'
-        biome: "&7 Biome\_: &e [biome]"
-        bank: '&7 Requiert &e $[number] &7 dans ta banque.'
-        economy: '&7 Requiert &e $[number] &7 dans ton solde.'
-        level: '&7 Requiert &e [number] &7 niveaux d''île.'
-        permission: '&7 Requiert la permission : `&e[permission]&7` .'
-        blocks-prefix: '&7 Blocs en phase -'
-        blocks: '&e [name],'
+        starting-block: '<gray>Commence après avoir détruit </gray><yellow>[number] blocs.</yellow>'
+        biome: "<gray>Biome : </gray><yellow>[biome]</yellow>"
+        bank: '<gray>Requiert </gray><yellow>$[number] </yellow><gray>dans ta banque.</gray>'
+        economy: '<gray>Requiert </gray><yellow>$[number] </yellow><gray>dans ton solde.</gray>'
+        level: '<gray>Requiert </gray><yellow>[number] </yellow><gray>niveaux d''île.</gray>'
+        permission: '<gray>Requiert la permission : `</gray><yellow>[permission]</yellow><gray>` .</gray>'
+        blocks-prefix: '<gray>Blocs en phase -</gray>'
+        blocks: '<yellow>[name],</yellow>'
         wrap-at: '50'
     tips:
-      click-to-previous: '&e Click &7 pour voir la page précédente.'
-      click-to-next: '&e Click &7 pour voir la page suivante.'
-      click-to-change: '&e Click &7 pour changer.'
+      click-to-previous: '<yellow>Click </yellow><gray>pour voir la page précédente.</gray>'
+      click-to-next: '<yellow>Click </yellow><gray>pour voir la page suivante.</gray>'
+      click-to-change: '<yellow>Click </yellow><gray>pour changer.</gray>'
   island:
     starting-hologram: |-
-      &aBienvenue sur AOneBlock
-      &eMine ce bloc pour commencer
+      <green>Bienvenue sur AOneBlock
+      </green><yellow>Mine ce bloc pour commencer</yellow>

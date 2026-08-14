@@ -3,92 +3,90 @@ protection:
     MAGIC_BLOCK:
       name: Bảo Vệ Khối Ma Thuật
       description: |-
-        &b Xếp hạng có thể phá
-        &b khối ma thuật nếu họ
-        &b có thể phá khối.
-      hint: "&c Xếp hạng của bạn không thể phá khối ma thuật!"
+        <aqua>Xếp hạng có thể phá
+        khối ma thuật nếu họ
+        có thể phá khối.</aqua>
+      hint: "<red>Xếp hạng của bạn không thể phá khối ma thuật!</red>"
     START_SAFETY:
       name: An Toàn Khởi Đầu
       description: |-
-        &b Ngăn người chơi mới
-        &b di chuyển trong 1 phút
-        &b để họ không bị rơi.
-      hint: "&c Di chuyển bị chặn vì lý do an toàn trong [number] giây nữa!"
-      free-to-move: "&a Bạn được phép di chuyển tự do. Hãy cẩn thận!"
+        <aqua>Ngăn người chơi mới
+        di chuyển trong 1 phút
+        để họ không bị rơi.</aqua>
+      hint: "<red>Di chuyển bị chặn vì lý do an toàn trong [number] giây nữa!</red>"
+      free-to-move: "<green>Bạn được phép di chuyển tự do. Hãy cẩn thận!</green>"
     ONEBLOCK_BOSSBAR:
-        name: Thanh Boss
-        description: |-
-          &b Hiển thị thanh trạng thái
-          &b cho mỗi giai đoạn.
+      name: Thanh Boss
+      description: |-
+        <aqua>Hiển thị thanh trạng thái
+        cho mỗi giai đoạn.</aqua>
     ONEBLOCK_ACTIONBAR:
       name: Thanh Hành Động (Action Bar)
       description: |-
-        &b Hiển thị trạng thái
-        &b cho mỗi giai đoạn
-        &b trên Thanh Hành Động.
+        <aqua>Hiển thị trạng thái
+        cho mỗi giai đoạn
+        trên Thanh Hành Động.</aqua>
 aoneblock:
   bossbar:
     title: Khối còn lại
-    status: '&a Khối pha &b [done] &d / &b [total]'
+    status: '<green>Khối pha </green><aqua>[done] </aqua><light_purple>/ </light_purple><aqua>[total]</aqua>'
     color: RED
     style: SEGMENTED_20
-    not-active: '&c Boss Bar không hoạt động cho hòn đảo này'
+    not-active: '<red>Boss Bar không hoạt động cho hòn đảo này</red>'
   actionbar:
-    status: "&a Giai đoạn: &b [phase-name] &d | &a Khối: &b [done] &d / &b [total] &d | &a Tiến độ: &b [percent-done]"
-    not-active: "&c Thanh hành động không hoạt động cho hòn đảo này"
+    status: "<green>Giai đoạn: </green><aqua>[phase-name] </aqua><light_purple>| </light_purple><green>Khối: </green><aqua>[done] </aqua><light_purple>/ </light_purple><aqua>[total] </aqua><light_purple>| </light_purple><green>Tiến độ: </green><aqua>[percent-done]</aqua>"
+    not-active: "<red>Thanh hành động không hoạt động cho hòn đảo này</red>"
   commands:
     admin:
       setcount:
         parameters: <tên> <số>
         description: chỉnh số đếm khối của người chơi
-        set: '&a Số đếm khối của [name] được đặt thành [number]'
-        set-lifetime: '&a Bộ đếm thời gian tồn tại của [name] được đặt thành [number]'
+        set: '<green>Số đếm khối của [name] được đặt thành [number]</green>'
+        set-lifetime: '<green>Bộ đếm thời gian tồn tại của [name] được đặt thành [number]</green>'
       setchest:
         parameters: <giai đoạn> <độ hiếm>
         description: thêm rương đang nhìn vào một giai đoạn với độ hiếm được chỉ định
-        chest-is-empty: '&c Rương đó trống nên không thể thêm vào'
-        unknown-phase: '&c Giai đoạn chưa biết. Dùng TAB để xem chúng'
-        unknown-rarity: '&c Độ hiếm chưa biết. Sử dụng COMMON, UNCOMMON, RARE hoặc EPIC'
-        look-at-chest: '&c Nhìn vào một cái rương đầy để đặt nó'
-        only-single-chest: '&c Chỉ có thể đặt các rương đơn'
-        success: '&a Rương được thêm thành công vào giai đoạn'
-        failure: >-
-          &c Rương không thể được thêm vào giai đoạn! Xem bảng điều khiển để
-          biết lỗi
+        chest-is-empty: '<red>Rương đó trống nên không thể thêm vào</red>'
+        unknown-phase: '<red>Giai đoạn chưa biết. Dùng TAB để xem chúng</red>'
+        unknown-rarity: '<red>Độ hiếm chưa biết. Sử dụng COMMON, UNCOMMON, RARE hoặc EPIC</red>'
+        look-at-chest: '<red>Nhìn vào một cái rương đầy để đặt nó</red>'
+        only-single-chest: '<red>Chỉ có thể đặt các rương đơn</red>'
+        success: '<green>Rương được thêm thành công vào giai đoạn</green>'
+        failure: '<red>Rương không thể được thêm vào giai đoạn! Xem bảng điều khiển để biết lỗi</red>'
       sanity:
         parameters: <giao đoạn>
         description: >-
           hiển thị kiểm tra sự đúng đắn của xác suất giao đoạn lên bảng điều
           khiển
-        see-console: '&a Xem bảng điều khiển cho báo cáo'
+        see-console: '<green>Xem bảng điều khiển cho báo cáo</green>'
     count:
       description: hiển thị số khối và giai đoạn
-      info: '&a Bạn đang ở trên khối &b [number] trong giai đoạn &a [name]'
+      info: '<green>Bạn đang ở trên khối </green><aqua>[number] trong giai đoạn </aqua><green>[name]</green>'
     info:
-      count: '&a Đảo nằm trên khối &b [number] &a trong giai đoạn &b [name]. '
+      count: '<green>Đảo nằm trên khối </green><aqua>[number] </aqua><green>trong giai đoạn </green><aqua>[name]. </aqua>'
     phases:
       description: hiển thị một danh sách tất cả các giai đoạn
-      title: '&2 Giai đoạn OneBlock'
-      name-syntax: '&a [name]'
-      description-syntax: '&b [number] khối'
+      title: '<dark_green>Giai đoạn OneBlock</dark_green>'
+      name-syntax: '<green>[name]</green>'
+      description-syntax: '<aqua>[number] khối</aqua>'
     island:
       bossbar:
         description: bật thanh Boss giai đoạn
-        status_on: '&b Bossbar &a bật lên'
-        status_off: '&b Bossbar &c tắt'
+        status_on: '<aqua>Bossbar </aqua><green>bật lên</green>'
+        status_off: '<aqua>Bossbar </aqua><red>tắt</red>'
       actionbar:
         description: bật/tắt thanh hành động giai đoạn
-        status_on: "&b Thanh hành động đã &a bật"
-        status_off: "&b Thanh hành động đã &c tắt"
+        status_on: "<aqua>Thanh hành động đã </aqua><green>bật</green>"
+        status_off: "<aqua>Thanh hành động đã </aqua><red>tắt</red>"
       setcount:
         parameters: <số lượng>
         description: đặt số khối thành giá trị đã hoàn thành trước đó
-        set: '&a Bộ đếm được đặt thành [number].'
-        too-high: '&cMức tối đa bạn có thể đặt là[number]!'
+        set: '<green>Bộ đếm được đặt thành [number].</green>'
+        too-high: '<red>Mức tối đa bạn có thể đặt là[number]!</red>'
     respawn-block:
       description: Block ma thuật hồi sinh trong các tình huống khi nó biến mất
-      block-exist: '&a Khối tồn tại, không yêu cầu phản hồi. '
-      block-respawned: '&a Chặn hồi sinh.'
+      block-exist: '<green>Khối tồn tại, không yêu cầu phản hồi. </green>'
+      block-respawned: '<green>Chặn hồi sinh.</green>'
   phase:
     insufficient-level: Cấp đảo của bạn quá thấp để thực thi! Nó phải là [number].
     insufficient-funds: Tài chính của bạn quá thấp để thực thi! Nó phải là [number].
@@ -100,16 +98,16 @@ aoneblock:
     my-island-phase-default: Không xác định
   gui:
     titles:
-      phases: '&0&l Giai đoạn OneBlock'
+      phases: '<black><bold>Giai đoạn OneBlock</bold></black>'
     buttons:
       previous:
-        name: '&f&l Trang trước'
-        description: '&7 Chuyển sang trang [number]'
+        name: '<white><bold>Trang trước</bold></white>'
+        description: '<gray>Chuyển sang trang [number]</gray>'
       next:
-        name: '&f&l Trang tiếp theo'
+        name: '<white><bold>Trang tiếp theo</bold></white>'
         description: '& Chuyển sang trang [number]'
       phase:
-        name: '&f&l [phase]'
+        name: '<white><bold>[phase]</bold></white>'
         description: |-
           [starting-block]
           [biome]
@@ -118,20 +116,20 @@ aoneblock:
           [level]
           [permission]
           [blocks]
-        starting-block: '&7 Bắt đầu sau khi phá vỡ &e [number] khối.'
-        biome: '&7 Biome: &e [biome]'
-        bank: '&7 Yêu cầu 7e $[number] &7 trong tài khoản ngân hàng.'
-        economy: '&7 Yêu cầu &e $[number] &7 trong tài khoản người chơi.'
-        level: '&7 Yêu cầu &e[number] &7 cấp đảo.'
-        permission: '&7 Yêu cầu `&e[permission]&7` quyền.'
-        blocks-prefix: '&7 Khối trong giai đoạn -'
-        blocks: '&e [name], '
+        starting-block: '<gray>Bắt đầu sau khi phá vỡ </gray><yellow>[number] khối.</yellow>'
+        biome: '<gray>Biome: </gray><yellow>[biome]</yellow>'
+        bank: '<gray>Yêu cầu 7e $[number] trong tài khoản ngân hàng.</gray>'
+        economy: '<gray>Yêu cầu </gray><yellow>$[number] </yellow><gray>trong tài khoản người chơi.</gray>'
+        level: '<gray>Yêu cầu </gray><yellow>[number] </yellow><gray>cấp đảo.</gray>'
+        permission: '<gray>Yêu cầu `</gray><yellow>[permission]</yellow><gray>` quyền.</gray>'
+        blocks-prefix: '<gray>Khối trong giai đoạn -</gray>'
+        blocks: '<yellow>[name], </yellow>'
         wrap-at: '50'
     tips:
-      click-to-previous: '&e Bấm &7 để xem trang trước.'
-      click-to-next: '&e Bấm &7 để xem trang tiếp theo.'
-      click-to-change: '&e Bấm &7 để thay đổi.'
+      click-to-previous: '<yellow>Bấm </yellow><gray>để xem trang trước.</gray>'
+      click-to-next: '<yellow>Bấm </yellow><gray>để xem trang tiếp theo.</gray>'
+      click-to-change: '<yellow>Bấm </yellow><gray>để thay đổi.</gray>'
   island:
     starting-hologram: |-
-      &aChào mừng đến với OneBlock
-      &eĐập khối này để bắt đầu
+      <green>Chào mừng đến với OneBlock
+      </green><yellow>Đập khối này để bắt đầu</yellow>

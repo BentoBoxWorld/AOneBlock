@@ -3,118 +3,112 @@ protection:
     MAGIC_BLOCK:
       name: Mágikus Blokk Védelem
       description: |-
-        &b Rang, amely képes
-        &b szétrombolni a mágikus
-        &b blokkot, ha tud blokkokat
-        &b rombolni.
-      hint: "&c A rangod nem törheti szét a mágikus blokkot!"
+        <aqua>Rang, amely képes
+        szétrombolni a mágikus
+        blokkot, ha tud blokkokat
+        rombolni.</aqua>
+      hint: "<red>A rangod nem törheti szét a mágikus blokkot!</red>"
     START_SAFETY:
       name: Kezdő Biztonság
       description: |-
-        &b Megakadályozza az új játékosokat
-        &b a mozgásban 1 percig,
-        &b hogy ne essenek le.
-      hint: "&c Mozgás blokkolva biztonsági okokból még [number] másodpercig!"
-      free-to-move: "&a Szabadon mozoghatsz. Légy óvatos!"
+        <aqua>Megakadályozza az új játékosokat
+        a mozgásban 1 percig,
+        hogy ne essenek le.</aqua>
+      hint: "<red>Mozgás blokkolva biztonsági okokból még [number] másodpercig!</red>"
+      free-to-move: "<green>Szabadon mozoghatsz. Légy óvatos!</green>"
     ONEBLOCK_BOSSBAR:
-        name: Boss Bar
-        description: |-
-          &b Állapotjelző sávot
-          &b mutat minden fázishoz.
+      name: Boss Bar
+      description: |-
+        <aqua>Állapotjelző sávot
+        mutat minden fázishoz.</aqua>
     ONEBLOCK_ACTIONBAR:
       name: Műveleti Sáv (Action Bar)
       description: |-
-        &b Állapotot mutat
-        &b minden fázishoz
-        &b a Műveleti Sávban.
+        <aqua>Állapotot mutat
+        minden fázishoz
+        a Műveleti Sávban.</aqua>
 aoneblock:
   bossbar:
     title: Blokkok maradtak
-    status: '&a Fázisblokkok &b [done] &d / &b [total]'
+    status: '<green>Fázisblokkok </green><aqua>[done] </aqua><light_purple>/ </light_purple><aqua>[total]</aqua>'
     color: RED
     style: SEGMENTED_20
-    not-active: '&c A Boss Bar nem aktív ezen a szigeten'
+    not-active: '<red>A Boss Bar nem aktív ezen a szigeten</red>'
   actionbar:
-    status: "&a Fázis: &b [phase-name] &d | &a Blokkok: &b [done] &d / &b [total] &d | &a Haladás: &b [percent-done]"
-    not-active: "&c Az akciósáv nem aktív ezen a szigeten"
+    status: "<green>Fázis: </green><aqua>[phase-name] </aqua><light_purple>| </light_purple><green>Blokkok: </green><aqua>[done] </aqua><light_purple>/ </light_purple><aqua>[total] </aqua><light_purple>| </light_purple><green>Haladás: </green><aqua>[percent-done]</aqua>"
+    not-active: "<red>Az akciósáv nem aktív ezen a szigeten</red>"
   commands:
     admin:
       setcount:
         parameters: <név> <szám>
         description: állítsa be a játékos blokkszámát
-        set: '&a [name] számának beállítása erre: [number]'
-        set-lifetime: '&a [name] élettartama a következőre van állítva: [number]'
+        set: '<green>[name] számának beállítása erre: [number]</green>'
+        set-lifetime: '<green>[name] élettartama a következőre van állítva: [number]</green>'
       setchest:
         parameters: <fázis> <ritkaság>
         description: helyezze a nézett mellkasát egy szakaszba a megadott ritkasággal
-        chest-is-empty: '&c A mellkas üres, ezért nem adható hozzá'
-        unknown-phase: '&c Ismeretlen fázis. A Tab-Complete használatával megtekintheti őket'
-        unknown-rarity: '&c Ismeretlen ritkaság. Használjon COMMON, UNCOMMON, RARE vagy EPIC'
-        look-at-chest: '&c Nézzen meg egy töltött mellkasat, hogy beállítsa'
-        only-single-chest: '&c Csak egyetlen ládát lehet beállítani'
+        chest-is-empty: '<red>A mellkas üres, ezért nem adható hozzá</red>'
+        unknown-phase: '<red>Ismeretlen fázis. A Tab-Complete használatával megtekintheti őket</red>'
+        unknown-rarity: '<red>Ismeretlen ritkaság. Használjon COMMON, UNCOMMON, RARE vagy EPIC</red>'
+        look-at-chest: '<red>Nézzen meg egy töltött mellkasat, hogy beállítsa</red>'
+        only-single-chest: '<red>Csak egyetlen ládát lehet beállítani</red>'
         success: és egy mellkas sikeresen hozzáadva a fázishoz
-        failure: '&c A mellkas nem adható hozzá a fázishoz! A hibákat lásd a konzolon'
+        failure: '<red>A mellkas nem adható hozzá a fázishoz! A hibákat lásd a konzolon</red>'
       sanity:
         parameters: <Fázisban>
         description: >-
           jelenítse meg a fázis valószínűségeinek józanság-ellenőrzését a
           konzolban
-        see-console: '&a Lásd a jelentés konzolt'
+        see-console: '<green>Lásd a jelentés konzolt</green>'
     count:
       description: mutassa meg a blokkok számát és a fázist
-      info: '&a Ön a &b [number] blokkban van a &a [name] fázisban'
+      info: '<green>Ön a </green><aqua>[number] blokkban van a </aqua><green>[name] fázisban</green>'
     info:
-      count: >-
-        Az &a sziget a &b [number]&a blokkon található, a &b [name] &a fázisban.
-        Élettartam száma &b [lifetime] &a.
+      count: 'Az <green>sziget a </green><aqua>[number]</aqua><green> blokkon található, a </green><aqua>[name] </aqua><green>fázisban. Élettartam száma </green><aqua>[lifetime] </aqua><green>.</green>'
     phases:
       description: az összes fázis felsorolása
-      title: '&2 OneBlock Fázis'
-      name-syntax: '&a [name]'
-      description-syntax: '&b [number] blokkolja'
+      title: '<dark_green>OneBlock Fázis</dark_green>'
+      name-syntax: '<green>[name]</green>'
+      description-syntax: '<aqua>[number] blokkolja</aqua>'
     island:
       bossbar:
         description: váltók fázisú főnök sáv
-        status_on: '&b Bossbar &a bekapcsolt'
-        status_off: '&b Bossbar &c kikapcsolt'
+        status_on: '<aqua>Bossbar </aqua><green>bekapcsolt</green>'
+        status_off: '<aqua>Bossbar </aqua><red>kikapcsolt</red>'
       actionbar:
         description: fázis akciósáv ki/bekapcsolása
-        status_on: "&b Akciósáv &a bekapcsolva"
-        status_off: "&b Akciósáv &c kikapcsolva"
+        status_on: "<aqua>Akciósáv </aqua><green>bekapcsolva</green>"
+        status_off: "<aqua>Akciósáv </aqua><red>kikapcsolva</red>"
       setcount:
         parameters: <szám>
         description: állítsa be a blokkszámot a korábban kitöltött értékre
-        set: '&a A számláló értéke [szám].'
-        too-high: '&c A beállítható maximum [number]!'
+        set: '<green>A számláló értéke [szám].</green>'
+        too-high: '<red>A beállítható maximum [number]!</red>'
     respawn-block:
       description: varázsblokkot hoz újra olyan helyzetekben, amikor eltűnik
-      block-exist: '&a Blokk létezik, nem igényelt újbóli megjelenést. megjelöltem neked.'
-      block-respawned: '&a blokk újjáéledt.'
+      block-exist: '<green>Blokk létezik, nem igényelt újbóli megjelenést. megjelöltem neked.</green>'
+      block-respawned: '<green>blokk újjáéledt.</green>'
   phase:
-    insufficient-level: >-
-      &c A sziget szintje túl alacsony a folytatáshoz! Ennek a következőnek kell
-      lennie: [number].
-    insufficient-funds: '&c A kerete túl kevés a folytatáshoz! Ezeknek [number]-nak kell lenniük.'
-    insufficient-bank-balance: >-
-      &c A sziget banki egyenlege túl alacsony a folytatáshoz! Ennek a
-      következőnek kell lennie: [number].
-    insufficient-permission: '&c Nem folytathatja tovább, amíg meg nem szerzi a [name] engedélyt!'
-    cooldown: '&c A következő szakasz [number] másodpercen belül elérhető lesz!'
+    insufficient-level: '<red>A sziget szintje túl alacsony a folytatáshoz! Ennek a következőnek kell lennie: [number].</red>'
+    insufficient-funds: '<red>A kerete túl kevés a folytatáshoz! Ezeknek [number]-nak kell lenniük.</red>'
+    insufficient-bank-balance: '<red>A sziget banki egyenlege túl alacsony a folytatáshoz! Ennek a következőnek kell lennie: [number].</red>'
+    insufficient-permission: '<red>Nem folytathatja tovább, amíg meg nem szerzi a [name] engedélyt!</red>'
+    cooldown: '<red>A következő szakasz [number] másodpercen belül elérhető lesz!</red>'
   placeholders:
     infinite: Végtelen
     my-island-phase-default: Ismeretlen
   gui:
     titles:
-      phases: '&0&l OneBlock fázisok'
+      phases: '<black><bold>OneBlock fázisok</bold></black>'
     buttons:
       previous:
-        name: '&f&l Előző oldal'
-        description: '&7 Váltás a [number] oldalra'
+        name: '<white><bold>Előző oldal</bold></white>'
+        description: '<gray>Váltás a [number] oldalra</gray>'
       next:
-        name: '&f&l Következő oldal'
-        description: '&7 Váltás a [number] oldalra'
+        name: '<white><bold>Következő oldal</bold></white>'
+        description: '<gray>Váltás a [number] oldalra</gray>'
       phase:
-        name: '&f&l [phase]'
+        name: '<white><bold>[phase]</bold></white>'
         description: |-
           [starting-block]
           [biome]
@@ -122,20 +116,20 @@ aoneblock:
           [economy]
           [level]
           [permission]
-        starting-block: '&7 Az &e [number] blokk feltörése után indul.'
-        biome: '&7 életrajz: &e [biome]'
-        bank: '&7 Szükséges &e $[number] &7 bankszámlára.'
-        economy: '&7 &e $[number] &7 játékos fiókot igényel.'
-        level: '&7 &e [number] &7 szigetszint szükséges.'
-        permission: '&7 `&e[permission]&7` engedély szükséges.'
-        blocks-prefix: '&7 Blokkok fázisban -'
-        blocks: '&e [name], '
+        starting-block: '<gray>Az </gray><yellow>[number] blokk feltörése után indul.</yellow>'
+        biome: '<gray>életrajz: </gray><yellow>[biome]</yellow>'
+        bank: '<gray>Szükséges </gray><yellow>$[number] </yellow><gray>bankszámlára.</gray>'
+        economy: '<gray></gray><yellow>$[number] </yellow><gray>játékos fiókot igényel.</gray>'
+        level: '<gray></gray><yellow>[number] </yellow><gray>szigetszint szükséges.</gray>'
+        permission: '<gray>`</gray><yellow>[permission]</yellow><gray>` engedély szükséges.</gray>'
+        blocks-prefix: '<gray>Blokkok fázisban -</gray>'
+        blocks: '<yellow>[name], </yellow>'
         wrap-at: '50'
     tips:
-      click-to-previous: '&e Kattintson a &7 gombra az előző oldal megtekintéséhez.'
-      click-to-next: '&e Kattintson a &7 gombra a következő oldal megtekintéséhez.'
-      click-to-change: '&e Kattintson a &7 gombra a módosításhoz.'
+      click-to-previous: '<yellow>Kattintson a </yellow><gray>gombra az előző oldal megtekintéséhez.</gray>'
+      click-to-next: '<yellow>Kattintson a </yellow><gray>gombra a következő oldal megtekintéséhez.</gray>'
+      click-to-change: '<yellow>Kattintson a </yellow><gray>gombra a módosításhoz.</gray>'
   island:
     starting-hologram: |-
-      &aÜdvözlünk az AOneBlockban
-      &eSzüntesse meg ezt a blokkot a kezdéshez
+      <green>Üdvözlünk az AOneBlockban
+      </green><yellow>Szüntesse meg ezt a blokkot a kezdéshez</yellow>
