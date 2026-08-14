@@ -3,115 +3,109 @@ protection:
     MAGIC_BLOCK:
       name: Захист Магічного Блоку
       description: |-
-        &b Ранг, який може зламати
-        &b магічний блок, якщо
-        &b може ламати блоки.
-      hint: "&c Ваш ранг не може зламати магічний блок!"
+        <aqua>Ранг, який може зламати
+        магічний блок, якщо
+        може ламати блоки.</aqua>
+      hint: "<red>Ваш ранг не може зламати магічний блок!</red>"
     START_SAFETY:
       name: Початкова Безпека
       description: |-
-        &b Запобігає руху нових гравців
-        &b протягом 1 хвилини,
-        &b щоб вони не впали.
-      hint: "&c Рух заблоковано з міркувань безпеки ще на [number] секунд!"
-      free-to-move: "&a Ви можете вільно рухатися. Будьте обережні!"
+        <aqua>Запобігає руху нових гравців
+        протягом 1 хвилини,
+        щоб вони не впали.</aqua>
+      hint: "<red>Рух заблоковано з міркувань безпеки ще на [number] секунд!</red>"
+      free-to-move: "<green>Ви можете вільно рухатися. Будьте обережні!</green>"
     ONEBLOCK_BOSSBAR:
-        name: Boss Bar
-        description: |-
-          &b Показує панель стану
-          &b для кожної фази.
+      name: Boss Bar
+      description: |-
+        <aqua>Показує панель стану
+        для кожної фази.</aqua>
     ONEBLOCK_ACTIONBAR:
       name: Action Bar
       description: |-
-        &b Показує статус
-        &b для кожної фази
-        &b в Action Bar.
+        <aqua>Показує статус
+        для кожної фази
+        в Action Bar.</aqua>
 aoneblock:
   bossbar:
     title: Блоки, що залишилися
-    status: '&a Фазові блоки &b [done] &d / &b [total]'
+    status: '<green>Фазові блоки </green><aqua>[done] </aqua><light_purple>/ </light_purple><aqua>[total]</aqua>'
     color: RED
     style: SEGMENTED_20
-    not-active: '&c Boss Bar не активний для цього острова'
+    not-active: '<red>Boss Bar не активний для цього острова</red>'
   actionbar:
-    status: "&a Фаза: &b [phase-name] &d | &a Блоки: &b [done] &d / &b [total] &d | &a Прогрес: &b [percent-done]"
-    not-active: "&c Панель дій не активна для цього острова"
+    status: "<green>Фаза: </green><aqua>[phase-name] </aqua><light_purple>| </light_purple><green>Блоки: </green><aqua>[done] </aqua><light_purple>/ </light_purple><aqua>[total] </aqua><light_purple>| </light_purple><green>Прогрес: </green><aqua>[percent-done]</aqua>"
+    not-active: "<red>Панель дій не активна для цього острова</red>"
   commands:
     admin:
       setcount:
         parameters: <name> <count> [lifetime]
         description: встановити кількість блоків гравця
-        set: '&a [name] встановлено значення [number]'
-        set-lifetime: '&a [name] тривалість життя встановлено на [number]'
+        set: '<green>[name] встановлено значення [number]</green>'
+        set-lifetime: '<green>[name] тривалість життя встановлено на [number]</green>'
       setchest:
         parameters: <phase> <rarity>
         description: поставити скриню, на яку дивляться, у фазу з указаною рідкістю
-        chest-is-empty: '&c Ця скриня порожня, тому її неможливо додати'
-        unknown-phase: '&c Невідома фаза. Використовуйте Tab-complete, щоб побачити їх'
-        unknown-rarity: '&c Невідома рідкість. Використовуйте COMMON, UNCOMMON, RARE або EPIC'
-        look-at-chest: '&c Подивіться на заповнену скриню, щоб встановити її'
-        only-single-chest: '&c Можна встановити лише окремі скрині'
+        chest-is-empty: '<red>Ця скриня порожня, тому її неможливо додати</red>'
+        unknown-phase: '<red>Невідома фаза. Використовуйте Tab-complete, щоб побачити їх</red>'
+        unknown-rarity: '<red>Невідома рідкість. Використовуйте COMMON, UNCOMMON, RARE або EPIC</red>'
+        look-at-chest: '<red>Подивіться на заповнену скриню, щоб встановити її</red>'
+        only-single-chest: '<red>Можна встановити лише окремі скрині</red>'
         success: '& Скриню успішно додано до фази'
-        failure: '&c Скриня не може бути додана до фази! Перегляньте консоль для помилок'
+        failure: '<red>Скриня не може бути додана до фази! Перегляньте консоль для помилок</red>'
       sanity:
         parameters: <phase>
         description: відобразити перевірку працездатності ймовірностей фази на консолі
-        see-console: '&a Дивіться консоль для звіту'
+        see-console: '<green>Дивіться консоль для звіту</green>'
     count:
       description: показати кількість блоків і фазу
-      info: '&a Ви знаходитесь у блоці &b [number] у фазі &a [name].'
+      info: '<green>Ви знаходитесь у блоці </green><aqua>[number] у фазі </aqua><green>[name].</green>'
     info:
-      count: >-
-        &a Острів знаходиться на блоці &b [number]&a у фазі &b [name] &a.
-        Підрахунок тривалості життя &b [lifetime] &a.
+      count: '<green>Острів знаходиться на блоці </green><aqua>[number]</aqua><green> у фазі </green><aqua>[name] </aqua><green>. Підрахунок тривалості життя </green><aqua>[lifetime] </aqua><green>.</green>'
     phases:
       description: показати список усіх фаз
-      title: '&2 OneBlock фази'
-      name-syntax: '&a [name]'
-      description-syntax: '&b [number] блоків'
+      title: '<dark_green>OneBlock фази</dark_green>'
+      name-syntax: '<green>[name]</green>'
+      description-syntax: '<aqua>[number] блоків</aqua>'
     island:
       bossbar:
         description: перемикає фазу боса
-        status_on: '&b Bossbar &a увімкнув'
-        status_off: '&b Bossbar &c вимкнувся'
+        status_on: '<aqua>Bossbar </aqua><green>увімкнув</green>'
+        status_off: '<aqua>Bossbar </aqua><red>вимкнувся</red>'
       actionbar:
         description: перемикає панель дій фази
-        status_on: "&b Панель дій &a увімкнена"
-        status_off: "&b Панель дій &c вимкнена"
+        status_on: "<aqua>Панель дій </aqua><green>увімкнена</green>"
+        status_off: "<aqua>Панель дій </aqua><red>вимкнена</red>"
       setcount:
         parameters: <count>
         description: встановити кількість блоків до попередньо завершеного значення
-        set: '&a Лічильник встановлено на [number].'
-        too-high: '&c Максимум, який ви можете встановити, це [number]!'
+        set: '<green>Лічильник встановлено на [number].</green>'
+        too-high: '<red>Максимум, який ви можете встановити, це [number]!</red>'
     respawn-block:
       description: відроджує магічний блок у ситуаціях, коли він зникає
-      block-exist: '&a Блок існує, не потребує відновлення. Я позначив це для вас.'
+      block-exist: '<green>Блок існує, не потребує відновлення. Я позначив це для вас.</green>'
       block-respawned: '& Блок відродився.'
   phase:
-    insufficient-level: >-
-      &c Рівень вашого острова занадто низький, щоб продовжити! Це має бути
-      [number].
-    insufficient-funds: '&c Ваших коштів занадто мало, щоб продовжити! Вони мають бути [number].'
-    insufficient-bank-balance: >-
-      &c Баланс острівного банку занадто низький, щоб продовжити! Це має бути
-      [number].
-    insufficient-permission: '&c Ви не можете продовжувати далі, доки не отримаєте дозвіл [name]!'
-    cooldown: '&c Наступна фаза буде доступна через [number] секунд!'
+    insufficient-level: '<red>Рівень вашого острова занадто низький, щоб продовжити! Це має бути [number].</red>'
+    insufficient-funds: '<red>Ваших коштів занадто мало, щоб продовжити! Вони мають бути [number].</red>'
+    insufficient-bank-balance: '<red>Баланс острівного банку занадто низький, щоб продовжити! Це має бути [number].</red>'
+    insufficient-permission: '<red>Ви не можете продовжувати далі, доки не отримаєте дозвіл [name]!</red>'
+    cooldown: '<red>Наступна фаза буде доступна через [number] секунд!</red>'
   placeholders:
     infinite: Нескінченний
     my-island-phase-default: Невідомо
   gui:
     titles:
-      phases: '&0&l Фази одного блоку'
+      phases: '<black><bold>Фази одного блоку</bold></black>'
     buttons:
       previous:
-        name: '&f&l Попередня сторінка'
-        description: '&7 Перейти на сторінку [number].'
+        name: '<white><bold>Попередня сторінка</bold></white>'
+        description: '<gray>Перейти на сторінку [number].</gray>'
       next:
-        name: '&f&l Наступна сторінка'
-        description: '&7 Перейти на сторінку [number].'
+        name: '<white><bold>Наступна сторінка</bold></white>'
+        description: '<gray>Перейти на сторінку [number].</gray>'
       phase:
-        name: '&f&l [phase]'
+        name: '<white><bold>[phase]</bold></white>'
         description: |-
           [starting-block]
           [biome]
@@ -119,20 +113,20 @@ aoneblock:
           [economy]
           [level]
           [permission]
-        starting-block: '&7 Запускається після розбиття &e [number] блоків.'
-        biome: '&7 Біом: &e [biome]'
-        bank: '&7 Потрібен &e $[number] &7 на банківському рахунку.'
-        economy: '&7 Потрібен &e $[number] &7 в обліковому записі гравця.'
-        level: '&7 Потрібен рівень острова &e [number] &7.'
-        permission: '&7 Потрібен дозвіл `&e[permission]&7`.'
+        starting-block: '<gray>Запускається після розбиття </gray><yellow>[number] блоків.</yellow>'
+        biome: '<gray>Біом: </gray><yellow>[biome]</yellow>'
+        bank: '<gray>Потрібен </gray><yellow>$[number] </yellow><gray>на банківському рахунку.</gray>'
+        economy: '<gray>Потрібен </gray><yellow>$[number] </yellow><gray>в обліковому записі гравця.</gray>'
+        level: '<gray>Потрібен рівень острова </gray><yellow>[number] </yellow><gray>.</gray>'
+        permission: '<gray>Потрібен дозвіл `</gray><yellow>[permission]</yellow><gray>`.</gray>'
         blocks-prefix: Блоки по фазі -
-        blocks: '&e [name], '
+        blocks: '<yellow>[name], </yellow>'
         wrap-at: '50'
     tips:
-      click-to-previous: '&e Натисніть &7, щоб переглянути попередню сторінку.'
-      click-to-next: '&e Натисніть &7, щоб переглянути наступну сторінку.'
-      click-to-change: '&e Натисніть &7, щоб змінити.'
+      click-to-previous: '<yellow>Натисніть </yellow><gray>, щоб переглянути попередню сторінку.</gray>'
+      click-to-next: '<yellow>Натисніть </yellow><gray>, щоб переглянути наступну сторінку.</gray>'
+      click-to-change: '<yellow>Натисніть </yellow><gray>, щоб змінити.</gray>'
   island:
     starting-hologram: |-
-      &aЛаскаво просимо до AOneBlock
-      &eРозбийте цей блок, щоб почати
+      <green>Ласкаво просимо до AOneBlock
+      </green><yellow>Розбийте цей блок, щоб почати</yellow>

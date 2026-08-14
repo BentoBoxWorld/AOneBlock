@@ -8,149 +8,149 @@ protection:
     MAGIC_BLOCK:
       name: Magic Block Protection
       description: |-
-        &b Rank that can break the magic
-        &b block if they can break blocks.
-      hint: "&c Your rank cannot break the magic block!"
+        <aqua>Rank that can break the magic
+        block if they can break blocks.</aqua>
+      hint: "<red>Your rank cannot break the magic block!</red>"
     START_SAFETY:
       name: Starting Safety
       description: |-
-        &b Prevents new players
-        &b from moving for 1 minute
-        &b so they don't fall off.
-      hint: "&c Movement blocked for safety for [number] more seconds!"
-      free-to-move: "&a You are free to move. Be careful!"
+        <aqua>Prevents new players
+        from moving for 1 minute
+        so they don't fall off.</aqua>
+      hint: "<red>Movement blocked for safety for [number] more seconds!</red>"
+      free-to-move: "<green>You are free to move. Be careful!</green>"
     ONEBLOCK_BOSSBAR:
-        name: Boss Bar
-        description: |-
-          &b Shows a status bar
-          &b for each phase.
+      name: Boss Bar
+      description: |-
+        <aqua>Shows a status bar
+        for each phase.</aqua>
     ONEBLOCK_ACTIONBAR:
       name: Action Bar
       description: |-
-        &b Shows a status
-        &b for each phase
-        &b in the Action Bar.
+        <aqua>Shows a status
+        for each phase
+        in the Action Bar.</aqua>
 
 aoneblock:
   bossbar:
     title: "Blocks remaining"
     # status: "&a Phase blocks &b [total]. Blocks left: [todo]"
     # status: "&a [phase-name] : [percent-done]"
-    status: "&a Phase blocks &b [done] &d / &b [total]"
+    status: "<green>Phase blocks </green><aqua>[done] </aqua><light_purple>/ </light_purple><aqua>[total]</aqua>"
     # RED, WHITE, PINK, BLUE, GREEN, YELLOW, or PURPLE
     color: RED
     # SOLID, SEGMENTED_6,  SEGMENTED_10, SEGMENTED_12, SEGMENTED_20
     style: SOLID
-    not-active: "&c Boss Bar is not active for this island"
+    not-active: "<red>Boss Bar is not active for this island</red>"
   actionbar:
-    status: "&a Phase: &b [phase-name] &d | &a Blocks: &b [done] &d / &b [total] &d | &a Progression: &b [percent-done]"
-    not-active: "&c Action Bar is not active for this island"
+    status: "<green>Phase: </green><aqua>[phase-name] </aqua><light_purple>| </light_purple><green>Blocks: </green><aqua>[done] </aqua><light_purple>/ </light_purple><aqua>[total] </aqua><light_purple>| </light_purple><green>Progression: </green><aqua>[percent-done]</aqua>"
+    not-active: "<red>Action Bar is not active for this island</red>"
   commands:
     admin:
       setcount:
         parameters: "<name> <count> [lifetime]"
         description: "set player's block count"
-        set: "&a [name]'s count set to [number]"
-        set-lifetime: "&a [name]'s lifetime count set to [number]"
+        set: "<green>[name]'s count set to [number]</green>"
+        set-lifetime: "<green>[name]'s lifetime count set to [number]</green>"
       setchest:
         parameters: "<phase> <rarity>"
         description: "put the looked-at chest in a phase with the rarity specified"
-        chest-is-empty: "&c That chest is empty so cannot be added"
-        unknown-phase: "&c Unknown phase. Use tab-complete to see them"
-        unknown-rarity: "&c Unknown rarity. Use COMMON, UNCOMMON, RARE or EPIC"
-        look-at-chest: "&c Look at a filled chest to set it"
-        only-single-chest: "&c Only single chests can be set"
-        success: "&a Chest successfully added to phase"
-        failure: "&c Chest could not be added to the phase! See console for errors"
+        chest-is-empty: "<red>That chest is empty so cannot be added</red>"
+        unknown-phase: "<red>Unknown phase. Use tab-complete to see them</red>"
+        unknown-rarity: "<red>Unknown rarity. Use COMMON, UNCOMMON, RARE or EPIC</red>"
+        look-at-chest: "<red>Look at a filled chest to set it</red>"
+        only-single-chest: "<red>Only single chests can be set</red>"
+        success: "<green>Chest successfully added to phase</green>"
+        failure: "<red>Chest could not be added to the phase! See console for errors</red>"
       sanity:
         parameters: "<phase>"
         description: "display a sanity check of the phase probabilities in the console"
-        see-console: "&a See the console for the report"
+        see-console: "<green>See the console for the report</green>"
       phases:
         description: "open the phase order editor"
-        no-index: "&c No phase index is loaded, so phases cannot be reordered"
-        saved: "&a Phase order saved and applied"
-        save-failed: "&c Could not save the phase order! See console for errors"
+        no-index: "<red>No phase index is loaded, so phases cannot be reordered</red>"
+        saved: "<green>Phase order saved and applied</green>"
+        save-failed: "<red>Could not save the phase order! See console for errors</red>"
         gui:
-          title: "&2 Phase Order"
-          info-title: "&f How to use"
+          title: "<dark_green>Phase Order</dark_green>"
+          info-title: "<white>How to use</white>"
           instructions: |-
-            &7 Click a phase to pick it up,
-            &7 then click where it should go.
-            &7 Right-click toggles a phase
-            &7 on or off.
-          repeat: "&7 After the last phase the count jumps to &b [number]"
-          phase-name: "&a [name]"
-          start: "&7 Start: &b [number]"
-          length: "&7 Length: &b [number]"
-          disabled: "&c Disabled"
-          version-locked: "&c Needs Minecraft [version]+"
-          pick-up: "&e Click to move"
-          toggle: "&e Right-click to toggle"
-          set-length: "&e Shift-left-click to set length"
-          drop-here: "&e Click to drop here"
-          drop-at-end: "&a Drop at the end"
-          held: "&e Moving: [name]"
-          put-back: "&e Click to put back"
-          enter-length: "&e Enter a new length in chat for &a [name] &e - it is currently &b [number] &e blocks. Type &c cancel &e to keep it."
-          invalid-length: "&c The length must be a whole number above 0"
-          length-cancelled: "&c Length unchanged"
+            <gray>Click a phase to pick it up,
+            then click where it should go.
+            Right-click toggles a phase
+            on or off.</gray>
+          repeat: "<gray>After the last phase the count jumps to </gray><aqua>[number]</aqua>"
+          phase-name: "<green>[name]</green>"
+          start: "<gray>Start: </gray><aqua>[number]</aqua>"
+          length: "<gray>Length: </gray><aqua>[number]</aqua>"
+          disabled: "<red>Disabled</red>"
+          version-locked: "<red>Needs Minecraft [version]+</red>"
+          pick-up: "<yellow>Click to move</yellow>"
+          toggle: "<yellow>Right-click to toggle</yellow>"
+          set-length: "<yellow>Shift-left-click to set length</yellow>"
+          drop-here: "<yellow>Click to drop here</yellow>"
+          drop-at-end: "<green>Drop at the end</green>"
+          held: "<yellow>Moving: [name]</yellow>"
+          put-back: "<yellow>Click to put back</yellow>"
+          enter-length: "<yellow>Enter a new length in chat for </yellow><green>[name] </green><yellow>- it is currently </yellow><aqua>[number] </aqua><yellow>blocks. Type </yellow><red>cancel </red><yellow>to keep it.</yellow>"
+          invalid-length: "<red>The length must be a whole number above 0</red>"
+          length-cancelled: "<red>Length unchanged</red>"
           cancel-word: "cancel"
     count:
       description: show the block count and phase
-      info: "&a You are on block &b [number] in the &a [name] phase"
+      info: "<green>You are on block </green><aqua>[number] in the </aqua><green>[name] phase</green>"
     info:
-      count: "&a Island is on block &b [number] &a in the &b [name] &a phase. Lifetime count &b [lifetime] &a."
+      count: "<green>Island is on block </green><aqua>[number] </aqua><green>in the </green><aqua>[name] </aqua><green>phase. Lifetime count </green><aqua>[lifetime] </aqua><green>.</green>"
     phases:
       description: show a list of all the phases
-      title: "&2 OneBlock Phases"
-      name-syntax: "&a [name]"
-      description-syntax: "&b [number] blocks"
+      title: "<dark_green>OneBlock Phases</dark_green>"
+      name-syntax: "<green>[name]</green>"
+      description-syntax: "<aqua>[number] blocks</aqua>"
     island:
       bossbar:
         description: "toggles phase boss bar"
-        status_on: "&b Bossbar turned &a on"
-        status_off: "&b Bossbar turned &c off"
+        status_on: "<aqua>Bossbar turned </aqua><green>on</green>"
+        status_off: "<aqua>Bossbar turned </aqua><red>off</red>"
       actionbar:
         description: "toggles phase action bar"
-        status_on: "&b Action Bar turned &a on"
-        status_off: "&b Action Bar turned &c off"
+        status_on: "<aqua>Action Bar turned </aqua><green>on</green>"
+        status_off: "<aqua>Action Bar turned </aqua><red>off</red>"
       setcount:
         parameters: "<count>"
         description: "set block count to previously completed value"
-        set: "&a Count set to [number]."
-        too-high: "&c The maximum you can set is [number]!"
+        set: "<green>Count set to [number].</green>"
+        too-high: "<red>The maximum you can set is [number]!</red>"
     respawn-block:
       description: "respawns magic block in situations when it disappears"
-      block-exist: "&a Block exists, did not require respawning. I marked it for you."
-      block-respawned: "&a Block respawned."
+      block-exist: "<green>Block exists, did not require respawning. I marked it for you.</green>"
+      block-respawned: "<green>Block respawned.</green>"
   phase:
-    insufficient-level: "&c Your island level is too low to proceed! It must be [number]."
-    insufficient-funds: "&c Your funds are too low to proceed! They must be [number]."
-    insufficient-bank-balance: "&c The island bank balance is too low to proceed! It must be [number]."
-    insufficient-permission: "&c You can proceed no further until you obtain the [name] permission!"
-    cooldown: "&c Next phase will be available in [number] seconds!"
+    insufficient-level: "<red>Your island level is too low to proceed! It must be [number].</red>"
+    insufficient-funds: "<red>Your funds are too low to proceed! They must be [number].</red>"
+    insufficient-bank-balance: "<red>The island bank balance is too low to proceed! It must be [number].</red>"
+    insufficient-permission: "<red>You can proceed no further until you obtain the [name] permission!</red>"
+    cooldown: "<red>Next phase will be available in [number] seconds!</red>"
   placeholders:
     infinite: Infinite
     my-island-phase-default: Unknown
   gui:
     titles:
-      phases: '&0&l OneBlock Phases'
+      phases: '<black><bold>OneBlock Phases</bold></black>'
     # This section contains all button names and lore (description)
     buttons:
       # List of buttons in GUI's
       # Button that is used in multipage GUIs which allows to return to previous page.
       previous:
-        name: "&f&l Previous Page"
+        name: "<white><bold>Previous Page</bold></white>"
         description: |-
-          &7 Switch to [number] page
+          <gray>Switch to [number] page</gray>
       # Button that is used in multipage GUIs which allows to go to next page.
       next:
-        name: "&f&l Next Page"
+        name: "<white><bold>Next Page</bold></white>"
         description: |-
-          &7 Switch to [number] page
+          <gray>Switch to [number] page</gray>
       phase:
-        name: "&f&l [phase]"
+        name: "<white><bold>[phase]</bold></white>"
         description: |-
           [starting-block]
           [biome]
@@ -160,24 +160,24 @@ aoneblock:
           [permission]
           [blocks]
         # Replaces text with [starting-block]
-        starting-block: "&7 Starts after breaking &e [number] blocks."
+        starting-block: "<gray>Starts after breaking </gray><yellow>[number] blocks.</yellow>"
         # Replaces text with [biome]
-        biome: "&7 Biome: &e [biome]"
+        biome: "<gray>Biome: </gray><yellow>[biome]</yellow>"
         # Replaces text with [bank]
-        bank: "&7 Requires &e $[number] &7 in bank account."
+        bank: "<gray>Requires </gray><yellow>$[number] </yellow><gray>in bank account.</gray>"
         # Replaces text with [economy]
-        economy: "&7 Requires &e $[number] &7 in player account."
+        economy: "<gray>Requires </gray><yellow>$[number] </yellow><gray>in player account.</gray>"
         # Replaces text with [level]
-        level: "&7 Requires &e [number] &7 island level."
+        level: "<gray>Requires </gray><yellow>[number] </yellow><gray>island level.</gray>"
         # Replaces text with [permission]
-        permission: "&7 Requires `&e[permission]&7` permission."
+        permission: "<gray>Requires `</gray><yellow>[permission]</yellow><gray>` permission.</gray>"
         # Replaces text with [blocks]
-        blocks-prefix: '&7 Blocks in phase - '
-        blocks: '&e [name], '
+        blocks-prefix: '<gray>Blocks in phase - </gray>'
+        blocks: '<yellow>[name], </yellow>'
         wrap-at: '50'
     tips:
-      click-to-previous: "&e Click &7 to view previous page."
-      click-to-next: "&e Click &7 to view next page."
-      click-to-change: "&e Click &7 to change."
+      click-to-previous: "<yellow>Click </yellow><gray>to view previous page.</gray>"
+      click-to-next: "<yellow>Click </yellow><gray>to view next page.</gray>"
+      click-to-change: "<yellow>Click </yellow><gray>to change.</gray>"
   island:
-    starting-hologram: "&aWelcome to AOneBlock\n&eBreak This Block to Begin"
+    starting-hologram: "<green>Welcome to AOneBlock\n</green><yellow>Break This Block to Begin</yellow>"
