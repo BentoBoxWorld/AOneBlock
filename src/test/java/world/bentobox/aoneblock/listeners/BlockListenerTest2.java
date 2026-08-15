@@ -24,10 +24,12 @@ import static org.mockito.Mockito.when;
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Random;
+import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
@@ -38,11 +40,15 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
+import org.bukkit.block.BlockSupport;
 import org.bukkit.block.BrushableBlock;
 import org.bukkit.block.Chest;
 import org.bukkit.block.data.type.Leaves;
+import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.Brushable;
+import org.bukkit.block.data.MultipleFacing;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Item;
 import org.bukkit.event.EventHandler;
@@ -62,6 +68,8 @@ import org.eclipse.jdt.annotation.NonNull;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockbukkit.mockbukkit.block.data.MultipleFacingDataMock;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
@@ -599,6 +607,105 @@ class BlockListenerTest2 extends CommonTestSetup {
         callSpawnBlock(nextBlock, magicBlock);
 
         verify(magicBlock).setType(Material.STONE, false);
+    }
+
+    /**
+     * Stubs every neighbor of the magic block as air.
+     * @return map of the neighbor mocks, keyed by the face of the magic block they sit on.
+     */
+    private Map<BlockFace, Block> stubAirNeighbors(Material plant) {
+        // Bukkit is statically mocked here, so supply the multiface block data ourselves.
+        // MockBukkit does not model every multiface material, so build the mock directly.
+        mockedBukkit.when(() -> Bukkit.createBlockData(plant))
+                .thenAnswer(i -> new MultipleFacingDataMock(plant));
+        return stubAirNeighbors();
+    }
+
+    private Map<BlockFace, Block> stubAirNeighbors() {
+        Map<BlockFace, Block> neighbors = new EnumMap<>(BlockFace.class);
+        for (BlockFace face : List.of(BlockFace.UP, BlockFace.DOWN, BlockFace.NORTH, BlockFace.EAST,
+                BlockFace.SOUTH, BlockFace.WEST)) {
+            Block neighbor = mock(Block.class);
+            when(neighbor.getType()).thenReturn(Material.AIR);
+            when(magicBlock.getRelative(face)).thenReturn(neighbor);
+            neighbors.put(face, neighbor);
+        }
+        return neighbors;
+    }
+
+    /**
+     * Turns a neighbor mock into a solid block that a multiface plant can attach to.
+     * @param neighbor the neighbor mock
+     * @param face the face of the neighbor that the plant would sit on
+     */
+    private void makeSolid(Block neighbor, BlockFace face) {
+        BlockData data = mock(BlockData.class);
+        when(neighbor.getType()).thenReturn(Material.MOSS_BLOCK);
+        when(neighbor.getBlockData()).thenReturn(data);
+        when(data.isFaceSturdy(face, BlockSupport.FULL)).thenReturn(true);
+    }
+
+    /**
+     * Test method for
+     * {@link world.bentobox.aoneblock.listeners.BlockListener} spawnBlock — GLOW_LICHEN with support.
+     * Glow lichen is attached to the faces of the solid neighbors the magic block has, so that
+     * vanilla does not delete it and bone meal has a face to spread from.
+     */
+    @Test
+    void testSpawnBlockGlowLichenAttachesToNeighbors() throws Exception {
+        Map<BlockFace, Block> neighbors = stubAirNeighbors(Material.GLOW_LICHEN);
+        makeSolid(neighbors.get(BlockFace.DOWN), BlockFace.UP);
+        makeSolid(neighbors.get(BlockFace.NORTH), BlockFace.SOUTH);
+
+        callSpawnBlock(new OneBlockObject(Material.GLOW_LICHEN, 1), magicBlock);
+
+        ArgumentCaptor<BlockData> captor = ArgumentCaptor.forClass(BlockData.class);
+        verify(magicBlock).setBlockData(captor.capture(), eq(false));
+        MultipleFacing lichen = (MultipleFacing) captor.getValue();
+        assertEquals(Material.GLOW_LICHEN, lichen.getMaterial());
+        assertEquals(Set.of(BlockFace.DOWN, BlockFace.NORTH), lichen.getFaces());
+        // The magic block itself is the lichen, so no support block is placed
+        verify(magicBlock, never()).setType(any(Material.class), anyBoolean());
+    }
+
+    /**
+     * Test method for
+     * {@link world.bentobox.aoneblock.listeners.BlockListener} spawnBlock — GLOW_LICHEN in mid-air.
+     * With nothing to cling to, the magic block becomes moss and the lichen grows on top of it.
+     */
+    @Test
+    void testSpawnBlockGlowLichenWithNoSupport() throws Exception {
+        Map<BlockFace, Block> neighbors = stubAirNeighbors(Material.GLOW_LICHEN);
+
+        callSpawnBlock(new OneBlockObject(Material.GLOW_LICHEN, 1), magicBlock);
+
+        verify(magicBlock).setType(Material.MOSS_BLOCK, false);
+        ArgumentCaptor<BlockData> captor = ArgumentCaptor.forClass(BlockData.class);
+        verify(neighbors.get(BlockFace.UP)).setBlockData(captor.capture(), eq(false));
+        MultipleFacing lichen = (MultipleFacing) captor.getValue();
+        assertEquals(Material.GLOW_LICHEN, lichen.getMaterial());
+        assertEquals(Set.of(BlockFace.DOWN), lichen.getFaces());
+    }
+
+    /**
+     * Test method for
+     * {@link world.bentobox.aoneblock.listeners.BlockListener} spawnBlock — VINE in mid-air.
+     * Vines cannot hang off the underside of a block, so they are grown on the side of the
+     * support block instead.
+     */
+    @Test
+    void testSpawnBlockVineWithNoSupport() throws Exception {
+        Map<BlockFace, Block> neighbors = stubAirNeighbors(Material.VINE);
+
+        callSpawnBlock(new OneBlockObject(Material.VINE, 1), magicBlock);
+
+        verify(magicBlock).setType(Material.MOSS_BLOCK, false);
+        verify(neighbors.get(BlockFace.UP), never()).setBlockData(any(), anyBoolean());
+        ArgumentCaptor<BlockData> captor = ArgumentCaptor.forClass(BlockData.class);
+        verify(neighbors.get(BlockFace.NORTH)).setBlockData(captor.capture(), eq(false));
+        MultipleFacing vine = (MultipleFacing) captor.getValue();
+        assertEquals(Material.VINE, vine.getMaterial());
+        assertEquals(Set.of(BlockFace.SOUTH), vine.getFaces());
     }
 
     /**
