@@ -5,7 +5,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
@@ -52,7 +51,7 @@ public class PlaceholdersManagerTest extends CommonTestSetup {
         when(addon.inWorld(world)).thenReturn(true);
         when(im.getProtectedIslandAt(any())).thenReturn(Optional.of(island));
         when(im.getIsland(world, user)).thenReturn(island);
-        when(im.getIslands(world, user)).thenReturn(List.of(island));
+        when(im.getOwnedIslands(world, user)).thenReturn(Set.of(island));
         @NonNull OneBlockIslands obi = new OneBlockIslands("uniqueId");
         obi.setPhaseName("first");
         obi.setBlockNumber(1000);
@@ -106,7 +105,7 @@ public class PlaceholdersManagerTest extends CommonTestSetup {
         when(user.getUniqueId()).thenReturn(uuid);
         assertEquals("first", pm.getPhase(user));
         when(im.getIsland(world, user)).thenReturn(null);
-        when(im.getIslands(world, user)).thenReturn(List.of());
+        when(im.getOwnedIslands(world, user)).thenReturn(Set.of());
         assertEquals("Unknown", pm.getPhase(user));
     }
 
@@ -120,7 +119,7 @@ public class PlaceholdersManagerTest extends CommonTestSetup {
         when(user.getUniqueId()).thenReturn(uuid);
         assertEquals("1000", pm.getCount(user));
         when(im.getIsland(world, user)).thenReturn(null);
-        when(im.getIslands(world, user)).thenReturn(List.of());
+        when(im.getOwnedIslands(world, user)).thenReturn(Set.of());
         assertEquals("0", pm.getCount(user));
     }
 
@@ -147,7 +146,7 @@ public class PlaceholdersManagerTest extends CommonTestSetup {
         when(user.getUniqueId()).thenReturn(uuid);
         assertEquals("next_phase", pm.getNextPhase(user));
         when(im.getIsland(world, user)).thenReturn(null);
-        when(im.getIslands(world, user)).thenReturn(List.of());
+        when(im.getOwnedIslands(world, user)).thenReturn(Set.of());
         assertEquals("", pm.getNextPhase(user));
     }
 
@@ -178,7 +177,7 @@ public class PlaceholdersManagerTest extends CommonTestSetup {
         when(obm.getNextPhaseBlocks(any())).thenReturn(-1);
         assertEquals("Infinite", pm.getNextPhaseBlocks(user));
         when(im.getIsland(world, user)).thenReturn(null);
-        when(im.getIslands(world, user)).thenReturn(List.of());
+        when(im.getOwnedIslands(world, user)).thenReturn(Set.of());
         assertEquals("", pm.getNextPhaseBlocks(user));
     }
 
@@ -205,7 +204,7 @@ public class PlaceholdersManagerTest extends CommonTestSetup {
         when(user.getUniqueId()).thenReturn(uuid);
         assertEquals("70%", pm.getPercentDone(user));
         when(im.getIsland(world, user)).thenReturn(null);
-        when(im.getIslands(world, user)).thenReturn(List.of());
+        when(im.getOwnedIslands(world, user)).thenReturn(Set.of());
         assertEquals("0%", pm.getPercentDone(user));
     }
 
@@ -232,7 +231,7 @@ public class PlaceholdersManagerTest extends CommonTestSetup {
         when(user.getUniqueId()).thenReturn(uuid);
         assertEquals("&a■■■■■&c■■■", pm.getDoneScale(user));
         when(im.getIsland(world, user)).thenReturn(null);
-        when(im.getIslands(world, user)).thenReturn(List.of());
+        when(im.getOwnedIslands(world, user)).thenReturn(Set.of());
         assertEquals("", pm.getDoneScale(user));
     }
 
@@ -282,6 +281,62 @@ public class PlaceholdersManagerTest extends CommonTestSetup {
         assertEquals("1000", pm.getLifetimeByLocation(user));
         when(im.getProtectedIslandAt(location)).thenReturn(Optional.empty());
         assertEquals("", pm.getLifetimeByLocation(user));
+    }
+
+    /**
+     * Set the user up as a team member on someone else's island: they own no island
+     * of their own and their active island is the team island.
+     * @return the team island
+     */
+    private Island setUpTeamMember() {
+        when(user.getUniqueId()).thenReturn(uuid);
+        Island teamIsland = mock(Island.class);
+        when(teamIsland.getOwner()).thenReturn(UUID.randomUUID());
+        // The team island is the member's active island
+        when(im.getIsland(world, user)).thenReturn(teamIsland);
+        // The member owns no island themselves
+        when(im.getOwnedIslands(world, user)).thenReturn(Set.of());
+        return teamIsland;
+    }
+
+    /**
+     * Test that my_island_phase shows the team island's phase for a team member who
+     * owns no island of their own.
+     */
+    @Test
+    void testGetPhaseTeamMember() {
+        setUpTeamMember();
+        assertEquals("first", pm.getPhase(user));
+    }
+
+    /**
+     * Test that my_island_count shows the team island's count for a team member.
+     */
+    @Test
+    void testGetCountTeamMember() {
+        setUpTeamMember();
+        assertEquals("1000", pm.getCount(user));
+    }
+
+    /**
+     * Test that my_island_percent_done shows the team island's percentage for a team member.
+     */
+    @Test
+    void testGetPercentDoneTeamMember() {
+        setUpTeamMember();
+        assertEquals("70%", pm.getPercentDone(user));
+    }
+
+    /**
+     * Test that the other my_island_* placeholders work for a team member too.
+     */
+    @Test
+    void testOtherPlaceholdersTeamMember() {
+        setUpTeamMember();
+        assertEquals("next_phase", pm.getNextPhase(user));
+        assertEquals("123", pm.getNextPhaseBlocks(user));
+        assertEquals("&a■■■■■&c■■■", pm.getDoneScale(user));
+        assertEquals("1000", pm.getLifetime(user));
     }
 
 }

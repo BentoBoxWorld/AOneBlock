@@ -64,22 +64,29 @@ public class AOneBlockPlaceholders {
     }
 
     /**
-     * Get the user's owned island. Returns the island owned by the user, not a team
-     * island they may be visiting as a member. If the user owns more than one island,
-     * one is picked.
+     * Get the island that the my_island_* placeholders should report on for this user.
+     * <p>
+     * An island the user owns is preferred, so that an owner who is also a member of
+     * someone else's island still sees their own island's stats. If the user owns no
+     * island, their active island is used, which is the team island for a team member.
+     * If the user owns more than one island, their active one is used if they own it,
+     * otherwise one is picked. See issue #518 for why owned islands take priority.
      * @param user user
-     * @return island owned by the user, or empty if they own none
+     * @return the user's own island, or the island they are a team member of, or empty
+     *         if they have neither
      */
     private Optional<Island> getUsersIsland(User user) {
-        // Get the active island for the user
+        // Get the active island for the user. This is the team island for a team member.
         Island i = addon.getIslands().getIsland(addon.getOverWorld(), user);
-        if (i != null && i.getOwner() != null && user.getUniqueId().equals(i.getOwner())) {
-            // User is the owner of their primary island
+        if (i != null && user.getUniqueId().equals(i.getOwner())) {
+            // User is the owner of their active island
             return Optional.of(i);
         }
 
-        // Find an island the user actually owns (not just a team island they are visiting)
-        return addon.getIslands().getOwnedIslands(addon.getOverWorld(), user).stream().findFirst();
+        // Prefer an island the user actually owns, if they own one
+        return addon.getIslands().getOwnedIslands(addon.getOverWorld(), user).stream().findFirst()
+                // Otherwise fall back to their active island, i.e., the island they are a team member of
+                .or(() -> Optional.ofNullable(i));
     }
 
     public String getPhaseBlocksNames(User user) {
