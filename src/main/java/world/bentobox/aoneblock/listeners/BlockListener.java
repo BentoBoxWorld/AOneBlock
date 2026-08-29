@@ -25,9 +25,11 @@ import org.bukkit.World;
 import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.block.BlockSupport;
 import org.bukkit.block.BrushableBlock;
 import org.bukkit.block.Chest;
 import org.bukkit.block.data.Brushable;
+import org.bukkit.block.data.MultipleFacing;
 import org.bukkit.block.data.type.Leaves;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -140,7 +142,24 @@ public class BlockListener extends FlagListener implements Listener {
     }  
 
     private static final Random RAND = new Random();
-    
+
+    /**
+     * Multiface plants, mapped to the block they are grown on when the magic block has nothing
+     * for them to attach to. Placed with their default block data these plants have no face set,
+     * a state that vanilla deletes at the next block update and that bone meal cannot spread from.
+     */
+    private static final Map<Material, Material> MULTIFACE_SUPPORT = Map.of(
+            Material.GLOW_LICHEN, Material.MOSS_BLOCK,
+            Material.SCULK_VEIN, Material.SCULK,
+            Material.RESIN_CLUMP, Material.STONE,
+            Material.VINE, Material.MOSS_BLOCK);
+
+    /**
+     * Directions tried, in order, when a multiface plant has to be given a block to grow on.
+     */
+    private static final List<BlockFace> MULTIFACE_OFFSETS = List.of(BlockFace.UP, BlockFace.NORTH,
+            BlockFace.EAST, BlockFace.SOUTH, BlockFace.WEST, BlockFace.DOWN);
+
     /**
      * Constructs the BlockListener.
      * @param addon - The AOneBlock addon instance.
@@ -710,6 +729,10 @@ public class BlockListener extends FlagListener implements Listener {
             return;
         }
         Material type = nextBlock.getMaterial();
+        if (MULTIFACE_SUPPORT.containsKey(type)) {
+            spawnMultifaceBlock(block, type);
+            return;
+        }
         block.setType(type, false);
         if (type.equals(Material.CHEST) && nextBlock.getChest() != null) {
             fillChest(nextBlock, block);
@@ -718,6 +741,63 @@ public class BlockListener extends FlagListener implements Listener {
         } else if (type == Material.SUSPICIOUS_GRAVEL || type == Material.SUSPICIOUS_SAND) {
             spawnSuspiciousBlock(block, type);
         }
+    }
+
+    /**
+     * Spawns a multiface plant - glow lichen, sculk vein, resin clump or vines.
+     * <p>
+     * These blocks are a film on the face of a neighboring block, not a cube. Placing one with
+     * {@code setType} gives it its default block data, which has no face set at all. The client
+     * draws that state on all six sides, so it looks fine, but the server treats it as
+     * unsupported: the next block update deletes it, and bone meal has no face to spread from.
+     * <p>
+     * So attach it to whatever solid neighbors the magic block already has. If it is floating in
+     * mid-air there is nothing to cling to - and nothing for bone meal to spread onto either - so
+     * the magic block becomes the plant's support block and the plant grows on the first free
+     * side of it.
+     *
+     * @param block The magic block being replaced.
+     * @param type  The multiface material, e.g. {@link Material#GLOW_LICHEN}.
+     */
+    private void spawnMultifaceBlock(@NonNull Block block, @NonNull Material type) {
+        if (!(type.createBlockData() instanceof MultipleFacing plant)) {
+            // Not a multiface block on this server version, so place it as-is
+            block.setType(type, false);
+            return;
+        }
+        boolean attached = false;
+        for (BlockFace face : plant.getAllowedFaces()) {
+            if (canAttachTo(block.getRelative(face), face.getOppositeFace())) {
+                plant.setFace(face, true);
+                attached = true;
+            }
+        }
+        if (attached) {
+            block.setBlockData(plant, false);
+            return;
+        }
+        // Nothing to grow on, so grow the plant a block to live on
+        block.setType(MULTIFACE_SUPPORT.get(type), false);
+        for (BlockFace offset : MULTIFACE_OFFSETS) {
+            BlockFace face = offset.getOppositeFace();
+            Block target = block.getRelative(offset);
+            if (plant.getAllowedFaces().contains(face) && target.getType().isAir()) {
+                plant.setFace(face, true);
+                target.setBlockData(plant, false);
+                return;
+            }
+        }
+    }
+
+    /**
+     * Checks whether a multiface plant can attach itself to the given face of a block.
+     *
+     * @param block The neighboring block.
+     * @param face  The face of that block the plant would sit on.
+     * @return {@code true} if that face is a full, solid face.
+     */
+    private boolean canAttachTo(@NonNull Block block, @NonNull BlockFace face) {
+        return !block.getType().isAir() && block.getBlockData().isFaceSturdy(face, BlockSupport.FULL);
     }
 
     /**

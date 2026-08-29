@@ -3,97 +3,93 @@ protection:
     MAGIC_BLOCK:
       name: Perlindungan Blok Ajaib
       description: |-
-        &b Pangkat yang dapat
-        &b menghancurkan blok ajaib
-        &b jika mereka dapat menghancurkan blok.
-      hint: "&c Pangkatmu tidak dapat menghancurkan blok ajaib!"
+        <aqua>Pangkat yang dapat
+        menghancurkan blok ajaib
+        jika mereka dapat menghancurkan blok.</aqua>
+      hint: "<red>Pangkatmu tidak dapat menghancurkan blok ajaib!</red>"
     START_SAFETY:
       name: Keamanan Awal
       description: |-
-        &b Mencegah pemain baru
-        &b bergerak selama 1 menit
-        &b agar mereka tidak jatuh.
-      hint: "&c Pergerakan diblokir untuk keselamatan selama [number] detik lagi!"
-      free-to-move: "&a Anda bebas bergerak. Hati-hati!"
+        <aqua>Mencegah pemain baru
+        bergerak selama 1 menit
+        agar mereka tidak jatuh.</aqua>
+      hint: "<red>Pergerakan diblokir untuk keselamatan selama [number] detik lagi!</red>"
+      free-to-move: "<green>Anda bebas bergerak. Hati-hati!</green>"
     ONEBLOCK_BOSSBAR:
-        name: Boss Bar
-        description: |-
-          &b Menampilkan bilah status
-          &b untuk setiap fase.
+      name: Boss Bar
+      description: |-
+        <aqua>Menampilkan bilah status
+        untuk setiap fase.</aqua>
     ONEBLOCK_ACTIONBAR:
       name: Action Bar
       description: |-
-        &b Menampilkan status
-        &b untuk setiap fase
-        &b di Action Bar.
+        <aqua>Menampilkan status
+        untuk setiap fase
+        di Action Bar.</aqua>
 aoneblock:
   bossbar:
     title: Blok tersisa
-    status: Blok fase &b [done] &d / &b [total]
+    status: 'Blok fase <aqua>[done] </aqua><light_purple>/ </light_purple><aqua>[total]</aqua>'
     color: RED
     style: SEGMENTED_20
-    not-active: '&c Bos Bar tidak aktif untuk pulau ini'
+    not-active: '<red>Bos Bar tidak aktif untuk pulau ini</red>'
   actionbar:
-    status: "&a Fase: &b [phase-name] &d | &a Blok: &b [done] &d / &b [total] &d | &a Kemajuan: &b [percent-done]"
-    not-active: "&c Action Bar tidak aktif untuk pulau ini"
+    status: "<green>Fase: </green><aqua>[phase-name] </aqua><light_purple>| </light_purple><green>Blok: </green><aqua>[done] </aqua><light_purple>/ </light_purple><aqua>[total] </aqua><light_purple>| </light_purple><green>Kemajuan: </green><aqua>[percent-done]</aqua>"
+    not-active: "<red>Action Bar tidak aktif untuk pulau ini</red>"
   commands:
     admin:
       setcount:
         parameters: <name> <count>
         description: atur jumlah blok pemain
-        set: '&a hitungan [name] diatur ke [number]'
-        set-lifetime: '&a Hitungan seumur hidup [name] diatur ke [number]'
+        set: '<green>hitungan [name] diatur ke [number]</green>'
+        set-lifetime: '<green>Hitungan seumur hidup [name] diatur ke [number]</green>'
       setchest:
         parameters: <phase> <rarity>
         description: letakkan dada yang tampak dalam fase dengan kelangkaan yang ditentukan
-        chest-is-empty: '&c Peti itu kosong sehingga tidak bisa ditambahkan'
-        unknown-phase: '&c Fase tidak dikenal. Gunakan tab-complete untuk melihatnya'
-        unknown-rarity: >-
-          &c Kelangkaan tidak diketahui. Gunakan COMMON, UNCOMMON, RARE atau
-          EPIC
-        look-at-chest: '&c Lihat peti berisi untuk mengaturnya'
-        only-single-chest: '&c Hanya peti tunggal yang dapat ditetapkan'
-        success: '&a Dada berhasil ditambahkan ke fase'
-        failure: '&c Dada tidak dapat ditambahkan ke fase! Lihat konsol untuk kesalahan'
+        chest-is-empty: '<red>Peti itu kosong sehingga tidak bisa ditambahkan</red>'
+        unknown-phase: '<red>Fase tidak dikenal. Gunakan tab-complete untuk melihatnya</red>'
+        unknown-rarity: '<red>Kelangkaan tidak diketahui. Gunakan COMMON, UNCOMMON, RARE atau EPIC</red>'
+        look-at-chest: '<red>Lihat peti berisi untuk mengaturnya</red>'
+        only-single-chest: '<red>Hanya peti tunggal yang dapat ditetapkan</red>'
+        success: '<green>Dada berhasil ditambahkan ke fase</green>'
+        failure: '<red>Dada tidak dapat ditambahkan ke fase! Lihat konsol untuk kesalahan</red>'
       sanity:
         parameters: <phase>
         description: menampilkan pemeriksaan kewarasan dari probabilitas fase di konsol
-        see-console: '&a Lihat konsol untuk laporannya'
+        see-console: '<green>Lihat konsol untuk laporannya</green>'
     count:
       description: perlihatkan jumlah blok dan fase
-      info: '&a Anda berada di blok &b [number] dalam fase &a [name]'
+      info: '<green>Anda berada di blok </green><aqua>[number] dalam fase </aqua><green>[name]</green>'
     info:
-      count: '&a Pulau ada di blok &b [number] &a dalam fase &b [name]. '
+      count: '<green>Pulau ada di blok </green><aqua>[number] </aqua><green>dalam fase </green><aqua>[name]. </aqua>'
     phases:
       description: perlihatkan daftar semua fase
-      title: '&2 Fase OneBlock'
-      name-syntax: '&a [name]'
-      description-syntax: '&b [number] blok'
+      title: '<dark_green>Fase OneBlock</dark_green>'
+      name-syntax: '<green>[name]</green>'
+      description-syntax: '<aqua>[number] blok</aqua>'
     island:
       bossbar:
         description: Mengalogkan Bar Bos Fase
-        status_on: '&b Bos bar &a dihidupkan'
-        status_off: '&b Bos bar &c dimatikan'
+        status_on: '<aqua>Bos bar </aqua><green>dihidupkan</green>'
+        status_off: '<aqua>Bos bar </aqua><red>dimatikan</red>'
       actionbar:
         description: mengaktifkan/menonaktifkan action bar fase
-        status_on: "&b Action Bar &a diaktifkan"
-        status_off: "&b Action Bar &c dinonaktifkan"
+        status_on: "<aqua>Action Bar </aqua><green>diaktifkan</green>"
+        status_off: "<aqua>Action Bar </aqua><red>dinonaktifkan</red>"
       setcount:
         parameters: <count>
         description: Setel jumlah blok ke nilai yang sebelumnya selesai
-        set: '&a Hitung diatur ke [number].'
-        too-high: '&c Maksimum yang dapat Anda atur adalah [number]!'
+        set: '<green>Hitung diatur ke [number].</green>'
+        too-high: '<red>Maksimum yang dapat Anda atur adalah [number]!</red>'
     respawn-block:
       description: respawns blok ajaib dalam situasi saat menghilang
-      block-exist: '&a Blok ada, tidak memerlukan respawning. '
-      block-respawned: '&a Blokir dihidupkan kembali.'
+      block-exist: '<green>Blok ada, tidak memerlukan respawning. </green>'
+      block-respawned: '<green>Blokir dihidupkan kembali.</green>'
   phase:
-    insufficient-level: '&c Tingkat pulau Anda terlalu rendah untuk [number]! '
-    insufficient-funds: '&c Dana Anda terlalu rendah untuk [number]! '
-    insufficient-bank-balance: '&c Saldo bank pulau terlalu rendah untuk [number]! '
-    insufficient-permission: >-
-      &c Anda tidak dapat melanjutkan lebih jauh sampai Anda mendapatkan izin
-      [name]!
+    insufficient-level: '<red>Tingkat pulau Anda terlalu rendah untuk [number]! </red>'
+    insufficient-funds: '<red>Dana Anda terlalu rendah untuk [number]! </red>'
+    insufficient-bank-balance: '<red>Saldo bank pulau terlalu rendah untuk [number]! </red>'
+    insufficient-permission: '<red>Anda tidak dapat melanjutkan lebih jauh sampai Anda mendapatkan izin [name]!</red>'
     cooldown: Fase berikutnya akan tersedia dalam detik [number]!
   placeholders:
     infinite: Tak terbatas
@@ -103,13 +99,13 @@ aoneblock:
       phases: OneBlock Phases
     buttons:
       previous:
-        name: '&f&l  halaman sebelumnya'
-        description: '&7 Beralih ke halaman [number]'
+        name: '<white><bold> halaman sebelumnya</bold></white>'
+        description: '<gray>Beralih ke halaman [number]</gray>'
       next:
-        name: '&f&l halaman berikutnya'
-        description: '&7 Beralih ke halaman [number]'
+        name: '<white><bold>halaman berikutnya</bold></white>'
+        description: '<gray>Beralih ke halaman [number]</gray>'
       phase:
-        name: '&f&l [phase]'
+        name: '<white><bold>[phase]</bold></white>'
         description: |-
           [starting-block]
           [biome]
@@ -118,20 +114,20 @@ aoneblock:
           [level]
           [permission]
           [blocks]
-        starting-block: '&7 Dimulai setelah melanggar &e blok [number].'
-        biome: '&7 Biome: &e [biome]'
-        bank: '&7 Membutuhkan &e $[number] &7 di rekening bank.'
-        economy: '&7 Membutuhkan &e $[number] &7 di akun pemain.'
-        level: '&7 Membutuhkan tingkat pulau &e [number].'
-        permission: '&7 Membutuhkan izin &e `[permission]`.'
-        blocks-prefix: '&7 Blok dalam fase -'
-        blocks: '&e [name], '
+        starting-block: '<gray>Dimulai setelah melanggar </gray><yellow>blok [number].</yellow>'
+        biome: '<gray>Biome: </gray><yellow>[biome]</yellow>'
+        bank: '<gray>Membutuhkan </gray><yellow>$[number] </yellow><gray>di rekening bank.</gray>'
+        economy: '<gray>Membutuhkan </gray><yellow>$[number] </yellow><gray>di akun pemain.</gray>'
+        level: '<gray>Membutuhkan tingkat pulau </gray><yellow>[number].</yellow>'
+        permission: '<gray>Membutuhkan izin </gray><yellow>`[permission]`.</yellow>'
+        blocks-prefix: '<gray>Blok dalam fase -</gray>'
+        blocks: '<yellow>[name], </yellow>'
         wrap-at: '50'
     tips:
-      click-to-previous: '&e Klik &7 untuk melihat halaman sebelumnya.'
-      click-to-next: '&e Klik &7 untuk melihat halaman berikutnya.'
-      click-to-change: '&e Klik &7 untuk berubah.'
+      click-to-previous: '<yellow>Klik </yellow><gray>untuk melihat halaman sebelumnya.</gray>'
+      click-to-next: '<yellow>Klik </yellow><gray>untuk melihat halaman berikutnya.</gray>'
+      click-to-change: '<yellow>Klik </yellow><gray>untuk berubah.</gray>'
   island:
     starting-hologram: |-
-      &a Selamat datang di AONEBLOCK
-      &e Hancurkan blok ini untuk memulai
+      <green>Selamat datang di AONEBLOCK
+      </green><yellow>Hancurkan blok ini untuk memulai</yellow>

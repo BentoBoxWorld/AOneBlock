@@ -36,9 +36,7 @@ aoneblock:
     style: SOLID
     not-active: <red>Боссбар отключен на этом острове.</red>
   actionbar:
-    status: '<green>Фаза: <aqua>[phase-name]</aqua> <light_purple>|</light_purple>
-      Блоков: <aqua>[done] <light_purple>/</light_purple> [total]</aqua> <light_purple>|</light_purple>
-      Прогресс: <aqua>[percent-done]</aqua></green>'
+    status: '<green>Фаза: <aqua>[phase-name]</aqua> <light_purple>|</light_purple> Блоков: <aqua>[done] <light_purple>/</light_purple> [total]</aqua> <light_purple>|</light_purple> Прогресс: <aqua>[percent-done]</aqua></green>'
     not-active: <red>Панель действий отключена на этом острове.</red>
   commands:
     admin:

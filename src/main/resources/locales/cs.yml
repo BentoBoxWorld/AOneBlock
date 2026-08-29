@@ -3,111 +3,109 @@ protection:
     MAGIC_BLOCK:
       name: Ochrana Kouzelného Bloku
       description: |-
-        &b Hodnost, která může rozbít
-        &b kouzelný blok, pokud
-        &b dokáže rozbíjet bloky.
-      hint: "&c Vaše hodnost nemůže rozbít kouzelný blok!"
+        <aqua>Hodnost, která může rozbít
+        kouzelný blok, pokud
+        dokáže rozbíjet bloky.</aqua>
+      hint: "<red>Vaše hodnost nemůže rozbít kouzelný blok!</red>"
     START_SAFETY:
       name: Počáteční Bezpečnost
       description: |-
-        &b Zabrání novým hráčům
-        &b v pohybu po dobu 1 minuty,
-        &b aby nespadli.
-      hint: "&c Pohyb zablokován kvůli bezpečnosti na [number] sekund!"
-      free-to-move: "&a Můžete se volně pohybovat. Buďte opatrní!"
+        <aqua>Zabrání novým hráčům
+        v pohybu po dobu 1 minuty,
+        aby nespadli.</aqua>
+      hint: "<red>Pohyb zablokován kvůli bezpečnosti na [number] sekund!</red>"
+      free-to-move: "<green>Můžete se volně pohybovat. Buďte opatrní!</green>"
     ONEBLOCK_BOSSBAR:
-        name: Boss Bar
-        description: |-
-          &b Zobrazuje stavový panel
-          &b pro každou fázi.
+      name: Boss Bar
+      description: |-
+        <aqua>Zobrazuje stavový panel
+        pro každou fázi.</aqua>
     ONEBLOCK_ACTIONBAR:
       name: Action Bar
       description: |-
-        &b Zobrazuje stav
-        &b pro každou fázi
-        &b v Action Baru.
+        <aqua>Zobrazuje stav
+        pro každou fázi
+        v Action Baru.</aqua>
 aoneblock:
   bossbar:
     title: Bloky zbývající
-    status: '&a Fázové bloky & B [done] & d / & b [total]'
+    status: '<green>Fázové bloky & B [done] & d / & b [total]</green>'
     color: RED
     style: SEGMENTED_20
-    not-active: '&c Boss Bar není pro tento ostrov aktivní'
+    not-active: '<red>Boss Bar není pro tento ostrov aktivní</red>'
   actionbar:
-    status: "&a Fáze: &b [phase-name] &d | &a Bloky: &b [done] &d / &b [total] &d | &a Postup: &b [percent-done]"
-    not-active: "&c Action Bar není pro tento ostrov aktivní"
+    status: "<green>Fáze: </green><aqua>[phase-name] </aqua><light_purple>| </light_purple><green>Bloky: </green><aqua>[done] </aqua><light_purple>/ </light_purple><aqua>[total] </aqua><light_purple>| </light_purple><green>Postup: </green><aqua>[percent-done]</aqua>"
+    not-active: "<red>Action Bar není pro tento ostrov aktivní</red>"
   commands:
     admin:
       setcount:
         parameters: <name> <count> [lifetime]
         description: nastavit počet bloků hráče
-        set: '&a počet [name] je nastaven na [number]'
-        set-lifetime: '&a [name] je nastaveno na [number]'
+        set: '<green>počet [name] je nastaven na [number]</green>'
+        set-lifetime: '<green>[name] je nastaveno na [number]</green>'
       setchest:
         parameters: <phase> <rarity>
         description: dejte pohled na hrudník do fáze se specifikovanou vzácností
-        chest-is-empty: '&c Ten hrudník je prázdný, takže jej nelze přidat'
-        unknown-phase: '&c Neznámá fáze. Chcete-li si je prohlédnout, použijte tabulátor'
-        unknown-rarity: '&c Neznámá vzácnost. Používejte COMMON, UNCOMMON, RARE nebo EPIC'
-        look-at-chest: '&c Podívejte se na naplněnou hruď a nastavte ji'
-        only-single-chest: '&c Lze nastavit pouze jednotlivé bedny'
-        success: '&a Hrudník byl úspěšně přidán do fáze'
-        failure: '&c Hrudník nelze přidat do fáze! Chyby najdete na konzole'
+        chest-is-empty: '<red>Ten hrudník je prázdný, takže jej nelze přidat</red>'
+        unknown-phase: '<red>Neznámá fáze. Chcete-li si je prohlédnout, použijte tabulátor</red>'
+        unknown-rarity: '<red>Neznámá vzácnost. Používejte COMMON, UNCOMMON, RARE nebo EPIC</red>'
+        look-at-chest: '<red>Podívejte se na naplněnou hruď a nastavte ji</red>'
+        only-single-chest: '<red>Lze nastavit pouze jednotlivé bedny</red>'
+        success: '<green>Hrudník byl úspěšně přidán do fáze</green>'
+        failure: '<red>Hrudník nelze přidat do fáze! Chyby najdete na konzole</red>'
       sanity:
         parameters: <fáze>
         description: zobrazí v konzoli kontrolu pravděpodobnosti fází
-        see-console: '&a Podívejte se do konzoly pro zprávu'
+        see-console: '<green>Podívejte se do konzoly pro zprávu</green>'
     count:
       description: zobrazit počet bloků a fázi
-      info: '&a Jste na bloku &b [number] ve fázi &a [name]'
+      info: '<green>Jste na bloku </green><aqua>[number] ve fázi </aqua><green>[name]</green>'
     info:
-      count: >-
-        Ostrov &a je na bloku &b [number]&a ve fázi &b [name] &a. Počet doživotí
-        &b [lifetime] &a.
+      count: 'Ostrov <green>je na bloku </green><aqua>[number]</aqua><green> ve fázi </green><aqua>[name] </aqua><green>. Počet doživotí </green><aqua>[lifetime] </aqua><green>.</green>'
     phases:
       description: zobrazit seznam všech fází
-      title: '&2 Fáze OneBlock'
-      name-syntax: '&a [name]'
-      description-syntax: '&b [number] bloků'
+      title: '<dark_green>Fáze OneBlock</dark_green>'
+      name-syntax: '<green>[name]</green>'
+      description-syntax: '<aqua>[number] bloků</aqua>'
     island:
       bossbar:
         description: přepíná fázový šéfový bar
-        status_on: '&b Bossbar se otočil &a zapnul'
-        status_off: '&b Bossbar se &c otočil'
+        status_on: '<aqua>Bossbar se otočil </aqua><green>zapnul</green>'
+        status_off: '<aqua>Bossbar se </aqua><red>otočil</red>'
       actionbar:
         description: přepíná action bar fáze
-        status_on: "&b Action Bar &a zapnut"
-        status_off: "&b Action Bar &c vypnut"
+        status_on: "<aqua>Action Bar </aqua><green>zapnut</green>"
+        status_off: "<aqua>Action Bar </aqua><red>vypnut</red>"
       setcount:
         parameters: <count>
         description: nastavte počet bloků na dříve dokončenou hodnotu
-        set: '&a Počet nastaven na [number].'
-        too-high: '&c Maximálně můžeš nastavit [number]!'
+        set: '<green>Počet nastaven na [number].</green>'
+        too-high: '<red>Maximálně můžeš nastavit [number]!</red>'
     respawn-block:
       description: respawnuje magický blok v situacích, kdy zmizí
-      block-exist: '&a Blok existuje, nevyžadoval respawning. Označil jsem to za vás.'
-      block-respawned: '&a Blok byl znovu vytvořen.'
+      block-exist: '<green>Blok existuje, nevyžadoval respawning. Označil jsem to za vás.</green>'
+      block-respawned: '<green>Blok byl znovu vytvořen.</green>'
   phase:
     insufficient-level: Tvůj ostrov je na příliš nízké úrovni, musí být alespoň [number].
     insufficient-funds: Nemáš dostatečné prostředky! Musíš mít alespoň [number].
     insufficient-bank-balance: V Bance ostrova není dostatek financí! Je potřeba alespoň [number].
-    insufficient-permission: '&c Nemůžete pokračovat, dokud nezískáte oprávnění [name]!'
-    cooldown: '&c Další fáze bude dostupná za [number] sekund!'
+    insufficient-permission: '<red>Nemůžete pokračovat, dokud nezískáte oprávnění [name]!</red>'
+    cooldown: '<red>Další fáze bude dostupná za [number] sekund!</red>'
   placeholders:
     infinite: Nekonečný
     my-island-phase-default: Neznámá
   gui:
     titles:
-      phases: '&0&l Jednoblokové fáze'
+      phases: '<black><bold>Jednoblokové fáze</bold></black>'
     buttons:
       previous:
-        name: '&f&l Předchozí stránka'
-        description: '&7 Přepnout na stránku [number]'
+        name: '<white><bold>Předchozí stránka</bold></white>'
+        description: '<gray>Přepnout na stránku [number]</gray>'
       next:
-        name: '&f&l Další stránka'
-        description: '&7 Přepnout na stránku [number]'
+        name: '<white><bold>Další stránka</bold></white>'
+        description: '<gray>Přepnout na stránku [number]</gray>'
       phase:
-        name: '&f&l [phase]'
+        name: '<white><bold>[phase]</bold></white>'
         description: |-
           [starting-block]
           [biome]
@@ -115,20 +113,20 @@ aoneblock:
           [economy] 
           [level]
           [permission]
-        starting-block: '&7 Spustí se po rozbití bloků &e [number].'
-        biome: '&7 Biom: &e [biome]'
-        bank: '&7 Vyžaduje &e $[number] &7 na bankovním účtu.'
-        economy: '&7 Vyžaduje &e $[number] &7 v hráčském účtu.'
-        level: '&7 Vyžaduje &e [number] &7 úroveň ostrova.'
-        permission: '&7 Vyžaduje oprávnění `&e[permission]&7`.'
-        blocks-prefix: '&7 Bloků ve fázi -'
-        blocks: '&e [name], '
+        starting-block: '<gray>Spustí se po rozbití bloků </gray><yellow>[number].</yellow>'
+        biome: '<gray>Biom: </gray><yellow>[biome]</yellow>'
+        bank: '<gray>Vyžaduje </gray><yellow>$[number] </yellow><gray>na bankovním účtu.</gray>'
+        economy: '<gray>Vyžaduje </gray><yellow>$[number] </yellow><gray>v hráčském účtu.</gray>'
+        level: '<gray>Vyžaduje </gray><yellow>[number] </yellow><gray>úroveň ostrova.</gray>'
+        permission: '<gray>Vyžaduje oprávnění `</gray><yellow>[permission]</yellow><gray>`.</gray>'
+        blocks-prefix: '<gray>Bloků ve fázi -</gray>'
+        blocks: '<yellow>[name], </yellow>'
         wrap-at: '50'
     tips:
-      click-to-previous: '&e Klepnutím na &7 zobrazíte předchozí stránku.'
-      click-to-next: '&e Klepnutím na &7 zobrazíte další stránku.'
-      click-to-change: '&e Klikněte na &7 pro změnu.'
+      click-to-previous: '<yellow>Klepnutím na </yellow><gray>zobrazíte předchozí stránku.</gray>'
+      click-to-next: '<yellow>Klepnutím na </yellow><gray>zobrazíte další stránku.</gray>'
+      click-to-change: '<yellow>Klikněte na </yellow><gray>pro změnu.</gray>'
   island:
     starting-hologram: |-
-      &a Vítejte v AOneBlock
-      &e Prolomte tento blok
+      <green>Vítejte v AOneBlock
+      </green><yellow>Prolomte tento blok</yellow>

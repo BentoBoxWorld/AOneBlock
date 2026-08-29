@@ -211,4 +211,17 @@ public class BossBarListenerTest extends CommonTestSetup {
     void testBukkitToAdventureNullIsEmpty() {
         assertEquals(Component.empty(), BossBarListener.bukkitToAdventure(null));
     }
+
+    /**
+     * Test for https://github.com/BentoBoxWorld/AOneBlock/issues/557 - NPC/minion breaks
+     * fire MagicBlockEvent with a null playerUUID; the listener must not throw.
+     */
+    @Test
+    void testNullPlayerUUIDDoesNotThrow() {
+        when(island.isAllowed(addon.ONEBLOCK_BOSSBAR)).thenReturn(true);
+        when(island.isAllowed(addon.ONEBLOCK_ACTIONBAR)).thenReturn(true);
+        bbl.onBreakBlockEvent(new MagicBlockEvent(island, null, null, block, Material.STONE));
+        verify(mockPlayer, never()).sendActionBar(any(Component.class));
+        verify(bossBar, never()).addPlayer(any());
+    }
 }

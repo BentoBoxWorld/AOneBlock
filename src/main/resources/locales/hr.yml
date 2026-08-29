@@ -3,115 +3,109 @@ protection:
     MAGIC_BLOCK:
       name: Zaštita Magičnog Bloka
       description: |-
-        &b Rang koji može razbiti
-        &b magični blok, ako
-        &b može razbiti blokove.
-      hint: "&c Vaš rang ne može razbiti magični blok!"
+        <aqua>Rang koji može razbiti
+        magični blok, ako
+        može razbiti blokove.</aqua>
+      hint: "<red>Vaš rang ne može razbiti magični blok!</red>"
     START_SAFETY:
       name: Početna Sigurnost
       description: |-
-        &b Sprječava nove igrače
-        &b da se kreću 1 minutu
-        &b da ne padnu.
-      hint: "&c Kretanje je blokirano iz sigurnosnih razloga još [number] sekundi!"
-      free-to-move: "&a Slobodni ste za kretanje. Budite oprezni!"
+        <aqua>Sprječava nove igrače
+        da se kreću 1 minutu
+        da ne padnu.</aqua>
+      hint: "<red>Kretanje je blokirano iz sigurnosnih razloga još [number] sekundi!</red>"
+      free-to-move: "<green>Slobodni ste za kretanje. Budite oprezni!</green>"
     ONEBLOCK_BOSSBAR:
-        name: Boss Traka
-        description: |-
-          &b Prikazuje statusnu traku
-          &b za svaku fazu.
+      name: Boss Traka
+      description: |-
+        <aqua>Prikazuje statusnu traku
+        za svaku fazu.</aqua>
     ONEBLOCK_ACTIONBAR:
       name: Traka Akcije
       description: |-
-        &b Prikazuje status
-        &b za svaku fazu
-        &b u Traci Akcije.
+        <aqua>Prikazuje status
+        za svaku fazu
+        u Traci Akcije.</aqua>
 aoneblock:
   bossbar:
     title: Preostali blokovi
-    status: '&a Fazni blokovi &b [done] &d / &b [total]'
+    status: '<green>Fazni blokovi </green><aqua>[done] </aqua><light_purple>/ </light_purple><aqua>[total]</aqua>'
     color: RED
     style: SEGMENTED_20
-    not-active: '&c Boss bar nije aktivan za ovaj otok'
+    not-active: '<red>Boss bar nije aktivan za ovaj otok</red>'
   actionbar:
-    status: "&a Faza: &b [phase-name] &d | &a Blokovi: &b [done] &d / &b [total] &d | &a Napredak: &b [percent-done]"
-    not-active: "&c Akcijska traka nije aktivna za ovaj otok"
+    status: "<green>Faza: </green><aqua>[phase-name] </aqua><light_purple>| </light_purple><green>Blokovi: </green><aqua>[done] </aqua><light_purple>/ </light_purple><aqua>[total] </aqua><light_purple>| </light_purple><green>Napredak: </green><aqua>[percent-done]</aqua>"
+    not-active: "<red>Akcijska traka nije aktivna za ovaj otok</red>"
   commands:
     admin:
       setcount:
         parameters: <ime> <broj>
         description: postavljanje broja blokova igrača
-        set: '&a broj [name] postavljen je na [number]'
-        set-lifetime: '&broj životnog vijeka [name] postavljen na [number]'
+        set: '<green>broj [name] postavljen je na [number]</green>'
+        set-lifetime: '<aqua>roj životnog vijeka [name] postavljen na [number]</aqua>'
       setchest:
         parameters: <phase> <rarity>
         description: stavite pregledani sanduk u fazu s specificiranom rijetkošću
-        chest-is-empty: '&c Taj je škrinja prazna pa se ne može dodati'
-        unknown-phase: '&c Nepoznata faza. Da biste ih vidjeli, upotrijebite karticu'
-        unknown-rarity: '&c Nepoznata rijetkost. Koristite COMMON, UNCOMMON, RARE ili EPIC'
-        look-at-chest: '&c Pogledajte napunjen škrinju da ga postavite'
-        only-single-chest: '&c Mogu se postaviti samo pojedinačne škrinje'
-        success: '&a Komoda uspješno dodana u fazu'
-        failure: >-
-          &c Grudište se nije moglo dodati u fazu! Pogledajte konzolu za
-          pogreške
+        chest-is-empty: '<red>Taj je škrinja prazna pa se ne može dodati</red>'
+        unknown-phase: '<red>Nepoznata faza. Da biste ih vidjeli, upotrijebite karticu</red>'
+        unknown-rarity: '<red>Nepoznata rijetkost. Koristite COMMON, UNCOMMON, RARE ili EPIC</red>'
+        look-at-chest: '<red>Pogledajte napunjen škrinju da ga postavite</red>'
+        only-single-chest: '<red>Mogu se postaviti samo pojedinačne škrinje</red>'
+        success: '<green>Komoda uspješno dodana u fazu</green>'
+        failure: '<red>Grudište se nije moglo dodati u fazu! Pogledajte konzolu za pogreške</red>'
       sanity:
         parameters: <Faza>
         description: prikazati provjeru ispravnosti faznih vjerojatnosti u konzoli
-        see-console: '&a Pogledajte konzolu za izvješće'
+        see-console: '<green>Pogledajte konzolu za izvješće</green>'
     count:
       description: prikazuju broj i fazu bloka
-      info: '&a Nalazite se na bloku &b [number] u fazi &a [name]'
+      info: '<green>Nalazite se na bloku </green><aqua>[number] u fazi </aqua><green>[name]</green>'
     info:
-      count: >-
-        &a Otok je u bloku &b [number]&a u &b [name] &a fazi. Životni vijek &b
-        [lifetime] &a.
+      count: '<green>Otok je u bloku </green><aqua>[number]</aqua><green> u </green><aqua>[name] </aqua><green>fazi. Životni vijek </green><aqua>[lifetime] </aqua><green>.</green>'
     phases:
       description: prikažite popis svih faza
-      title: '&2 OneBlock Faze'
-      name-syntax: '&a [name]'
-      description-syntax: '&b [number] blokova'
+      title: '<dark_green>OneBlock Faze</dark_green>'
+      name-syntax: '<green>[name]</green>'
+      description-syntax: '<aqua>[number] blokova</aqua>'
     island:
       bossbar:
         description: prebacuje fazni boss bar
-        status_on: '&b Bossbar se &a uključio'
-        status_off: '&b Bossbar se &a isključio'
+        status_on: '<aqua>Bossbar se </aqua><green>uključio</green>'
+        status_off: '<aqua>Bossbar se </aqua><green>isključio</green>'
       actionbar:
         description: uključuje/isključuje akcijsku traku faze
-        status_on: "&b Akcijska traka &a uključena"
-        status_off: "&b Akcijska traka &c isključena"
+        status_on: "<aqua>Akcijska traka </aqua><green>uključena</green>"
+        status_off: "<aqua>Akcijska traka </aqua><red>isključena</red>"
       setcount:
         parameters: <count>
         description: postaviti broj blokova na prethodno dovršenu vrijednost
-        set: '&a Brojanje postavljeno na [number].'
-        too-high: '&c Maksimalno što možete postaviti je [number]!'
+        set: '<green>Brojanje postavljeno na [number].</green>'
+        too-high: '<red>Maksimalno što možete postaviti je [number]!</red>'
     respawn-block:
       description: ponovno rađa magični blok u situacijama kada nestane
-      block-exist: >-
-        &a blok postoji, nije zahtijevao ponovno stvaranje. Označila sam za
-        tebe.
-      block-respawned: '&a blok se ponovno pojavio.'
+      block-exist: '<green>blok postoji, nije zahtijevao ponovno stvaranje. Označila sam za tebe.</green>'
+      block-respawned: '<green>blok se ponovno pojavio.</green>'
   phase:
-    insufficient-level: '&c Vaša razina otoka je preniska za nastavak! Mora biti [number].'
-    insufficient-funds: '&c Vaša su sredstva premala za nastavak! Moraju biti [number].'
-    insufficient-bank-balance: '&c Stanje otočne banke je premalo za nastavak! Mora biti [number].'
-    insufficient-permission: '&c Ne možete nastaviti dok ne dobijete dopuštenje [name]!'
-    cooldown: '&c Sljedeća faza bit će dostupna za [number] sekundi!'
+    insufficient-level: '<red>Vaša razina otoka je preniska za nastavak! Mora biti [number].</red>'
+    insufficient-funds: '<red>Vaša su sredstva premala za nastavak! Moraju biti [number].</red>'
+    insufficient-bank-balance: '<red>Stanje otočne banke je premalo za nastavak! Mora biti [number].</red>'
+    insufficient-permission: '<red>Ne možete nastaviti dok ne dobijete dopuštenje [name]!</red>'
+    cooldown: '<red>Sljedeća faza bit će dostupna za [number] sekundi!</red>'
   placeholders:
     infinite: Beskonačno
     my-island-phase-default: Nepoznato
   gui:
     titles:
-      phases: '&0&l OneBlock faze'
+      phases: '<black><bold>OneBlock faze</bold></black>'
     buttons:
       previous:
-        name: '&f&l Prethodna stranica'
-        description: '&7 Prijeđi na stranicu [number].'
+        name: '<white><bold>Prethodna stranica</bold></white>'
+        description: '<gray>Prijeđi na stranicu [number].</gray>'
       next:
-        name: '&f&l Sljedeća stranica'
-        description: '&7 Prijeđi na stranicu [number].'
+        name: '<white><bold>Sljedeća stranica</bold></white>'
+        description: '<gray>Prijeđi na stranicu [number].</gray>'
       phase:
-        name: '&f&l [phase]'
+        name: '<white><bold>[phase]</bold></white>'
         description: |-
           [starting-block]
           [biome]
@@ -119,20 +113,20 @@ aoneblock:
           [economy]
           [level]
           [permission]
-        starting-block: '&7 Počinje nakon razbijanja &e [number] blokova.'
-        biome: '&7 Biome: &e [biome]'
-        bank: '&7 Zahtijeva &e $[number] &7 na bankovnom računu.'
-        economy: '&7 Zahtijeva &e $[number] &7 na računu igrača.'
-        level: '&7 Zahtijeva &e [number] &7 razinu otoka.'
-        permission: '&7 Zahtijeva dozvolu `&e[permission]&7`.'
-        blocks-prefix: '&7 Blokovi u fazi -'
-        blocks: '&e [name], '
+        starting-block: '<gray>Počinje nakon razbijanja </gray><yellow>[number] blokova.</yellow>'
+        biome: '<gray>Biome: </gray><yellow>[biome]</yellow>'
+        bank: '<gray>Zahtijeva </gray><yellow>$[number] </yellow><gray>na bankovnom računu.</gray>'
+        economy: '<gray>Zahtijeva </gray><yellow>$[number] </yellow><gray>na računu igrača.</gray>'
+        level: '<gray>Zahtijeva </gray><yellow>[number] </yellow><gray>razinu otoka.</gray>'
+        permission: '<gray>Zahtijeva dozvolu `</gray><yellow>[permission]</yellow><gray>`.</gray>'
+        blocks-prefix: '<gray>Blokovi u fazi -</gray>'
+        blocks: '<yellow>[name], </yellow>'
         wrap-at: '50'
     tips:
-      click-to-previous: '&e Kliknite &7 za pregled prethodne stranice.'
-      click-to-next: '&e Kliknite &7 za pregled sljedeće stranice.'
-      click-to-change: '&e Kliknite &7 za promjenu.'
+      click-to-previous: '<yellow>Kliknite </yellow><gray>za pregled prethodne stranice.</gray>'
+      click-to-next: '<yellow>Kliknite </yellow><gray>za pregled sljedeće stranice.</gray>'
+      click-to-change: '<yellow>Kliknite </yellow><gray>za promjenu.</gray>'
   island:
     starting-hologram: |-
-      &aDobro došli u AOneBlock
-      &eRazbijte ovaj blok za početak
+      <green>Dobro došli u AOneBlock
+      </green><yellow>Razbijte ovaj blok za početak</yellow>

@@ -3,113 +3,109 @@ protection:
     MAGIC_BLOCK:
       name: Büyülü Blok Koruması
       description: |-
-        &b Blokları kırabilirlerse
-        &b büyülü bloğu kırabilecek
-        &b rütbe.
-      hint: "&c Rütbeniz büyülü bloğu kıramaz!"
+        <aqua>Blokları kırabilirlerse
+        büyülü bloğu kırabilecek
+        rütbe.</aqua>
+      hint: "<red>Rütbeniz büyülü bloğu kıramaz!</red>"
     START_SAFETY:
       name: Başlangıç Güvenliği
       description: |-
-        &b Yeni oyuncuların 1 dakika
-        &b boyunca hareket etmesini
-        &b engelleyerek düşmelerini önler.
-      hint: "&c Güvenlik için hareket [number] saniye daha engellendi!"
-      free-to-move: "&a Serbestçe hareket edebilirsiniz. Dikkatli olun!"
+        <aqua>Yeni oyuncuların 1 dakika
+        boyunca hareket etmesini
+        engelleyerek düşmelerini önler.</aqua>
+      hint: "<red>Güvenlik için hareket [number] saniye daha engellendi!</red>"
+      free-to-move: "<green>Serbestçe hareket edebilirsiniz. Dikkatli olun!</green>"
     ONEBLOCK_BOSSBAR:
-        name: Boss Çubuğu
-        description: |-
-          &b Her aşama için bir
-          &b durum çubuğu gösterir.
+      name: Boss Çubuğu
+      description: |-
+        <aqua>Her aşama için bir
+        durum çubuğu gösterir.</aqua>
     ONEBLOCK_ACTIONBAR:
       name: Eylem Çubuğu (Action Bar)
       description: |-
-        &b Her aşama için bir
-        &b durumu Eylem Çubuğunda
-        &b gösterir.
+        <aqua>Her aşama için bir
+        durumu Eylem Çubuğunda
+        gösterir.</aqua>
 aoneblock:
   bossbar:
     title: Kalan bloklar
-    status: '&a Faz blokları &b [done] &d / &b [total]'
+    status: '<green>Faz blokları </green><aqua>[done] </aqua><light_purple>/ </light_purple><aqua>[total]</aqua>'
     color: RED
     style: SEGMENTED_20
-    not-active: '&c Patron Bar bu ada için aktif değil'
+    not-active: '<red>Patron Bar bu ada için aktif değil</red>'
   actionbar:
-    status: "&a Aşama: &b [phase-name] &d | &a Bloklar: &b [done] &d / &b [total] &d | &a İlerleme: &b [percent-done]"
-    not-active: "&c Bu ada için eylem çubuğu aktif değil"
+    status: "<green>Aşama: </green><aqua>[phase-name] </aqua><light_purple>| </light_purple><green>Bloklar: </green><aqua>[done] </aqua><light_purple>/ </light_purple><aqua>[total] </aqua><light_purple>| </light_purple><green>İlerleme: </green><aqua>[percent-done]</aqua>"
+    not-active: "<red>Bu ada için eylem çubuğu aktif değil</red>"
   commands:
     admin:
       setcount:
         parameters: <ad> <sayı> [lifetime]
         description: oyuncunun blok sayısını ayarla
-        set: '&a [name] ''ın sayısı [number] olarak ayarlandı'
-        set-lifetime: '&a [name]''nin toplam kırılan blok sayısı [number] olarak ayarlandı'
+        set: '<green>[name] ''ın sayısı [number] olarak ayarlandı</green>'
+        set-lifetime: '<green>[name]''nin toplam kırılan blok sayısı [number] olarak ayarlandı</green>'
       setchest:
         parameters: <aşama> <nadirlik>
         description: bakılan sandığı nadir görülen bir evreye koyar
-        chest-is-empty: '&c Bu sandık boş, bu yüzden eklenemez'
-        unknown-phase: >-
-          &c Bilinmeyen aşama. Bunları görmek için sekme-tamamlama özelliğini
-          kullanın
+        chest-is-empty: '<red>Bu sandık boş, bu yüzden eklenemez</red>'
+        unknown-phase: '<red>Bilinmeyen aşama. Bunları görmek için sekme-tamamlama özelliğini kullanın</red>'
         unknown-rarity: '& c Bilinmeyen nadirlik. COMMON, UNCOMMON, RARE veya EPIC kullanın'
-        look-at-chest: '&c Ayarlamak için dolu bir sandığa bakın'
-        only-single-chest: '&c Yalnızca tek sandık ayarlanabilir'
-        success: '&a Sandık aşamaya başarıyla eklendi'
-        failure: '&c Sandık aşamaya eklenemedi! Hatalar için konsola bakın'
+        look-at-chest: '<red>Ayarlamak için dolu bir sandığa bakın</red>'
+        only-single-chest: '<red>Yalnızca tek sandık ayarlanabilir</red>'
+        success: '<green>Sandık aşamaya başarıyla eklendi</green>'
+        failure: '<red>Sandık aşamaya eklenemedi! Hatalar için konsola bakın</red>'
       sanity:
         parameters: <Aşama>
         description: konsoldaki faz olasılıklarının akıl sağlığını kontrol etmek
-        see-console: '&a Rapor için konsola bakın'
+        see-console: '<green>Rapor için konsola bakın</green>'
     count:
       description: blok sayısını ve aşamayı göster
-      info: '&a [name] aşamasında blok &b [number] üzerindesiniz'
+      info: '<green>[name] aşamasında blok </green><aqua>[number] üzerindesiniz</aqua>'
     info:
-      count: >-
-        &a Ada blok sayısı &b [number]  &b [name] &a aşamasında. Toplam kırılan
-        blok &b [lifetime] &a.
+      count: '<green>Ada blok sayısı </green><aqua>[number]  [name] </aqua><green>aşamasında. Toplam kırılan blok </green><aqua>[lifetime] </aqua><green>.</green>'
     phases:
       description: tüm aşamaların bir listesini göster
-      title: '&2 TekBlok Aşaması'
-      name-syntax: '&a [name]'
-      description-syntax: '&b [number] blokları'
+      title: '<dark_green>TekBlok Aşaması</dark_green>'
+      name-syntax: '<green>[name]</green>'
+      description-syntax: '<aqua>[number] blokları</aqua>'
     island:
       bossbar:
         description: Faz patron çubuğunu değiştirir
-        status_on: '&b Bossbar &a açıldı'
-        status_off: '&b Bossbar &c kapandı'
+        status_on: '<aqua>Bossbar </aqua><green>açıldı</green>'
+        status_off: '<aqua>Bossbar </aqua><red>kapandı</red>'
       actionbar:
         description: aşama eylem çubuğunu açar/kapatır
-        status_on: "&b Eylem Çubuğu &a açıldı"
-        status_off: "&b Eylem Çubuğu &c kapatıldı"
+        status_on: "<aqua>Eylem Çubuğu </aqua><green>açıldı</green>"
+        status_off: "<aqua>Eylem Çubuğu </aqua><red>kapatıldı</red>"
       setcount:
         parameters: <say>
         description: blok sayısını önceden tamamlanmış değere ayarla
-        set: '&a Sayım [number] olarak ayarlandı.'
-        too-high: '&c Ayarlayabileceğiniz maksimum sayı [number]!'
+        set: '<green>Sayım [number] olarak ayarlandı.</green>'
+        too-high: '<red>Ayarlayabileceğiniz maksimum sayı [number]!</red>'
     respawn-block:
       description: Kaynak bloğunu kaybolma durumlarında yeniden doğurur
-      block-exist: '&a Kaynak bloğu yerinde senin için işaretledim.'
-      block-respawned: '&a Kaynak bloğu yeniden doğdu.'
+      block-exist: '<green>Kaynak bloğu yerinde senin için işaretledim.</green>'
+      block-respawned: '<green>Kaynak bloğu yeniden doğdu.</green>'
   phase:
-    insufficient-level: '&c Ada seviyeniz devam etmek için çok düşük! [number] olmalıdır.'
-    insufficient-funds: '&c Paranız devam etmek için çok düşük! [number] olmalıdırlar.'
-    insufficient-bank-balance: '&c Ada bankası bakiyesi devam etmek için çok düşük! [number] olmalıdır.'
-    insufficient-permission: '&c [name] iznini alana kadar devam edemezsiniz!'
-    cooldown: '&c Bir sonraki aşama [number] saniye içinde hazır olacak!'
+    insufficient-level: '<red>Ada seviyeniz devam etmek için çok düşük! [number] olmalıdır.</red>'
+    insufficient-funds: '<red>Paranız devam etmek için çok düşük! [number] olmalıdırlar.</red>'
+    insufficient-bank-balance: '<red>Ada bankası bakiyesi devam etmek için çok düşük! [number] olmalıdır.</red>'
+    insufficient-permission: '<red>[name] iznini alana kadar devam edemezsiniz!</red>'
+    cooldown: '<red>Bir sonraki aşama [number] saniye içinde hazır olacak!</red>'
   placeholders:
     infinite: Sonsuz
     my-island-phase-default: Bilinmiyor
   gui:
     titles:
-      phases: '&0&l TekBlok Aşamaları'
+      phases: '<black><bold>TekBlok Aşamaları</bold></black>'
     buttons:
       previous:
-        name: '&f&l Önceki Sayfa'
-        description: '&7 [number] Sayılı sayfaya geçer'
+        name: '<white><bold>Önceki Sayfa</bold></white>'
+        description: '<gray>[number] Sayılı sayfaya geçer</gray>'
       next:
-        name: '&f&l Sıradaki Sayfa '
-        description: '&7 [number] Sayılı sayfaya geçer'
+        name: '<white><bold>Sıradaki Sayfa </bold></white>'
+        description: '<gray>[number] Sayılı sayfaya geçer</gray>'
       phase:
-        name: '&f&l [phase]'
+        name: '<white><bold>[phase]</bold></white>'
         description: |-
           [starting-block]
           [biome]
@@ -118,20 +114,20 @@ aoneblock:
           [level]
           [permission]
           [blocks]
-        starting-block: '&7 &e [sayı] kadar blok kırdıktan sonra başlar.'
-        biome: '&7 Biome: &e [biome]'
-        bank: '&7 Banka hesabında &e $[number] &7 olması gerekli.'
-        economy: '&7 Bakiyenizin &e $[number] &7 olması gerekli.'
-        level: '&7 &e [sayı] &7 kadar ada seviyeniz olmalı.'
-        permission: '&7 `&e[izin]&7` izni gerektirir.'
-        blocks-prefix: '&7 Aşamadaki bloklar - '
-        blocks: '&e [name], '
+        starting-block: '<gray></gray><yellow>[sayı] kadar blok kırdıktan sonra başlar.</yellow>'
+        biome: '<gray>Biome: </gray><yellow>[biome]</yellow>'
+        bank: '<gray>Banka hesabında </gray><yellow>$[number] </yellow><gray>olması gerekli.</gray>'
+        economy: '<gray>Bakiyenizin </gray><yellow>$[number] </yellow><gray>olması gerekli.</gray>'
+        level: '<gray></gray><yellow>[sayı] </yellow><gray>kadar ada seviyeniz olmalı.</gray>'
+        permission: '<gray>`</gray><yellow>[izin]</yellow><gray>` izni gerektirir.</gray>'
+        blocks-prefix: '<gray>Aşamadaki bloklar - </gray>'
+        blocks: '<yellow>[name], </yellow>'
         wrap-at: '50'
     tips:
-      click-to-previous: '&e Önceki sayfayı görüntülemek için &7 tıklayın.'
-      click-to-next: '&e Sonraki sayfayı görüntülemek için &7 tıklayın.'
-      click-to-change: '&e Değiştirmek için &7 tıklayın.'
+      click-to-previous: '<yellow>Önceki sayfayı görüntülemek için </yellow><gray>tıklayın.</gray>'
+      click-to-next: '<yellow>Sonraki sayfayı görüntülemek için </yellow><gray>tıklayın.</gray>'
+      click-to-change: '<yellow>Değiştirmek için </yellow><gray>tıklayın.</gray>'
   island:
     starting-hologram: |-
-      &aTekBlok'a Hoş Geldiniz
-      &eBaşlamak için Bu Bloğu Kırın
+      <green>TekBlok'a Hoş Geldiniz
+      </green><yellow>Başlamak için Bu Bloğu Kırın</yellow>
