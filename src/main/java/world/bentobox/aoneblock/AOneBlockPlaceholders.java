@@ -64,11 +64,11 @@ public class AOneBlockPlaceholders {
     }
 
     /**
-     * Get the user's owned island. Returns the island owned by the user, not a team
-     * island they may be visiting as a member. If the user owns more than one island,
-     * one is picked.
+     * Get the user's island. Prefers an island the user owns; if they own none,
+     * falls back to the team island they are a member of. If the user owns more
+     * than one island, one is picked.
      * @param user user
-     * @return island owned by the user, or empty if they own none
+     * @return island owned by the user, or their team island, or empty if neither exists
      */
     private Optional<Island> getUsersIsland(User user) {
         // Get the active island for the user
@@ -78,8 +78,14 @@ public class AOneBlockPlaceholders {
             return Optional.of(i);
         }
 
-        // Find an island the user actually owns (not just a team island they are visiting)
-        return addon.getIslands().getOwnedIslands(addon.getOverWorld(), user).stream().findFirst();
+        // Prefer an island the user actually owns (not just a team island they are a member of)
+        Optional<Island> owned = addon.getIslands().getOwnedIslands(addon.getOverWorld(), user).stream().findFirst();
+        if (owned.isPresent()) {
+            return owned;
+        }
+
+        // Fall back to the team island the user is a member of, if any
+        return Optional.ofNullable(i);
     }
 
     public String getPhaseBlocksNames(User user) {

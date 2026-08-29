@@ -272,6 +272,27 @@ public class PlaceholdersManagerTest extends CommonTestSetup {
     }
 
     /**
+     * Test that my_island_* placeholders fall back to the team island for a team
+     * member who owns no island of their own. See issue #559.
+     */
+    @Test
+    void testTeamMemberWithoutOwnedIsland() {
+        when(user.getUniqueId()).thenReturn(uuid);
+        // The team island is owned by someone else
+        Island teamIsland = mock(Island.class);
+        when(teamIsland.getOwner()).thenReturn(UUID.randomUUID());
+        when(im.getIsland(world, user)).thenReturn(teamIsland);
+        // The user owns no island of their own
+        when(im.getOwnedIslands(world, user)).thenReturn(Set.of());
+        // Placeholders should show the team island's data, not the defaults
+        assertEquals("first", pm.getPhase(user));
+        assertEquals("1000", pm.getCount(user));
+        assertEquals("70%", pm.getPercentDone(user));
+        assertEquals("next_phase", pm.getNextPhase(user));
+        assertEquals("1000", pm.getLifetime(user));
+    }
+
+    /**
      * Test method for {@link world.bentobox.aoneblock.AOneBlockPlaceholders#getLifetimeByLocation(world.bentobox.bentobox.api.user.User)}.
      */
     @Test
