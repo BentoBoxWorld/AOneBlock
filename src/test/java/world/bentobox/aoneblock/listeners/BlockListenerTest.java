@@ -3,6 +3,8 @@ package world.bentobox.aoneblock.listeners;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
@@ -17,7 +19,10 @@ import java.util.concurrent.CompletableFuture;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.entity.ArmorStand;
+import org.bukkit.entity.EntityType;
 import org.bukkit.event.block.BlockFromToEvent;
+import org.bukkit.event.entity.EntityInteractEvent;
 import org.eclipse.jdt.annotation.NonNull;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -190,6 +195,57 @@ public class BlockListenerTest extends CommonTestSetup {
         BlockFromToEvent e = new BlockFromToEvent(from, to);
         bl.onBlockFromTo(e);
         assertTrue(e.isCancelled());
+    }
+
+    /**
+     * When no phase covers the island's block number (e.g. phase files failed to load or
+     * a goto points below the first phase), the break must be cancelled and an error logged
+     * instead of throwing a NullPointerException.
+     */
+    @Test
+    void testProcessNoPhaseForBlockNumberCancelsAndLogs() {
+        when(addon.inWorld(any(World.class))).thenReturn(true);
+        island.setCenter(location);
+        when(im.getIslandAt(location)).thenReturn(Optional.of(island));
+        when(obm.getPhase(anyInt())).thenReturn(null);
+
+        Block block = mock(Block.class);
+        when(block.getLocation()).thenReturn(location);
+        when(block.getWorld()).thenReturn(world);
+        ArmorStand minion = mock(ArmorStand.class);
+        when(minion.getType()).thenReturn(EntityType.ARMOR_STAND);
+
+        EntityInteractEvent e = new EntityInteractEvent(minion, block);
+        bl.onBlockBreakByMinion(e);
+
+        assertTrue(e.isCancelled());
+        verify(addon).logError(anyString());
+    }
+
+    /**
+     * A phase whose goto target lies below the first phase must also be handled gracefully.
+     */
+    @Test
+    void testProcessGotoBelowFirstPhaseCancelsAndLogs() {
+        when(addon.inWorld(any(World.class))).thenReturn(true);
+        island.setCenter(location);
+        when(im.getIslandAt(location)).thenReturn(Optional.of(island));
+        OneBlockPhase gotoPhase = new OneBlockPhase("0");
+        gotoPhase.setGotoBlock(-5);
+        when(obm.getPhase(0)).thenReturn(gotoPhase);
+        when(obm.getPhase(-5)).thenReturn(null);
+
+        Block block = mock(Block.class);
+        when(block.getLocation()).thenReturn(location);
+        when(block.getWorld()).thenReturn(world);
+        ArmorStand minion = mock(ArmorStand.class);
+        when(minion.getType()).thenReturn(EntityType.ARMOR_STAND);
+
+        EntityInteractEvent e = new EntityInteractEvent(minion, block);
+        bl.onBlockBreakByMinion(e);
+
+        assertTrue(e.isCancelled());
+        verify(addon).logError(anyString());
     }
 
     /**
