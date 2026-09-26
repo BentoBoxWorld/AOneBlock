@@ -12,6 +12,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -95,6 +96,8 @@ public class OneBlocksManager {
     private static final String INDEX_PHASES = "phases";
     private static final String GOTO_AT_END = "gotoAtEnd";
     private static final String ADMIN_LENGTHS = "adminLengths";
+    private static final String SHIPPED_PHASES = "shippedPhases";
+    private static final String ADDED_IN = "addedIn";
     private static final String CHESTS_YML_SUFFIX = "_chests.yml";
     private static final String WEIGHT = "weight";
     /**
@@ -115,6 +118,17 @@ public class OneBlocksManager {
      * then never overwrites lengths from the files' legacy start-block keys.
      */
     private boolean adminLengths;
+    /**
+     * Files of the phases shipped in the addon jar that this server has already
+     * been offered. A shipped phase not in this set is new in this addon version
+     * and is added to the index; one in it but missing from the index was
+     * removed by an admin and stays out.
+     */
+    private Set<String> shippedPhases = new LinkedHashSet<>();
+    /**
+     * False when the index predates {@link #shippedPhases} being recorded.
+     */
+    private boolean shippedPhasesRecorded;
 
     /**
      * @param addon - addon
@@ -136,6 +150,8 @@ public class OneBlocksManager {
         phaseIndex = new ArrayList<>();
         gotoAtEnd = null;
         adminLengths = false;
+        shippedPhases = new LinkedHashSet<>();
+        shippedPhasesRecorded = false;
         // Check for folder
         File check = new File(addon.getDataFolder(), PHASES);
         if (check.mkdirs()) {
@@ -200,7 +216,8 @@ public class OneBlocksManager {
         if (entries == null) {
             return false;
         }
-        boolean changed = reconcileIndex(entries, check, freshIndex);
+        boolean changed = addNewShippedPhases(entries);
+        changed |= reconcileIndex(entries, check, freshIndex);
         if (entries.isEmpty()) {
             return false;
         }
@@ -257,7 +274,77 @@ public class OneBlocksManager {
         }
         gotoAtEnd = index.contains(GOTO_AT_END) ? index.getInt(GOTO_AT_END, 0) : null;
         adminLengths = index.getBoolean(ADMIN_LENGTHS, false);
+        shippedPhasesRecorded = index.contains(SHIPPED_PHASES);
+        shippedPhases = new LinkedHashSet<>(index.getStringList(SHIPPED_PHASES));
         return entries;
+    }
+
+    /**
+     * Adds phases that are new in this addon version to an existing index. An
+     * index belongs to the server, so an addon upgrade never replaces it - without
+     * this, phases shipped by later versions would never appear on servers that
+     * already have an index.
+     * <p>
+     * A shipped phase is added when the index has no phase with its file or name
+     * and it is not in {@link #shippedPhases}, so phases an admin removed are
+     * never brought back. Indexes written before {@link #shippedPhases} existed
+     * treat every shipped phase without an {@code addedIn} tag as already offered.
+     * A new phase goes after the nearest shipped phase above it that the index
+     * has, and its files are copied from the jar.
+     *
+     * @param entries index entries, updated in place
+     * @return true if the entries or the offered phases changed
+     */
+    boolean addNewShippedPhases(List<PhaseIndexEntry> entries) {
+        boolean changed = false;
+        String previous = null;
+        for (Map<?, ?> map : readShippedIndex()) {
+            PhaseIndexEntry shipped = PhaseIndexEntry.fromMap(map);
+            if (shipped == null) {
+                continue;
+            }
+            String file = shipped.getFile();
+            boolean offered = shippedPhases.contains(file) || (!shippedPhasesRecorded && !map.containsKey(ADDED_IN));
+            boolean inIndex = entries.stream().anyMatch(en -> en.getFile().equals(file)
+                    || (en.getName() != null && en.getName().equalsIgnoreCase(shipped.getName())));
+            if (!inIndex && !offered) {
+                entries.add(positionAfter(entries, previous), shipped);
+                restorePhaseFileFromJar(file);
+                addon.log("Phase index: added new phase " + shipped.getName()
+                        + " from this version of the addon. Move or disable it with /oba phases.");
+                inIndex = true;
+            }
+            if (inIndex) {
+                previous = file;
+            }
+            changed |= shippedPhases.add(file);
+        }
+        return changed;
+    }
+
+    /**
+     * @return the phase entries of the index shipped in the addon jar, or an
+     *         empty list if the jar has none
+     */
+    private List<Map<?, ?>> readShippedIndex() {
+        try {
+            return addon.getYamlFromJar(PHASES_INDEX_YML).getMapList(INDEX_PHASES);
+        } catch (Exception e) {
+            return List.of();
+        }
+    }
+
+    /**
+     * @return the position just after the entry for this file, or 0 if there is
+     *         no such entry
+     */
+    private int positionAfter(List<PhaseIndexEntry> entries, @Nullable String file) {
+        for (int i = 0; i < entries.size(); i++) {
+            if (entries.get(i).getFile().equals(file)) {
+                return i + 1;
+            }
+        }
+        return 0;
     }
 
     /**
@@ -638,6 +725,9 @@ public class OneBlocksManager {
         }
         if (adminLengths) {
             index.set(ADMIN_LENGTHS, true);
+        }
+        if (!shippedPhases.isEmpty()) {
+            index.set(SHIPPED_PHASES, new ArrayList<>(shippedPhases));
         }
         try {
             index.save(indexFile);

@@ -66,6 +66,7 @@ public class OneBlocksManagerTest3 extends CommonTestSetup {
     @Mock
 	private AddonsManager am;
 	private OneBlocksManager obm;
+	private AOneBlock addon;
 	private OneBlockPhase obPhase;
 	@Mock
 	private @NonNull OneBlockIslands obi;
@@ -143,7 +144,7 @@ public class OneBlocksManagerTest3 extends CommonTestSetup {
 		// MultiLib - prevent BukkitImpl from checking Paper classloader
 		Mockito.mockStatic(MultiLib.class);
 		// Addon
-        AOneBlock addon = new AOneBlock();
+        addon = new AOneBlock();
 		File dataFolder = new File("addons/AOneBlock");
 		addon.setDataFolder(dataFolder);
 		addon.setFile(jFile);
@@ -168,6 +169,7 @@ public class OneBlocksManagerTest3 extends CommonTestSetup {
 	    super.tearDown();
 		deleteAll(new File("database"));
 		cleanPhaseFiles();
+		java.nio.file.Files.deleteIfExists(UPGRADE_JAR.toPath());
 	}
 
 	@AfterAll
@@ -1269,6 +1271,191 @@ public class OneBlocksManagerTest3 extends CommonTestSetup {
 		String saved = java.nio.file.Files.readString(INDEX_FILE.toPath());
 		assertTrue(saved.contains("adminLengths: true"));
 		verify(plugin, never()).logError(anyString());
+	}
+
+
+	private static final File UPGRADE_JAR = new File("upgrade-addon.jar");
+
+	/**
+	 * Points the addon at a jar that ships Plains and Old as baseline phases and
+	 * Fresh as a phase new in this version, together with a shipped index.
+	 */
+	private void useJarWithShippedIndex() throws IOException {
+		Map<String, String> files = Map.of(
+				"phases/0_plains.yml", """
+                '0':
+                  name: Plains
+                  biome: PLAINS
+                  blocks:
+                    GRASS_BLOCK: 100
+                """,
+				"phases/100_old.yml", """
+                '100':
+                  name: Old
+                  biome: PLAINS
+                  blocks:
+                    STONE: 100
+                """,
+				"phases/200_fresh.yml", """
+                '200':
+                  name: Fresh
+                  biome: PLAINS
+                  blocks:
+                    DIRT: 100
+                """,
+				"phases_index.yml", """
+                phases:
+                  - file: 0_plains
+                    section: '0'
+                    name: Plains
+                    length: 100
+                  - file: 100_old
+                    section: '100'
+                    name: Old
+                    length: 100
+                  - file: 200_fresh
+                    section: '200'
+                    name: Fresh
+                    length: 300
+                    addedIn: '9.9.9'
+                gotoAtEnd: 0
+                """);
+		try (JarOutputStream jar = new JarOutputStream(new FileOutputStream(UPGRADE_JAR))) {
+			for (Map.Entry<String, String> en : files.entrySet()) {
+				jar.putNextEntry(new JarEntry(en.getKey()));
+				jar.write(en.getValue().getBytes(java.nio.charset.StandardCharsets.UTF_8));
+				jar.closeEntry();
+			}
+		}
+		addon.setFile(UPGRADE_JAR);
+	}
+
+	private void writePlainsPhaseFile() throws IOException {
+		PHASES_DIR.mkdirs();
+		java.nio.file.Files.writeString(new File(PHASES_DIR, "0_plains.yml").toPath(), """
+                '0':
+                  name: Plains
+                  biome: PLAINS
+                  blocks:
+                    GRASS_BLOCK: 100
+                """);
+	}
+
+	/**
+	 * Upgrading an index written before shippedPhases existed adds the phase the
+	 * new version ships, copies its file from the jar, and records every shipped
+	 * phase as offered. The baseline phase an admin had removed stays out.
+	 */
+	@Test
+	void testUpgradeAddsNewShippedPhase() throws IOException, InvalidConfigurationException {
+		useJarWithShippedIndex();
+		writePlainsPhaseFile();
+		java.nio.file.Files.writeString(INDEX_FILE.toPath(), """
+                phases:
+                  - file: 0_plains
+                    section: '0'
+                    name: Plains
+                    length: 100
+                gotoAtEnd: 0
+                """);
+		obm.loadPhases();
+		List<PhaseIndexEntry> index = obm.getPhaseIndex();
+		assertEquals(List.of("Plains", "Fresh"), index.stream().map(PhaseIndexEntry::getName).toList());
+		assertEquals(300, index.get(1).getLength());
+		assertTrue(new File(PHASES_DIR, "200_fresh.yml").exists(), "New phase file should be copied from the jar");
+		assertFalse(new File(PHASES_DIR, "100_old.yml").exists(), "Removed baseline phase should stay removed");
+		assertEquals("Fresh", obm.getPhase(100).getPhaseName());
+		verify(plugin).log(org.mockito.ArgumentMatchers.contains("added new phase Fresh"));
+		YamlConfiguration saved = new YamlConfiguration();
+		saved.load(INDEX_FILE);
+		assertEquals(List.of("0_plains", "100_old", "200_fresh"), saved.getStringList("shippedPhases"));
+		verify(plugin, never()).logError(anyString());
+	}
+
+	/**
+	 * A new shipped phase goes after the nearest shipped phase above it in the
+	 * shipped order, wherever the admin has moved that phase - here Old, which
+	 * the admin moved to the top.
+	 */
+	@Test
+	void testUpgradeInsertsAfterShippedPredecessor() throws IOException {
+		useJarWithShippedIndex();
+		writePlainsPhaseFile();
+		java.nio.file.Files.writeString(new File(PHASES_DIR, "100_old.yml").toPath(), """
+                '100':
+                  name: Old
+                  biome: PLAINS
+                  blocks:
+                    STONE: 100
+                """);
+		java.nio.file.Files.writeString(new File(PHASES_DIR, "custom.yml").toPath(), """
+                custom:
+                  name: Custom
+                  biome: PLAINS
+                  blocks:
+                    SAND: 100
+                """);
+		java.nio.file.Files.writeString(INDEX_FILE.toPath(), """
+                phases:
+                  - file: 100_old
+                    section: '100'
+                    name: Old
+                    length: 100
+                  - file: 0_plains
+                    section: '0'
+                    name: Plains
+                    length: 100
+                  - file: custom
+                    section: custom
+                    name: Custom
+                    length: 100
+                gotoAtEnd: 0
+                """);
+		obm.loadPhases();
+		assertEquals(List.of("Old", "Fresh", "Plains", "Custom"),
+				obm.getPhaseIndex().stream().map(PhaseIndexEntry::getName).toList());
+	}
+
+	/**
+	 * A shipped phase already offered to this server and then removed by an admin
+	 * is not brought back, and a load with nothing new leaves the index alone.
+	 */
+	@Test
+	void testRemovedShippedPhaseStaysRemoved() throws IOException {
+		useJarWithShippedIndex();
+		writePlainsPhaseFile();
+		java.nio.file.Files.writeString(INDEX_FILE.toPath(), """
+                phases:
+                  - file: 0_plains
+                    section: '0'
+                    name: Plains
+                    length: 100
+                gotoAtEnd: 0
+                shippedPhases:
+                  - 0_plains
+                  - 100_old
+                  - 200_fresh
+                """);
+		obm.loadPhases();
+		assertEquals(1, obm.getPhaseIndex().size());
+		assertFalse(new File(PHASES_DIR, "200_fresh.yml").exists());
+		verify(plugin, never()).log(org.mockito.ArgumentMatchers.contains("added new phase"));
+		verify(plugin, never()).log(org.mockito.ArgumentMatchers.contains("Updated"));
+	}
+
+	/**
+	 * A fresh install copies the shipped index, which already has every phase, so
+	 * nothing is added - the shipped phases are just recorded as offered.
+	 */
+	@Test
+	void testFreshInstallRecordsShippedPhases() throws IOException, InvalidConfigurationException {
+		useJarWithShippedIndex();
+		obm.loadPhases();
+		assertEquals(3, obm.getPhaseIndex().size());
+		verify(plugin, never()).log(org.mockito.ArgumentMatchers.contains("added new phase"));
+		YamlConfiguration saved = new YamlConfiguration();
+		saved.load(INDEX_FILE);
+		assertEquals(List.of("0_plains", "100_old", "200_fresh"), saved.getStringList("shippedPhases"));
 	}
 
 	/**
