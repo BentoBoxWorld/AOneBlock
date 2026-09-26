@@ -57,7 +57,7 @@
         <mock-bukkit.version>4.110.0</mock-bukkit.version>
         <!-- More visible way how to change dependency versions -->
         <bentobox.version>3.22.0</bentobox.version>
-        <items-adder.version>4.0.10</items-adder.version>
+        <items-adder.version>4.0.17</items-adder.version>
         <nexo.version>1.8.0</nexo.version>
         <craftengine.version>0.0.67</craftengine.version>
         <level.version>2.6.2</level.version>
@@ -67,7 +67,7 @@
         <!-- Do not change unless you want different name for local builds. -->
         <build.number>-LOCAL</build.number>
         <!-- This allows to change between versions. -->
-        <build.version>1.27.1</build.version>
+        <build.version>1.28.0</build.version>
         <!-- SonarCloud -->
         <sonar.projectKey>BentoBoxWorld_AOneBlock</sonar.projectKey>
         <sonar.organization>bentobox-world</sonar.organization>
@@ -146,13 +146,6 @@
             <url>https://repo.papermc.io/repository/maven-public/</url>
             <releases><enabled>true</enabled></releases>
             <snapshots><enabled>true</enabled></snapshots>
-        </repository>
-        <!-- ItemsAdder API -->
-        <repository>
-            <id>matteodev</id>
-            <url>https://maven.devs.beer/</url>
-            <releases><enabled>true</enabled></releases>
-            <snapshots><enabled>false</enabled></snapshots>
         </repository>
         <!-- Nexo API -->
         <repository>
@@ -269,8 +262,9 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>dev.lone</groupId>
-            <artifactId>api-itemsadder</artifactId>
+            <!-- Published to Maven Central -->
+            <groupId>beer.devs</groupId>
+            <artifactId>itemsadder-api</artifactId>
             <version>${items-adder.version}</version>
             <scope>provided</scope>
         </dependency>

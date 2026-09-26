@@ -423,7 +423,7 @@ public class BlockListener extends FlagListener implements Listener {
 
         // Process phase changes and requirements
         ProcessPhaseResult phaseResult = processPhase(e, island, is, player, world, block);
-        if (e.isCancelled()) {
+        if (phaseResult == null || e.isCancelled()) {
             return;
         }
 
@@ -455,14 +455,27 @@ public class BlockListener extends FlagListener implements Listener {
      * @param player - player involved
      * @param world - world where processing occurs
      * @param block - block being processed
-     * @return ProcessPhaseResult containing phase details
+     * @return ProcessPhaseResult containing phase details, or null if no phase covers the
+     *         island's block number. In that case the event is cancelled so the magic block
+     *         is not lost, and an error is logged for the admin.
      */
+    @Nullable
     private ProcessPhaseResult processPhase(Cancellable e, Island i, OneBlockIslands is, Player player, World world, Block block) {
         OneBlockPhase phase = oneBlocksManager.getPhase(is.getBlockNumber());
         String prevPhaseName = is.getPhaseName();
 
-        if (Objects.requireNonNull(phase).getGotoBlock() != null) {
+        if (phase != null && phase.getGotoBlock() != null) {
             phase = handleGoto(is, phase.getGotoBlock());
+        }
+
+        if (phase == null) {
+            // No phase covers this block number. This happens when no phase files loaded,
+            // when the first phase does not start at block 0, or when a goto points below
+            // the first phase. Keep the block in place rather than breaking the island.
+            addon.logError("No phase found for block number " + is.getBlockNumber() + " on island "
+                    + i.getUniqueId() + ". Check the phase files in the phases folder.");
+            e.setCancelled(true);
+            return null;
         }
 
         String currPhaseName = phase.getPhaseName() == null ? "" : phase.getPhaseName();
@@ -516,7 +529,7 @@ public class BlockListener extends FlagListener implements Listener {
      */
     private void handlePhaseChange(OneBlockIslands is, String currPhaseName) {
         OneBlockPhase nextPhase = oneBlocksManager.getPhase(is.getBlockNumber() + 1);
-        if (Objects.requireNonNull(nextPhase).getGotoBlock() != null) {
+        if (nextPhase != null && nextPhase.getGotoBlock() != null) {
             nextPhase = oneBlocksManager.getPhase(nextPhase.getGotoBlock());
         }
         String nextPhaseName = nextPhase == null || nextPhase.getPhaseName() == null ? "" : nextPhase.getPhaseName();

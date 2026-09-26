@@ -1,0 +1,67 @@
+# Dappled Forest phase. The dappled_forest biome, poplar wood, poplar leaves
+# and red shrub only exist from Minecraft 26.3, so this phase declares a
+# required version and is skipped on older servers.
+'15500':
+  name: Dappled Forest
+  icon: YELLOW_POPLAR_LEAVES
+  firstBlock: POPLAR_LOG
+  biome: DAPPLED_FOREST
+  requiredMinecraftVersion: '26.3'
+  fixedBlocks:
+    '0': POPLAR_LOG
+    '1': YELLOW_POPLAR_LEAVES
+    '2': ORANGE_POPLAR_LEAVES
+    '3': RED_POPLAR_LEAVES
+    '4': POPLAR_SAPLING
+    '5': RED_SHRUB
+  blocks:
+    POPLAR_LOG: 300
+    YELLOW_POPLAR_LEAVES: 80
+    ORANGE_POPLAR_LEAVES: 80
+    RED_POPLAR_LEAVES: 80
+    LEAF_LITTER: 80
+    RED_SHRUB: 40
+    GRASS_BLOCK: 100
+    DIRT: 100
+    COARSE_DIRT: 30
+    STONE: 100
+    BROWN_MUSHROOM_BLOCK: 20
+    MOSSY_COBBLESTONE: 20
+    # Wool stairs in every colour, so each one is a random colour
+    WHITE_WOOL_STAIRS: 5
+    LIGHT_GRAY_WOOL_STAIRS: 5
+    GRAY_WOOL_STAIRS: 5
+    BLACK_WOOL_STAIRS: 5
+    BROWN_WOOL_STAIRS: 5
+    RED_WOOL_STAIRS: 5
+    ORANGE_WOOL_STAIRS: 5
+    YELLOW_WOOL_STAIRS: 5
+    LIME_WOOL_STAIRS: 5
+    GREEN_WOOL_STAIRS: 5
+    CYAN_WOOL_STAIRS: 5
+    LIGHT_BLUE_WOOL_STAIRS: 5
+    BLUE_WOOL_STAIRS: 5
+    PURPLE_WOOL_STAIRS: 5
+    MAGENTA_WOOL_STAIRS: 5
+    PINK_WOOL_STAIRS: 5
+    CHEST: 60
+  mobs:
+    SHEEP: 60
+    PIG: 50
+    CHICKEN: 50
+    COW: 40
+    RABBIT: 20
+    FOX: 20
+    SPIDER: 50
+    SKELETON: 50
+    CREEPER: 50
+    SLIME: 50
+    ZOMBIE: 48
+    ENDERMAN: 5
+    BAT: 5
+    WITCH: 3
+    ZOMBIE_VILLAGER: 3
+  holograms:
+    '0': '&6Autumn has come to the forest!'
+  start-commands: []
+  end-commands: []

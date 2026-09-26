@@ -22,8 +22,16 @@
 #   enabled: optional, defaults to true. Set false to leave a phase out.
 #   requiredMinecraftVersion: optional. The phase is skipped (taking up no
 #            blocks) when the server is older than this version.
+#   addedIn: optional, in the shipped index only. The addon version that first
+#            shipped the phase. Used once, when upgrading an index written
+#            before shippedPhases existed, to tell new phases from ones an
+#            admin removed.
 #   adminLengths: (top level) set automatically once lengths are edited in the
 #            admin GUI; stops reconciliation from recomputing lengths.
+#   shippedPhases: (top level) set automatically. Shipped phases this server
+#            has already been offered. When an addon upgrade ships a new phase,
+#            it is added to this index once; delete its entry and phase files
+#            to remove it for good.
 #
 # After the last phase, the block count jumps to gotoAtEnd.
 phases:
@@ -108,4 +116,10 @@ phases:
     name: Sulfur Caves
     length: 500
     requiredMinecraftVersion: '26.2'
+  - file: 15500_dappled_forest
+    section: '15500'
+    name: Dappled Forest
+    length: 500
+    addedIn: '1.28.0'
+    requiredMinecraftVersion: '26.3'
 gotoAtEnd: 0
