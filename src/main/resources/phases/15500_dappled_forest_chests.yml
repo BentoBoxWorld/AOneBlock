@@ -108,3 +108,102 @@
           count: 2
           schema_version: 1
       rarity: RARE
+    '4':
+      contents:
+        3:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 5023
+          id: minecraft:orange_cushion
+          count: 1
+          schema_version: 1
+        5:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 5023
+          id: minecraft:red_cushion
+          count: 1
+          schema_version: 1
+        13:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 5023
+          id: minecraft:yellow_cushion
+          count: 1
+          schema_version: 1
+        21:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 5023
+          id: minecraft:brown_cushion
+          count: 1
+          schema_version: 1
+        23:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 5023
+          id: minecraft:orange_wool_stairs
+          count: 4
+          schema_version: 1
+      rarity: COMMON
+    '5':
+      contents:
+        3:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 5023
+          id: minecraft:white_cushion
+          count: 1
+          schema_version: 1
+        5:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 5023
+          id: minecraft:light_blue_cushion
+          count: 1
+          schema_version: 1
+        13:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 5023
+          id: minecraft:lime_cushion
+          count: 1
+          schema_version: 1
+        21:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 5023
+          id: minecraft:pink_cushion
+          count: 1
+          schema_version: 1
+        23:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 5023
+          id: minecraft:white_wool_stairs
+          count: 4
+          schema_version: 1
+      rarity: COMMON
+    '6':
+      contents:
+        4:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 5023
+          id: minecraft:purple_cushion
+          count: 2
+          schema_version: 1
+        11:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 5023
+          id: minecraft:cyan_cushion
+          count: 2
+          schema_version: 1
+        13:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 5023
+          id: minecraft:straw_bed
+          count: 1
+          schema_version: 1
+        15:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 5023
+          id: minecraft:magenta_cushion
+          count: 2
+          schema_version: 1
+        22:
+          ==: org.bukkit.inventory.ItemStack
+          DataVersion: 5023
+          id: minecraft:blue_cushion
+          count: 2
+          schema_version: 1
+      rarity: UNCOMMON
