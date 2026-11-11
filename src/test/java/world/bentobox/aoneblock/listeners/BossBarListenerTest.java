@@ -8,6 +8,7 @@ import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -262,7 +263,7 @@ public class BossBarListenerTest extends CommonTestSetup {
         when(world.getPlayers()).thenReturn(java.util.List.of(mockPlayer));
         when(mockPlayer.getUniqueId()).thenReturn(uuid);
         fireMagicBlockEvent();
-        verify(bossBar, org.mockito.Mockito.times(1)).addPlayer(mockPlayer);
+        verify(bossBar, times(1)).addPlayer(mockPlayer);
 
         PhaseFinale finale = new PhaseFinale(org.bukkit.entity.EntityType.ZOMBIE, "Colossus", 100, 1, 0, 0, true, 20,
                 java.util.Map.of(), java.util.Map.of(), java.util.List.of(), java.util.List.of());
@@ -270,6 +271,6 @@ public class BossBarListenerTest extends CommonTestSetup {
         verify(bossBar).removeAll();
 
         bbl.onFinaleEnd(new PhaseFinaleEndEvent(island, uuid, block, "Plains", true, true));
-        verify(bossBar, org.mockito.Mockito.times(2)).addPlayer(mockPlayer);
+        verify(bossBar, times(2)).addPlayer(mockPlayer);
     }
 }

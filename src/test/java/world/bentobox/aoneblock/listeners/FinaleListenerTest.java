@@ -120,7 +120,8 @@ class FinaleListenerTest extends CommonTestSetup {
         when(world.getDifficulty()).thenReturn(Difficulty.NORMAL);
         when(world.getPlayers()).thenReturn(List.of(mockPlayer));
         when(world.getMinHeight()).thenReturn(-64);
-        when(world.dropItem(any(), any())).thenReturn(mock(Item.class));
+        Item dropped = mock(Item.class);
+        when(world.dropItem(any(), any())).thenReturn(dropped);
         when(block.getWorld()).thenReturn(world);
         when(block.getLocation()).thenAnswer(a -> new Location(world, 0, 64, 0));
 
@@ -351,8 +352,9 @@ class FinaleListenerTest extends CommonTestSetup {
     void testOtherEntityDamageIgnored() {
         summon();
         EntityDamageEvent e = mock(EntityDamageEvent.class);
-        when(e.getEntity()).thenReturn(mock(Zombie.class, a -> a.getMethod().getName().equals("getUniqueId")
-                ? UUID.randomUUID() : null));
+        Zombie bystander = mock(Zombie.class);
+        when(bystander.getUniqueId()).thenReturn(UUID.randomUUID());
+        when(e.getEntity()).thenReturn(bystander);
         fl.onBossDamage(e);
         verify(e, never()).setCancelled(true);
     }

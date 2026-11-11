@@ -236,9 +236,7 @@ public class FinaleListener implements Listener {
         Location home = home(block);
         Entity entity = world.spawnEntity(home, finale.boss());
         if (!(entity instanceof LivingEntity boss) || !entity.isValid()) {
-            if (entity != null) {
-                entity.remove();
-            }
+            entity.remove();
             addon.logWarning("Could not spawn finale boss " + finale.boss() + " for phase " + phaseName);
             return false;
         }
@@ -301,7 +299,7 @@ public class FinaleListener implements Listener {
     private void spawnMinions(ActiveFinale f, EntityType type, int count, Location home) {
         for (int i = 0; i < count; i++) {
             Entity e = home.getWorld().spawnEntity(home, type);
-            if (e == null || !e.isValid()) {
+            if (!e.isValid()) {
                 continue;
             }
             e.setPersistent(false);
@@ -473,9 +471,10 @@ public class FinaleListener implements Listener {
         World world = f.block.getWorld();
         Location home = home(f.block);
         f.finale.drops().forEach((material, amount) -> {
+            int stack = Math.max(1, material.getMaxStackSize());
             int left = amount;
             while (left > 0) {
-                int size = Math.min(left, Math.max(1, material.getMaxStackSize()));
+                int size = Math.min(left, stack);
                 world.dropItem(home, new ItemStack(material, size));
                 left -= size;
             }

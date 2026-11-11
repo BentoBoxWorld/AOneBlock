@@ -90,6 +90,7 @@ public class OneBlocksManager {
     private static final String END_COMMANDS_FIRST_TIME = "end-commands-first-time";
     private static final String REQUIREMENTS = "requirements";
     private static final String FINALE = "finale";
+    private static final String FINALE_LOG_PREFIX = "Phase ";
     private static final String REQUIRED_MC_VERSION = "requiredMinecraftVersion";
     // Possessive quantifiers - version strings need no backtracking and this
     // keeps pathological inputs from recursing deeply in the regex engine
@@ -1150,39 +1151,49 @@ public class OneBlocksManager {
         EntityType boss = Enums.getIfPresent(EntityType.class, sec.getString("boss", "").toUpperCase(Locale.ENGLISH))
                 .orNull();
         if (boss == null || !boss.isAlive() || !boss.isSpawnable()) {
-            addon.logWarning("Phase " + phaseName + " finale: boss '" + sec.getString("boss")
+            addon.logWarning(FINALE_LOG_PREFIX + phaseName + " finale: boss '" + sec.getString("boss")
                     + "' is not a living entity type on this server. The finale is disabled.");
             return;
         }
-        Map<EntityType, Integer> minions = new EnumMap<>(EntityType.class);
-        ConfigurationSection minionSec = sec.getConfigurationSection("minions");
-        if (minionSec != null) {
-            for (String key : minionSec.getKeys(false)) {
-                EntityType et = Enums.getIfPresent(EntityType.class, key.toUpperCase(Locale.ENGLISH)).orNull();
-                if (et == null || !et.isAlive() || !et.isSpawnable()) {
-                    addon.logWarning("Phase " + phaseName + " finale: skipping unknown minion " + key);
-                } else {
-                    minions.put(et, Math.max(0, minionSec.getInt(key)));
-                }
-            }
-        }
-        Map<Material, Integer> drops = new EnumMap<>(Material.class);
-        ConfigurationSection dropSec = sec.getConfigurationSection("drops");
-        if (dropSec != null) {
-            for (String key : dropSec.getKeys(false)) {
-                Material m = Material.matchMaterial(key);
-                if (m == null || !m.isItem()) {
-                    addon.logWarning("Phase " + phaseName + " finale: skipping unknown drop " + key);
-                } else {
-                    drops.put(m, Math.max(1, dropSec.getInt(key)));
-                }
-            }
-        }
+        Map<EntityType, Integer> minions = readFinaleMinions(sec.getConfigurationSection("minions"), phaseName);
+        Map<Material, Integer> drops = readFinaleDrops(sec.getConfigurationSection("drops"), phaseName);
         obPhase.setFinale(new PhaseFinale(boss, sec.getString(NAME, Util.prettifyText(boss.name())),
                 Math.max(1D, sec.getDouble("health", 100D)), Math.max(0.1D, sec.getDouble("scale", 1D)),
                 sec.getDouble("damage", 0D), sec.getDouble("speed", 0D), sec.getBoolean("void-respawn", true),
                 Math.max(0, sec.getInt("warning", PhaseFinale.DEFAULT_WARNING)), minions, drops,
                 sec.getStringList("commands"), sec.getStringList("first-time-commands")));
+    }
+
+    private Map<EntityType, Integer> readFinaleMinions(ConfigurationSection minionSec, String phaseName) {
+        Map<EntityType, Integer> minions = new EnumMap<>(EntityType.class);
+        if (minionSec == null) {
+            return minions;
+        }
+        for (String key : minionSec.getKeys(false)) {
+            EntityType et = Enums.getIfPresent(EntityType.class, key.toUpperCase(Locale.ENGLISH)).orNull();
+            if (et == null || !et.isAlive() || !et.isSpawnable()) {
+                addon.logWarning(FINALE_LOG_PREFIX + phaseName + " finale: skipping unknown minion " + key);
+            } else {
+                minions.put(et, Math.max(0, minionSec.getInt(key)));
+            }
+        }
+        return minions;
+    }
+
+    private Map<Material, Integer> readFinaleDrops(ConfigurationSection dropSec, String phaseName) {
+        Map<Material, Integer> drops = new EnumMap<>(Material.class);
+        if (dropSec == null) {
+            return drops;
+        }
+        for (String key : dropSec.getKeys(false)) {
+            Material m = Material.matchMaterial(key);
+            if (m == null || !m.isItem()) {
+                addon.logWarning(FINALE_LOG_PREFIX + phaseName + " finale: skipping unknown drop " + key);
+            } else {
+                drops.put(m, Math.max(1, dropSec.getInt(key)));
+            }
+        }
+        return drops;
     }
 
     private void saveFinale(ConfigurationSection phSec, OneBlockPhase p) {
