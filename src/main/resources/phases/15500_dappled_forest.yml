@@ -65,3 +65,14 @@
     '0': '&6Autumn has come to the forest!'
   start-commands: []
   end-commands: []
+  finale:
+    boss: VINDICATOR
+    name: '<dark_green>The Woodcutter'
+    health: 400
+    scale: 1.8
+    damage: 14
+    minions:
+      VINDICATOR: 2
+    drops:
+      DIAMOND: 16
+      NETHERITE_INGOT: 1

@@ -1,5 +1,9 @@
 package world.bentobox.aoneblock.listeners;
 
+import world.bentobox.aoneblock.events.PhaseFinaleEndEvent;
+import world.bentobox.aoneblock.events.PhaseFinaleStartEvent;
+import world.bentobox.aoneblock.oneblocks.OneBlockPhase;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -55,6 +59,34 @@ public class BossBarListener implements Listener {
         tryToShowActionBar(e.getPlayerUUID(), e.getIsland());
     }
 
+    /**
+     * The boss has its own health bar, so the phase bar steps aside for the fight.
+     * @param e event
+     */
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    public void onFinaleStart(PhaseFinaleStartEvent e) {
+        BossBar bar = islandBossBars.remove(e.getIsland());
+        if (bar != null) {
+            bar.removeAll();
+        }
+    }
+
+    /**
+     * Bring the phase bar back as soon as the fight is over, whichever way it went.
+     * @param e event
+     */
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void onFinaleEnd(PhaseFinaleEndEvent e) {
+        Island island = e.getIsland();
+        if (island.getWorld() == null) {
+            return;
+        }
+        island.getWorld().getPlayers().stream().filter(p -> island.onIsland(p.getLocation())).forEach(p -> {
+            tryToShowActionBar(p.getUniqueId(), island);
+            tryToShowBossBar(p.getUniqueId(), island);
+        });
+    }
+
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onEnterIsland(IslandEnterEvent event) {
         if (addon.inWorld(event.getIsland().getWorld())) {
@@ -93,6 +125,31 @@ public class BossBarListener implements Listener {
         return Util.parseMiniMessageOrLegacy(text);
     }
 
+    /**
+     * @param obi island data
+     * @return the plain name of the phase boss this island still has to defeat, or
+     *         null if there is none
+     */
+    private String pendingBoss(OneBlockIslands obi) {
+        String pending = obi.getFinalePending();
+        if (pending == null || pending.isEmpty() || !addon.getSettings().isPhaseFinales()) {
+            return null;
+        }
+        return addon.getOneBlockManager().getPhase(pending).map(OneBlockPhase::getFinale)
+                .map(f -> PlainTextComponentSerializer.plainText()
+                        .serialize(Util.parseMiniMessageOrLegacy(f.name())))
+                .orElse(null);
+    }
+
+    /**
+     * @param island island
+     * @return true if the phase boss is alive on this island right now
+     */
+    private boolean isFighting(Island island) {
+        FinaleListener finales = addon.getFinaleListener();
+        return finales != null && finales.isActive(island);
+    }
+
     private void tryToShowActionBar(UUID uuid, Island island) {
         // The listener is registered whenever either the boss bar or action bar flag is
         // registered, so the global setting must be checked here as well as the flag
@@ -115,6 +172,17 @@ public class BossBarListener implements Listener {
         @NonNull
         OneBlockIslands obi = addon.getOneBlocksIsland(island);
 
+        // A boss stands between this island and the next phase
+        String boss = pendingBoss(obi);
+        if (boss != null && isFighting(island)) {
+            // The boss has its own health bar
+            return;
+        }
+        if (boss != null) {
+            player.sendActionBar(
+                    bukkitToAdventure(user.getTranslation("aoneblock.finale.pending", "[name]", boss)));
+            return;
+        }
         // --- Create the Action Bar Component ---
         int numBlocksToGo = addon.getOneBlockManager().getNextPhaseBlocks(obi);
         int phaseBlocks = addon.getOneBlockManager().getPhaseBlocks(obi);
@@ -180,6 +248,25 @@ public class BossBarListener implements Listener {
         @NonNull
         OneBlockIslands obi = addon.getOneBlocksIsland(island);
 
+        // A boss stands between this island and the next phase. The block count is
+        // already in the next phase, so do not show that phase's progress yet.
+        String boss = pendingBoss(obi);
+        if (boss != null && isFighting(island)) {
+            // The boss has its own health bar, so the phase bar steps aside
+            islandBossBars.remove(island);
+            bar.removeAll();
+            return;
+        }
+        if (boss != null) {
+            bar.setProgress(1D);
+            bar.setTitle(user.getTranslationOrNothing("aoneblock.finale.pending", "[name]", boss));
+            Player bossPlayer = Bukkit.getPlayer(uuid);
+            if (!bar.getPlayers().contains(bossPlayer)) {
+                bar.addPlayer(bossPlayer);
+            }
+            islandBossBars.put(island, bar);
+            return;
+        }
         // Set progress
         bar.setProgress(addon.getOneBlockManager().getPercentageDone(obi) / 100);
         int numBlocksToGo = addon.getOneBlockManager().getNextPhaseBlocks(obi);

@@ -40,3 +40,10 @@
   holograms: {}
   start-commands: []
   end-commands: []
+  finale:
+    boss: WARDEN
+    name: '<dark_aqua>The Warden'
+    health: 300
+    drops:
+      DIAMOND: 12
+      ECHO_SHARD: 8
