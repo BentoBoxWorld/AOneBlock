@@ -413,7 +413,7 @@ public class AOneBlock extends GameModeAddon {
      * @return the listener that runs phase finales
      */
     public FinaleListener getFinaleListener() {
-        return blockListener.getFinaleListener();
+        return blockListener == null ? null : blockListener.getFinaleListener();
     }
 
     /**
