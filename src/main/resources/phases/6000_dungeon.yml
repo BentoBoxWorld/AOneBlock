@@ -41,3 +41,15 @@
     BAT: 3
     AXOLOTL: 1
     GLOW_SQUID: 1
+  finale:
+    boss: WITHER_SKELETON
+    name: '<gray>The Jailer'
+    health: 200
+    scale: 1.5
+    damage: 9
+    minions:
+      SKELETON: 3
+      ZOMBIE: 3
+    drops:
+      DIAMOND: 6
+      GOLDEN_APPLE: 2

@@ -398,6 +398,10 @@ island:
   # Drop broken blocks on top of magic block
   # If you want Jobs or other plugins to recognize magic block breaking this must be false
   drop-on-top: true
+  # Phase finales
+  # A phase whose file has a finale section ends with a boss that must be defeated
+  # before the magic block moves on to the next phase. Set to false to turn all finales off.
+  phase-finales: true
   # Magic block mob warning
   # Players might be able to hear hostile mobs up to this many blocks away
   # Minimum is 0 (no warning), max is 5

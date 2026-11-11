@@ -53,3 +53,13 @@
     '0': '&eBeware the noxious fumes!'
   start-commands: []
   end-commands: []
+  finale:
+    boss: BLAZE
+    name: '<gold>Brimstone'
+    health: 400
+    scale: 2
+    minions:
+      MAGMA_CUBE: 3
+    drops:
+      DIAMOND: 16
+      ANCIENT_DEBRIS: 3

@@ -130,6 +130,11 @@ aoneblock:
     insufficient-bank-balance: "<red>The island bank balance is too low to proceed! It must be [number].</red>"
     insufficient-permission: "<red>You can proceed no further until you obtain the [name] permission!</red>"
     cooldown: "<red>Next phase will be available in [number] seconds!</red>"
+  finale:
+    start: "<dark_red><bold>[name]</bold></dark_red> <red>rises from the magic block! Defeat it to move on.</red>"
+    defeat-boss: "<red>The magic block is sealed until [name] is defeated!</red>"
+    defeated: "<green><bold>[name]</bold> has been defeated! The magic block is yours again.</green>"
+    retreat: "<yellow>[name] has retreated. Hit the magic block when you are ready to face it again.</yellow>"
   placeholders:
     infinite: Infinite
     my-island-phase-default: Unknown

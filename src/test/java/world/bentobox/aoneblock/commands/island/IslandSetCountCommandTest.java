@@ -127,6 +127,7 @@ public class IslandSetCountCommandTest extends CommonTestSetup {
 
         // BlockListener
         when(addon.getBlockListener()).thenReturn(bl);
+        when(addon.getFinaleListener()).thenReturn(mock(world.bentobox.aoneblock.listeners.FinaleListener.class));
         when(bl.getIsland(island)).thenReturn(oneBlockIsland);
 
         // DUT

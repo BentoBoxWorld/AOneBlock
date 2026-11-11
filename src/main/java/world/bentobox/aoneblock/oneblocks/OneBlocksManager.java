@@ -14,6 +14,7 @@ import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.EnumMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -88,6 +89,7 @@ public class OneBlocksManager {
     private static final String END_COMMANDS = "end-commands";
     private static final String END_COMMANDS_FIRST_TIME = "end-commands-first-time";
     private static final String REQUIREMENTS = "requirements";
+    private static final String FINALE = "finale";
     private static final String REQUIRED_MC_VERSION = "requiredMinecraftVersion";
     // Possessive quantifiers - version strings need no backtracking and this
     // keeps pathological inputs from recursing deeply in the regex engine
@@ -1129,6 +1131,78 @@ public class OneBlocksManager {
         addCommands(obPhase, phaseConfig);
         // Requirements
         addRequirements(obPhase, phaseConfig);
+        // Finale
+        addFinale(obPhase, phaseConfig);
+    }
+
+    /**
+     * Reads the optional finale section, the boss that ends the phase.
+     *
+     * @param obPhase phase to fill
+     * @param phase   configuration section being read
+     */
+    void addFinale(OneBlockPhase obPhase, ConfigurationSection phase) {
+        ConfigurationSection sec = phase.getConfigurationSection(FINALE);
+        if (sec == null) {
+            return;
+        }
+        String phaseName = obPhase.getPhaseName();
+        EntityType boss = Enums.getIfPresent(EntityType.class, sec.getString("boss", "").toUpperCase(Locale.ENGLISH))
+                .orNull();
+        if (boss == null || !boss.isAlive() || !boss.isSpawnable()) {
+            addon.logWarning("Phase " + phaseName + " finale: boss '" + sec.getString("boss")
+                    + "' is not a living entity type on this server. The finale is disabled.");
+            return;
+        }
+        Map<EntityType, Integer> minions = new EnumMap<>(EntityType.class);
+        ConfigurationSection minionSec = sec.getConfigurationSection("minions");
+        if (minionSec != null) {
+            for (String key : minionSec.getKeys(false)) {
+                EntityType et = Enums.getIfPresent(EntityType.class, key.toUpperCase(Locale.ENGLISH)).orNull();
+                if (et == null || !et.isAlive() || !et.isSpawnable()) {
+                    addon.logWarning("Phase " + phaseName + " finale: skipping unknown minion " + key);
+                } else {
+                    minions.put(et, Math.max(0, minionSec.getInt(key)));
+                }
+            }
+        }
+        Map<Material, Integer> drops = new EnumMap<>(Material.class);
+        ConfigurationSection dropSec = sec.getConfigurationSection("drops");
+        if (dropSec != null) {
+            for (String key : dropSec.getKeys(false)) {
+                Material m = Material.matchMaterial(key);
+                if (m == null || !m.isItem()) {
+                    addon.logWarning("Phase " + phaseName + " finale: skipping unknown drop " + key);
+                } else {
+                    drops.put(m, Math.max(1, dropSec.getInt(key)));
+                }
+            }
+        }
+        obPhase.setFinale(new PhaseFinale(boss, sec.getString(NAME, Util.prettifyText(boss.name())),
+                Math.max(1D, sec.getDouble("health", 100D)), Math.max(0.1D, sec.getDouble("scale", 1D)),
+                sec.getDouble("damage", 0D), sec.getDouble("speed", 0D), sec.getBoolean("void-respawn", true),
+                Math.max(0, sec.getInt("warning", PhaseFinale.DEFAULT_WARNING)), minions, drops,
+                sec.getStringList("commands"), sec.getStringList("first-time-commands")));
+    }
+
+    private void saveFinale(ConfigurationSection phSec, OneBlockPhase p) {
+        PhaseFinale f = p.getFinale();
+        if (f == null) {
+            return;
+        }
+        ConfigurationSection sec = phSec.createSection(FINALE);
+        sec.set("boss", f.boss().name());
+        sec.set(NAME, f.name());
+        sec.set("health", f.health());
+        sec.set("scale", f.scale());
+        sec.set("damage", f.damage());
+        sec.set("speed", f.speed());
+        sec.set("void-respawn", f.voidRespawn());
+        sec.set("warning", f.warning());
+        f.minions().forEach((k, v) -> sec.set("minions." + k.name(), v));
+        f.drops().forEach((k, v) -> sec.set("drops." + k.name(), v));
+        sec.set("commands", f.commands());
+        sec.set("first-time-commands", f.firstTimeCommands());
     }
 
     /**
@@ -1692,6 +1766,7 @@ public class OneBlocksManager {
             saveEntities(phSec, p);
             saveHolos(phSec, p);
             saveCommands(phSec, p);
+            saveFinale(phSec, p);
         }
         try {
             // Save

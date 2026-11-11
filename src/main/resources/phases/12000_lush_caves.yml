@@ -41,3 +41,13 @@
     '0': '&aWelcome to the Lush Caves!'
   start-commands: []
   end-commands: []
+  finale:
+    boss: BOGGED
+    name: '<green>The Mossback'
+    health: 320
+    scale: 2
+    minions:
+      BOGGED: 3
+    drops:
+      DIAMOND: 12
+      GOLDEN_APPLE: 4

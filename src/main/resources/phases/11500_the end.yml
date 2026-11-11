@@ -14,3 +14,14 @@
   mobs:
     SHULKER: 80
     ENDERMAN: 500
+  finale:
+    boss: ENDERMAN
+    name: '<light_purple>The Void Walker'
+    health: 320
+    scale: 2.5
+    damage: 12
+    minions:
+      ENDERMITE: 5
+    drops:
+      DIAMOND: 12
+      ENDER_PEARL: 16

@@ -18,3 +18,14 @@
     CREEPER: 10
     ENDERMAN: 10
     RABBIT: 50
+  finale:
+    boss: HUSK
+    name: '<gold>The Pharaoh'
+    health: 220
+    scale: 3
+    damage: 9
+    minions:
+      HUSK: 4
+    drops:
+      DIAMOND: 6
+      GOLD_BLOCK: 4

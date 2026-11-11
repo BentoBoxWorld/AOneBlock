@@ -42,3 +42,14 @@
     BAT: 30
     AXOLOTL: 1
     GLOW_SQUID: 1
+  finale:
+    boss: SPIDER
+    name: '<dark_gray>The Broodmother'
+    health: 120
+    scale: 3
+    damage: 5
+    minions:
+      CAVE_SPIDER: 4
+    drops:
+      IRON_INGOT: 12
+      DIAMOND: 2
