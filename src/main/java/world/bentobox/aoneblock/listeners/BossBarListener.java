@@ -150,6 +150,33 @@ public class BossBarListener implements Listener {
         return finales != null && finales.isActive(island);
     }
 
+    /**
+     * While a phase boss is still to be defeated, the block count is already in the
+     * next phase, so the bar names the boss instead of showing that phase's progress.
+     * While the boss is alive it has its own health bar and this one steps aside.
+     *
+     * @return true if the bar was handled here
+     */
+    private boolean showPendingBoss(BossBar bar, User user, UUID uuid, Island island, OneBlockIslands obi) {
+        String boss = pendingBoss(obi);
+        if (boss == null) {
+            return false;
+        }
+        if (isFighting(island)) {
+            islandBossBars.remove(island);
+            bar.removeAll();
+            return true;
+        }
+        bar.setProgress(1D);
+        bar.setTitle(user.getTranslationOrNothing("aoneblock.finale.pending", "[name]", boss));
+        Player player = Bukkit.getPlayer(uuid);
+        if (!bar.getPlayers().contains(player)) {
+            bar.addPlayer(player);
+        }
+        islandBossBars.put(island, bar);
+        return true;
+    }
+
     private void tryToShowActionBar(UUID uuid, Island island) {
         // The listener is registered whenever either the boss bar or action bar flag is
         // registered, so the global setting must be checked here as well as the flag
@@ -248,23 +275,7 @@ public class BossBarListener implements Listener {
         @NonNull
         OneBlockIslands obi = addon.getOneBlocksIsland(island);
 
-        // A boss stands between this island and the next phase. The block count is
-        // already in the next phase, so do not show that phase's progress yet.
-        String boss = pendingBoss(obi);
-        if (boss != null && isFighting(island)) {
-            // The boss has its own health bar, so the phase bar steps aside
-            islandBossBars.remove(island);
-            bar.removeAll();
-            return;
-        }
-        if (boss != null) {
-            bar.setProgress(1D);
-            bar.setTitle(user.getTranslationOrNothing("aoneblock.finale.pending", "[name]", boss));
-            Player bossPlayer = Bukkit.getPlayer(uuid);
-            if (!bar.getPlayers().contains(bossPlayer)) {
-                bar.addPlayer(bossPlayer);
-            }
-            islandBossBars.put(island, bar);
+        if (showPendingBoss(bar, user, uuid, island, obi)) {
             return;
         }
         // Set progress

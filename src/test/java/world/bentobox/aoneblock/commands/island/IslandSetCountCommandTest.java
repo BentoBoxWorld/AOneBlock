@@ -27,6 +27,7 @@ import org.mockito.Mock;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 
+import world.bentobox.aoneblock.listeners.FinaleListener;
 import world.bentobox.aoneblock.AOneBlock;
 import world.bentobox.aoneblock.CommonTestSetup;
 import world.bentobox.aoneblock.Settings;
@@ -127,7 +128,8 @@ public class IslandSetCountCommandTest extends CommonTestSetup {
 
         // BlockListener
         when(addon.getBlockListener()).thenReturn(bl);
-        when(addon.getFinaleListener()).thenReturn(mock(world.bentobox.aoneblock.listeners.FinaleListener.class));
+        FinaleListener finaleListener = mock(FinaleListener.class);
+        when(addon.getFinaleListener()).thenReturn(finaleListener);
         when(bl.getIsland(island)).thenReturn(oneBlockIsland);
 
         // DUT

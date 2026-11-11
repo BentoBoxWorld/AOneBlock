@@ -1575,7 +1575,7 @@ public class OneBlocksManagerTest3 extends CommonTestSetup {
 	 * Every shipped phase ends in a boss that this server version understands.
 	 */
 	@Test
-	void testShippedPhasesHaveFinales() throws Exception {
+	void testShippedPhasesHaveFinales() {
 		File[] files = new File("src/main/resources/phases")
 				.listFiles((d, n) -> n.endsWith(".yml") && !n.endsWith("_chests.yml") && !n.contains("goto"));
 		assertTrue(files.length > 10);
