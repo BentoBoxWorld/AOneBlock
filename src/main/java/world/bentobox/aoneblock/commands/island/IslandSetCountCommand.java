@@ -82,6 +82,7 @@ public class IslandSetCountCommand extends CompositeCommand {
         }
         i.setBlockNumber(count);
         i.clearQueue();
+        addon.getFinaleListener().clear(island, i);
         user.sendMessage("aoneblock.commands.island.setcount.set", TextVariables.NUMBER, String.valueOf(i.getBlockNumber()));
         setCooldown(user.getUniqueId(), addon.getSettings().getSetCountCooldown() * 60);
         return true;

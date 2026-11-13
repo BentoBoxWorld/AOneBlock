@@ -8,6 +8,7 @@ import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -26,6 +27,11 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
+import world.bentobox.aoneblock.events.PhaseFinaleEndEvent;
+import world.bentobox.aoneblock.events.PhaseFinaleStartEvent;
+import world.bentobox.bentobox.util.Util;
+import world.bentobox.aoneblock.oneblocks.PhaseFinale;
+import world.bentobox.aoneblock.oneblocks.OneBlockPhase;
 import world.bentobox.aoneblock.AOneBlock;
 import world.bentobox.aoneblock.CommonTestSetup;
 import world.bentobox.aoneblock.Settings;
@@ -223,5 +229,48 @@ public class BossBarListenerTest extends CommonTestSetup {
         bbl.onBreakBlockEvent(new MagicBlockEvent(island, null, null, block, Material.STONE));
         verify(mockPlayer, never()).sendActionBar(any(Component.class));
         verify(bossBar, never()).addPlayer(any());
+    }
+
+    /**
+     * While a phase boss is still to be defeated the bar names the boss instead of
+     * showing the next phase's progress.
+     */
+    @Test
+    void testBossBarShowsPendingBoss() {
+        OneBlockPhase phase = new OneBlockPhase("0");
+        phase.setFinale(new PhaseFinale(org.bukkit.entity.EntityType.ZOMBIE, "Colossus", 100, 1,
+                0, 0, true, 20, java.util.Map.of(), java.util.Map.of(), java.util.List.of(), java.util.List.of()));
+        when(obi.getFinalePending()).thenReturn("Plains");
+        when(obm.getPhase("Plains")).thenReturn(java.util.Optional.of(phase));
+        mockedUtil.when(() -> Util.parseMiniMessageOrLegacy(anyString()))
+                .thenAnswer(a -> Component.text(a.getArgument(0, String.class)));
+        when(island.isAllowed(addon.ONEBLOCK_BOSSBAR)).thenReturn(true);
+        fireMagicBlockEvent();
+        verify(bossBar).setProgress(1D);
+        verify(bossBar, never()).setProgress(0.8D);
+        verify(bossBar).addPlayer(mockPlayer);
+    }
+
+    /**
+     * The phase bar steps aside when the boss spawns and comes straight back when
+     * the fight ends, without waiting for the next block break.
+     */
+    @Test
+    void testBossBarRefreshedAroundFinale() {
+        when(island.isAllowed(addon.ONEBLOCK_BOSSBAR)).thenReturn(true);
+        when(island.getWorld()).thenReturn(world);
+        when(island.onIsland(any())).thenReturn(true);
+        when(world.getPlayers()).thenReturn(java.util.List.of(mockPlayer));
+        when(mockPlayer.getUniqueId()).thenReturn(uuid);
+        fireMagicBlockEvent();
+        verify(bossBar, times(1)).addPlayer(mockPlayer);
+
+        PhaseFinale finale = new PhaseFinale(org.bukkit.entity.EntityType.ZOMBIE, "Colossus", 100, 1, 0, 0, true, 20,
+                java.util.Map.of(), java.util.Map.of(), java.util.List.of(), java.util.List.of());
+        bbl.onFinaleStart(new PhaseFinaleStartEvent(island, uuid, block, "Plains", finale));
+        verify(bossBar).removeAll();
+
+        bbl.onFinaleEnd(new PhaseFinaleEndEvent(island, uuid, block, "Plains", true, true));
+        verify(bossBar, times(2)).addPlayer(mockPlayer);
     }
 }

@@ -34,3 +34,11 @@
     PANDA: 5
     CHICKEN: 20
     FROG: 5
+  finale:
+    boss: IRON_GOLEM
+    name: '<green>The Temple Guardian'
+    health: 180
+    scale: 1.5
+    drops:
+      DIAMOND: 5
+      EMERALD: 8
