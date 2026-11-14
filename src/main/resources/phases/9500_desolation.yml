@@ -50,3 +50,14 @@
     EVOKER: 5
     ENDERMITE: 10
     WITHER_SKELETON: 5
+  finale:
+    boss: GIANT
+    name: '<dark_red>The Last Titan'
+    health: 300
+    damage: 10
+    speed: 0.3
+    minions:
+      ZOMBIE: 6
+    drops:
+      DIAMOND: 10
+      ANCIENT_DEBRIS: 2

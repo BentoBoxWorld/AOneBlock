@@ -339,3 +339,50 @@
     PIG: 150
     VILLAGER: 15
     CHICKEN: 200
+
+  # -------------------------------------------------------------------------
+  # finale - the boss that ends the phase (optional)
+  # -------------------------------------------------------------------------
+  # When the last block of the phase is mined the magic block is sealed and
+  # the boss spawns on top of it. The phase does not change until it is dead.
+  # Only damage from players (melee, projectiles, pets) hurts the boss, and it
+  # cannot change blocks. If everyone dies or leaves, the boss retreats and
+  # hitting the magic block summons it again. Each lost fight makes the next
+  # attempt 10% easier, down to half health. Boss health grows by 50% for each
+  # extra player on the island, up to 4 players.
+  #
+  # The last blocks of the phase are forewarned by a heartbeat that rises in
+  # pitch, then a bell toll five blocks from the end.
+  #
+  #   boss                - EntityType of the boss. GIANT has no AI in vanilla;
+  #                         it is given one here (needs Paper).
+  #   name                - display name, MiniMessage or legacy & codes.
+  #   health              - base max health. Server max is 1024 unless raised in
+  #                         spigot.yml (settings.attribute.maxHealth).
+  #   scale               - size multiplier. 1 is normal. Default 1.
+  #   damage              - attack damage. Omit or 0 for the mob's default.
+  #   speed               - movement speed. Omit or 0 for the mob's default.
+  #   void-respawn        - true (default): a boss knocked into the void comes
+  #                         back to the magic block. false: the void kills it
+  #                         and that counts as a win.
+  #   warning             - how many blocks before the end the omen starts.
+  #                         Default 20. 0 for no warning.
+  #   minions             - mobs that spawn with the boss, TYPE: count.
+  #   drops               - items dropped when the boss dies, MATERIAL: amount.
+  #   commands            - run every time the boss is defeated. Same prefixes
+  #                         and placeholders as end-commands.
+  #   first-time-commands - run only the first time the island defeats it.
+  #
+  # Turn all finales off with island.phase-finales in config.yml.
+  finale:
+    boss: GIANT
+    name: '<dark_green>The Colossus'
+    health: 100
+    scale: 0.5
+    damage: 4
+    speed: 0.25
+    minions:
+      ZOMBIE: 2
+    drops:
+      IRON_INGOT: 8
+      BREAD: 8

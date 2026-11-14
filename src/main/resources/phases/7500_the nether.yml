@@ -40,3 +40,13 @@
     ENDERMAN: 20
     BLAZE: 200
     WITHER_SKELETON: 20
+  finale:
+    boss: PIGLIN_BRUTE
+    name: '<red>The Warlord'
+    health: 240
+    scale: 2
+    minions:
+      WITHER_SKELETON: 3
+    drops:
+      DIAMOND: 8
+      ANCIENT_DEBRIS: 1

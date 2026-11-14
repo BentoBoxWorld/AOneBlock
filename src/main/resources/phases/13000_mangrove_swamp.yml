@@ -45,3 +45,14 @@
     '0': '&2The waters here are murky...'
   start-commands: []
   end-commands: []
+  finale:
+    boss: CAVE_SPIDER
+    name: '<dark_green>The Mire Lurker'
+    health: 340
+    scale: 4
+    damage: 10
+    minions:
+      CAVE_SPIDER: 4
+    drops:
+      DIAMOND: 14
+      EXPERIENCE_BOTTLE: 32

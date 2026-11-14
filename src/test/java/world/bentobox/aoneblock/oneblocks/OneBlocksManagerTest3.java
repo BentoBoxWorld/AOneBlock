@@ -1,5 +1,6 @@
 package world.bentobox.aoneblock.oneblocks;
 
+import org.bukkit.entity.EntityType;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -1512,4 +1513,81 @@ public class OneBlocksManagerTest3 extends CommonTestSetup {
 		verify(plugin).logError(org.mockito.ArgumentMatchers.contains("CHEST_WITH item is invalid"));
 	}
 
+
+	/**
+	 * Test method for
+	 * {@link world.bentobox.aoneblock.oneblocks.OneBlocksManager#addFinale(OneBlockPhase, org.bukkit.configuration.ConfigurationSection)}.
+	 */
+	@Test
+	void testAddFinale() throws Exception {
+		YamlConfiguration cfg = new YamlConfiguration();
+		cfg.loadFromString("""
+				finale:
+				  boss: zombie
+				  name: '<red>Boss'
+				  health: 150
+				  scale: 2.5
+				  damage: 6
+				  void-respawn: false
+				  warning: 10
+				  minions:
+				    SKELETON: 3
+				    NOT_A_MOB: 2
+				  drops:
+				    DIAMOND: 4
+				  commands:
+				  - 'say hi'
+				""");
+		OneBlockPhase phase = new OneBlockPhase("0");
+		phase.setPhaseName("Plains");
+		obm.addFinale(phase, cfg);
+		PhaseFinale f = phase.getFinale();
+		assertEquals(EntityType.ZOMBIE, f.boss());
+		assertEquals("<red>Boss", f.name());
+		assertEquals(150D, f.health());
+		assertEquals(2.5D, f.scale());
+		assertEquals(6D, f.damage());
+		assertEquals(0D, f.speed());
+		assertFalse(f.voidRespawn());
+		assertEquals(10, f.warning());
+		assertEquals(java.util.Map.of(EntityType.SKELETON, 3), f.minions());
+		assertEquals(java.util.Map.of(Material.DIAMOND, 4), f.drops());
+		assertEquals(java.util.List.of("say hi"), f.commands());
+		assertTrue(f.firstTimeCommands().isEmpty());
+	}
+
+	/**
+	 * A phase without a finale section, or with a bad boss, has no finale.
+	 */
+	@Test
+	void testAddFinaleNoneOrBad() throws Exception {
+		OneBlockPhase phase = new OneBlockPhase("0");
+		phase.setPhaseName("Plains");
+		obm.addFinale(phase, new YamlConfiguration());
+		assertNull(phase.getFinale());
+		YamlConfiguration cfg = new YamlConfiguration();
+		cfg.loadFromString("finale:\n  boss: ARROW\n");
+		obm.addFinale(phase, cfg);
+		assertNull(phase.getFinale());
+	}
+
+	/**
+	 * Every shipped phase ends in a boss that this server version understands.
+	 */
+	@Test
+	void testShippedPhasesHaveFinales() {
+		File[] files = new File("src/main/resources/phases")
+				.listFiles((d, n) -> n.endsWith(".yml") && !n.endsWith("_chests.yml") && !n.contains("goto"));
+		assertTrue(files.length > 10);
+		for (File file : files) {
+			YamlConfiguration cfg = YamlConfiguration.loadConfiguration(file);
+			String key = cfg.getKeys(false).iterator().next();
+			OneBlockPhase phase = new OneBlockPhase(key);
+			phase.setPhaseName(file.getName());
+			obm.addFinale(phase, cfg.getConfigurationSection(key));
+			assertNotNull(phase.getFinale(), file.getName());
+			assertTrue(phase.getFinale().health() <= 1024D / 2.5D, file.getName() + " health exceeds the server cap when scaled");
+			assertFalse(phase.getFinale().drops().isEmpty(), file.getName());
+		}
+	}
 }

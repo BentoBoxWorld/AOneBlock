@@ -18,6 +18,7 @@ import world.bentobox.aoneblock.commands.island.PlayerCommand;
 import world.bentobox.aoneblock.dataobjects.OneBlockIslands;
 import world.bentobox.aoneblock.generators.ChunkGeneratorWorld;
 import world.bentobox.aoneblock.listeners.BlockListener;
+import world.bentobox.aoneblock.listeners.FinaleListener;
 import world.bentobox.aoneblock.listeners.BlockProtect;
 import world.bentobox.aoneblock.listeners.BossBarListener;
 import world.bentobox.aoneblock.listeners.HoloListener;
@@ -195,6 +196,7 @@ public class AOneBlock extends GameModeAddon {
         // Initialize and register listeners
         blockListener = new BlockListener(this);
         registerListener(blockListener);
+        registerListener(blockListener.getFinaleListener());
         registerListener(new NoBlockHandler(this));
         registerListener(new BlockProtect(this));
         registerListener(new JoinLeaveListener(this));
@@ -241,6 +243,11 @@ public class AOneBlock extends GameModeAddon {
         // Pladdon before BentoBox, so anything queued here depends on BentoBox draining it later.
         if (blockListener != null) {
             blockListener.saveCacheNow();
+        }
+
+        // Remove any bosses
+        if (blockListener != null) {
+            blockListener.getFinaleListener().onDisable();
         }
 
         // Clear holograms
@@ -400,6 +407,13 @@ public class AOneBlock extends GameModeAddon {
      */
     public BlockListener getBlockListener() {
         return blockListener;
+    }
+
+    /**
+     * @return the listener that runs phase finales
+     */
+    public FinaleListener getFinaleListener() {
+        return blockListener == null ? null : blockListener.getFinaleListener();
     }
 
     /**

@@ -16,6 +16,7 @@ import org.eclipse.jdt.annotation.NonNull;
 import world.bentobox.aoneblock.AOneBlock;
 import world.bentobox.aoneblock.dataobjects.OneBlockIslands;
 import world.bentobox.aoneblock.oneblocks.MobAspects;
+import world.bentobox.aoneblock.oneblocks.PhaseFinale;
 
 /**
  * Plays a warning sound
@@ -48,6 +49,33 @@ public class WarningSounder {
         });
 
     }
+
+    /**
+     * Forewarns of the phase's boss over the last blocks of the phase: a heartbeat
+     * that rises in pitch as the end nears, and a bell toll just before it.
+     *
+     * @param block - the magic block
+     * @param finale - the phase's finale
+     * @param toGo - blocks left in the phase
+     */
+    void omen(@NonNull Block block, @NonNull PhaseFinale finale, int toGo) {
+        int warning = finale.warning();
+        if (toGo < 1 || toGo > warning) {
+            return;
+        }
+        float nearness = 1F - (float) toGo / warning;
+        block.getWorld().playSound(block.getLocation(), Sound.ENTITY_WARDEN_HEARTBEAT, 2F, 0.5F + 1.5F * nearness);
+        block.getWorld().spawnParticle(Particle.DUST, block.getLocation().add(new Vector(0.5, 1.0, 0.5)),
+                5 + Math.round(20 * nearness), 0.5, 0.2, 0.5, 1, new Particle.DustOptions(Color.fromRGB(120, 0, 0), 1.5F));
+        if (toGo == Math.min(BELL_AT, warning)) {
+            block.getWorld().playSound(block.getLocation(), Sound.BLOCK_BELL_RESONATE, 2F, 0.8F);
+        }
+    }
+
+    /**
+     * Blocks before the end of the phase at which the bell tolls.
+     */
+    static final int BELL_AT = 5;
 
     private void initialize() {
         Map<EntityType, MobAspects> m = new EnumMap<>(EntityType.class);

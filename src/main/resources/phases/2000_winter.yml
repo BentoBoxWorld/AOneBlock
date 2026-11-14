@@ -31,3 +31,13 @@
     RABBIT: 50
     CHICKEN: 10
     GOAT: 10
+  finale:
+    boss: STRAY
+    name: '<aqua>The Frostbitten'
+    health: 140
+    scale: 2
+    minions:
+      STRAY: 3
+    drops:
+      DIAMOND: 3
+      PACKED_ICE: 16

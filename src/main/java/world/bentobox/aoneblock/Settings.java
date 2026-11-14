@@ -390,6 +390,12 @@ public class Settings implements WorldSettings {
     @ConfigEntry(path = "island.drop-on-top") // , since = "1.3.0")
     private boolean dropOnTop = true;
 
+    @ConfigComment("Phase finales")
+    @ConfigComment("A phase whose file has a finale section ends with a boss that must be defeated")
+    @ConfigComment("before the magic block moves on to the next phase. Set to false to turn all finales off.")
+    @ConfigEntry(path = "island.phase-finales")
+    private boolean phaseFinales = true;
+
     @ConfigComment("Magic block mob warning")
     @ConfigComment("Players might be able to hear hostile mobs up to this many blocks away")
     @ConfigComment("Minimum is 0 (no warning), max is 5")
@@ -1869,6 +1875,20 @@ public class Settings implements WorldSettings {
             mobWarning = BlockListener.MAX_LOOK_AHEAD;
         }
         return mobWarning;
+    }
+
+    /**
+     * @return true if phase finales are enabled
+     */
+    public boolean isPhaseFinales() {
+        return phaseFinales;
+    }
+
+    /**
+     * @param phaseFinales true to enable phase finales
+     */
+    public void setPhaseFinales(boolean phaseFinales) {
+        this.phaseFinales = phaseFinales;
     }
 
     /**

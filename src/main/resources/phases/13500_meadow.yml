@@ -52,3 +52,13 @@
     '0': '&dA peaceful meadow!'
   start-commands: []
   end-commands: []
+  finale:
+    boss: EVOKER
+    name: '<yellow>The Summoner'
+    health: 360
+    scale: 1.5
+    minions:
+      VINDICATOR: 2
+    drops:
+      DIAMOND: 14
+      TOTEM_OF_UNDYING: 1

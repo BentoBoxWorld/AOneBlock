@@ -38,3 +38,14 @@
     '0': '&bProceed with caution!'
   start-commands: []
   end-commands: []
+  finale:
+    boss: SILVERFISH
+    name: '<gray>The Burrower'
+    health: 340
+    scale: 6
+    damage: 10
+    minions:
+      SILVERFISH: 6
+    drops:
+      DIAMOND: 14
+      ANCIENT_DEBRIS: 2

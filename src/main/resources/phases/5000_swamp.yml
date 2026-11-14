@@ -30,3 +30,13 @@
     CHICKEN: 20
     TADPOLE: 20
     FROG: 40
+  finale:
+    boss: WITCH
+    name: '<dark_purple>The Bog Witch'
+    health: 180
+    scale: 1.5
+    minions:
+      SLIME: 3
+    drops:
+      DIAMOND: 5
+      EXPERIENCE_BOTTLE: 16

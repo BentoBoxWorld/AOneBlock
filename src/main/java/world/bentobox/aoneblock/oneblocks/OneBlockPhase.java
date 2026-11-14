@@ -58,6 +58,7 @@ public class OneBlockPhase {
     private List<String> endCommands;
     private List<String> firstTimeEndCommands;
     private List<Requirement> requirements;
+    private PhaseFinale finale;
     private Map<Integer, OneBlockObject> fixedBlocks;
     private Map<Integer, String> holograms;
 
@@ -427,6 +428,20 @@ public class OneBlockPhase {
      */
     public void setRequirements(List<Requirement> requirements) {
         this.requirements = requirements;
+    }
+
+    /**
+     * @return the boss finale that ends this phase, or null if there is none
+     */
+    public PhaseFinale getFinale() {
+        return finale;
+    }
+
+    /**
+     * @param finale the boss finale that ends this phase, or null for none
+     */
+    public void setFinale(PhaseFinale finale) {
+        this.finale = finale;
     }
 
     /**

@@ -44,3 +44,13 @@
     '0': '&fHigh altitude ahead!'
   start-commands: []
   end-commands: []
+  finale:
+    boss: BREEZE
+    name: '<white>The Gale'
+    health: 380
+    scale: 2
+    minions:
+      STRAY: 3
+    drops:
+      DIAMOND: 16
+      ENCHANTED_GOLDEN_APPLE: 1
