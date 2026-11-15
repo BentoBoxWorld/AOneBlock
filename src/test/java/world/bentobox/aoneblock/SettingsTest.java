@@ -1761,7 +1761,19 @@ public class SettingsTest extends CommonTestSetup {
         s.setSaveEvery(-50);
         assertEquals(1, s.getSaveEvery());
     }
-    
-    
-    
+
+    @Test
+    void testTeamsDisabled() {
+        assertFalse(s.isTeamsDisabled());
+        s.setTeamsDisabled(true);
+        assertTrue(s.isTeamsDisabled());
+    }
+
+    @Test
+    void testStructureSettings() {
+        assertTrue(s.getStructureSettings().isEmpty());
+        s.setStructureSettings(java.util.Map.of("monument", false, "trial_chambers", true));
+        assertFalse(s.getStructureSettings().get("monument"));
+        assertTrue(s.getStructureSettings().get("trial_chambers"));
+    }
 }
