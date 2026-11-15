@@ -136,7 +136,7 @@ permissions:
     default: TRUE
   aoneblock.phases:
     description: Allow use of '/ob phases' command - show a list of all the phases
-    default: FALSE
+    default: OP
   aoneblock.island.setcount:
     description: Allow use of '/ob setCount' command - set block count to previously completed value
     default: OP
