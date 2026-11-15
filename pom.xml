@@ -50,13 +50,13 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <java.version>21</java.version>
+        <java.version>25</java.version>
         <!-- Non-minecraft related dependencies -->
         <junit.version>5.10.2</junit.version>
-        <mockito.version>5.11.0</mockito.version>
-        <mock-bukkit.version>4.110.0</mock-bukkit.version>
+        <mockito.version>5.20.0</mockito.version>
+        <mock-bukkit.version>4.119.0</mock-bukkit.version>
         <!-- More visible way how to change dependency versions -->
-        <bentobox.version>3.22.0</bentobox.version>
+        <bentobox.version>3.23.7</bentobox.version>
         <items-adder.version>4.0.17</items-adder.version>
         <nexo.version>1.8.0</nexo.version>
         <craftengine.version>0.0.67</craftengine.version>
@@ -67,7 +67,7 @@
         <!-- Do not change unless you want different name for local builds. -->
         <build.number>-LOCAL</build.number>
         <!-- This allows to change between versions. -->
-        <build.version>1.29.0</build.version>
+        <build.version>1.30.0</build.version>
         <!-- SonarCloud -->
         <sonar.projectKey>BentoBoxWorld_AOneBlock</sonar.projectKey>
         <sonar.organization>bentobox-world</sonar.organization>
@@ -187,14 +187,14 @@
     <dependencies>
         <dependency>
             <groupId>org.mockbukkit.mockbukkit</groupId>
-            <artifactId>mockbukkit-v1.21</artifactId>
+            <artifactId>mockbukkit-v26.3</artifactId>
             <version>${mock-bukkit.version}</version>
             <scope>test</scope>
          </dependency>
         <dependency>
           <groupId>io.papermc.paper</groupId>
           <artifactId>paper-api</artifactId>
-          <version>1.21.11-R0.1-SNAPSHOT</version>
+          <version>26.3.build.231-stable</version>
           <scope>provided</scope>
         </dependency>
         <!-- Apache Commons Text -->
@@ -233,7 +233,7 @@
             <dependency>
                 <groupId>org.mockito</groupId>
                 <artifactId>mockito-junit-jupiter</artifactId>
-                <version>5.11.0</version>
+                <version>${mockito.version}</version>
                 <scope>test</scope>
             </dependency>
         <dependency>
@@ -352,6 +352,7 @@
                 <version>3.13.0</version>
                 <configuration>
                     <release>${java.version}</release>
+                    <fork>true</fork>
                 </configuration>
             </plugin>
             <plugin>

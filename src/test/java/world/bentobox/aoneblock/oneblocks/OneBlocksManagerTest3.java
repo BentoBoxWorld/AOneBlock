@@ -715,7 +715,7 @@ public class OneBlocksManagerTest3 extends CommonTestSetup {
                         0:
                           ==: org.bukkit.inventory.ItemStack
                           DataVersion: 4438
-                          id: minecraft:sulfur
+                          id: minecraft:not_a_real_item
                           count: 1
                           schema_version: 1
                         1:
@@ -738,7 +738,7 @@ public class OneBlocksManagerTest3 extends CommonTestSetup {
 		assertNotNull(phase);
 		assertEquals(1, phase.getChests().size());
 		assertEquals(1, phase.getChests().iterator().next().getChest().size());
-		verify(plugin).log(org.mockito.ArgumentMatchers.contains("Skipping item minecraft:sulfur"));
+		verify(plugin).log(org.mockito.ArgumentMatchers.contains("Skipping item minecraft:not_a_real_item"));
 		verify(plugin, never()).logError(anyString());
 	}
 

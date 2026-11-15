@@ -67,6 +67,9 @@ public class IslandSetCountCommandTest extends CommonTestSetup {
     @Override
     @AfterEach
     public void tearDown() throws Exception {
+        // setUp() injects a mock into the static RanksManager singleton; clear it so later
+        // test classes (e.g. AOneBlockTest) don't reach a mock Mockito has since disabled
+        WhiteBox.setInternalState(RanksManager.class, "instance", null);
         super.tearDown();
         deleteAll(new File("database"));
         deleteAll(new File("database_backup"));
