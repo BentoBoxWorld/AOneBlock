@@ -30,13 +30,15 @@ import org.eclipse.jdt.annotation.Nullable;
  * @param firstTimeCommands commands run only the first time the island defeats this boss
  * @param mythicBoss        MythicMobs mob type id to spawn as the boss, or empty for a
  *                          vanilla boss
- * @param mythicLevel       level of the MythicMobs boss
+ * @param mythicLevel       level of the MythicMobs boss and minions
+ * @param mythicMinions     MythicMobs mobs, by type id, that spawn alongside the boss,
+ *                          and how many of each
  * @author tastybento
  */
 public record PhaseFinale(@Nullable EntityType boss, String name, double health, double scale, double damage,
         double speed, boolean voidRespawn, int warning, Map<EntityType, Integer> minions,
         Map<Material, Integer> drops, List<String> commands, List<String> firstTimeCommands, String mythicBoss,
-        double mythicLevel) {
+        double mythicLevel, Map<String, Integer> mythicMinions) {
 
     /**
      * Default number of blocks of forewarning.
@@ -52,6 +54,7 @@ public record PhaseFinale(@Nullable EntityType boss, String name, double health,
         commands = List.copyOf(commands);
         firstTimeCommands = List.copyOf(firstTimeCommands);
         mythicBoss = mythicBoss == null ? "" : mythicBoss.trim();
+        mythicMinions = mythicMinions == null ? Map.of() : Map.copyOf(mythicMinions);
         if (boss == null && mythicBoss.isEmpty()) {
             throw new IllegalArgumentException("A finale needs a boss or a mythic-boss");
         }
@@ -64,7 +67,7 @@ public record PhaseFinale(@Nullable EntityType boss, String name, double health,
             boolean voidRespawn, int warning, Map<EntityType, Integer> minions, Map<Material, Integer> drops,
             List<String> commands, List<String> firstTimeCommands) {
         this(boss, name, health, scale, damage, speed, voidRespawn, warning, minions, drops, commands,
-                firstTimeCommands, "", 1D);
+                firstTimeCommands, "", 1D, Map.of());
     }
 
     /**

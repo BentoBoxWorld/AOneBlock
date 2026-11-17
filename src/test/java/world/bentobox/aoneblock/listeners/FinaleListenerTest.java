@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyDouble;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doReturn;
@@ -451,16 +452,31 @@ class FinaleListenerTest extends CommonTestSetup {
     // ---------------------------------------------------------------------
 
     private PhaseFinale mythicFinale(EntityType fallback) {
+        return mythicFinale(fallback, Map.of());
+    }
+
+    private PhaseFinale mythicFinale(EntityType fallback, Map<String, Integer> mythicMinions) {
         return new PhaseFinale(fallback, "Skeleton King", 0, 0, 0, 0, true, 20, Map.of(),
-                Map.of(Material.IRON_INGOT, 8), List.of(), List.of(), "SkeletonKing", 3);
+                Map.of(Material.IRON_INGOT, 8), List.of(), List.of(), "SkeletonKing", 3,
+                mythicMinions);
     }
 
     /**
      * MythicMobs is not on the test classpath, so stub the one method that talks to its hook.
      */
     private void mythicSpawns(Entity result) {
-        fl = spy(fl);
-        doReturn(result).when(fl).spawnMythicEntity(any(), any(), anyString(), anyString());
+        mythicSpawns(null, result);
+    }
+
+    /**
+     * @param type mob type to stub, or null for any
+     */
+    private void mythicSpawns(String type, Entity result) {
+        if (!org.mockito.Mockito.mockingDetails(fl).isSpy()) {
+            fl = spy(fl);
+        }
+        doReturn(result).when(fl).spawnMythicEntity(type == null ? anyString() : eq(type), anyDouble(), any(),
+                anyString(), anyString());
     }
 
     @Test
@@ -469,7 +485,7 @@ class FinaleListenerTest extends CommonTestSetup {
         mythicSpawns(boss);
         when(attribute.getBaseValue()).thenReturn(200D);
         summon();
-        verify(fl).spawnMythicEntity(eq(plains.getFinale()), any(), eq(PLAINS), eq("Skeleton King"));
+        verify(fl).spawnMythicEntity(eq("SkeletonKing"), eq(3D), any(), eq("Skeleton King"), eq(PLAINS));
         verify(world, never()).spawnEntity(any(), any(EntityType.class));
         // Keeps its own size and health, scaled for one player
         verify(boss, never()).getAttribute(Attribute.SCALE);
@@ -524,7 +540,7 @@ class FinaleListenerTest extends CommonTestSetup {
         plains.setFinale(mythicFinale(null));
         fl = spy(fl);
         doThrow(new NoClassDefFoundError("io/lumine/mythic/bukkit/MythicBukkit")).when(fl)
-                .spawnMythicEntity(any(), any(), anyString(), anyString());
+                .spawnMythicEntity(anyString(), anyDouble(), any(), anyString(), anyString());
         is.setFinalePending(PLAINS);
         assertFalse(fl.gate(island, is, mockPlayer, block));
         assertEquals("", is.getFinalePending());
@@ -542,11 +558,59 @@ class FinaleListenerTest extends CommonTestSetup {
     }
 
     @Test
+    void testMythicMinions() {
+        Zombie imp = mock(Zombie.class);
+        UUID impId = UUID.randomUUID();
+        when(imp.getUniqueId()).thenReturn(impId);
+        when(imp.isValid()).thenReturn(true);
+        when(imp.getWorld()).thenReturn(world);
+        when(imp.getLocation()).thenReturn(new Location(world, 0, 65, 0));
+        mockedBukkit.when(() -> Bukkit.getEntity(impId)).thenReturn(imp);
+        plains.setFinale(mythicFinale(null, Map.of("Imp", 3)));
+        mythicSpawns("SkeletonKing", boss);
+        mythicSpawns("Imp", imp);
+        summon();
+        verify(fl, times(3)).spawnMythicEntity(eq("Imp"), eq(3D), any(), eq("Imp"), eq(PLAINS));
+        verify(imp, times(3)).setPersistent(false);
+        // Minions are finale mobs: they cannot change blocks, and leave with the boss
+        EntityChangeBlockEvent e = mock(EntityChangeBlockEvent.class);
+        when(e.getEntity()).thenReturn(imp);
+        fl.onChangeBlock(e);
+        verify(e).setCancelled(true);
+        fl.clear(island, is);
+        verify(imp).remove();
+    }
+
+    @Test
+    void testMythicMinionsWithVanillaBoss() {
+        PhaseFinale f = new PhaseFinale(EntityType.ZOMBIE, "The Colossus", 100, 2, 4, 0, true, 20, Map.of(),
+                Map.of(), List.of(), List.of(), "", 2, Map.of("Imp", 2));
+        assertFalse(f.isMythic());
+        plains.setFinale(f);
+        mythicSpawns(null);
+        summon();
+        verify(world).spawnEntity(any(), eq(EntityType.ZOMBIE));
+        // Unknown or missing: tried once, not once per minion
+        verify(fl, times(1)).spawnMythicEntity(eq("Imp"), eq(2D), any(), anyString(), eq(PLAINS));
+        assertTrue(fl.isActive(island));
+    }
+
+    @Test
+    void testMythicMinionThrowsBossStillFights() {
+        plains.setFinale(mythicFinale(null, Map.of("Imp", 2)));
+        mythicSpawns("SkeletonKing", boss);
+        doThrow(new NoClassDefFoundError("io/lumine/mythic/bukkit/MythicBukkit")).when(fl)
+                .spawnMythicEntity(eq("Imp"), anyDouble(), any(), anyString(), anyString());
+        summon();
+        assertTrue(fl.isActive(island));
+    }
+
+    @Test
     void testFinaleNeedsABoss() {
         Map<EntityType, Integer> none = Map.of();
         Map<Material, Integer> drops = Map.of();
         List<String> cmds = List.of();
         assertThrows(IllegalArgumentException.class, () -> new PhaseFinale(null, "x", 1, 1, 0, 0, true, 0, none,
-                drops, cmds, cmds, "", 1));
+                drops, cmds, cmds, "", 1, Map.of()));
     }
 }

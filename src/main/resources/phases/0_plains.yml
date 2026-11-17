@@ -361,7 +361,8 @@
   #                         cannot be spawned, boss is used as a fallback; leave
   #                         boss out for no fallback (the phase then simply
   #                         moves on). Its own skills, drops and AI all apply.
-  #   mythic-level        - level of the MythicMobs boss. Default 1.
+  #   mythic-level        - level of the MythicMobs boss and mythic-minions.
+  #                         Default 1.
   #   name                - display name, MiniMessage or legacy & codes. Set it
   #                         for a mythic-boss too, or the bar shows its type id.
   #   health              - base max health. 0 keeps the mob's own; the default
@@ -377,6 +378,8 @@
   #   warning             - how many blocks before the end the omen starts.
   #                         Default 20. 0 for no warning.
   #   minions             - mobs that spawn with the boss, TYPE: count.
+  #   mythic-minions      - MythicMobs mobs that spawn with the boss, type: count.
+  #                         They use mythic-level. Skipped if MythicMobs is missing.
   #   drops               - items dropped when the boss dies, MATERIAL: amount.
   #   commands            - run every time the boss is defeated. Same prefixes
   #                         and placeholders as end-commands.

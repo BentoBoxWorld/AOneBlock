@@ -282,6 +282,7 @@ public class FinaleListener implements Listener {
 
         // Minions
         finale.minions().forEach((type, count) -> spawnMinions(f, type, count, home));
+        finale.mythicMinions().forEach((type, count) -> spawnMythicMinions(f, type, count, home));
 
         // Register
         active.put(island.getUniqueId(), f);
@@ -342,7 +343,7 @@ public class FinaleListener implements Listener {
     private LivingEntity spawnMythicBoss(PhaseFinale finale, Location home, String phaseName, String plainName) {
         Entity entity;
         try {
-            entity = spawnMythicEntity(finale, home, phaseName, plainName);
+            entity = spawnMythicEntity(finale.mythicBoss(), finale.mythicLevel(), home, plainName, phaseName);
         } catch (RuntimeException | LinkageError e) {
             addon.logError("Could not spawn MythicMobs boss " + finale.mythicBoss() + " for phase " + phaseName
                     + ": " + e.getMessage());
@@ -364,23 +365,27 @@ public class FinaleListener implements Listener {
      * Spawn a MythicMob through BentoBox's MythicMobs hook. Kept apart so that it
      * is the only code that touches the hook.
      *
+     * @param type        MythicMobs mob type id
+     * @param level       mob level
+     * @param home        where to spawn it
+     * @param displayName name the hook gives the mob
+     * @param phaseName   phase, for log messages
      * @return the spawned entity, or null if MythicMobs is missing or does not know the mob
      */
     @Nullable
-    Entity spawnMythicEntity(PhaseFinale finale, Location home, String phaseName, String plainName) {
+    Entity spawnMythicEntity(String type, double level, Location home, String displayName, String phaseName) {
         Optional<MythicMobsHook> hook = addon.getPlugin().getHooks().getHook("MythicMobs")
                 .filter(MythicMobsHook.class::isInstance).map(MythicMobsHook.class::cast);
         if (hook.isEmpty()) {
-            addon.logWarning("Phase " + phaseName + " has MythicMobs boss " + finale.mythicBoss()
+            addon.logWarning("Phase " + phaseName + " finale uses MythicMobs mob " + type
                     + " but MythicMobs is not installed");
             return null;
         }
         AtomicReference<Entity> spawned = new AtomicReference<>();
         // A delay of 0 spawns on this tick and runs the callback before returning
-        if (!hook.get().spawnMythicMob(
-                new MythicMobRecord(finale.mythicBoss(), plainName, finale.mythicLevel(), 0F, ""), home,
-                spawned::set, 0L)) {
-            addon.logWarning("Phase " + phaseName + " finale: MythicMobs has no mob called " + finale.mythicBoss());
+        if (!hook.get().spawnMythicMob(new MythicMobRecord(type, displayName, level, 0F, ""), home, spawned::set,
+                0L)) {
+            addon.logWarning("Phase " + phaseName + " finale: MythicMobs has no mob called " + type);
             return null;
         }
         return spawned.get();
@@ -388,14 +393,35 @@ public class FinaleListener implements Listener {
 
     private void spawnMinions(ActiveFinale f, EntityType type, int count, Location home) {
         for (int i = 0; i < count; i++) {
-            Entity e = home.getWorld().spawnEntity(home, type);
-            if (!e.isValid()) {
-                continue;
+            addMinion(f, home.getWorld().spawnEntity(home, type));
+        }
+    }
+
+    private void addMinion(ActiveFinale f, Entity e) {
+        if (!e.isValid()) {
+            return;
+        }
+        e.setPersistent(false);
+        prepare(e);
+        f.minions.add(e.getUniqueId());
+        byMinion.put(e.getUniqueId(), f);
+    }
+
+    private void spawnMythicMinions(ActiveFinale f, String type, int count, Location home) {
+        for (int i = 0; i < count; i++) {
+            Entity e;
+            try {
+                e = spawnMythicEntity(type, f.finale.mythicLevel(), home, type, f.phaseName);
+            } catch (RuntimeException | LinkageError ex) {
+                addon.logError("Could not spawn MythicMobs minion " + type + " for phase " + f.phaseName + ": "
+                        + ex.getMessage());
+                return;
             }
-            e.setPersistent(false);
-            prepare(e);
-            f.minions.add(e.getUniqueId());
-            byMinion.put(e.getUniqueId(), f);
+            if (e == null) {
+                // Missing plugin or unknown mob; already logged, so do not try the rest
+                return;
+            }
+            addMinion(f, e);
         }
     }
 
