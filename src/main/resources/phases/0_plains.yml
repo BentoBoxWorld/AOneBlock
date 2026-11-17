@@ -356,10 +356,19 @@
   #
   #   boss                - EntityType of the boss. GIANT has no AI in vanilla;
   #                         it is given one here (needs Paper).
-  #   name                - display name, MiniMessage or legacy & codes.
-  #   health              - base max health. Server max is 1024 unless raised in
-  #                         spigot.yml (settings.attribute.maxHealth).
-  #   scale               - size multiplier. 1 is normal. Default 1.
+  #   mythic-boss         - optional MythicMobs mob type to use as the boss
+  #                         instead, e.g. SkeletonKing. Needs MythicMobs. If it
+  #                         cannot be spawned, boss is used as a fallback; leave
+  #                         boss out for no fallback (the phase then simply
+  #                         moves on). Its own skills, drops and AI all apply.
+  #   mythic-level        - level of the MythicMobs boss. Default 1.
+  #   name                - display name, MiniMessage or legacy & codes. Set it
+  #                         for a mythic-boss too, or the bar shows its type id.
+  #   health              - base max health. 0 keeps the mob's own; the default
+  #                         is 100, or 0 for a mythic-boss. Server max is 1024
+  #                         unless raised in spigot.yml (settings.attribute.maxHealth).
+  #   scale               - size multiplier. 1 is normal. Default 1, or the
+  #                         mob's own size for a mythic-boss.
   #   damage              - attack damage. Omit or 0 for the mob's default.
   #   speed               - movement speed. Omit or 0 for the mob's default.
   #   void-respawn        - true (default): a boss knocked into the void comes

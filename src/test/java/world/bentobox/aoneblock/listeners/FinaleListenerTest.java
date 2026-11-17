@@ -2,12 +2,16 @@ package world.bentobox.aoneblock.listeners;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -26,6 +30,7 @@ import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Arrow;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Zombie;
@@ -439,5 +444,109 @@ class FinaleListenerTest extends CommonTestSetup {
         verify(boss).remove();
         // Still pending for after the restart
         assertEquals(PLAINS, is.getFinalePending());
+    }
+
+    // ---------------------------------------------------------------------
+    // MythicMobs bosses
+    // ---------------------------------------------------------------------
+
+    private PhaseFinale mythicFinale(EntityType fallback) {
+        return new PhaseFinale(fallback, "Skeleton King", 0, 0, 0, 0, true, 20, Map.of(),
+                Map.of(Material.IRON_INGOT, 8), List.of(), List.of(), "SkeletonKing", 3);
+    }
+
+    /**
+     * MythicMobs is not on the test classpath, so stub the one method that talks to its hook.
+     */
+    private void mythicSpawns(Entity result) {
+        fl = spy(fl);
+        doReturn(result).when(fl).spawnMythicEntity(any(), any(), anyString(), anyString());
+    }
+
+    @Test
+    void testMythicBossSummoned() {
+        plains.setFinale(mythicFinale(null));
+        mythicSpawns(boss);
+        when(attribute.getBaseValue()).thenReturn(200D);
+        summon();
+        verify(fl).spawnMythicEntity(eq(plains.getFinale()), any(), eq(PLAINS), eq("Skeleton King"));
+        verify(world, never()).spawnEntity(any(), any(EntityType.class));
+        // Keeps its own size and health, scaled for one player
+        verify(boss, never()).getAttribute(Attribute.SCALE);
+        verify(attribute).setBaseValue(200D);
+        verify(boss).setPersistent(false);
+        verify(boss).setTarget(mockPlayer);
+        assertTrue(fl.isActive(island));
+    }
+
+    @Test
+    void testMythicBossWinIsTheKill() {
+        plains.setFinale(mythicFinale(null));
+        mythicSpawns(boss);
+        summon();
+        EntityDeathEvent e = mock(EntityDeathEvent.class);
+        when(e.getEntity()).thenReturn(boss);
+        fl.onDeath(e);
+        assertFalse(fl.isActive(island));
+        assertEquals("", is.getFinalePending());
+        assertTrue(is.getDefeatedFinales().contains(PLAINS));
+    }
+
+    @Test
+    void testMythicBossUnknownUsesFallback() {
+        plains.setFinale(mythicFinale(EntityType.ZOMBIE));
+        mythicSpawns(null);
+        summon();
+        verify(world).spawnEntity(any(), eq(EntityType.ZOMBIE));
+        assertTrue(fl.isActive(island));
+    }
+
+    @Test
+    void testMythicBossNoPluginUsesFallback() {
+        plains.setFinale(mythicFinale(EntityType.ZOMBIE));
+        summon();
+        verify(world).spawnEntity(any(), eq(EntityType.ZOMBIE));
+        assertTrue(fl.isActive(island));
+    }
+
+    @Test
+    void testMythicBossNoPluginNoFallbackWaives() {
+        plains.setFinale(mythicFinale(null));
+        is.setFinalePending(PLAINS);
+        assertFalse(fl.gate(island, is, mockPlayer, block));
+        verify(world, never()).spawnEntity(any(), any(EntityType.class));
+        assertEquals("", is.getFinalePending());
+        assertFalse(fl.isActive(island));
+    }
+
+    @Test
+    void testMythicBossHookThrowsWaives() {
+        plains.setFinale(mythicFinale(null));
+        fl = spy(fl);
+        doThrow(new NoClassDefFoundError("io/lumine/mythic/bukkit/MythicBukkit")).when(fl)
+                .spawnMythicEntity(any(), any(), anyString(), anyString());
+        is.setFinalePending(PLAINS);
+        assertFalse(fl.gate(island, is, mockPlayer, block));
+        assertEquals("", is.getFinalePending());
+    }
+
+    @Test
+    void testMythicBossNotLivingWaives() {
+        plains.setFinale(mythicFinale(null));
+        Item item = mock(Item.class);
+        mythicSpawns(item);
+        is.setFinalePending(PLAINS);
+        assertFalse(fl.gate(island, is, mockPlayer, block));
+        verify(item).remove();
+        assertEquals("", is.getFinalePending());
+    }
+
+    @Test
+    void testFinaleNeedsABoss() {
+        Map<EntityType, Integer> none = Map.of();
+        Map<Material, Integer> drops = Map.of();
+        List<String> cmds = List.of();
+        assertThrows(IllegalArgumentException.class, () -> new PhaseFinale(null, "x", 1, 1, 0, 0, true, 0, none,
+                drops, cmds, cmds, "", 1));
     }
 }

@@ -5,15 +5,20 @@ import java.util.Map;
 
 import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
+import org.eclipse.jdt.annotation.Nullable;
 
 /**
  * The boss encounter that ends a phase. Defined by the optional {@code finale:}
  * section of a phase file.
  *
- * @param boss              entity type of the boss
+ * @param boss              entity type of the boss. If {@code mythicBoss} is set this
+ *                          is the fallback used when the MythicMob cannot be spawned,
+ *                          and may be null for no fallback
  * @param name              display name of the boss, MiniMessage or legacy codes
- * @param health            base maximum health, before scaling for players
- * @param scale             size multiplier, 1 is normal size
+ * @param health            base maximum health, before scaling for players, or 0 or
+ *                          less to keep the mob's own maximum health
+ * @param scale             size multiplier, 1 is normal size, or 0 or less to keep the
+ *                          mob's own size
  * @param damage            attack damage, or 0 or less to keep the mob's default
  * @param speed             movement speed, or 0 or less to keep the mob's default
  * @param voidRespawn       if true a boss that falls into the void returns to the
@@ -23,11 +28,15 @@ import org.bukkit.entity.EntityType;
  * @param drops             items dropped at the magic block when the boss is defeated
  * @param commands          commands run every time the boss is defeated
  * @param firstTimeCommands commands run only the first time the island defeats this boss
+ * @param mythicBoss        MythicMobs mob type id to spawn as the boss, or empty for a
+ *                          vanilla boss
+ * @param mythicLevel       level of the MythicMobs boss
  * @author tastybento
  */
-public record PhaseFinale(EntityType boss, String name, double health, double scale, double damage, double speed,
-        boolean voidRespawn, int warning, Map<EntityType, Integer> minions, Map<Material, Integer> drops,
-        List<String> commands, List<String> firstTimeCommands) {
+public record PhaseFinale(@Nullable EntityType boss, String name, double health, double scale, double damage,
+        double speed, boolean voidRespawn, int warning, Map<EntityType, Integer> minions,
+        Map<Material, Integer> drops, List<String> commands, List<String> firstTimeCommands, String mythicBoss,
+        double mythicLevel) {
 
     /**
      * Default number of blocks of forewarning.
@@ -42,5 +51,26 @@ public record PhaseFinale(EntityType boss, String name, double health, double sc
         drops = Map.copyOf(drops);
         commands = List.copyOf(commands);
         firstTimeCommands = List.copyOf(firstTimeCommands);
+        mythicBoss = mythicBoss == null ? "" : mythicBoss.trim();
+        if (boss == null && mythicBoss.isEmpty()) {
+            throw new IllegalArgumentException("A finale needs a boss or a mythic-boss");
+        }
+    }
+
+    /**
+     * A finale with a vanilla boss.
+     */
+    public PhaseFinale(EntityType boss, String name, double health, double scale, double damage, double speed,
+            boolean voidRespawn, int warning, Map<EntityType, Integer> minions, Map<Material, Integer> drops,
+            List<String> commands, List<String> firstTimeCommands) {
+        this(boss, name, health, scale, damage, speed, voidRespawn, warning, minions, drops, commands,
+                firstTimeCommands, "", 1D);
+    }
+
+    /**
+     * @return true if the boss is a MythicMobs mob
+     */
+    public boolean isMythic() {
+        return !mythicBoss.isEmpty();
     }
 }
