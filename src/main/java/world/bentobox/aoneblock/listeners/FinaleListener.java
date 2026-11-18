@@ -95,6 +95,7 @@ public class FinaleListener implements Listener {
     static final double MERCY_FLOOR = 0.5D;
 
     private static final String NAME = "[name]";
+    private static final String FOR_PHASE = " for phase ";
 
     private final AOneBlock addon;
     /** Running finales by island unique id. */
@@ -320,20 +321,24 @@ public class FinaleListener implements Listener {
      */
     @Nullable
     private LivingEntity spawnBoss(PhaseFinale finale, Location home, String phaseName, String plainName) {
+        EntityType type = finale.boss();
         if (finale.isMythic()) {
             LivingEntity boss = spawnMythicBoss(finale, home, phaseName, plainName);
             if (boss != null) {
                 return boss;
             }
-            if (finale.boss() == null) {
-                return null;
+            if (type != null) {
+                addon.logWarning("Using " + type + " as the finale boss" + FOR_PHASE + phaseName + " instead");
             }
-            addon.logWarning("Using " + finale.boss() + " as the finale boss for phase " + phaseName + " instead");
         }
-        Entity entity = home.getWorld().spawnEntity(home, finale.boss());
+        if (type == null) {
+            // A MythicMobs boss with no fallback
+            return null;
+        }
+        Entity entity = home.getWorld().spawnEntity(home, type);
         if (!(entity instanceof LivingEntity boss) || !entity.isValid()) {
             entity.remove();
-            addon.logWarning("Could not spawn finale boss " + finale.boss() + " for phase " + phaseName);
+            addon.logWarning("Could not spawn finale boss " + type + FOR_PHASE + phaseName);
             return null;
         }
         return boss;
@@ -345,7 +350,7 @@ public class FinaleListener implements Listener {
         try {
             entity = spawnMythicEntity(finale.mythicBoss(), finale.mythicLevel(), home, plainName, phaseName);
         } catch (RuntimeException | LinkageError e) {
-            addon.logError("Could not spawn MythicMobs boss " + finale.mythicBoss() + " for phase " + phaseName
+            addon.logError("Could not spawn MythicMobs boss " + finale.mythicBoss() + FOR_PHASE + phaseName
                     + ": " + e.getMessage());
             return null;
         }
@@ -356,7 +361,7 @@ public class FinaleListener implements Listener {
             return boss;
         }
         entity.remove();
-        addon.logWarning("MythicMobs boss " + finale.mythicBoss() + " for phase " + phaseName
+        addon.logWarning("MythicMobs boss " + finale.mythicBoss() + FOR_PHASE + phaseName
                 + " is not a living mob or did not spawn");
         return null;
     }
@@ -413,7 +418,7 @@ public class FinaleListener implements Listener {
             try {
                 e = spawnMythicEntity(type, f.finale.mythicLevel(), home, type, f.phaseName);
             } catch (RuntimeException | LinkageError ex) {
-                addon.logError("Could not spawn MythicMobs minion " + type + " for phase " + f.phaseName + ": "
+                addon.logError("Could not spawn MythicMobs minion " + type + FOR_PHASE + f.phaseName + ": "
                         + ex.getMessage());
                 return;
             }
