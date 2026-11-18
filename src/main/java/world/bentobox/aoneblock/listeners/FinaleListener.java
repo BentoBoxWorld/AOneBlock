@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicReference;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Difficulty;
@@ -61,7 +62,9 @@ import world.bentobox.aoneblock.oneblocks.PhaseFinale;
 import world.bentobox.bentobox.api.events.island.IslandDeleteEvent;
 import world.bentobox.bentobox.api.events.island.IslandResettedEvent;
 import world.bentobox.bentobox.api.user.User;
+import world.bentobox.bentobox.blueprints.dataobjects.BlueprintEntity.MythicMobRecord;
 import world.bentobox.bentobox.database.objects.Island;
+import world.bentobox.bentobox.hooks.MythicMobsHook;
 import world.bentobox.bentobox.util.Util;
 
 /**
@@ -92,6 +95,7 @@ public class FinaleListener implements Listener {
     static final double MERCY_FLOOR = 0.5D;
 
     private static final String NAME = "[name]";
+    private static final String FOR_PHASE = " for phase ";
 
     private final AOneBlock addon;
     /** Running finales by island unique id. */
@@ -234,14 +238,13 @@ public class FinaleListener implements Listener {
             Player summoner) {
         World world = block.getWorld();
         Location home = home(block);
-        Entity entity = world.spawnEntity(home, finale.boss());
-        if (!(entity instanceof LivingEntity boss) || !entity.isValid()) {
-            entity.remove();
-            addon.logWarning("Could not spawn finale boss " + finale.boss() + " for phase " + phaseName);
+        Component name = Util.parseMiniMessageOrLegacy(finale.name());
+        LivingEntity boss = spawnBoss(finale, home, phaseName,
+                PlainTextComponentSerializer.plainText().serialize(name));
+        if (boss == null) {
             return false;
         }
         List<Player> fighters = fighters(island, world);
-        Component name = Util.parseMiniMessageOrLegacy(finale.name());
         ActiveFinale f = new ActiveFinale(island, is, phaseName, finale, block, boss, name);
 
         // Dress the boss
@@ -249,10 +252,12 @@ public class FinaleListener implements Listener {
         boss.setCustomNameVisible(true);
         boss.setPersistent(false);
         boss.setRemoveWhenFarAway(false);
-        setAttribute(boss, Attribute.SCALE, finale.scale());
-        double health = scaledHealth(finale.health(), fighters.size(), is.getFinaleFails());
-        setAttribute(boss, Attribute.MAX_HEALTH, health);
+        if (finale.scale() > 0) {
+            setAttribute(boss, Attribute.SCALE, finale.scale());
+        }
         AttributeInstance max = boss.getAttribute(Attribute.MAX_HEALTH);
+        double health = scaledHealth(baseHealth(finale, boss, max), fighters.size(), is.getFinaleFails());
+        setAttribute(boss, Attribute.MAX_HEALTH, health);
         if (max != null) {
             // The server may cap max health, so read it back
             boss.setHealth(max.getValue());
@@ -278,6 +283,7 @@ public class FinaleListener implements Listener {
 
         // Minions
         finale.minions().forEach((type, count) -> spawnMinions(f, type, count, home));
+        finale.mythicMinions().forEach((type, count) -> spawnMythicMinions(f, type, count, home));
 
         // Register
         active.put(island.getUniqueId(), f);
@@ -296,16 +302,131 @@ public class FinaleListener implements Listener {
         return true;
     }
 
+    /**
+     * @return the boss's health before scaling: the phase file's, or the mob's own
+     *         if that is 0, e.g., from its MythicMobs config
+     */
+    private static double baseHealth(PhaseFinale finale, LivingEntity boss, @Nullable AttributeInstance max) {
+        if (finale.health() > 0) {
+            return finale.health();
+        }
+        return max != null ? max.getBaseValue() : boss.getHealth();
+    }
+
+    /**
+     * Spawn the boss: the MythicMob if the finale names one, falling back to the
+     * vanilla boss type if there is one.
+     *
+     * @return the boss, or null if nothing could be spawned
+     */
+    @Nullable
+    private LivingEntity spawnBoss(PhaseFinale finale, Location home, String phaseName, String plainName) {
+        EntityType type = finale.boss();
+        if (finale.isMythic()) {
+            LivingEntity boss = spawnMythicBoss(finale, home, phaseName, plainName);
+            if (boss != null) {
+                return boss;
+            }
+            if (type != null) {
+                addon.logWarning("Using " + type + " as the finale boss" + FOR_PHASE + phaseName + " instead");
+            }
+        }
+        if (type == null) {
+            // A MythicMobs boss with no fallback
+            return null;
+        }
+        Entity entity = home.getWorld().spawnEntity(home, type);
+        if (!(entity instanceof LivingEntity boss) || !entity.isValid()) {
+            entity.remove();
+            addon.logWarning("Could not spawn finale boss " + type + FOR_PHASE + phaseName);
+            return null;
+        }
+        return boss;
+    }
+
+    @Nullable
+    private LivingEntity spawnMythicBoss(PhaseFinale finale, Location home, String phaseName, String plainName) {
+        Entity entity;
+        try {
+            entity = spawnMythicEntity(finale.mythicBoss(), finale.mythicLevel(), home, plainName, phaseName);
+        } catch (RuntimeException | LinkageError e) {
+            addon.logError("Could not spawn MythicMobs boss " + finale.mythicBoss() + FOR_PHASE + phaseName
+                    + ": " + e.getMessage());
+            return null;
+        }
+        if (entity == null) {
+            return null;
+        }
+        if (entity instanceof LivingEntity boss && entity.isValid()) {
+            return boss;
+        }
+        entity.remove();
+        addon.logWarning("MythicMobs boss " + finale.mythicBoss() + FOR_PHASE + phaseName
+                + " is not a living mob or did not spawn");
+        return null;
+    }
+
+    /**
+     * Spawn a MythicMob through BentoBox's MythicMobs hook. Kept apart so that it
+     * is the only code that touches the hook.
+     *
+     * @param type        MythicMobs mob type id
+     * @param level       mob level
+     * @param home        where to spawn it
+     * @param displayName name the hook gives the mob
+     * @param phaseName   phase, for log messages
+     * @return the spawned entity, or null if MythicMobs is missing or does not know the mob
+     */
+    @Nullable
+    Entity spawnMythicEntity(String type, double level, Location home, String displayName, String phaseName) {
+        Optional<MythicMobsHook> hook = addon.getPlugin().getHooks().getHook("MythicMobs")
+                .filter(MythicMobsHook.class::isInstance).map(MythicMobsHook.class::cast);
+        if (hook.isEmpty()) {
+            addon.logWarning("Phase " + phaseName + " finale uses MythicMobs mob " + type
+                    + " but MythicMobs is not installed");
+            return null;
+        }
+        AtomicReference<Entity> spawned = new AtomicReference<>();
+        // A delay of 0 spawns on this tick and runs the callback before returning
+        if (!hook.get().spawnMythicMob(new MythicMobRecord(type, displayName, level, 0F, ""), home, spawned::set,
+                0L)) {
+            addon.logWarning("Phase " + phaseName + " finale: MythicMobs has no mob called " + type);
+            return null;
+        }
+        return spawned.get();
+    }
+
     private void spawnMinions(ActiveFinale f, EntityType type, int count, Location home) {
         for (int i = 0; i < count; i++) {
-            Entity e = home.getWorld().spawnEntity(home, type);
-            if (!e.isValid()) {
-                continue;
+            addMinion(f, home.getWorld().spawnEntity(home, type));
+        }
+    }
+
+    private void addMinion(ActiveFinale f, Entity e) {
+        if (!e.isValid()) {
+            return;
+        }
+        e.setPersistent(false);
+        prepare(e);
+        f.minions.add(e.getUniqueId());
+        byMinion.put(e.getUniqueId(), f);
+    }
+
+    private void spawnMythicMinions(ActiveFinale f, String type, int count, Location home) {
+        for (int i = 0; i < count; i++) {
+            Entity e;
+            try {
+                e = spawnMythicEntity(type, f.finale.mythicLevel(), home, type, f.phaseName);
+            } catch (RuntimeException | LinkageError ex) {
+                addon.logError("Could not spawn MythicMobs minion " + type + FOR_PHASE + f.phaseName + ": "
+                        + ex.getMessage());
+                return;
             }
-            e.setPersistent(false);
-            prepare(e);
-            f.minions.add(e.getUniqueId());
-            byMinion.put(e.getUniqueId(), f);
+            if (e == null) {
+                // Missing plugin or unknown mob; already logged, so do not try the rest
+                return;
+            }
+            addMinion(f, e);
         }
     }
 

@@ -1557,6 +1557,57 @@ public class OneBlocksManagerTest3 extends CommonTestSetup {
 	}
 
 	/**
+	 * A MythicMobs boss keeps its own health and size unless they are set, and the
+	 * vanilla boss is an optional fallback.
+	 */
+	@Test
+	void testAddFinaleMythic() throws Exception {
+		YamlConfiguration cfg = new YamlConfiguration();
+		cfg.loadFromString("""
+				finale:
+				  mythic-boss: SkeletonKing
+				  mythic-level: 5
+				  mythic-minions:
+				    Imp: 3
+				    BoneGuard: 1
+				""");
+		OneBlockPhase phase = new OneBlockPhase("0");
+		phase.setPhaseName("Plains");
+		obm.addFinale(phase, cfg);
+		PhaseFinale f = phase.getFinale();
+		assertTrue(f.isMythic());
+		assertEquals("SkeletonKing", f.mythicBoss());
+		assertEquals(5D, f.mythicLevel());
+		assertNull(f.boss());
+		assertEquals("SkeletonKing", f.name());
+		assertEquals(0D, f.health());
+		assertEquals(0D, f.scale());
+		assertEquals(java.util.Map.of("Imp", 3, "BoneGuard", 1), f.mythicMinions());
+
+		cfg.loadFromString("""
+				finale:
+				  mythic-boss: SkeletonKing
+				  boss: WITHER_SKELETON
+				  health: 300
+				""");
+		obm.addFinale(phase, cfg);
+		f = phase.getFinale();
+		assertEquals(EntityType.WITHER_SKELETON, f.boss());
+		assertEquals(300D, f.health());
+		assertEquals(1D, f.mythicLevel());
+
+		// A bad fallback does not disable a mythic boss
+		cfg.loadFromString("""
+				finale:
+				  mythic-boss: SkeletonKing
+				  boss: ARROW
+				""");
+		obm.addFinale(phase, cfg);
+		assertNull(phase.getFinale().boss());
+		assertTrue(phase.getFinale().isMythic());
+	}
+
+	/**
 	 * A phase without a finale section, or with a bad boss, has no finale.
 	 */
 	@Test
