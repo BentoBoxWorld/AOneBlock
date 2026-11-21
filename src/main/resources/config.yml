@@ -242,7 +242,7 @@ world:
     ENDER_CHEST: false
     TREES_GROWING_OUTSIDE_RANGE: false
     WITHER_DAMAGE: false
-    PISTON_PUSH: false
+    PISTON_PUSH: true
     COARSE_DIRT_TILLING: true
     ENDERMAN_GRIEFING: true
     CLEAN_SUPER_FLAT: false
