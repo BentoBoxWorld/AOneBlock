@@ -86,6 +86,7 @@ public class AOneBlock extends GameModeAddon {
             .type(Type.WORLD_SETTING)
             .listener(new StartSafetyListener(this))
             .defaultSetting(false)
+            .setGameMode(this)
             .build();
     /** The listener for the boss bar */
     private final BossBarListener bossBar = new BossBarListener(this);
@@ -97,6 +98,7 @@ public class AOneBlock extends GameModeAddon {
             .type(Type.SETTING)
             .listener(bossBar)
             .defaultSetting(true)
+            .setGameMode(this)
             .build();
     /**
      * Flag to enable or disable the OneBlock action bar.
@@ -106,7 +108,8 @@ public class AOneBlock extends GameModeAddon {
             .type(Type.SETTING)
             .listener(bossBar)
             .defaultSetting(true)
-            .build();    
+            .setGameMode(this)
+            .build();
     /**
      * Flag to set who can break the magic block.
      */
@@ -114,6 +117,7 @@ public class AOneBlock extends GameModeAddon {
             .mode(Mode.BASIC)
             .type(Type.PROTECTION)
             .defaultRank(RanksManager.COOP_RANK)
+            .setGameMode(this)
             .build();
 
     @Override
