@@ -1148,20 +1148,35 @@ public class OneBlocksManager {
             return;
         }
         String phaseName = obPhase.getPhaseName();
-        EntityType boss = Enums.getIfPresent(EntityType.class, sec.getString("boss", "").toUpperCase(Locale.ENGLISH))
-                .orNull();
+        String mythicBoss = sec.getString("mythic-boss", "").trim();
+        boolean mythic = !mythicBoss.isEmpty();
+        String bossName = sec.getString("boss", "");
+        EntityType boss = Enums.getIfPresent(EntityType.class, bossName.toUpperCase(Locale.ENGLISH)).orNull();
         if (boss == null || !boss.isAlive() || !boss.isSpawnable()) {
-            addon.logWarning(FINALE_LOG_PREFIX + phaseName + " finale: boss '" + sec.getString("boss")
-                    + "' is not a living entity type on this server. The finale is disabled.");
-            return;
+            boss = null;
+            if (!mythic) {
+                addon.logWarning(FINALE_LOG_PREFIX + phaseName + " finale: boss '" + sec.getString("boss")
+                        + "' is not a living entity type on this server. The finale is disabled.");
+                return;
+            }
+            if (!bossName.isEmpty()) {
+                addon.logWarning(FINALE_LOG_PREFIX + phaseName + " finale: fallback boss '" + bossName
+                        + "' is not a living entity type on this server. There will be no fallback.");
+            }
         }
+        // MythicMobs bosses keep their own health and size unless the phase file sets them
+        double health = sec.getDouble("health", mythic ? 0D : 100D);
+        double scale = sec.getDouble("scale", mythic ? 0D : 1D);
+        String defaultName = mythic ? mythicBoss : Util.prettifyText(boss.name());
         Map<EntityType, Integer> minions = readFinaleMinions(sec.getConfigurationSection("minions"), phaseName);
         Map<Material, Integer> drops = readFinaleDrops(sec.getConfigurationSection("drops"), phaseName);
-        obPhase.setFinale(new PhaseFinale(boss, sec.getString(NAME, Util.prettifyText(boss.name())),
-                Math.max(1D, sec.getDouble("health", 100D)), Math.max(0.1D, sec.getDouble("scale", 1D)),
+        obPhase.setFinale(new PhaseFinale(boss, sec.getString(NAME, defaultName),
+                health > 0D ? Math.max(1D, health) : 0D, scale > 0D ? Math.max(0.1D, scale) : 0D,
                 sec.getDouble("damage", 0D), sec.getDouble("speed", 0D), sec.getBoolean("void-respawn", true),
                 Math.max(0, sec.getInt("warning", PhaseFinale.DEFAULT_WARNING)), minions, drops,
-                sec.getStringList("commands"), sec.getStringList("first-time-commands")));
+                sec.getStringList("commands"), sec.getStringList("first-time-commands"), mythicBoss,
+                Math.max(1D, sec.getDouble("mythic-level", 1D)),
+                readFinaleMythicMinions(sec.getConfigurationSection("mythic-minions"))));
     }
 
     private Map<EntityType, Integer> readFinaleMinions(ConfigurationSection minionSec, String phaseName) {
@@ -1176,6 +1191,19 @@ public class OneBlocksManager {
             } else {
                 minions.put(et, Math.max(0, minionSec.getInt(key)));
             }
+        }
+        return minions;
+    }
+
+    /**
+     * MythicMobs minions, by mob type id. The ids cannot be checked here because
+     * MythicMobs may not have loaded its mobs yet; unknown ones are reported when
+     * the boss spawns.
+     */
+    private Map<String, Integer> readFinaleMythicMinions(ConfigurationSection minionSec) {
+        Map<String, Integer> minions = new LinkedHashMap<>();
+        if (minionSec != null) {
+            minionSec.getKeys(false).forEach(key -> minions.put(key, Math.max(0, minionSec.getInt(key))));
         }
         return minions;
     }
@@ -1202,7 +1230,13 @@ public class OneBlocksManager {
             return;
         }
         ConfigurationSection sec = phSec.createSection(FINALE);
-        sec.set("boss", f.boss().name());
+        if (f.isMythic()) {
+            sec.set("mythic-boss", f.mythicBoss());
+            sec.set("mythic-level", f.mythicLevel());
+        }
+        if (f.boss() != null) {
+            sec.set("boss", f.boss().name());
+        }
         sec.set(NAME, f.name());
         sec.set("health", f.health());
         sec.set("scale", f.scale());
@@ -1211,6 +1245,7 @@ public class OneBlocksManager {
         sec.set("void-respawn", f.voidRespawn());
         sec.set("warning", f.warning());
         f.minions().forEach((k, v) -> sec.set("minions." + k.name(), v));
+        f.mythicMinions().forEach((k, v) -> sec.set("mythic-minions." + k, v));
         f.drops().forEach((k, v) -> sec.set("drops." + k.name(), v));
         sec.set("commands", f.commands());
         sec.set("first-time-commands", f.firstTimeCommands());

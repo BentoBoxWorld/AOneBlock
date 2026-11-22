@@ -1,7 +1,7 @@
 name: AOneBlock
 main: world.bentobox.aoneblock.AOneBlock
 version: ${version}${build.number}
-api-version: 3.22.0
+api-version: 3.23.0
 metrics: true
 icon: "STONE"
 repository: "BentoBoxWorld/AOneBlock"
@@ -124,19 +124,19 @@ permissions:
     default: TRUE
   aoneblock.island.deletehome:
     description: Allow use of '/ob deletehome' command - delete a home location
-    default: OP
+    default: TRUE
   aoneblock.island.renamehome:
     description: Allow use of '/ob renamehome' command - rename a home location
-    default: OP
+    default: TRUE
   aoneblock.island.homes:
     description: Allow use of '/ob homes' command - list your homes
-    default: OP
+    default: TRUE
   aoneblock.count:
     description: Allow use of '/ob count' command - show the block count and phase
     default: TRUE
   aoneblock.phases:
     description: Allow use of '/ob phases' command - show a list of all the phases
-    default: FALSE
+    default: OP
   aoneblock.island.setcount:
     description: Allow use of '/ob setCount' command - set block count to previously completed value
     default: OP

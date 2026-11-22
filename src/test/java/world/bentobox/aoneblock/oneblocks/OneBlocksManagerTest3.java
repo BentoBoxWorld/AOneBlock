@@ -715,7 +715,7 @@ public class OneBlocksManagerTest3 extends CommonTestSetup {
                         0:
                           ==: org.bukkit.inventory.ItemStack
                           DataVersion: 4438
-                          id: minecraft:sulfur
+                          id: minecraft:not_a_real_item
                           count: 1
                           schema_version: 1
                         1:
@@ -738,7 +738,7 @@ public class OneBlocksManagerTest3 extends CommonTestSetup {
 		assertNotNull(phase);
 		assertEquals(1, phase.getChests().size());
 		assertEquals(1, phase.getChests().iterator().next().getChest().size());
-		verify(plugin).log(org.mockito.ArgumentMatchers.contains("Skipping item minecraft:sulfur"));
+		verify(plugin).log(org.mockito.ArgumentMatchers.contains("Skipping item minecraft:not_a_real_item"));
 		verify(plugin, never()).logError(anyString());
 	}
 
@@ -1554,6 +1554,57 @@ public class OneBlocksManagerTest3 extends CommonTestSetup {
 		assertEquals(java.util.Map.of(Material.DIAMOND, 4), f.drops());
 		assertEquals(java.util.List.of("say hi"), f.commands());
 		assertTrue(f.firstTimeCommands().isEmpty());
+	}
+
+	/**
+	 * A MythicMobs boss keeps its own health and size unless they are set, and the
+	 * vanilla boss is an optional fallback.
+	 */
+	@Test
+	void testAddFinaleMythic() throws Exception {
+		YamlConfiguration cfg = new YamlConfiguration();
+		cfg.loadFromString("""
+				finale:
+				  mythic-boss: SkeletonKing
+				  mythic-level: 5
+				  mythic-minions:
+				    Imp: 3
+				    BoneGuard: 1
+				""");
+		OneBlockPhase phase = new OneBlockPhase("0");
+		phase.setPhaseName("Plains");
+		obm.addFinale(phase, cfg);
+		PhaseFinale f = phase.getFinale();
+		assertTrue(f.isMythic());
+		assertEquals("SkeletonKing", f.mythicBoss());
+		assertEquals(5D, f.mythicLevel());
+		assertNull(f.boss());
+		assertEquals("SkeletonKing", f.name());
+		assertEquals(0D, f.health());
+		assertEquals(0D, f.scale());
+		assertEquals(java.util.Map.of("Imp", 3, "BoneGuard", 1), f.mythicMinions());
+
+		cfg.loadFromString("""
+				finale:
+				  mythic-boss: SkeletonKing
+				  boss: WITHER_SKELETON
+				  health: 300
+				""");
+		obm.addFinale(phase, cfg);
+		f = phase.getFinale();
+		assertEquals(EntityType.WITHER_SKELETON, f.boss());
+		assertEquals(300D, f.health());
+		assertEquals(1D, f.mythicLevel());
+
+		// A bad fallback does not disable a mythic boss
+		cfg.loadFromString("""
+				finale:
+				  mythic-boss: SkeletonKing
+				  boss: ARROW
+				""");
+		obm.addFinale(phase, cfg);
+		assertNull(phase.getFinale().boss());
+		assertTrue(phase.getFinale().isMythic());
 	}
 
 	/**
