@@ -1,4 +1,8 @@
 # AOneBlock
+
+<!-- BentoBox stats badges: https://download.bentobox.world/admin (Badges tab) -->
+[![Servers](https://download.bentobox.world/badge/AOneBlock/servers.svg)](https://download.bentobox.world/) [![Popularity](https://download.bentobox.world/badge/AOneBlock/rank.svg)](https://download.bentobox.world/) [![Downloads](https://download.bentobox.world/badge/AOneBlock/downloads.svg)](https://download.bentobox.world/) [![Minecraft](https://download.bentobox.world/badge/AOneBlock/mc.svg)](https://download.bentobox.world/)
+
 A OneBlock Minecraft plugin, written by tastybento. 
 Credit for the original idea: IJAminecraft.
 
