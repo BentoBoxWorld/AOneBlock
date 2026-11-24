@@ -3,6 +3,10 @@ main: world.bentobox.aoneblock.AOneBlockPladdon
 version: ${project.version}${build.number}
 api-version: "1.21"
 
+# BentoBox must be installed: this jar is an addon and belongs in plugins/BentoBox/addons.
+# Declaring it makes Paper explain a missing BentoBox, and load it before this jar.
+depend: [BentoBox]
+
 authors: [tastybento]
 contributors: ["The BentoBoxWorld Community"]
 website: https://bentobox.world
